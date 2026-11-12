@@ -1,0 +1,30 @@
+import { designers, houses } from './index';
+
+/**
+ * Sanity checks that types can't catch. House ids are already checked by the
+ * compiler. Run with `npm test`; problems are also logged in the browser
+ * console on startup.
+ */
+export function validateData(): string[] {
+  const problems: string[] = [];
+  const thisYear = new Date().getFullYear();
+
+  for (const d of designers) {
+    if (d.career.length === 0) problems.push(`${d.id}: has no career entries`);
+
+    for (const t of d.career) {
+      const where = `${d.id} @ ${t.house} (${t.start})`;
+      if (typeof t.end === 'number' && t.end < t.start) problems.push(`${where}: end before start`);
+      if (t.start > thisYear + 1) problems.push(`${where}: start year is in the future`);
+      if (d.born && t.start < d.born + 14) problems.push(`${where}: starts before age 14`);
+      if (d.died && t.end === null) problems.push(`${where}: marked current but designer died ${d.died}`);
+    }
+  }
+
+  for (const h of houses) {
+    const used = designers.some((d) => d.career.some((t) => t.house === h.id));
+    if (!used) problems.push(`${h.id}: no designers linked yet`);
+  }
+
+  return problems;
+}
