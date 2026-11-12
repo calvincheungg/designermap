@@ -32,6 +32,17 @@ const sources = (list?: string[]) =>
         .join('')}</ul></fieldset>`
     : '';
 
+/** "https://www.loewe.com/eu/" → a link reading "loewe.com". */
+const websiteLink = (url: string) => {
+  let label = url;
+  try {
+    label = new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    /* not a valid URL; show it as written (validate.ts flags it) */
+  }
+  return `<a href="${esc(url)}" target="_blank" rel="noreferrer">${esc(label)}</a>`;
+};
+
 const notes = (text?: string) =>
   text ? `<fieldset><legend>Notes</legend><p>${esc(text)}</p></fieldset>` : '';
 
@@ -96,6 +107,7 @@ function renderHouse(id: string) {
           ['Founder', esc(h.founder)],
           ['Based in', esc(`${h.city}, ${h.country}`)],
           ['Group', esc(h.parentGroup)],
+          ['Website', h.website && websiteLink(h.website)],
         ])}</div>
       </div>
       <fieldset><legend>Creative directors</legend>
@@ -128,7 +140,9 @@ function renderDesigner(id: string) {
     .map((m) => {
       const from = getHouse(m.from.house)?.name ?? m.from.house;
       const to = getHouse(m.to.house)?.name ?? m.to.house;
-      return `<li><b>${m.year}</b> ${link('house', m.from.house, from)} → ${link('house', m.to.house, to)}</li>`;
+      return m.concurrent
+        ? `<li><b>${m.year}</b> + ${link('house', m.to.house, to)} <span class="hint">(alongside ${link('house', m.from.house, from)})</span></li>`
+        : `<li><b>${m.year}</b> ${link('house', m.from.house, from)} → ${link('house', m.to.house, to)}</li>`;
     })
     .join('');
 

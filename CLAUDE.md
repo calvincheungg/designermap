@@ -1,7 +1,8 @@
 # Designer Map
 
-Interactive graph of fashion houses and their creative directors, styled like
-Windows 98. Vite + TypeScript, Cytoscape.js (fcose layout) for the graph,
+Interactive world map of fashion houses and their creative directors, styled
+like Windows 98. Vite + TypeScript, Cytoscape.js for the graph (preset positions
+on the map, fcose for the network view), d3-geo + world-atlas for the map,
 98.css for the UI chrome. No framework: plain DOM + template strings.
 
 ## Commands
@@ -28,8 +29,10 @@ Run `npm run check && npm test` before committing.
 src/types.ts          data model
 src/data/houses.ts    SOURCE OF TRUTH: houses (key = house id)
 src/data/designers.ts SOURCE OF TRUTH: designers + career tenures
+src/data/cities.ts    city → [lat, lng]; every house city must be listed here
 src/data/index.ts     derived queries: tenuresAt, movesOf, allMoves, yearRange…
 src/data/validate.ts  sanity checks (also run in tests + logged in browser)
+src/graph/geo.ts      projection, world SVG markup, city-box placement + overlap removal
 src/graph/            Cytoscape: elements.ts (per view), style.ts, icons.ts, graph.ts
 src/ui/panel.ts       "Properties" window HTML for house / designer / directory
 src/main.ts           wires toolbar, search, year slider, panel ↔ graph
@@ -44,10 +47,25 @@ Key rules:
   bad `house:` reference in a career is a compile error. Keep the
   `satisfies Record<string, …>` pattern; don't widen to `string`.
 - `end: null` = current, `end` omitted = unknown, `approximate: true` = unverified years.
-- A "move" = consecutive career entries (sorted by start) at *different* houses.
-  Same-house promotions are not moves.
-- Two graph views (`ViewMode`): `network` (designer nodes ↔ house nodes) and
-  `moves` (house → house arrows). Houses sit inside city compound nodes.
+- Houses can have `website` (full URL; validate.ts checks the format), shown as a link.
+- Two views (`ViewMode`):
+  - `map` (default): one `marker` node per city: a pixel-art Win98 pin
+    (`icons.ts cityMarkerIcon`) whose tip sits exactly on the city. Pins scale
+    with the map when zoomed out but cap at ~26px on screen (`sizeMarkers`,
+    re-run on every zoom); colliding labels are hidden via `text-opacity`
+    (an empty `label` bypass would *remove* the override). Clicking a pin
+    toggles the city; `DesignerGraph.expanded` holds open cities. An open city's
+    houses sit in an invisible `grid` compound in the nearest spot that covers no
+    pin or other open city (`geo.ts placeGrids`), with a dotted leader to the pin.
+    `move` edges are rebuilt on every expand/collapse: each end attaches to the
+    house if its city is open, else to the pin. Selecting a house or designer
+    auto-expands the cities involved. Map min zoom: `MAP_MIN_ZOOM` or map-fills-view.
+  - `network`: designer nodes ↔ house nodes, laid out by fcose.
+- The world map is an SVG *under* the Cytoscape canvas, drawn in model
+  coordinates and kept aligned by mirroring pan/zoom (`syncMapLayer`). Don't
+  draw map features as Cytoscape nodes.
+- A move = starting at a new house. Same-house title changes aren't moves;
+  `from` is the house they left that year if any; `concurrent` = kept the old role.
 - Logos: `public/logos/<file>`, referenced by `logo:` on the house; missing logos
   fall back to a generated initials icon (`graph/icons.ts`).
 
@@ -63,6 +81,8 @@ Key rules:
   `tree-view`, `status-bar`) before writing custom CSS. Custom CSS is in
   `src/style.css`; graph styling is in `src/graph/style.ts` (canvas, not CSS).
 - Palette: teal desktop `#008080`, face `#c0c0c0`, selection navy `#000080`.
+  Map uses the Windows reserved colours: sea `#a6caf0`, land `#c0dcc0`,
+  borders `#a0a0a4`, city boxes `#fffbf0`.
 - 98.css trips Vite's CSS minifier, which is why `vite.config.ts` sets `cssMinify: false`.
 - Layout must still work at phone width (the properties window stacks under the graph).
 

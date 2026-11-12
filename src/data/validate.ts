@@ -22,6 +22,9 @@ export function validateData(): string[] {
   }
 
   for (const h of houses) {
+    if (h.website && !/^https?:\/\/[^\s/]+\.[^\s]+$/.test(h.website)) {
+      problems.push(`${h.id}: website should be a full URL like https://www.example.com`);
+    }
     const used = designers.some((d) => d.career.some((t) => t.house === h.id));
     if (!used) problems.push(`${h.id}: no designers linked yet`);
   }

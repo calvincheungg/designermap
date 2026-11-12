@@ -25,7 +25,15 @@ if (problems.length) console.warn(`Data warnings (${problems.length}):\n  ${prob
 /* ---------- graph + selection ---------- */
 let selection: Selection = null;
 
-const graph = new DesignerGraph($('graph'), (sel) => select(sel));
+const expandAllBtn = $<HTMLButtonElement>('expand-all');
+const graph = new DesignerGraph($('graph'), {
+  onSelect: (sel) => select(sel),
+  onExpandChange: (open, total) => {
+    const all = open === total;
+    expandAllBtn.textContent = all ? 'Collapse all' : 'Expand all';
+    expandAllBtn.setAttribute('aria-pressed', String(all));
+  },
+});
 document.fonts.ready.then(() => graph.refreshStyle());
 // Handy for poking at the graph from the browser console during development.
 if (import.meta.env.DEV) Object.assign(window, { graph, cy: graph.cy });
@@ -54,9 +62,14 @@ panel.addEventListener('click', (e) => {
 
 /* ---------- toolbar ---------- */
 viewSelect.addEventListener('change', () => {
-  graph.setMode(viewSelect.value as ViewMode);
+  const mode = viewSelect.value as ViewMode;
+  graph.setMode(mode);
   graph.select(selection);
+  // Expanding cities only applies to the map.
+  expandAllBtn.disabled = mode !== 'map';
 });
+
+expandAllBtn.addEventListener('click', () => graph.setAllExpanded(!graph.allExpanded));
 
 $('fit').addEventListener('click', () => graph.fit());
 $('home').addEventListener('click', () => {
@@ -64,11 +77,19 @@ $('home').addEventListener('click', () => {
   graph.fit();
 });
 
-// Search: a datalist of every house + designer name.
-const searchIndex = new Map<string, NonNullable<Selection>>([
-  ...houses.map((h) => [h.name, { kind: 'house', id: h.id }] as const),
-  ...designers.map((d) => [d.name, { kind: 'designer', id: d.id }] as const),
-]);
+// Search: a datalist of every house + designer name. Founders often share a name
+// with their house ("Jil Sander"), so clashing names get a "(house)"/"(designer)" suffix.
+const entries: [string, NonNullable<Selection>][] = [
+  ...houses.map((h) => [h.name, { kind: 'house', id: h.id }] as [string, NonNullable<Selection>]),
+  ...designers.map((d) => [d.name, { kind: 'designer', id: d.id }] as [string, NonNullable<Selection>]),
+];
+const nameCount = Map.groupBy(entries, ([name]) => name);
+const searchIndex = new Map(
+  entries.map(([name, sel]) => [
+    nameCount.get(name)!.length > 1 ? `${name} (${sel.kind})` : name,
+    sel,
+  ]),
+);
 searchOptions.innerHTML = [...searchIndex.keys()]
   .sort()
   .map((n) => `<option value="${n.replace(/"/g, '&quot;')}"></option>`)

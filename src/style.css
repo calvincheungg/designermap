@@ -62,6 +62,8 @@ html, body {
 .graph-pane {
   flex: 1;
   min-width: 0;
+  position: relative;
+  overflow: hidden;
   background: #fff;
   box-shadow:
     inset -1px -1px #fff,
@@ -69,6 +71,29 @@ html, body {
     inset -2px -2px #dfdfdf,
     inset 2px 2px #0a0a0a;
 }
+
+/* Cytoscape canvas sits inside the bevel; the world map sits under it. */
+.cy-layer {
+  position: absolute;
+  inset: 2px;
+}
+
+/* World map in the Windows reserved palette: sky blue sea, money green land. */
+.map-layer {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transform-origin: 0 0;
+  pointer-events: none;
+  display: none;
+}
+.graph-pane.is-map { background: #a6caf0; }
+.graph-pane.is-map .map-layer { display: block; }
+.map-layer path { vector-effect: non-scaling-stroke; }
+.map-layer .sphere { fill: #a6caf0; }
+.map-layer .graticule { fill: none; stroke: #fff; stroke-opacity: 0.6; stroke-width: 0.5; }
+.map-layer .land { fill: #c0dcc0; stroke: #808080; stroke-width: 0.75; }
+.map-layer .borders { fill: none; stroke: #a0a0a4; stroke-width: 0.5; }
 
 /* ---------- properties window ---------- */
 .side-window {

@@ -37,23 +37,38 @@ export function tenuresAtInYear(houseId: string, year: number): HouseTenure[] {
   return tenuresAt(houseId).filter((t) => isActiveIn(t, year));
 }
 
+/** Last year of a tenure: Infinity if current, start year if unknown. */
+const endYear = (t: Tenure) => (t.end === null ? Infinity : (t.end ?? t.start));
+
 export function isActiveIn(t: Tenure, year: number): boolean {
-  const end = t.end === null ? Infinity : (t.end ?? t.start);
-  return t.start <= year && year <= end;
+  return t.start <= year && year <= endYear(t);
 }
 
 /**
- * Each time a designer starts at a *different* house from their previous
- * tenure. Promotions within the same house (e.g. co-CD → CD) aren't moves.
+ * Each time a designer starts at a new house.
+ *
+ * - Continuing at the same house (co-CD → CD, a new title) isn't a move.
+ * - `from` is the other house they were most recently at. If they left one
+ *   house the year they joined, that's the one (Lagerfeld: Chloé → Chanel 1983,
+ *   even though he stayed at Fendi).
+ * - `concurrent` = they kept the old role too (JW Anderson + Loewe, Prada + Miu Miu).
  */
 export function movesOf(designerId: string): Move[] {
   const career = careerOf(designerId);
   const moves: Move[] = [];
-  for (let i = 1; i < career.length; i++) {
-    const from = career[i - 1]!;
-    const to = career[i]!;
-    if (from.house !== to.house) moves.push({ designerId, from, to, year: to.start });
-  }
+
+  career.forEach((to, i) => {
+    const earlier = career.slice(0, i);
+    if (earlier.some((t) => t.house === to.house && endYear(t) >= to.start)) return;
+
+    const recency = (t: Tenure) => Math.min(endYear(t), to.start);
+    const from = earlier
+      .filter((t) => t.house !== to.house)
+      .sort((a, b) => recency(b) - recency(a) || endYear(a) - endYear(b))[0];
+    if (!from) return;
+
+    moves.push({ designerId, from, to, year: to.start, concurrent: endYear(from) > to.start });
+  });
   return moves;
 }
 

@@ -1,4 +1,5 @@
 import type { HouseData } from '../types';
+import type { CityName } from './cities';
 
 /**
  * Fashion houses. The object key is the house id. It's referenced from
@@ -16,6 +17,7 @@ export const houses = {
     city: 'Paris',
     country: 'France',
     parentGroup: 'LVMH',
+    website: 'https://www.dior.com',
     // logo: 'dior.svg',
   },
   chanel: {
@@ -24,6 +26,7 @@ export const houses = {
     founder: 'Gabrielle "Coco" Chanel',
     city: 'Paris',
     country: 'France',
+    website: 'https://www.chanel.com',
   },
   saintLaurent: {
     name: 'Saint Laurent',
@@ -32,6 +35,7 @@ export const houses = {
     city: 'Paris',
     country: 'France',
     parentGroup: 'Kering',
+    website: 'https://www.ysl.com',
   },
   givenchy: {
     name: 'Givenchy',
@@ -40,6 +44,7 @@ export const houses = {
     city: 'Paris',
     country: 'France',
     parentGroup: 'LVMH',
+    website: 'https://www.givenchy.com',
   },
   balenciaga: {
     name: 'Balenciaga',
@@ -48,6 +53,7 @@ export const houses = {
     city: 'Paris',
     country: 'France',
     parentGroup: 'Kering',
+    website: 'https://www.balenciaga.com',
     notes: 'Founded in San Sebastián; moved to Paris in 1937.',
   },
   celine: {
@@ -57,6 +63,7 @@ export const houses = {
     city: 'Paris',
     country: 'France',
     parentGroup: 'LVMH',
+    website: 'https://www.celine.com',
   },
   louisVuitton: {
     name: 'Louis Vuitton',
@@ -65,6 +72,7 @@ export const houses = {
     city: 'Paris',
     country: 'France',
     parentGroup: 'LVMH',
+    website: 'https://www.louisvuitton.com',
   },
   chloe: {
     name: 'Chloé',
@@ -73,6 +81,7 @@ export const houses = {
     city: 'Paris',
     country: 'France',
     parentGroup: 'Richemont',
+    website: 'https://www.chloe.com',
   },
   maisonMargiela: {
     name: 'Maison Margiela',
@@ -81,6 +90,41 @@ export const houses = {
     city: 'Paris',
     country: 'France',
     parentGroup: 'OTB',
+    website: 'https://www.maisonmargiela.com',
+  },
+  vetements: {
+    name: 'Vetements',
+    founded: 2014,
+    founder: 'Demna & Guram Gvasalia',
+    city: 'Paris',
+    country: 'France',
+    website: 'https://www.vetements.com',
+  },
+  kenzo: {
+    name: 'Kenzo',
+    founded: 1970,
+    founder: 'Kenzo Takada',
+    city: 'Paris',
+    country: 'France',
+    parentGroup: 'LVMH',
+    website: 'https://www.kenzo.com',
+  },
+  oamc: {
+    name: 'OAMC',
+    founded: 2013,
+    founder: 'Luke Meier',
+    city: 'Paris',
+    country: 'France',
+    website: 'https://www.oamc.com',
+  },
+  rickOwens: {
+    name: 'Rick Owens',
+    founded: 1994,
+    founder: 'Rick Owens',
+    city: 'Paris',
+    country: 'France',
+    website: 'https://www.rickowens.eu',
+    notes: 'Founded in Los Angeles; moved to Paris in 2003.',
   },
   gucci: {
     name: 'Gucci',
@@ -89,6 +133,23 @@ export const houses = {
     city: 'Florence',
     country: 'Italy',
     parentGroup: 'Kering',
+    website: 'https://www.gucci.com',
+  },
+  ferragamo: {
+    name: 'Ferragamo',
+    founded: 1927,
+    founder: 'Salvatore Ferragamo',
+    city: 'Florence',
+    country: 'Italy',
+    website: 'https://www.ferragamo.com',
+  },
+  robertoCavalli: {
+    name: 'Roberto Cavalli',
+    founded: 1970,
+    founder: 'Roberto Cavalli',
+    city: 'Florence',
+    country: 'Italy',
+    website: 'https://www.robertocavalli.com',
   },
   prada: {
     name: 'Prada',
@@ -97,6 +158,17 @@ export const houses = {
     city: 'Milan',
     country: 'Italy',
     parentGroup: 'Prada Group',
+    website: 'https://www.prada.com',
+  },
+  miuMiu: {
+    name: 'Miu Miu',
+    founded: 1993,
+    founder: 'Miuccia Prada',
+    city: 'Milan',
+    country: 'Italy',
+    parentGroup: 'Prada Group',
+    website: 'https://www.miumiu.com',
+    notes: 'Shows in Paris.',
   },
   bottegaVeneta: {
     name: 'Bottega Veneta',
@@ -104,6 +176,7 @@ export const houses = {
     city: 'Milan',
     country: 'Italy',
     parentGroup: 'Kering',
+    website: 'https://www.bottegaveneta.com',
     notes: 'Founded in Vicenza.',
   },
   valentino: {
@@ -112,6 +185,7 @@ export const houses = {
     founder: 'Valentino Garavani',
     city: 'Rome',
     country: 'Italy',
+    website: 'https://www.valentino.com',
   },
   fendi: {
     name: 'Fendi',
@@ -120,6 +194,7 @@ export const houses = {
     city: 'Rome',
     country: 'Italy',
     parentGroup: 'LVMH',
+    website: 'https://www.fendi.com',
   },
   jilSander: {
     name: 'Jil Sander',
@@ -128,6 +203,7 @@ export const houses = {
     city: 'Milan',
     country: 'Italy',
     parentGroup: 'OTB',
+    website: 'https://www.jilsander.com',
     notes: 'Founded in Hamburg.',
   },
   burberry: {
@@ -136,6 +212,7 @@ export const houses = {
     founder: 'Thomas Burberry',
     city: 'London',
     country: 'UK',
+    website: 'https://www.burberry.com',
   },
   alexanderMcQueen: {
     name: 'Alexander McQueen',
@@ -144,6 +221,39 @@ export const houses = {
     city: 'London',
     country: 'UK',
     parentGroup: 'Kering',
+    website: 'https://www.alexandermcqueen.com',
+  },
+  jwAnderson: {
+    name: 'JW Anderson',
+    founded: 2008,
+    founder: 'Jonathan Anderson',
+    city: 'London',
+    country: 'UK',
+    website: 'https://www.jwanderson.com',
+  },
+  martineRose: {
+    name: 'Martine Rose',
+    founded: 2007,
+    founder: 'Martine Rose',
+    city: 'London',
+    country: 'UK',
+    website: 'https://www.martine-rose.com',
+  },
+  craigGreen: {
+    name: 'Craig Green',
+    founded: 2012,
+    founder: 'Craig Green',
+    city: 'London',
+    country: 'UK',
+    website: 'https://www.craig-green.com',
+  },
+  walesBonner: {
+    name: 'Wales Bonner',
+    founded: 2014,
+    founder: 'Grace Wales Bonner',
+    city: 'London',
+    country: 'UK',
+    website: 'https://walesbonner.com',
   },
   loewe: {
     name: 'Loewe',
@@ -151,6 +261,170 @@ export const houses = {
     city: 'Madrid',
     country: 'Spain',
     parentGroup: 'LVMH',
+    website: 'https://www.loewe.com',
+  },
+  yohjiYamamoto: {
+    name: 'Yohji Yamamoto',
+    founded: 1972,
+    founder: 'Yohji Yamamoto',
+    city: 'Tokyo',
+    country: 'Japan',
+    website: 'https://www.yohjiyamamoto.co.jp',
+  },
+  commeDesGarcons: {
+    name: 'Comme des Garçons',
+    founded: 1969,
+    founder: 'Rei Kawakubo',
+    city: 'Tokyo',
+    country: 'Japan',
+    website: 'https://www.comme-des-garcons.com',
+  },
+  junyaWatanabe: {
+    name: 'Junya Watanabe',
+    founded: 1992,
+    founder: 'Junya Watanabe',
+    city: 'Tokyo',
+    country: 'Japan',
+    parentGroup: 'Comme des Garçons',
+  },
+  isseyMiyake: {
+    name: 'Issey Miyake',
+    founded: 1970,
+    founder: 'Issey Miyake',
+    city: 'Tokyo',
+    country: 'Japan',
+    website: 'https://www.isseymiyake.com',
+  },
+  undercover: {
+    name: 'Undercover',
+    founded: 1990,
+    founder: 'Jun Takahashi',
+    city: 'Tokyo',
+    country: 'Japan',
+    website: 'https://undercoverism.com',
+  },
+  sacai: {
+    name: 'Sacai',
+    founded: 1999,
+    founder: 'Chitose Abe',
+    city: 'Tokyo',
+    country: 'Japan',
+    website: 'https://www.sacai.jp',
+  },
+  kolor: {
+    name: 'Kolor',
+    founded: 2004,
+    founder: 'Junichi Abe',
+    city: 'Tokyo',
+    country: 'Japan',
+    website: 'https://kolor.jp',
+  },
+  maisonMiharaYasuhiro: {
+    name: 'Maison Mihara Yasuhiro',
+    founded: 1997,
+    founder: 'Mihara Yasuhiro',
+    city: 'Tokyo',
+    country: 'Japan',
+    website: 'https://miharayasuhiro.jp',
+  },
+  visvim: {
+    name: 'Visvim',
+    founded: 2000,
+    founder: 'Hiroki Nakamura',
+    city: 'Tokyo',
+    country: 'Japan',
+    website: 'https://www.visvim.tv',
+  },
+  julius: {
+    name: 'Julius',
+    founded: 2001,
+    founder: 'Tatsuro Horikawa',
+    city: 'Tokyo',
+    country: 'Japan',
+    website: 'https://julius-tokyo.com',
+  },
+  humanMade: {
+    name: 'Human Made',
+    founded: 2010,
+    founder: 'Nigo',
+    city: 'Tokyo',
+    country: 'Japan',
+    website: 'https://www.humanmade.jp',
+  },
+  auralee: {
+    name: 'Auralee',
+    founded: 2015,
+    founder: 'Ryota Iwai',
+    city: 'Tokyo',
+    country: 'Japan',
+    website: 'https://auralee.jp',
+  },
+  kapital: {
+    name: 'Kapital',
+    founded: 1984,
+    founder: 'Toshikiyo Hirata',
+    city: 'Okayama',
+    country: 'Japan',
+    website: 'https://www.kapital.jp',
+    notes: 'Based in Kojima, Kurashiki — the centre of Japanese denim.',
+  },
+
+  /* ---------- Korea ---------- */
+  wooyoungmi: {
+    name: 'Wooyoungmi',
+    founded: 2002,
+    founder: 'Woo Young-mi',
+    city: 'Seoul',
+    country: 'South Korea',
+    website: 'https://www.wooyoungmi.com',
+  },
+  aderError: {
+    name: 'ADER ERROR',
+    founded: 2014,
+    founder: 'Anonymous multidisciplinary collective',
+    city: 'Seoul',
+    country: 'South Korea',
+    website: 'https://adererror.com',
+  },
+  juunJ: {
+    name: 'Juun.J',
+    founded: 2007,
+    founder: 'Jung Wook-jun',
+    city: 'Seoul',
+    country: 'South Korea',
+    website: 'https://juunj.com',
+  },
+  hyeinSeo: {
+    name: 'Hyein Seo',
+    founded: 2014,
+    founder: 'Hyein Seo & Jinho Lee',
+    city: 'Seoul',
+    country: 'South Korea',
+    website: 'https://hyeinseo.com',
+  },
+  kanghyuk: {
+    name: 'Kanghyuk',
+    founded: 2017,
+    founder: 'Kanghyuk Choi & Sanglak Shon',
+    city: 'Seoul',
+    country: 'South Korea',
+    website: 'https://kanghyuk.net',
+  },
+  postArchiveFaction: {
+    name: 'Post Archive Faction',
+    founded: 2018,
+    founder: 'Dongjoon Lim & Sookyo Jeong',
+    city: 'Seoul',
+    country: 'South Korea',
+    website: 'https://postarchivefaction.com',
+  },
+  bode: {
+    name: 'Bode',
+    founded: 2016,
+    founder: 'Emily Adams Bode Aujla',
+    city: 'New York',
+    country: 'USA',
+    website: 'https://bode.com',
   },
   calvinKlein: {
     name: 'Calvin Klein',
@@ -159,8 +433,13 @@ export const houses = {
     city: 'New York',
     country: 'USA',
     parentGroup: 'PVH',
+    website: 'https://www.calvinklein.com',
+    notes:
+      'After Raf Simons left in December 2018, the 205W39NYC runway line was discontinued. ' +
+      'The Collection business was revived under Veronica Leoni (appointed May 2024), who left in October 2026. ' +
+      'No successor announced as of November 2026.',
   },
-} satisfies Record<string, HouseData>;
+} satisfies Record<string, HouseData & { city: CityName }>;
 
 /** Union of every house key. A typo in designers.ts becomes a compile error. */
 export type HouseId = keyof typeof houses;

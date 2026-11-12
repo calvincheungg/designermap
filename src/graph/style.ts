@@ -16,6 +16,8 @@ export const graphStyle: StylesheetJson = [
       'text-margin-y': 4,
       'text-wrap': 'wrap',
       'text-max-width': '90px',
+      // Hide unreadably small labels when zoomed out to the whole world.
+      'min-zoomed-font-size': 7,
     },
   },
   {
@@ -35,6 +37,53 @@ export const graphStyle: StylesheetJson = [
       'font-weight': 'bold',
       color: '#404040',
       padding: '18px',
+    },
+  },
+  {
+    // Retro pixel pin with the house count; its tip points at the city.
+    // Width/height/font are set per zoom by DesignerGraph.sizeMarkers.
+    selector: 'node[kind = "marker"]',
+    style: {
+      shape: 'rectangle',
+      width: 65,
+      height: 70,
+      'background-opacity': 0,
+      'background-image': 'data(image)',
+      'background-fit': 'contain',
+      'background-clip': 'none',
+      'border-width': 0,
+      label: 'data(label)',
+      'text-valign': 'bottom',
+      'text-wrap': 'none',
+      'font-size': 11,
+      'font-weight': 'bold',
+      color: '#000000',
+      'text-outline-color': '#ffffff',
+      'text-outline-width': 2,
+      'min-zoomed-font-size': 0,
+      'z-index': 20,
+    },
+  },
+  {
+    // Invisible group around an expanded city's houses (no box, just a hit area for leaders).
+    selector: 'node[kind = "grid"]',
+    style: {
+      'background-opacity': 0,
+      'border-width': 0,
+      padding: '4px',
+      label: '',
+      events: 'no',
+    },
+  },
+  {
+    // Dotted leader from a pin to its open city's houses.
+    selector: 'edge[kind = "leader"]',
+    style: {
+      width: 1.5,
+      'line-color': '#000080',
+      'line-style': 'dotted',
+      'curve-style': 'straight',
+      events: 'no',
     },
   },
   {
@@ -85,6 +134,11 @@ export const graphStyle: StylesheetJson = [
       'arrow-scale': 0.9,
     },
   },
+  {
+    // Took on a second house while keeping the first: dashed, hollow arrow.
+    selector: 'edge[kind = "move"][?concurrent]',
+    style: { 'line-style': 'dashed', 'target-arrow-fill': 'hollow' },
+  },
 
   /* ---------- interaction states ---------- */
   {
@@ -112,5 +166,5 @@ export const graphStyle: StylesheetJson = [
     },
   },
   { selector: '.faded', style: { opacity: 0.15, 'text-opacity': 0.3 } },
-  { selector: '.hidden', style: { display: 'none' } },
+  { selector: '.hidden, .collapsed', style: { display: 'none' } },
 ];

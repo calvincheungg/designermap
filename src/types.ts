@@ -10,13 +10,18 @@
  * is only written down once.
  */
 
+/** [latitude, longitude] */
+export type LatLng = [lat: number, lng: number];
+
 export interface HouseData {
   name: string;
   founded?: number;
   founder?: string;
-  /** Used to cluster / colour houses in the graph (e.g. all Paris houses together). */
+  /** Places the house on the world map; must be a key in data/cities.ts. */
   city: string;
   country: string;
+  /** The brand's official site, full URL, e.g. "https://www.loewe.com". */
+  website?: string;
   /** Filename inside public/logos/, e.g. "dior.svg". Omit to show initials. */
   logo?: string;
   /** Optional brand color used for the initials badge + timeline accents. */
@@ -34,6 +39,8 @@ export type Role =
   | 'Menswear Director'
   | 'Womenswear Director'
   | 'Founder'
+  /** Family / owner running the house before the creative-director era. */
+  | 'Head of House'
   | 'Other';
 
 export interface Tenure<HouseId extends string = string> {
@@ -83,4 +90,6 @@ export interface Move {
   to: Tenure;
   /** The year they started at the new house. */
   year: number;
+  /** They kept the `from` role alongside the new one (e.g. their own label). */
+  concurrent: boolean;
 }

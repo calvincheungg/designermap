@@ -2,7 +2,10 @@ import { houses, logoUrl } from '../data';
 import type { House } from '../types';
 
 /** The 16-colour VGA palette. Houses without a `color` get one by city. */
-const VGA = ['#000080', '#800000', '#008000', '#808000', '#800080', '#008080', '#000000', '#808080'];
+const VGA = [
+  '#000080', '#800000', '#008000', '#808000', '#800080', '#008080', '#000000', '#808080',
+  '#0000ff', '#ff0000', '#ff00ff',
+];
 const cities = [...new Set(houses.map((h) => h.city))];
 
 export const houseColor = (h: House) => h.color ?? VGA[cities.indexOf(h.city) % VGA.length]!;
@@ -14,6 +17,85 @@ const initials = (name: string) =>
     .join('')
     .slice(0, 3)
     .toUpperCase();
+
+/* ---------- City map pin (pixel art) ---------- */
+
+/** Pin size in art pixels; the pointer's tip is the bottom-centre pixel. */
+export const PIN_W = 13;
+export const PIN_H = 14;
+
+/** 3×5 bitmap digits, drawn pixel by pixel so the count looks like a 1998 system font. */
+const DIGITS: Record<string, string[]> = {
+  '0': ['111', '101', '101', '101', '111'],
+  '1': ['010', '110', '010', '010', '111'],
+  '2': ['111', '001', '111', '100', '111'],
+  '3': ['111', '001', '011', '001', '111'],
+  '4': ['101', '101', '111', '001', '001'],
+  '5': ['111', '100', '111', '001', '111'],
+  '6': ['111', '100', '111', '101', '111'],
+  '7': ['111', '001', '010', '010', '010'],
+  '8': ['111', '101', '111', '101', '111'],
+  '9': ['111', '101', '111', '001', '111'],
+};
+
+/**
+ * Map pin with the number of houses in the city: a bevelled Win98 button
+ * badge with a pixel pointer underneath. Raised grey when collapsed; pressed
+ * navy with white digits when expanded.
+ */
+export function cityMarkerIcon(count: number, expanded: boolean): string {
+  const W = '#ffffff', L = '#dfdfdf', G = '#808080', K = '#000000';
+  const face = expanded ? '#000080' : '#c0c0c0';
+  const ink = expanded ? '#ffffff' : '#000000';
+  // Raised: light top-left, dark bottom-right. Pressed: the reverse.
+  const [outerTL, innerTL, innerBR, outerBR] = expanded ? [K, G, L, W] : [W, L, G, K];
+
+  const px: (string | null)[][] = Array.from({ length: PIN_H }, () => Array(PIN_W).fill(null));
+  const set = (x: number, y: number, c: string) => {
+    if (px[y] && x >= 0 && x < PIN_W) px[y]![x] = c;
+  };
+
+  // Badge: rows 0–10, cols 0–12, with a two-pixel bevel.
+  for (let y = 0; y <= 10; y++) for (let x = 0; x <= 12; x++) set(x, y, face);
+  for (let i = 0; i <= 12; i++) { set(i, 10, outerBR); set(i, 9, innerBR); }
+  for (let i = 0; i <= 10; i++) { set(12, i, outerBR); set(11, i, innerBR); }
+  for (let i = 0; i <= 11; i++) set(i, 0, outerTL);
+  for (let i = 0; i <= 9; i++) set(0, i, outerTL);
+  for (let i = 1; i <= 10; i++) set(i, 1, innerTL);
+  for (let i = 1; i <= 8; i++) set(1, i, innerTL);
+
+  // Pointer, opening out of the badge's bottom edge.
+  [[4, 11, K], [5, 11, face], [6, 11, face], [7, 11, face], [8, 11, K],
+   [5, 12, K], [6, 12, face], [7, 12, K],
+   [6, 13, K]].forEach(([x, y, c]) => set(x as number, y as number, c as string));
+  for (let x = 5; x <= 7; x++) { set(x, 9, face); set(x, 10, face); }
+
+  // Count, centred in the badge face (rows 3–7).
+  const text = String(Math.min(count, 99));
+  const width = text.length * 4 - 1;
+  let x0 = Math.floor((PIN_W - width) / 2);
+  for (const ch of text) {
+    DIGITS[ch]!.forEach((row, dy) => {
+      [...row].forEach((bit, dx) => bit === '1' && set(x0 + dx, 3 + dy, ink));
+    });
+    x0 += 4;
+  }
+
+  // One rect per horizontal run of same-coloured pixels.
+  let rects = '';
+  px.forEach((row, y) => {
+    let x = 0;
+    while (x < PIN_W) {
+      const c = row[x];
+      let end = x;
+      while (end + 1 < PIN_W && row[end + 1] === c) end++;
+      if (c) rects += `<rect x="${x}" y="${y}" width="${end - x + 1}" height="1" fill="${c}"/>`;
+      x = end + 1;
+    }
+  });
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${PIN_W * 8}" height="${PIN_H * 8}" viewBox="0 0 ${PIN_W} ${PIN_H}" shape-rendering="crispEdges">${rects}</svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
 
 /**
  * A logo URL if the house has one, otherwise a bevelled Win98-style
