@@ -25,9 +25,17 @@ export function validateData(): string[] {
     if (h.website && !/^https?:\/\/[^\s/]+\.[^\s]+$/.test(h.website)) {
       problems.push(`${h.id}: website should be a full URL like https://www.example.com`);
     }
-    const used = designers.some((d) => d.career.some((t) => t.house === h.id));
-    if (!used) problems.push(`${h.id}: no designers linked yet`);
+    if (h.logo && !/^https?:\/\//.test(h.logo) && !/\.(svg|png|jpe?g|webp|gif|avif)$/i.test(h.logo)) {
+      problems.push(`${h.id}: logo should be an image file in public/logos/ (e.g. "${h.id}.svg") or a full URL`);
+    }
   }
 
   return problems;
+}
+
+/** Houses with nobody linked yet: not an error, just research still to do. */
+export function researchTodos(): string[] {
+  return houses
+    .filter((h) => !designers.some((d) => d.career.some((t) => t.house === h.id)))
+    .map((h) => `${h.name}: no founder or creative director recorded yet`);
 }

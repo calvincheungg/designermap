@@ -35,6 +35,21 @@ describe('world map layout', () => {
     for (const h of houses) expect(all.houses.has(h.id), h.id).toBe(true);
   });
 
+  it('orders every open city\'s houses alphabetically, row by row', () => {
+    const positions = layoutMap(allCities).houses;
+    for (const [city, hs] of housesByCity()) {
+      const names = hs.map((h) => h.name);
+      expect(names, city).toEqual(
+        [...names].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base', numeric: true })),
+      );
+      // Reading order on screen (top-to-bottom, then left-to-right) matches.
+      const onScreen = [...hs]
+        .sort((a, b) => positions.get(a.id)!.y - positions.get(b.id)!.y || positions.get(a.id)!.x - positions.get(b.id)!.x)
+        .map((h) => h.name);
+      expect(onScreen, city).toEqual(names);
+    }
+  });
+
   it('keeps pins small on screen when zoomed in', () => {
     // Art pixels → screen px: grows with the map, then caps at 2px per pixel.
     expect(pinScale(0.3) * 0.3).toBeCloseTo(1.5);

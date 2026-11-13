@@ -35,6 +35,7 @@ src/data/validate.ts  sanity checks (also run in tests + logged in browser)
 src/graph/geo.ts      projection, world SVG markup, city-box placement + overlap removal
 src/graph/            Cytoscape: elements.ts (per view), style.ts, icons.ts, graph.ts
 src/ui/panel.ts       "Properties" window HTML for house / designer / directory
+src/ui/listbox.ts     Win98 drop-down lists for the Find box and View menu (replace <datalist>/native menus)
 src/main.ts           wires toolbar, search, year slider, panel ↔ graph
 ```
 
@@ -47,7 +48,10 @@ Key rules:
   bad `house:` reference in a career is a compile error. Keep the
   `satisfies Record<string, …>` pattern; don't widen to `string`.
 - `end: null` = current, `end` omitted = unknown, `approximate: true` = unverified years.
-- Houses can have `website` (full URL; validate.ts checks the format), shown as a link.
+- Houses can have `website` (full URL; validate.ts checks the format), shown as a link,
+  and `logo` (file in public/logos/ or full URL; falls back to the initials square).
+- A house with nobody linked yet is fine: `researchTodos()` lists it in the browser
+  console instead of failing tests. Don't invent founders to fill it.
 - Two views (`ViewMode`):
   - `map` (default): one `marker` node per city: a pixel-art Win98 pin
     (`icons.ts cityMarkerIcon`) whose tip sits exactly on the city. Pins scale
@@ -62,8 +66,12 @@ Key rules:
     auto-expands the cities involved. Map min zoom: `MAP_MIN_ZOOM` or map-fills-view.
   - `network`: designer nodes ↔ house nodes, laid out by fcose.
 - The world map is an SVG *under* the Cytoscape canvas, drawn in model
-  coordinates and kept aligned by mirroring pan/zoom (`syncMapLayer`). Don't
-  draw map features as Cytoscape nodes.
+  coordinates and kept aligned by mirroring pan/zoom onto an SVG `<g transform>`
+  (`syncMapLayer`). Use the SVG attribute, not a CSS transform, or
+  `non-scaling-stroke` stops working. Don't draw map features as Cytoscape nodes.
+- Past zoom 1, edge width/arrows are capped on screen (`scaleEdges`, run
+  on zoom and after selection) since Cytoscape sizes them in model units.
+  Map zoom range: MAP_MIN_ZOOM (or map-fills-view) to 8.
 - A move = starting at a new house. Same-house title changes aren't moves;
   `from` is the house they left that year if any; `concurrent` = kept the old role.
 - Logos: `public/logos/<file>`, referenced by `logo:` on the house; missing logos
@@ -92,3 +100,11 @@ Key rules:
 - `cytoscape-fcose` has no types; declared in `src/vendor.d.ts`.
 - Canvas text doesn't reflow on font load: `graph.refreshStyle()` after `document.fonts.ready`.
 - In dev, `window.cy` / `window.graph` are exposed for console debugging.
+- Performance (Cytoscape restyles are the expensive part):
+  - Generated SVG icons go through `svgUrl` in `icons.ts` (cached `blob:` URLs).
+    Don't put long `data:` URIs in node data/styles: Cytoscape hashes every
+    style string on each restyle, and multi-KB URIs made opening a city ~10× slower.
+  - `add/remove/toggleClass` restyle every element passed, changed or not. Use
+    `setClass` in `graph.ts`, which only touches elements whose state changes;
+    never `cy.elements().removeClass(…)`.
+  - `housesByCity()` is memoized; treat its result as read-only.

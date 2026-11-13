@@ -47,7 +47,43 @@ html, body {
   box-shadow: 0 1px 0 #fff;
 }
 .toolbar .field-row { margin: 0; }
-.toolbar input[type='text'] { width: 160px; }
+/* Same 14px as the Properties window (98.css defaults to 11px). */
+.toolbar label,
+.toolbar select,
+.toolbar input,
+.toolbar button,
+.toolbar output { font-size: 14px; }
+.toolbar input[type='text'] { width: 220px; height: 26px; }
+.toolbar select { height: 26px; background-position: right 2px center; }
+.toolbar button { min-height: 26px; }
+
+/* Win98 drop-down list (search suggestions, View menu); see src/ui/listbox.ts. */
+.w98-combo { position: relative; display: inline-block; }
+.w98-listbox {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #000;
+  font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: none;
+}
+.w98-listbox li {
+  padding: 2px 6px;
+  white-space: nowrap;
+  cursor: default;
+}
+.w98-listbox li .hint { color: #808080; font-size: 12px; }
+.w98-listbox li.active { background: var(--navy); color: #fff; }
+.w98-listbox li.active .hint { color: #c0c0c0; }
+.w98-listbox li.empty { color: #808080; }
 .year-row input[type='range'] { width: 180px; }
 .year-row output { min-width: 3.5em; font-variant-numeric: tabular-nums; }
 
@@ -81,9 +117,9 @@ html, body {
 /* World map in the Windows reserved palette: sky blue sea, money green land. */
 .map-layer {
   position: absolute;
-  top: 2px;
-  left: 2px;
-  transform-origin: 0 0;
+  inset: 2px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
   pointer-events: none;
   display: none;
 }
@@ -97,7 +133,7 @@ html, body {
 
 /* ---------- properties window ---------- */
 .side-window {
-  width: 340px;
+  width: 400px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -107,12 +143,21 @@ html, body {
   overflow: auto;
   margin: 8px;
 }
-.side-window h2 {
-  font-size: 16px;
-  margin: 0 0 6px;
+/* Larger than 98.css's 11px so the properties are easy to read and fill the window. */
+.side-window .window-body,
+.side-window .window-body table,
+.side-window .window-body legend,
+.side-window .window-body ul.tree-view {
+  font-size: 14px;
 }
-.side-window fieldset { margin-bottom: 10px; min-width: 0; }
-.side-window .sunken-panel { width: 100%; max-height: 260px; }
+.side-window h2 {
+  font-size: 20px;
+  margin: 0 0 8px;
+}
+.side-window fieldset { margin-bottom: 12px; min-width: 0; }
+.side-window .sunken-panel { width: 100%; max-height: 50vh; }
+.side-window .sunken-panel table > tbody > tr > * { padding: 2px 6px; }
+.side-window .sunken-panel table > thead > tr > * { height: 22px; }
 .side-window table.interactive { width: 100%; }
 .side-window td { vertical-align: top; white-space: normal; }
 .side-window td.nowrap, .nowrap { white-space: nowrap; }
@@ -124,11 +169,17 @@ html, body {
   margin-bottom: 10px;
 }
 .logo {
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
   background: #fff;
   flex-shrink: 0;
+}
+/* A real brand logo gets a little breathing room and a sunken Win98 frame. */
+/* A real brand logo sits in the same bevelled frame as the initials badge (set inline). */
+.logo.has-logo {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 
 table.fields { background: none; border-collapse: collapse; }
@@ -136,15 +187,17 @@ table.fields th {
   text-align: left;
   font-weight: normal;
   color: #404040;
-  padding: 1px 8px 1px 0;
+  padding: 2px 10px 2px 0;
 }
-table.fields td { padding: 1px 0; }
+table.fields td { padding: 2px 0; }
 
 .hint { color: #404040; margin: 0 0 8px; }
-.moves, .sources { margin: 0; padding-left: 16px; }
-.moves li { margin: 3px 0; }
-.sources { word-break: break-all; }
+.moves { margin: 0; padding-left: 16px; }
+.moves li { margin: 5px 0; }
 .tree-view { margin: 0; max-height: 240px; overflow: auto; }
+/* Fixed-height scrolling list box (Directory), so long lists never push the panel. */
+.tree-view.scroll-box { height: 220px; max-height: none; overflow-y: auto; }
+.tree-view summary { cursor: pointer; }
 
 /* ---------- status bar ---------- */
 .status-bar-field { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

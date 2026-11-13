@@ -5,12 +5,13 @@ import {
   getDesigner,
   getHouse,
   houses,
+  logoUrl,
   movesOf,
   tenuresAt,
 } from '../data';
 import type { Selection } from '../graph/graph';
-import { houseIcon } from '../graph/icons';
-import type { Tenure } from '../types';
+import { frameIcon, initialsIcon, logoInfo } from '../graph/icons';
+import type { House, Tenure } from '../types';
 
 const esc = (s: unknown) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -20,17 +21,6 @@ const link = (kind: 'house' | 'designer', id: string, label: string) =>
   `<a href="#" data-select="${kind}:${esc(id)}">${esc(label)}</a>`;
 
 const role = (t: Tenure) => esc(t.roleDetail ? `${t.role} (${t.roleDetail})` : t.role);
-
-const sources = (list?: string[]) =>
-  list?.length
-    ? `<fieldset><legend>Sources</legend><ul class="sources">${list
-        .map((s) =>
-          /^https?:\/\//.test(s)
-            ? `<li><a href="${esc(s)}" target="_blank" rel="noreferrer">${esc(s)}</a></li>`
-            : `<li>${esc(s)}</li>`,
-        )
-        .join('')}</ul></fieldset>`
-    : '';
 
 /** "https://www.loewe.com/eu/" → a link reading "loewe.com". */
 const websiteLink = (url: string) => {
@@ -59,17 +49,31 @@ export function renderPanel(sel: Selection): { title: string; html: string } {
 }
 
 function renderDirectory() {
-  const byCity = Map.groupBy(houses, (h) => h.city);
-  const tree = [...byCity]
-    .map(
-      ([city, hs]) =>
-        `<li><details open><summary>${esc(city)}</summary><ul>${hs
-          .map((h) => `<li>${link('house', h.id, h.name)}</li>`)
-          .join('')}</ul></details></li>`,
-    )
+  const byName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name);
+  const houseList = (hs: typeof houses) =>
+    `<ul>${[...hs].sort(byName).map((h) => `<li>${link('house', h.id, h.name)}</li>`).join('')}</ul>`;
+
+  // Country → city → houses, collapsed so the list stays short; it scrolls inside its box.
+  const byCountry = [...Map.groupBy(houses, (h) => h.country)].sort(([a], [b]) => a.localeCompare(b));
+  const tree = byCountry
+    .map(([country, hs]) => {
+      const cities = [...Map.groupBy(hs, (h) => h.city)].sort(([a], [b]) => a.localeCompare(b));
+      if (cities.length === 1) {
+        const [city] = cities[0]!;
+        return `<li><details><summary>${esc(country)} · ${esc(city)} (${hs.length})</summary>${houseList(hs)}</details></li>`;
+      }
+      const cityItems = cities
+        .map(
+          ([city, chs]) =>
+            `<li><details><summary>${esc(city)} (${chs.length})</summary>${houseList(chs)}</details></li>`,
+        )
+        .join('');
+      return `<li><details><summary>${esc(country)} (${hs.length})</summary><ul>${cityItems}</ul></details></li>`;
+    })
     .join('');
+
   const people = [...designers]
-    .sort((a, b) => a.name.localeCompare(b.name))
+    .sort(byName)
     .map((d) => `<li>${link('designer', d.id, d.name)}</li>`)
     .join('');
 
@@ -77,9 +81,24 @@ function renderDirectory() {
     title: 'Directory',
     html: `
       <p class="hint">Click an icon in the graph, or pick from the lists below.</p>
-      <fieldset><legend>Fashion houses</legend><ul class="tree-view">${tree}</ul></fieldset>
-      <fieldset><legend>Designers</legend><ul class="tree-view">${people}</ul></fieldset>`,
+      <fieldset><legend>Fashion houses (${houses.length})</legend><ul class="tree-view scroll-box">${tree}</ul></fieldset>
+      <fieldset><legend>Designers (${designers.length})</legend><ul class="tree-view scroll-box">${people}</ul></fieldset>`,
   };
+}
+
+/**
+ * The house's square: its logo inside the same bevelled frame as the initials
+ * badge (inside painted in the logo's background colour), or the initials badge.
+ */
+function logoImg(h: House) {
+  const fallback = `this.onerror=null;this.className='logo';this.removeAttribute('style');this.src='${initialsIcon(h)}'`;
+  const url = logoUrl(h);
+  if (!url) return `<img class="logo" src="${esc(initialsIcon(h))}" alt="${esc(h.name)}" />`;
+  const background = logoInfo.get(url)?.background ?? '#ffffff';
+  // 80px square, 5px frame (the 64px frame art scaled up); "contain" logos get a few more px of margin.
+  const pad = h.logoFit === 'fill' ? 5 : 10;
+  const style = `background-image:url(&quot;${frameIcon(background)}&quot;);padding:${pad}px`;
+  return `<img class="logo has-logo" src="${esc(url)}" alt="${esc(h.name)} logo" style="${style}" onerror="${esc(fallback)}" />`;
 }
 
 function renderHouse(id: string) {
@@ -101,7 +120,7 @@ function renderHouse(id: string) {
     title: `${h.name} Properties`,
     html: `
       <div class="identity">
-        <img class="logo" src="${esc(houseIcon(h))}" alt="${esc(h.name)} logo" />
+        ${logoImg(h)}
         <div><h2>${esc(h.name)}</h2>${fields([
           ['Founded', h.founded && esc(h.founded)],
           ['Founder', esc(h.founder)],
@@ -117,7 +136,7 @@ function renderHouse(id: string) {
             : '<p class="hint">None recorded yet. Add a career entry in designers.ts.</p>'
         }
       </fieldset>
-      ${notes(h.notes)}${sources(h.sources)}`,
+      ${notes(h.notes)}`,
   };
 }
 
@@ -162,6 +181,6 @@ function renderDesigner(id: string) {
       <fieldset><legend>Moves</legend>
         ${moves ? `<ul class="moves">${moves}</ul>` : '<p class="hint">No moves between houses recorded.</p>'}
       </fieldset>
-      ${notes(d.notes)}${sources(d.sources)}`,
+      ${notes(d.notes)}`,
   };
 }

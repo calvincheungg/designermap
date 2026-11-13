@@ -83,11 +83,17 @@ export function yearRange(): [number, number] {
   return [Math.min(...years), Math.max(...years)];
 }
 
-/** "2012–2016", "2016–present", "~1964–1983", "2005–?" */
+/** "2012–2016", "2016–present", "~1964–1983", "2005–?", or "2021" for a single year. */
 export function formatTenureYears(t: Tenure): string {
+  const prefix = t.approximate ? '~' : '';
+  if (t.end === t.start) return `${prefix}${t.start}`;
   const end = t.end === null ? 'present' : (t.end ?? '?');
-  return `${t.approximate ? '~' : ''}${t.start}–${end}`;
+  return `${prefix}${t.start}–${end}`;
 }
 
-export const logoUrl = (h: House): string | undefined =>
-  h.logo ? `${import.meta.env.BASE_URL}logos/${h.logo}` : undefined;
+/** Where a house's logo loads from: a full URL as-is, or a file in public/logos/. */
+export const logoUrl = (h: House): string | undefined => {
+  if (!h.logo) return undefined;
+  if (/^https?:\/\//.test(h.logo)) return h.logo;
+  return `${import.meta.env.BASE_URL}logos/${h.logo}`;
+};

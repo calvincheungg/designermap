@@ -73,7 +73,7 @@ export interface CityLayout {
   anchor: Point;
   /** Where the pin's pointer touches the map: exactly on the city. */
   tip: Point;
-  houses: House[];
+  houses: readonly House[];
 }
 
 export interface MapLayout {
@@ -92,13 +92,20 @@ export interface Box {
   h: number;
 }
 
-export const housesByCity = (): Map<string, House[]> =>
-  new Map(
-    [...Map.groupBy(houses, (h) => h.city)].map(([city, hs]) => [
-      city,
-      [...hs].sort((a, b) => (a.founded ?? 0) - (b.founded ?? 0)),
-    ]),
-  );
+/** Alphabetical, ignoring case and accents ("Chloé", "mastermind JAPAN", "424" all sort naturally). */
+const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
+const byName = (a: House, b: House) => collator.compare(a.name, b.name);
+
+let byCityCache: ReadonlyMap<string, readonly House[]> | undefined;
+
+/**
+ * Houses grouped by city, each city's list in alphabetical order (the grid order).
+ * The data is static, so this is built once and shared; don't mutate it.
+ */
+export const housesByCity = (): ReadonlyMap<string, readonly House[]> =>
+  (byCityCache ??= new Map(
+    [...Map.groupBy(houses, (h) => h.city)].map(([city, hs]) => [city, [...hs].sort(byName)]),
+  ));
 
 const gridSize = (n: number) => {
   const cols = Math.ceil(Math.sqrt(n));
@@ -181,7 +188,7 @@ function placeNear(m: Box, w: number, h: number, placed: Box[]): Point {
   return best ?? below;
 }
 
-/** House positions for the open cities' grids (oldest house first). */
+/** House positions for the open cities' grids, alphabetical, row by row. */
 export function housePositions(grids: Box[]): Map<string, Point> {
   const byCity = housesByCity();
   const out = new Map<string, Point>();

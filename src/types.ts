@@ -22,8 +22,19 @@ export interface HouseData {
   country: string;
   /** The brand's official site, full URL, e.g. "https://www.loewe.com". */
   website?: string;
-  /** Filename inside public/logos/, e.g. "dior.svg". Omit to show initials. */
+  /**
+   * The brand's label/logo, shown in its square on the map and in the
+   * Properties window. Either a filename inside public/logos/ (e.g. "dior.svg")
+   * or a full image URL. Omit it, or if the image can't load, and the square
+   * shows the house's initials instead.
+   */
   logo?: string;
+  /**
+   * How the logo sits in its frame. "contain" (default) leaves a small margin;
+   * "fill" scales it to the frame's full inside edge to edge. Either way, any
+   * space left over is painted in the logo's own background colour.
+   */
+  logoFit?: 'contain' | 'fill';
   /** Optional brand color used for the initials badge + timeline accents. */
   color?: string;
   parentGroup?: string;

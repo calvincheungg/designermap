@@ -68,8 +68,10 @@ describe('data', () => {
       ['marcJacobs', 1997],
       ['kimJones', 2011],
       ['nicolasGhesquiere', 2013],
+      ['nicolasDiFelice', 2014], // womenswear designer under Ghesquière, ~2014–2020
       ['virgilAbloh', 2018],
       ['pharrellWilliams', 2023],
+      ['colmDillane', 2023], // KidSuper, guest designer for one menswear season
     ]);
   });
 
@@ -93,6 +95,7 @@ describe('data', () => {
     ]);
     expect(tenuresAt('robertoCavalli').map((t) => t.designerId)).toEqual([
       'robertoCavalli',
+      'olivierRousteing', // womenswear design team, ~2003–2008
       'peterDundas',
       'paulSurridge',
       'faustoPuglisi',
@@ -100,6 +103,12 @@ describe('data', () => {
   });
 
   it('lists a house’s directors chronologically', () => {
-    expect(tenuresAt('celine').map((t) => t.designerId)).toEqual(['phoebePhilo', 'hediSlimane']);
+    expect(tenuresAt('celine').map((t) => t.designerId)).toEqual([
+      'celineVipiana',
+      'michaelKorsDesigner',
+      'phoebePhilo',
+      'hediSlimane',
+      'michaelRider',
+    ]);
   });
 });

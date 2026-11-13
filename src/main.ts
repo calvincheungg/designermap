@@ -2,9 +2,10 @@ import '98.css/dist/98.css';
 import './style.css';
 
 import { allMoves, designers, getDesigner, getHouse, houses, yearRange } from './data';
-import { validateData } from './data/validate';
+import { researchTodos, validateData } from './data/validate';
 import type { ViewMode } from './graph/elements';
 import { DesignerGraph, type Selection } from './graph/graph';
+import { autocomplete, win98Select, type ListItem } from './ui/listbox';
 import { renderPanel } from './ui/panel';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -13,7 +14,6 @@ const panel = $('panel');
 const panelTitle = $('panel-title');
 const viewSelect = $<HTMLSelectElement>('view');
 const search = $<HTMLInputElement>('search');
-const searchOptions = $('search-options');
 const yearInput = $<HTMLInputElement>('year');
 const yearLabel = $('year-label');
 const playBtn = $<HTMLButtonElement>('play');
@@ -21,6 +21,8 @@ const playBtn = $<HTMLButtonElement>('play');
 /* ---------- data sanity check (see src/data/validate.ts) ---------- */
 const problems = validateData();
 if (problems.length) console.warn(`Data warnings (${problems.length}):\n  ${problems.join('\n  ')}`);
+const todos = researchTodos();
+if (todos.length) console.info(`Research to-do (${todos.length}):\n  ${todos.join('\n  ')}`);
 
 /* ---------- graph + selection ---------- */
 let selection: Selection = null;
@@ -61,6 +63,7 @@ panel.addEventListener('click', (e) => {
 });
 
 /* ---------- toolbar ---------- */
+win98Select(viewSelect);
 viewSelect.addEventListener('change', () => {
   const mode = viewSelect.value as ViewMode;
   graph.setMode(mode);
@@ -77,29 +80,14 @@ $('home').addEventListener('click', () => {
   graph.fit();
 });
 
-// Search: a datalist of every house + designer name. Founders often share a name
-// with their house ("Jil Sander"), so clashing names get a "(house)"/"(designer)" suffix.
-const entries: [string, NonNullable<Selection>][] = [
-  ...houses.map((h) => [h.name, { kind: 'house', id: h.id }] as [string, NonNullable<Selection>]),
-  ...designers.map((d) => [d.name, { kind: 'designer', id: d.id }] as [string, NonNullable<Selection>]),
-];
-const nameCount = Map.groupBy(entries, ([name]) => name);
-const searchIndex = new Map(
-  entries.map(([name, sel]) => [
-    nameCount.get(name)!.length > 1 ? `${name} (${sel.kind})` : name,
-    sel,
-  ]),
-);
-searchOptions.innerHTML = [...searchIndex.keys()]
-  .sort()
-  .map((n) => `<option value="${n.replace(/"/g, '&quot;')}"></option>`)
-  .join('');
-search.addEventListener('change', () => {
-  const hit =
-    searchIndex.get(search.value) ??
-    [...searchIndex].find(([n]) => n.toLowerCase().includes(search.value.toLowerCase()))?.[1];
-  if (hit) select(hit, true);
-});
+// Search: type-ahead over every house + designer, each tagged "house"/"designer"
+// (founders often share a name with their house, e.g. "Jil Sander").
+const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
+const searchItems: ListItem<NonNullable<Selection>>[] = [
+  ...houses.map((h) => ({ label: h.name, hint: 'house', value: { kind: 'house' as const, id: h.id } })),
+  ...designers.map((d) => ({ label: d.name, hint: 'designer', value: { kind: 'designer' as const, id: d.id } })),
+].sort((a, b) => collator.compare(a.label, b.label) || a.hint.localeCompare(b.hint));
+autocomplete(search, searchItems, (it) => select(it.value, true));
 
 // Year slider: scrub through history. Far right = everything.
 const [minYear, maxYear] = yearRange();

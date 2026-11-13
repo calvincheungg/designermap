@@ -2,7 +2,7 @@ import type { ElementDefinition } from 'cytoscape';
 import { allMoves, designers, formatTenureYears, getDesigner, getHouse, houses } from '../data';
 import type { House } from '../types';
 import { housesByCity, layoutMap } from './geo';
-import { cityMarkerIcon, houseIcon } from './icons';
+import { cityMarkerIcon, houseIcon, initialsIcon } from './icons';
 
 /**
  * map     → world map: a numbered marker per city; expand a city to see its
@@ -29,6 +29,10 @@ function houseNode(h: House, parent?: string): ElementDefinition {
       label: h.name,
       ...(parent && { parent }),
       image: houseIcon(h),
+      // Used if the logo image fails to load (see DesignerGraph.checkLogos).
+      fallbackImage: initialsIcon(h),
+      hasLogo: !!h.logo,
+      logoFit: h.logoFit ?? 'contain',
       start: h.founded ?? -Infinity,
     },
   };
@@ -57,7 +61,9 @@ export function mapElements(): ElementDefinition[] {
         image: cityMarkerIcon(c.houses.length, false),
         tip: c.tip,
       },
-      position: c.tip,
+      // A copy: Cytoscape keeps and mutates the position object, and `tip` must
+      // stay on the city (sizeMarkers lifts the pin above it).
+      position: { ...c.tip },
       selectable: false,
     });
     // Invisible group holding the city's houses when expanded, with a leader

@@ -10,6 +10,26 @@ const cities = [...new Set(houses.map((h) => h.city))];
 
 export const houseColor = (h: House) => h.color ?? VGA[cities.indexOf(h.city) % VGA.length]!;
 
+/**
+ * Turn generated SVG markup into a short image URL, created once per distinct icon.
+ *
+ * Cytoscape hashes every style value, character by character, each time an
+ * element is restyled (hover, fade, collapse, zoom). A multi-KB `data:` URI per
+ * node made every restyle slow; a `blob:` URL is ~60 characters.
+ */
+const svgUrls = new Map<string, string>();
+function svgUrl(svg: string): string {
+  let url = svgUrls.get(svg);
+  if (!url) {
+    url =
+      typeof URL.createObjectURL === 'function'
+        ? URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }))
+        : `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    svgUrls.set(svg, url);
+  }
+  return url;
+}
+
 const initials = (name: string) =>
   name
     .split(/[\s-]+/)
@@ -94,25 +114,51 @@ export function cityMarkerIcon(count: number, expanded: boolean): string {
     }
   });
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${PIN_W * 8}" height="${PIN_H * 8}" viewBox="0 0 ${PIN_W} ${PIN_H}" shape-rendering="crispEdges">${rects}</svg>`;
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  return svgUrl(svg);
 }
 
-/**
- * A logo URL if the house has one, otherwise a bevelled Win98-style
- * "program icon" with the house's initials, as an SVG data URI.
- */
-export function houseIcon(h: House): string {
-  const url = logoUrl(h);
-  if (url) return url;
-
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">
+/** The bevelled Win98 frame shared by the initials badge and logos (64×64, 4px border). */
+const FRAME = `
   <rect x="0" y="0" width="64" height="64" fill="#000"/>
   <rect x="0" y="0" width="63" height="63" fill="#fff"/>
   <rect x="1" y="1" width="62" height="62" fill="#808080"/>
-  <rect x="1" y="1" width="61" height="61" fill="#dfdfdf"/>
+  <rect x="1" y="1" width="61" height="61" fill="#dfdfdf"/>`;
+/** Share of the square inside the frame (56 of 64px). */
+export const FRAME_INSIDE = 56 / 64;
+
+/** Just the frame, with its inside painted `fill`; logos are drawn on top of it. */
+export function frameIcon(fill: string): string {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">${FRAME}
+  <rect x="4" y="4" width="56" height="56" fill="${fill}"/>
+</svg>`;
+  return svgUrl(svg);
+}
+
+/** What we learn about a logo once it loads: its proportions and background colour. */
+export interface LogoInfo {
+  ratio: number;
+  background: string;
+}
+/** Filled in by DesignerGraph as logos load; the Properties window reads it too. */
+export const logoInfo = new Map<string, LogoInfo>();
+
+/** Logo size inside its square (percent of the square), keeping its proportions. */
+export function logoSize(ratio: number, fit: 'contain' | 'fill' = 'contain') {
+  const longest = FRAME_INSIDE * 100 * (fit === 'fill' ? 1 : 0.86);
+  return ratio >= 1 ? { w: longest, h: longest / ratio } : { w: longest * ratio, h: longest };
+}
+
+/** The default square: a bevelled Win98-style "program icon" with the house's initials. */
+export function initialsIcon(h: House): string {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" shape-rendering="crispEdges">${FRAME}
   <rect x="4" y="4" width="56" height="56" fill="${houseColor(h)}"/>
   <text x="32" y="41" text-anchor="middle" font-family="Times New Roman, serif" font-weight="bold"
         font-size="${initials(h.name).length > 2 ? 18 : 24}" fill="#fff">${initials(h.name)}</text>
 </svg>`;
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  return svgUrl(svg);
+}
+
+/** The house's logo if it has one, otherwise its initials square. */
+export function houseIcon(h: House): string {
+  return logoUrl(h) ?? initialsIcon(h);
 }

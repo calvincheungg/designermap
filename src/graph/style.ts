@@ -98,6 +98,19 @@ export const graphStyle: StylesheetJson = [
       'background-fit': 'contain',
       'background-clip': 'none',
       'border-width': 0,
+      // Allow logos hosted on other sites (no CORS headers needed; we never read pixels back).
+      // 'null' is documented by Cytoscape but missing from its type definitions.
+      'background-image-crossorigin': 'null' as unknown as 'anonymous',
+    },
+  },
+  {
+    // A brand logo. Once it loads, DesignerGraph.checkLogos draws it as two
+    // layers: the same bevelled frame as the initials badge (inside painted in
+    // the logo's own background colour), then the logo sized to fit.
+    selector: 'node[kind = "house"][?hasLogo]',
+    style: {
+      'background-color': '#c0c0c0',
+      'background-fit': 'contain',
     },
   },
   {
@@ -119,10 +132,11 @@ export const graphStyle: StylesheetJson = [
       'line-color': '#808080',
       'curve-style': 'bezier',
       'font-family': FONT,
-      'font-size': 9,
+      // Same size as the house names, and like them it scales with the map.
+      'font-size': 11,
       'text-background-color': '#fff',
       'text-background-opacity': 1,
-      'text-background-padding': '1px',
+      'text-background-padding': '2px',
     },
   },
   { selector: 'edge[?current]', style: { 'line-style': 'solid', width: 2 } },
@@ -152,6 +166,11 @@ export const graphStyle: StylesheetJson = [
     },
   },
   {
+    // Houses involved in the selection get a navy border; nothing else is dimmed.
+    selector: 'node.highlight[kind = "house"]',
+    style: { 'border-width': 2, 'border-color': NAVY, 'border-style': 'solid' },
+  },
+  {
     selector: 'node.focus',
     style: { 'border-width': 2, 'border-color': NAVY, 'border-style': 'dashed' },
   },
@@ -162,9 +181,13 @@ export const graphStyle: StylesheetJson = [
       'line-color': NAVY,
       'target-arrow-color': NAVY,
       width: 2,
-      'z-index': 10,
+      // Draw above the house icons so the "Name 'YY" label is never hidden behind a logo.
+      'z-compound-depth': 'top',
+      'z-index-compare': 'manual',
+      'z-index': 1000,
     },
   },
-  { selector: '.faded', style: { opacity: 0.15, 'text-opacity': 0.3 } },
+  // Only unrelated arrows fade, so the selection's moves stand out; houses stay fully visible.
+  { selector: 'edge.faded', style: { opacity: 0.15, 'text-opacity': 0.3 } },
   { selector: '.hidden, .collapsed', style: { display: 'none' } },
 ];

@@ -56,8 +56,20 @@ If a `house` id is misspelled, `npm run check` fails. `npm test` flags
 end-before-start, current roles for deceased designers, houses with nobody
 linked, and similar problems. The same warnings appear in the browser console.
 
-**Logos:** drop `dior.svg` (or `.png`) into [public/logos/](public/logos/) and set
-`logo: 'dior.svg'` on the house. Houses without one get a coloured initials icon.
+**Logos:** each house shows a square on the map. By default it's a coloured
+initials badge; to use the brand's label/logo instead, set `logo` on the house:
+
+```ts
+dior: { …, logo: 'dior.svg' },                          // a file in public/logos/
+chanel: { …, logo: 'https://example.com/chanel.png' },  // or a full image URL
+```
+
+Logos sit inside the same bevelled Win98 frame as the initials badge, on the
+logo's own background colour (read from its corner pixel). Wide wordmarks are
+fitted without stretching. Add `logoFit: 'fill'` to scale a logo edge to edge
+inside the frame instead of leaving a small margin (good for logos on a solid
+colour block, like 424). If a logo can't load, the house falls
+back to its initials and the browser console says which one.
 
 > The starter data was written from memory. Verify each entry and add `sources`.
 
