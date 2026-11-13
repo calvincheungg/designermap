@@ -21,25 +21,6 @@ export const graphStyle: StylesheetJson = [
     },
   },
   {
-    // Group box for each city, like a 98.css <fieldset>.
-    selector: 'node[kind = "city"]',
-    style: {
-      shape: 'rectangle',
-      'background-color': '#c0c0c0',
-      'background-opacity': 0.25,
-      'border-width': 1,
-      'border-color': '#808080',
-      'border-style': 'solid',
-      'text-valign': 'top',
-      'text-halign': 'center',
-      'text-margin-y': -2,
-      'font-size': 12,
-      'font-weight': 'bold',
-      color: '#404040',
-      padding: '18px',
-    },
-  },
-  {
     // Retro pixel pin with the house count; its tip points at the city.
     // Width/height/font are set per zoom by DesignerGraph.sizeMarkers.
     selector: 'node[kind = "marker"]',
@@ -114,18 +95,6 @@ export const graphStyle: StylesheetJson = [
     },
   },
   {
-    selector: 'node[kind = "designer"]',
-    style: {
-      shape: 'ellipse',
-      width: 14,
-      height: 14,
-      'background-color': '#ffff80',
-      'border-width': 1,
-      'border-color': '#000',
-      'font-size': 10,
-    },
-  },
-  {
     selector: 'edge',
     style: {
       width: 1,
@@ -139,7 +108,6 @@ export const graphStyle: StylesheetJson = [
       'text-background-padding': '2px',
     },
   },
-  { selector: 'edge[?current]', style: { 'line-style': 'solid', width: 2 } },
   {
     selector: 'edge[kind = "move"]',
     style: {
@@ -157,7 +125,7 @@ export const graphStyle: StylesheetJson = [
   /* ---------- interaction states ---------- */
   {
     // Selected desktop icon: navy label background, white text.
-    selector: 'node.highlight[kind != "city"], node:selected[kind != "city"]',
+    selector: 'node.highlight, node:selected',
     style: {
       color: '#fff',
       'text-background-color': NAVY,
@@ -189,5 +157,5 @@ export const graphStyle: StylesheetJson = [
   },
   // Only unrelated arrows fade, so the selection's moves stand out; houses stay fully visible.
   { selector: 'edge.faded', style: { opacity: 0.15, 'text-opacity': 0.3 } },
-  { selector: '.hidden, .collapsed', style: { display: 'none' } },
+  { selector: '.hidden, .collapsed, .lines-off', style: { display: 'none' } },
 ];

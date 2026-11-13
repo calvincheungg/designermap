@@ -10,18 +10,26 @@
  * is only written down once.
  */
 
+import type { HouseTags } from './data/tags';
+import type { GroupId } from './data/groups';
+import type { CountryCode } from './data/countries';
+
 /** [latitude, longitude] */
 export type LatLng = [lat: number, lng: number];
 
 export interface HouseData {
   name: string;
+  /** Editorial filter tags for the house overall, rather than a particular era. */
+  tags: HouseTags;
   founded?: number;
   founder?: string;
   /** Places the house on the world map; must be a key in data/cities.ts. */
   city: string;
-  country: string;
+  country: CountryCode;
   /** The brand's official site, full URL, e.g. "https://www.loewe.com". */
   website?: string;
+  /** Instagram handle without the "@", e.g. "loewe". Shown as a link under the website. */
+  instagram?: string;
   /**
    * The brand's label/logo, shown in its square on the map and in the
    * Properties window. Either a filename inside public/logos/ (e.g. "dior.svg")
@@ -37,7 +45,7 @@ export interface HouseData {
   logoFit?: 'contain' | 'fill';
   /** Optional brand color used for the initials badge + timeline accents. */
   color?: string;
-  parentGroup?: string;
+  parentGroup?: GroupId;
   notes?: string;
   sources?: string[];
 }
@@ -59,7 +67,8 @@ export interface Tenure<HouseId extends string = string> {
   role: Role;
   /** Optional free-text detail, e.g. "Dior Homme" or "Rive Gauche womenswear". */
   roleDetail?: string;
-  start: number;
+  /** Omit when the role is confirmed but its start year is unknown. */
+  start?: number;
   /** `null` = current. `undefined` = unknown / still researching. */
   end?: number | null;
   /** Mark years you haven't confirmed yet so they show a "~" in the UI. */

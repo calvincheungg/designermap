@@ -2,6 +2,8 @@
 
 An interactive world map of fashion houses and their creative directors: who led
 which house, when, and where they moved next. Styled like Windows 98.
+The interface uses React and TypeScript; Cytoscape and the SVG map engine retain
+their own rendering and layout logic.
 
 ```bash
 npm install
@@ -25,15 +27,34 @@ All data lives in three files. Everything else is derived from them.
 
 ```ts
 // houses.ts
-margiela: {
+// Import tag enums from './tags' and CountryCode from './countries'.
+maisonMargiela: {
+  tags: {
+    marketPositioning: MarketPositioning.Luxury,
+    brandCategory: [BrandCategory.AvantGarde, BrandCategory.Couture],
+    aesthetic: [Aesthetic.Deconstructed, Aesthetic.Experimental],
+    collections: [CollectionTag.Menswear, CollectionTag.Womenswear],
+    product: [ProductTag.ReadyToWear, ProductTag.Couture, ProductTag.Footwear, ProductTag.Bags],
+  },
   name: 'Maison Margiela',
   founded: 1988,
   city: 'Paris',
-  country: 'France',
+  country: CountryCode.France,
   website: 'https://www.maisonmargiela.com', // optional, shown as a link
+  instagram: 'maisonmargiela',                // optional, handle without the @
   logo: 'margiela.svg',                        // optional, file in public/logos/
 },
 ```
+
+Tags use enums from `src/data/tags.ts` for autocomplete. Choose 1–3 main
+aesthetics and 1–4 primary product specialties. Menswear and Womenswear belong
+in `collections`; unisex ranges can match both. `DesignerLed` describes creative
+identity, not ownership independence. Market positioning follows the main
+commercial brand; a luxury subline can occupy a different tier.
+
+Filters allow multiple choices: selections within a group use OR, while groups
+combine with AND. Collection and product filters work independently. Selected
+filters appear on the right, and clicking a tag on a brand page adds that filter.
 
 **Add a designer (moves are worked out from the career order):**
 
@@ -84,8 +105,8 @@ back to its initials and the browser console says which one.
   Arrows are moves between houses (or between city pins while collapsed);
   dashed arrows mean the designer kept their old role too. Selecting a house or
   designer opens the cities involved.
-- **Network** view: a free-form graph with designers as nodes linked to every
-  house they worked at.
+- **Show move lines** (toolbar checkbox) turns the arrows between brands on or
+  off. With it off, selecting a designer still draws their own moves.
 - **Click** a house or designer to highlight their connections and open
   their Properties window. Click empty space to clear. Scroll to zoom, drag to pan.
 - **Year slider / Play** steps through history. Only tenures (and houses) that had
@@ -101,11 +122,15 @@ src/
   data/cities.ts      city coordinates for the map
   graph/geo.ts        map projection, world SVG, city box placement
   graph/              Cytoscape graph: elements, Win98 stylesheet, icons, interaction
-  ui/panel.ts         Properties window HTML
-  main.ts             wires toolbar, search, slider, panel and graph together
+  ui/panel.tsx        React Properties window components
+  ui/filters.tsx      multi-select filter menus and selected chips
+  ui/listbox.tsx      searchable Win98 combobox
+  ui/context-menu.tsx map actions, rendered through a React portal
+  ui/map-view.tsx     graph host, initialization and lifecycle cleanup
+  App.tsx             UI state; connects components to the existing graph API
+  main.tsx            React root and startup validation
 ```
 
-Built with [Cytoscape.js](https://js.cytoscape.org/) (plus the `fcose` layout for
-the network view), [d3-geo](https://d3js.org/d3-geo) and
+Built with [React](https://react.dev/), [Cytoscape.js](https://js.cytoscape.org/), [d3-geo](https://d3js.org/d3-geo) and
 [world-atlas](https://github.com/topojson/world-atlas) for the map, and
 [98.css](https://jdan.github.io/98.css/) for the Windows 98 look.

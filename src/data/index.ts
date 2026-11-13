@@ -1,9 +1,24 @@
 import type { Designer, House, HouseTenure, Move, Tenure } from '../types';
 import { designers as designerRecords } from './designers';
 import { houses as houseRecords } from './houses';
+import { groups as groupRecords, GroupId, type GroupData } from './groups';
 
 export type { HouseId } from './houses';
 export type { DesignerId } from './designers';
+export { MarketPositioning, BrandCategory, Aesthetic, CollectionTag, ProductTag, marketPositionings, brandCategories, aesthetics, collectionTags, productTags, matchesHouseFilters } from './tags';
+export type { HouseTags, HouseFilters } from './tags';
+export { GroupId } from './groups';
+export type { GroupData } from './groups';
+export { CountryCode, countryNames } from './countries';
+
+export const groups: (GroupData & { id: GroupId })[] = Object.values(GroupId).map((id) => ({ id, ...groupRecords[id] }));
+const groupById = new Map<string, (typeof groups)[number]>(groups.map((group) => [group.id, group]));
+export const getGroup = (id: string) => groupById.get(id);
+
+/** Current affiliations recorded in the map; membership is never copied to groups.ts. */
+export const housesInGroup = (id: string): House[] => houses
+  .filter((house) => house.parentGroup === id)
+  .sort((a, b) => a.name.localeCompare(b.name));
 
 export const houses: House[] = Object.entries(houseRecords).map(([id, h]) => ({ id, ...h }));
 export const designers: Designer[] = Object.entries(designerRecords).map(([id, d]) => ({
@@ -17,7 +32,8 @@ const designerById = new Map(designers.map((d) => [d.id, d]));
 export const getHouse = (id: string) => houseById.get(id);
 export const getDesigner = (id: string) => designerById.get(id);
 
-const byStart = (a: Tenure, b: Tenure) => a.start - b.start;
+const startYear = (t: Tenure) => t.start ?? (typeof t.end === 'number' ? t.end : -Infinity);
+const byStart = (a: Tenure, b: Tenure) => startYear(a) - startYear(b) || 0;
 
 /** A designer's career in chronological order. */
 export function careerOf(designerId: string): Tenure[] {
@@ -37,11 +53,11 @@ export function tenuresAtInYear(houseId: string, year: number): HouseTenure[] {
   return tenuresAt(houseId).filter((t) => isActiveIn(t, year));
 }
 
-/** Last year of a tenure: Infinity if current, start year if unknown. */
-const endYear = (t: Tenure) => (t.end === null ? Infinity : (t.end ?? t.start));
+/** Undated past roles sort before dated roles without implying concurrency. */
+const endYear = (t: Tenure) => (t.end === null ? Infinity : (t.end ?? t.start ?? -Infinity));
 
 export function isActiveIn(t: Tenure, year: number): boolean {
-  return t.start <= year && year <= endYear(t);
+  return t.start !== undefined && t.start <= year && year <= endYear(t);
 }
 
 /**
@@ -58,16 +74,27 @@ export function movesOf(designerId: string): Move[] {
   const moves: Move[] = [];
 
   career.forEach((to, i) => {
+    const year = to.start;
+    if (year === undefined) return;
     const earlier = career.slice(0, i);
-    if (earlier.some((t) => t.house === to.house && endYear(t) >= to.start)) return;
+    if (earlier.some((t) => t.house === to.house && endYear(t) >= year)) return;
 
-    const recency = (t: Tenure) => Math.min(endYear(t), to.start);
+    const recency = (t: Tenure) => Math.min(endYear(t), year);
     const from = earlier
       .filter((t) => t.house !== to.house)
-      .sort((a, b) => recency(b) - recency(a) || endYear(a) - endYear(b))[0];
+      // Most recently left; then prefer a role that ended over one still held.
+      // Still a tie: among roles already over, the one started most recently
+      // (Cucinelli → Prada → Canali, all ending 2024); among roles still held,
+      // the longest-held (Margiela, not its MM6 line, → Hermès in 1997).
+      .sort(
+        (a, b) =>
+          recency(b) - recency(a) ||
+          endYear(a) - endYear(b) ||
+          (endYear(a) <= year ? startYear(b) - startYear(a) : startYear(a) - startYear(b)),
+      )[0];
     if (!from) return;
 
-    moves.push({ designerId, from, to, year: to.start, concurrent: endYear(from) > to.start });
+    moves.push({ designerId, from, to, year, concurrent: endYear(from) > year });
   });
   return moves;
 }
@@ -79,16 +106,17 @@ export function yearRange(): [number, number] {
   const thisYear = new Date().getFullYear();
   const years = designers.flatMap((d) =>
     d.career.flatMap((t) => [t.start, t.end === null ? thisYear : (t.end ?? t.start)]),
-  );
+  ).filter((year): year is number => year !== undefined);
   return [Math.min(...years), Math.max(...years)];
 }
 
 /** "2012–2016", "2016–present", "~1964–1983", "2005–?", or "2021" for a single year. */
 export function formatTenureYears(t: Tenure): string {
   const prefix = t.approximate ? '~' : '';
-  if (t.end === t.start) return `${prefix}${t.start}`;
+  if (t.start === undefined && t.end === undefined) return 'Unknown';
+  if (t.start !== undefined && t.end === t.start) return `${prefix}${t.start}`;
   const end = t.end === null ? 'present' : (t.end ?? '?');
-  return `${prefix}${t.start}–${end}`;
+  return `${prefix}${t.start ?? '?'}–${end}`;
 }
 
 /** Where a house's logo loads from: a full URL as-is, or a file in public/logos/. */

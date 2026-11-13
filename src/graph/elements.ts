@@ -1,19 +1,16 @@
 import type { ElementDefinition } from 'cytoscape';
-import { allMoves, designers, formatTenureYears, getDesigner, getHouse, houses } from '../data';
+import { allMoves, getDesigner, getHouse, houses } from '../data';
 import type { House } from '../types';
-import { housesByCity, layoutMap } from './geo';
+import { layoutMap } from './geo';
 import { cityMarkerIcon, houseIcon, initialsIcon } from './icons';
 
 /**
- * map     → world map: a numbered marker per city; expand a city to see its
- *           houses; arrows show moves between whatever is showing.
- * network → free-form graph: designers are nodes linked to every house they worked at.
+ * World map: a numbered marker per city; expand a city to see its houses;
+ * arrows show moves between whatever is showing.
  */
-export type ViewMode = 'map' | 'network';
 
 export const nodeId = {
   house: (id: string) => `h:${id}`,
-  designer: (id: string) => `d:${id}`,
   city: (city: string) => `c:${city}`,
   grid: (city: string) => `g:${city}`,
 };
@@ -116,45 +113,4 @@ export function moveEdges(expanded: ReadonlySet<string>): ElementDefinition[] {
       },
     ];
   });
-}
-
-/* ---------- Network view ---------- */
-
-export function networkElements(): ElementDefinition[] {
-  const els: ElementDefinition[] = [];
-
-  for (const city of housesByCity().keys()) {
-    els.push({ group: 'nodes', data: { id: nodeId.city(city), kind: 'city', label: city } });
-  }
-  for (const h of houses) els.push(houseNode(h, nodeId.city(h.city)));
-
-  for (const d of designers) {
-    els.push({
-      group: 'nodes',
-      data: {
-        id: nodeId.designer(d.id),
-        refId: d.id,
-        kind: 'designer',
-        label: d.name,
-        start: Math.min(...d.career.map((t) => t.start)),
-      },
-    });
-    d.career.forEach((t, i) => {
-      els.push({
-        group: 'edges',
-        data: {
-          id: `t:${d.id}:${i}`,
-          kind: 'tenure',
-          source: nodeId.designer(d.id),
-          target: nodeId.house(t.house),
-          label: formatTenureYears(t),
-          designerId: d.id,
-          start: t.start,
-          current: t.end === null,
-        },
-      });
-    });
-  }
-
-  return els;
 }

@@ -1,9 +1,10 @@
 # Designer Map
 
 Interactive world map of fashion houses and their creative directors, styled
-like Windows 98. Vite + TypeScript, Cytoscape.js for the graph (preset positions
-on the map, fcose for the network view), d3-geo + world-atlas for the map,
-98.css for the UI chrome. No framework: plain DOM + template strings.
+like Windows 98. React + Vite + TypeScript for the interface, Cytoscape.js for
+the graph (preset positions on the map), d3-geo + world-atlas for the map,
+and 98.css for the UI chrome. React owns interface state and components;
+the existing graph engine owns the SVG and canvas inside its map host.
 
 ## Commands
 
@@ -34,9 +35,12 @@ src/data/index.ts     derived queries: tenuresAt, movesOf, allMoves, yearRange�
 src/data/validate.ts  sanity checks (also run in tests + logged in browser)
 src/graph/geo.ts      projection, world SVG markup, city-box placement + overlap removal
 src/graph/            Cytoscape: elements.ts (per view), style.ts, icons.ts, graph.ts
-src/ui/panel.ts       "Properties" window HTML for house / designer / directory
-src/ui/listbox.ts     Win98 drop-down lists for the Find box and View menu (replace <datalist>/native menus)
-src/main.ts           wires toolbar, search, year slider, panel ↔ graph
+src/ui/panel.tsx      React Properties components for house / designer / group / directory
+src/ui/listbox.tsx    React Win98 Find combobox (replaces <datalist>)
+src/ui/filters.tsx    React multi-select filters and selected chips
+src/ui/map-view.tsx   React lifecycle boundary for DesignerGraph and its context menu
+src/App.tsx           interface state and synchronization with the graph API
+src/main.tsx          React root and startup data validation
 ```
 
 Key rules:
@@ -48,12 +52,23 @@ Key rules:
   bad `house:` reference in a career is a compile error. Keep the
   `satisfies Record<string, …>` pattern; don't widen to `string`.
 - `end: null` = current, `end` omitted = unknown, `approximate: true` = unverified years.
+- Role `Other` (with a `roleDetail` like "Senior designer", "Design assistant", "Head of knitwear")
+  = a design-team or earlier role. It never counts as the house's creative-director succession:
+  the Properties window lists it under "Design team & other roles", and tests use `directorsOf`.
+  Use the director roles only for real house/line leadership. Separate stints = separate entries.
 - Houses can have `website` (full URL; validate.ts checks the format), shown as a link,
+  `instagram` (handle only, no @ or URL; shown as an @handle link under the website;
+  every house has the field, `''` when unknown, like `logo`),
   and `logo` (file in public/logos/ or full URL; falls back to the initials square).
 - A house with nobody linked yet is fine: `researchTodos()` lists it in the browser
   console instead of failing tests. Don't invent founders to fill it.
-- Two views (`ViewMode`):
-  - `map` (default): one `marker` node per city: a pixel-art Win98 pin
+- One view, the world map (the old network view was removed):
+  - `MapView` creates `DesignerGraph` once per mount. Keep graph callbacks stable;
+    UI updates must not rebuild the engine. Cleanup calls `destroy()` to release
+    Cytoscape, ResizeObserver, pending image callbacks and delayed fit timers.
+  - Keep data queries and graph layout independent of React. Use React components
+    and event handlers for interface changes rather than HTML strings or DOM mutation.
+  - One `marker` node per city: a pixel-art Win98 pin
     (`icons.ts cityMarkerIcon`) whose tip sits exactly on the city. Pins scale
     with the map when zoomed out but cap at ~26px on screen (`sizeMarkers`,
     re-run on every zoom); colliding labels are hidden via `text-opacity`
@@ -64,7 +79,10 @@ Key rules:
     `move` edges are rebuilt on every expand/collapse: each end attaches to the
     house if its city is open, else to the pin. Selecting a house or designer
     auto-expands the cities involved. Map min zoom: `MAP_MIN_ZOOM` or map-fills-view.
-  - `network`: designer nodes ↔ house nodes, laid out by fcose.
+  - Designers aren't nodes; selecting one highlights their houses + move edges.
+  - "Show move lines" checkbox → `DesignerGraph.setShowMoves`: off hides `move`
+    edges via the `lines-off` class, except the current selection's own lines.
+    Remembered in localStorage (`designer-map:show-lines`).
 - The world map is an SVG *under* the Cytoscape canvas, drawn in model
   coordinates and kept aligned by mirroring pan/zoom onto an SVG `<g transform>`
   (`syncMapLayer`). Use the SVG attribute, not a CSS transform, or
@@ -97,7 +115,6 @@ Key rules:
 ## Gotchas
 
 - TypeScript 7 and Vite 8; `lib` is ES2024 (for `Map.groupBy`).
-- `cytoscape-fcose` has no types; declared in `src/vendor.d.ts`.
 - Canvas text doesn't reflow on font load: `graph.refreshStyle()` after `document.fonts.ready`.
 - In dev, `window.cy` / `window.graph` are exposed for console debugging.
 - Performance (Cytoscape restyles are the expensive part):

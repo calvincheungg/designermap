@@ -1,11 +1,34 @@
 import { describe, expect, it } from 'vitest';
 import { houses } from '../data';
 import { cities, type CityName } from '../data/cities';
-import { boxesOverlap, housesByCity, layoutMap, mapBoxes, pinScale, project } from './geo';
+import { boxesOverlap, housesByCity, layoutMap, mapBoxes, mapSvgMarkup, pinScale, project } from './geo';
+import subdivisions from '../data/map/north-america-subdivisions.json';
 
 const allCities = new Set(housesByCity().keys());
 
 describe('world map layout', () => {
+  it('projects internal boundaries for Canada and the USA into the clipped map layer', () => {
+    expect(subdivisions.features.map((f) => f.properties.country).sort()).toEqual(['CA', 'US']);
+    const markup = mapSvgMarkup();
+    expect(markup).toContain('<clipPath id="map-land-clip">');
+    const paths = [...markup.matchAll(/<path class="subdivision-borders" data-country="(CA|US)" clip-path="url\(#map-land-clip\)" d="([^"]+)"\/>/g)];
+    expect(paths.map((match) => match[1]).sort()).toEqual(['CA', 'US']);
+    for (const [, , d] of paths) {
+      expect(d).toMatch(/^M[\d.-]+,[\d.-]+/);
+      expect(d).not.toMatch(/NaN|Infinity|null/);
+    }
+    for (const region of subdivisions.features) {
+      expect(region.geometry.coordinates.length).toBeGreaterThan(0);
+      for (const line of region.geometry.coordinates) {
+        expect(line.length).toBeGreaterThan(1);
+        for (const [lon, lat] of line) {
+          expect(lon).toBeLessThan(-50);
+          expect(lat).toBeGreaterThan(20);
+        }
+      }
+    }
+  });
+
   it('puts every pin tip exactly on its city', () => {
     for (const c of layoutMap(allCities).cities) {
       const at = project(cities[c.city as CityName]);
@@ -55,6 +78,20 @@ describe('world map layout', () => {
     expect(pinScale(0.3) * 0.3).toBeCloseTo(1.5);
     expect(pinScale(1) * 1).toBeCloseTo(2);
     expect(pinScale(3) * 3).toBeCloseTo(2);
+  });
+
+  it('compacts filtered houses and skips cities with no matches', () => {
+    const paris = housesByCity().get('Paris')!.slice(0, 2);
+    const filtered = new Map([['Paris', paris]]);
+    const layout = layoutMap(allCities, filtered);
+    expect(layout.cities.map((c) => c.city)).toEqual(['Paris']);
+    expect([...layout.houses.keys()]).toEqual(paris.map((h) => h.id));
+    const [first, second] = paris.map((h) => layout.houses.get(h.id)!);
+    expect(first!.y).toBe(second!.y);
+    expect(first!.x).toBeLessThan(second!.x);
+    const empty = layoutMap(allCities, new Map());
+    expect(empty.cities).toEqual([]);
+    expect(empty.houses.size).toBe(0);
   });
 
   it('keeps geography roughly right (west to east: New York, Paris, Tokyo)', () => {

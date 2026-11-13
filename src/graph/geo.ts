@@ -2,6 +2,8 @@ import { geoGraticule10, geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature, mesh } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import world from 'world-atlas/countries-110m.json';
+import type { FeatureCollection, MultiLineString } from 'geojson';
+import subdivisions from '../data/map/north-america-subdivisions.json';
 import { houses } from '../data';
 import { cities, type CityName } from '../data/cities';
 import type { House, LatLng } from '../types';
@@ -30,7 +32,7 @@ export function project([lat, lng]: LatLng): Point {
   return { x, y };
 }
 
-/** Inner SVG markup for the map: ocean, graticule, land, country borders. */
+/** World map with internal boundaries for Canadian provinces/territories and US states. */
 export function mapSvgMarkup(): string {
   const topo = world as unknown as Topology<{
     countries: GeometryCollection;
@@ -38,10 +40,15 @@ export function mapSvgMarkup(): string {
   }>;
   const land = path(feature(topo, topo.objects.land));
   const borders = path(mesh(topo, topo.objects.countries, (a, b) => a !== b));
+  const regions = subdivisions as unknown as FeatureCollection<MultiLineString, { country: string }>;
   return [
+    // Subdivision data uses a finer coastline than world-atlas; clip at the land edge.
+    `<defs><clipPath id="map-land-clip"><path d="${land}"/></clipPath></defs>`,
     `<path class="sphere" d="${path(SPHERE)}"/>`,
     `<path class="graticule" d="${path(geoGraticule10())}"/>`,
     `<path class="land" d="${land}"/>`,
+    ...regions.features.map((region) =>
+      `<path class="subdivision-borders" data-country="${region.properties.country}" clip-path="url(#map-land-clip)" d="${path(region)}"/>`),
     `<path class="borders" d="${borders}"/>`,
   ].join('');
 }
@@ -129,8 +136,7 @@ function pinBox(city: string, zoom: number): Box & { pinH: number } {
  * doesn't cover any pin or another open city (biggest cities first, so small
  * ones fit around them). Doesn't depend on zoom, so houses stay put.
  */
-export function placeGrids(expanded: ReadonlySet<string>): Box[] {
-  const byCity = housesByCity();
+export function placeGrids(expanded: ReadonlySet<string>, byCity = housesByCity()): Box[] {
   const placed: Box[] = [...byCity.keys()].map((c) => pinBox(c, GRID_REF_ZOOM));
   const pins = new Map(placed.map((b) => [b.city, b]));
   const grids: Box[] = [];
@@ -189,8 +195,7 @@ function placeNear(m: Box, w: number, h: number, placed: Box[]): Point {
 }
 
 /** House positions for the open cities' grids, alphabetical, row by row. */
-export function housePositions(grids: Box[]): Map<string, Point> {
-  const byCity = housesByCity();
+export function housePositions(grids: Box[], byCity = housesByCity()): Map<string, Point> {
   const out = new Map<string, Point>();
   for (const g of grids) {
     const hs = byCity.get(g.city)!;
@@ -206,13 +211,12 @@ export function housePositions(grids: Box[]): Map<string, Point> {
 }
 
 /** Pins (always exactly on their city) + houses for an expansion state. */
-export function layoutMap(expanded: ReadonlySet<string>): MapLayout {
-  const byCity = housesByCity();
+export function layoutMap(expanded: ReadonlySet<string>, byCity = housesByCity()): MapLayout {
   const cityLayouts = [...byCity].map(([city, hs]): CityLayout => {
     const at = project(cities[city as CityName]);
     return { city, anchor: at, tip: at, houses: hs };
   });
-  return { cities: cityLayouts, houses: housePositions(placeGrids(expanded)) };
+  return { cities: cityLayouts, houses: housePositions(placeGrids(expanded, byCity), byCity) };
 }
 
 export function boxesOverlap(

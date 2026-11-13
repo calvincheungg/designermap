@@ -7,72 +7,7 @@
     <title>Designer Map</title>
   </head>
   <body>
-    <div class="desktop">
-      <div class="window main-window">
-        <div class="title-bar">
-          <div class="title-bar-text">Designer Map: Fashion Houses &amp; Creative Directors</div>
-          <div class="title-bar-controls" aria-hidden="true">
-            <button aria-label="Minimize" tabindex="-1"></button>
-            <button aria-label="Maximize" tabindex="-1"></button>
-            <button aria-label="Close" tabindex="-1"></button>
-          </div>
-        </div>
-
-        <div class="window-body">
-          <div class="toolbar">
-            <div class="field-row">
-              <label for="view">View:</label>
-              <select id="view">
-                <option value="map">World map</option>
-                <option value="network">Network (designers ↔ houses)</option>
-              </select>
-            </div>
-
-            <div class="field-row">
-              <label for="search">Find:</label>
-              <input id="search" type="text" placeholder="House or designer" />
-            </div>
-
-            <div class="field-row year-row">
-              <label for="year">Year:</label>
-              <input id="year" type="range" step="1" />
-              <output id="year-label" for="year"></output>
-              <button id="play">▶ Play</button>
-            </div>
-
-            <div class="field-row">
-              <button id="expand-all" aria-pressed="false">Expand all</button>
-              <button id="fit">Fit</button>
-              <button id="home">Directory</button>
-            </div>
-          </div>
-
-          <div class="content">
-            <div id="graph" class="graph-pane" aria-label="Graph of fashion houses and designers"></div>
-
-            <div class="window side-window">
-              <div class="title-bar">
-                <div class="title-bar-text" id="panel-title">Directory</div>
-              </div>
-              <div class="window-body" id="panel"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="status-bar">
-          <p class="status-bar-field" id="status-counts"></p>
-          <p class="status-bar-field" id="status-selection">Nothing selected</p>
-          <p class="status-bar-field" id="status-year"></p>
-        </div>
-      </div>
-
-      <div class="taskbar">
-        <button class="start-button"><span class="start-logo" aria-hidden="true"></span><b>Start</b></button>
-        <button class="task active">Designer Map</button>
-        <div class="tray"><span id="clock"></span></div>
-      </div>
-    </div>
-
-    <script type="module" src="/src/main.ts"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
