@@ -6689,7 +6689,7 @@ export const houses = {
     parentGroup: GroupId.LVMH,
     website: 'https://www.loropiana.com',
     instagram: 'loropiana',
-    logo: '',
+    logo: 'loro_piana.png',
     notes: 'Italian luxury house rooted in fine textiles, known for cashmere and vicuña knitwear, understated ready-to-wear and refined outerwear. Founded as a textile business in Quarona, it expanded into clothing and accessories under the Loro Piana family. LVMH acquired a controlling stake in 2013.',
     sources: ['https://www.lvmh.com/our-maisons/fashion-leather-good/loro-piana', 'https://it.loropiana.com/it/legal-area', 'https://www.globenewswire.com/news-release/2013/12/05/1775598/0/en/LVMH-GROUP-ACQUISITION-OF-LORO-PIANA-GAINS-FINAL-APPROVALS.html'],
   },
