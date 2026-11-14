@@ -1,4 +1,6 @@
-import { collectionTags, designers, houses, marketPositionings } from './index';
+import { collectionTags, designers, getDesigner, getGroup, getHouse, houses, marketPositionings } from './index';
+import { cityRegions, type CityName } from './cities';
+import { CountryCode } from './countries';
 
 /**
  * Sanity checks that types can't catch. House ids are already checked by the
@@ -24,6 +26,21 @@ export function validateData(): string[] {
   }
 
   for (const h of houses) {
+    if (h.country === CountryCode.UnitedStates || h.country === CountryCode.Canada) {
+      const location = cityRegions[h.city as CityName];
+      if (!location?.region || location.country !== h.country) problems.push(`${h.id}: city needs a matching state or province`);
+    }
+    for (const affiliation of h.regionalAffiliations ?? []) {
+      if (!getGroup(affiliation.group)) problems.push(`${h.id}: unknown regional group ${affiliation.group}`);
+      if (!affiliation.territory.trim()) problems.push(`${h.id}: regional relationship needs a territory`);
+      if (!affiliation.sources.length) problems.push(`${h.id}: regional relationship needs sources`);
+    }
+    for (const id of h.founders ?? []) {
+      if (!getDesigner(id)) problems.push(`${h.id}: unknown founder designer ${id}`);
+    }
+    if (new Set(h.founders).size !== (h.founders?.length ?? 0)) problems.push(`${h.id}: duplicate founder references`);
+    if (h.founderHouse && !getHouse(h.founderHouse)) problems.push(`${h.id}: unknown founding house ${h.founderHouse}`);
+    if (h.founderGroup && !getGroup(h.founderGroup)) problems.push(`${h.id}: unknown founding group ${h.founderGroup}`);
     if (!marketPositionings.includes(h.tags.marketPositioning)) {
       problems.push(`${h.id}: choose a valid market positioning`);
     }

@@ -1,15 +1,16 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
-export interface ListItem<T> { label: string; hint?: string; value: T }
-const fold = (value: string) => value.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+export interface ListItem<T> { label: string; aliases?: readonly string[]; hint?: string; value: T }
+const words = (value: string) => value.normalize('NFKD').replace(/\p{M}/gu, '').toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+const compact = (value: string) => words(value).join('');
 
-/** Accent-insensitive prefix/word matches precede other substring matches. */
+/** Ignore case, accents, punctuation and spaces; prefer prefix/word matches. */
 export function matchingItems<T>(items: readonly ListItem<T>[], query: string, limit = 60): ListItem<T>[] {
-  const q = fold(query.trim());
+  const q = compact(query);
   if (!q) return items.slice(0, limit);
-  const folded = items.map((item) => ({ item, key: fold(item.label) }));
-  const starts = folded.filter(({ key }) => key.startsWith(q) || key.includes(` ${q}`));
-  const contains = folded.filter((item) => !starts.includes(item) && item.key.includes(q));
+  const folded = items.map((item) => ({ item, terms: [item.label, ...(item.aliases ?? [])].map(words) }));
+  const starts = folded.filter(({ terms }) => terms.some((tokens) => tokens.some((_, index) => tokens.slice(index).join('').startsWith(q))));
+  const contains = folded.filter((item) => !starts.includes(item) && item.terms.some((tokens) => tokens.join('').includes(q)));
   return [...starts, ...contains].slice(0, limit).map(({ item }) => item);
 }
 
@@ -31,7 +32,7 @@ export function SearchBox<T>({ items, value, onChange, onPick }: {
     onChange(item.label); setOpen(false); onPick(item); input.current?.blur();
   }
   return <div className="field-row"><label htmlFor="search">Find:</label><div className="w98-combo">
-    <input id="search" ref={input} type="text" placeholder="House, designer or group" role="combobox" autoComplete="off"
+    <input id="search" ref={input} type="text" placeholder="House, person or group" role="combobox" autoComplete="off"
       aria-autocomplete="list" aria-controls={id} aria-expanded={open} aria-activedescendant={open && activeIndex >= 0 ? `${id}-${activeIndex}` : undefined}
       value={value} onChange={(event) => { onChange(event.target.value); setActive(0); setOpen(true); }}
       onFocus={(event) => { event.target.select(); setActive(0); setOpen(true); }} onBlur={() => setOpen(false)}

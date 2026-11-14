@@ -1,11 +1,11 @@
 import cytoscape, { type Collection, type Core, type NodeSingular, type SingularElementArgument } from 'cytoscape';
-import { careerOf, getHouse } from '../data';
+import { allMoves, careerOf, getHouse, housesInGroup, type GroupId } from '../data';
 import { mapElements, moveEdges, nodeId } from './elements';
 import { housesByCity, LABEL_PX, layoutMap, MAP_HEIGHT, MAP_MIN_ZOOM, MAP_WIDTH, mapSvgMarkup, pinScale } from './geo';
 import { cityMarkerIcon, frameIcon, logoInfo, logoSize, PIN_H, PIN_W } from './icons';
 import { graphStyle } from './style';
 
-export type Selection = { kind: 'house' | 'designer'; id: string } | null;
+export type Selection = { kind: 'house' | 'designer'; id: string } | { kind: 'group'; id: GroupId } | null;
 
 /** Elements that are scenery, never faded. */
 const SCENERY = '[kind = "marker"], [kind = "leader"], [kind = "grid"]';
@@ -45,6 +45,8 @@ export class DesignerGraph {
   private showMoves = true;
   private selection: Selection = null;
   private expanded = new Set<string>();
+  /** Houses revealed by a selection in cities the user has not opened. */
+  private autoRevealed = new Map<string, Set<string>>();
   private readonly allCities = [...housesByCity().keys()];
   private mapLayer: SVGSVGElement;
   /** Group inside the map SVG that carries the pan/zoom transform. */
@@ -178,6 +180,10 @@ export class DesignerGraph {
   /** Show only what existed up to (and including) `year`. */
   setYear(year: number) {
     this.year = year;
+    if (this.selection) {
+      this.refreshSelection(false, true);
+      return;
+    }
     this.applyYear();
     this.applySelection(false);
   }
@@ -185,29 +191,55 @@ export class DesignerGraph {
   /** Tag filters apply to houses, city counts, and both ends of each move. */
   setHouseFilter(ids: ReadonlySet<string> | undefined) {
     this.matchingHouseIds = ids;
-    this.relayoutMap(false);
+    if (this.selection) this.refreshSelection(false, true);
+    else this.relayoutMap(false);
   }
 
   select(sel: Selection, reveal = false) {
     this.selection = sel;
-    // Open the cities involved so the selection can be seen.
+    this.refreshSelection(reveal);
+  }
+
+  private refreshSelection(reveal: boolean, forceLayout = false) {
+    const sel = this.selection;
+    // Replace automatic reveals, preserving cities the user opened manually.
+    let relayout = forceLayout || this.autoRevealed.size > 0;
+    for (const city of this.autoRevealed.keys()) this.expanded.delete(city);
+    this.autoRevealed.clear();
+
     if (sel) {
-      const cities =
-        sel.kind === 'house'
-          ? [getHouse(sel.id)?.city]
-          : careerOf(sel.id).map((t) => getHouse(t.house)?.city);
-      const toOpen = cities.filter((c): c is string => !!c && !this.expanded.has(c)
-        && (housesByCity().get(c)?.some((h) => this.matchesHouse(h.id)) ?? false));
-      if (toOpen.length) {
-        toOpen.forEach((c) => this.expanded.add(c));
-        this.relayoutMap(false);
-        this.notifyExpand();
+      const ids = new Set(sel.kind === 'house' ? [sel.id]
+        : sel.kind === 'group' ? housesInGroup(sel.id).map((house) => house.id)
+        : careerOf(sel.id).map((t) => t.house));
+      if (sel.kind === 'house') {
+        // Read the underlying moves: collapsed endpoints currently point at pins.
+        for (const move of allMoves()) {
+          if (move.year > this.year || !this.matchesHouse(move.from.house) || !this.matchesHouse(move.to.house)) continue;
+          if (move.from.house === sel.id) ids.add(move.to.house);
+          if (move.to.house === sel.id) ids.add(move.from.house);
+        }
       }
+      for (const id of ids) {
+        const house = getHouse(id);
+        if (!house || !this.matchesHouse(id) || (house.founded ?? -Infinity) > this.year) continue;
+        const city = house.city;
+        if (!this.expanded.has(city)) {
+          this.expanded.add(city);
+          this.autoRevealed.set(city, new Set());
+          relayout = true;
+        }
+        this.autoRevealed.get(city)?.add(id);
+      }
+    }
+    if (relayout) {
+      this.relayoutMap(false);
+      this.notifyExpand();
     }
     this.applySelection(reveal);
   }
 
   toggleCity(city: string) {
+    this.autoRevealed.delete(city);
     if (this.expanded.has(city)) this.expanded.delete(city);
     else this.expanded.add(city);
     this.relayoutMap(true);
@@ -215,6 +247,7 @@ export class DesignerGraph {
   }
 
   setAllExpanded(open: boolean) {
+    this.autoRevealed.clear();
     this.expanded = new Set(open ? this.allCities : []);
     this.relayoutMap(true);
     this.notifyExpand();
@@ -268,7 +301,8 @@ export class DesignerGraph {
   private relayoutMap(animate: boolean) {
     const cy = this.cy;
     const byCity = new Map([...housesByCity()].flatMap(([city, hs]) => {
-      const matching = hs.filter((h) => this.matchesHouse(h.id));
+      const revealed = this.autoRevealed.get(city);
+      const matching = hs.filter((h) => this.matchesHouse(h.id) && (!revealed || revealed.has(h.id)));
       return matching.length ? [[city, matching] as const] : [];
     }));
     const layout = layoutMap(this.expanded, byCity);
@@ -436,6 +470,12 @@ export class DesignerGraph {
       const node = cy.getElementById(nodeId.house(sel.id));
       return node.closedNeighborhood().not(SCENERY).union(node);
     }
+    if (sel.kind === 'group') {
+      return housesInGroup(sel.id).reduce(
+        (acc, house) => acc.union(cy.getElementById(nodeId.house(house.id))),
+        cy.collection(),
+      );
+    }
     // Designers aren't nodes: light up every house they worked at + their move arrows.
     const houses = careerOf(sel.id).reduce(
       (acc, t) => acc.union(cy.getElementById(nodeId.house(t.house))),
@@ -456,7 +496,7 @@ export class DesignerGraph {
       const self = sel?.kind === 'house' ? cy.getElementById(nodeId.house(sel.id)) : cy.collection();
       const scenery = cy.elements(SCENERY);
       const all = cy.elements();
-      setClass(all, 'highlight', (el) => shown.has(el));
+      setClass(all, 'highlight', (el) => shown.has(el) && (sel?.kind === 'designer' || el.isEdge() || self.has(el)));
       setClass(all, 'focus', (el) => shown.nonempty() && self.has(el));
       setClass(all, 'faded', (el) => shown.nonempty() && !shown.has(el) && !scenery.has(el));
       // Lines setting off: hide every move line except the selection's own.

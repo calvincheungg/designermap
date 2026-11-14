@@ -29,6 +29,7 @@ vi.mock('./graph/graph', () => ({
   },
 }));
 import { App } from './App';
+import { GroupId } from './data/groups';
 
 afterEach(() => {
   cleanup();
@@ -38,6 +39,45 @@ afterEach(() => {
 });
 
 describe('React app graph integration', () => {
+  it('finds business leaders and reveals their career houses', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    await user.type(screen.getByRole('combobox'), 'elliott.hill');
+    await user.click(screen.getByRole('option', { name: 'Elliott Hill leader' }));
+    expect(screen.getByRole('heading', { name: 'Elliott Hill' })).toBeTruthy();
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'designer', id: 'elliottHill' }, true);
+  });
+
+  it('finds a brand by its normalized historical name and reveals its founder profile', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    await user.type(screen.getByRole('combobox'), ' g.STAR / raw ');
+    await user.click(screen.getByRole('option', { name: 'G-STAR house' }));
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'gStar' }, true);
+    const founder = document.querySelector('.identity [data-select="designer:josVanTilburg"]');
+    expect(founder).toBeTruthy();
+    await user.click(founder!);
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'designer', id: 'josVanTilburg' }, true);
+    expect(screen.getByRole('heading', { name: 'Jos van Tilburg' })).toBeTruthy();
+  });
+
+  it('reveals group brands when opening a group from search or a brand profile', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    await user.type(screen.getByRole('combobox'), 'WHP Global');
+    await user.click(screen.getByRole('option', { name: 'WHP Global group' }));
+    expect(screen.getByRole('heading', { name: 'WHP Global' })).toBeTruthy();
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'group', id: GroupId.WHPGlobal }, true);
+    await user.click(screen.getByRole('link', { name: 'Marc Jacobs' }));
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'marcJacobs' }, true);
+    await user.click(screen.getByRole('link', { name: 'WHP Global' }));
+    expect(screen.getByRole('heading', { name: 'WHP Global' })).toBeTruthy();
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'group', id: GroupId.WHPGlobal }, true);
+  });
+
   it('preserves search, tag filters, year filtering, and the graph instance across UI updates', async () => {
     const user = userEvent.setup();
     const view = render(<StrictMode><App /></StrictMode>);

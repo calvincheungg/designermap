@@ -51,7 +51,12 @@ Key rules:
 - **Ids are object keys** (camelCase). `HouseId` is `keyof typeof houses`, so a
   bad `house:` reference in a career is a compile error. Keep the
   `satisfies Record<string, …>` pattern; don't widen to `string`.
-- `end: null` = current, `end` omitted = unknown, `approximate: true` = unverified years.
+- **Every confirmed current role must explicitly use `end: null`**, including
+  founder, co-founder and `Other` roles. Never leave `end` omitted, undefined or
+  an empty string for a known current role. Omit `end` only when the end date or
+  current status is unknown; do not convert unknown roles to current by default.
+  Use a numeric end year for a known completed tenure.
+  `approximate: true` = unverified years.
 - Role `Other` (with a `roleDetail` like "Senior designer", "Design assistant", "Head of knitwear")
   = a design-team or earlier role. It never counts as the house's creative-director succession:
   the Properties window lists it under "Design team & other roles", and tests use `directorsOf`.
@@ -77,8 +82,16 @@ Key rules:
     houses sit in an invisible `grid` compound in the nearest spot that covers no
     pin or other open city (`geo.ts placeGrids`), with a dotted leader to the pin.
     `move` edges are rebuilt on every expand/collapse: each end attaches to the
-    house if its city is open, else to the pin. Selecting a house or designer
-    auto-expands the cities involved. Map min zoom: `MAP_MIN_ZOOM` or map-fills-view.
+    house if its city is open, else to the pin. Selecting a brand reveals its
+    direct move connections: `autoRevealed` restricts automatically opened cities
+    to those brands, keeping manually opened cities intact. Changing or clearing
+    the selection replaces these automatic reveals. Only the selected brand gets
+    an outline; connected brands retain their normal borders. Selecting a designer
+    opens their career cities and highlights their houses and moves.
+    Opening a group profile reveals its member brands from `housesInGroup` and
+    frames them on the map, without expanding their designer connections or
+    outlining individual brands. Group reveals also respect year and tag filters.
+    Map min zoom: `MAP_MIN_ZOOM` or map-fills-view.
   - Designers aren't nodes; selecting one highlights their houses + move edges.
   - "Show move lines" checkbox → `DesignerGraph.setShowMoves`: off hides `move`
     edges via the `lines-off` class, except the current selection's own lines.
@@ -97,9 +110,58 @@ Key rules:
 
 ## Data conventions
 
+- **For every brand research, addition or correction, follow
+  [the brand research workflow](docs/brand-research.md).** Read it when starting
+  that task, including research of the associated designers and career links.
+  Prioritize founders and creative roles. CEO and other business-leadership
+  research is optional unless the user specifically requests it; preserve
+  existing sourced leadership entries.
+- For mass-market sportswear and other brands led by executives, record sourced
+  brand-wide business leadership using `CEO`, `President` or `Managing Director`.
+  These roles appear under Business leadership and never in creative succession.
+  Keep exact titles in `roleDetail`, including co-CEO and brand-president scope.
+  A parent-company CEO is not automatically the CEO of each portfolio brand.
+  Keep separate dated CEO stints for founders who leave or return, and verify
+  current appointments rather than assuming an old announcement remains current.
+- US and Canadian cities need state/province metadata in `cityRegions` in
+  `cities.ts`. Use `formatCity` only in the right-hand directory's city menus.
+  Keep map labels and house location fields concise, without state/province.
+  Keep plain city keys for coordinates, grouping and graph IDs. Validation
+  checks regional coverage.
+- House `founders` are designer profile IDs (`as const`), never copied names.
+  Names and spelling live in `designers.ts`; `foundersOf` resolves them for links.
+  The record mapping in `data/index.ts` type-checks every founder ID. Founding
+  associations are distinct from creative-director tenures: a business co-founder
+  can have an `Other` career role. Do not invent dates when adding a profile.
+  Use `founderHouse` or `founderGroup` for existing corporate founders, and
+  `founderOrganization` for a collective or company without a profile.
+- Find ignores case, accents, punctuation and whitespace for houses, designers
+  and groups. Put alternate/historical brand names in house `aliases` (for
+  example, G-Star RAW) instead of changing the displayed name just for search.
+- Market positioning runs **High Luxury → Luxury → Premium → Mid-market → Budget**.
+  High Luxury covers the upper luxury market, based on sustained pricing across
+  core products, exclusivity, materials and craftsmanship, and overall positioning.
+  Examples include Dior, Chanel, Hermès, The Row, Loro Piana and Brunello Cucinelli.
+  Luxury includes Lemaire, Acne Studios and Jil Sander. These are editorial tiers,
+  not an official industry standard or a quality ranking. Judge the brand overall,
+  rather than its cheapest entry product, most expensive piece or a collaboration.
+  Group ownership, age and the Couture tag do not automatically determine tier;
+  couture remains a separate brand/product classification.
+- **Exclude one-off collaborations from career tenures and map connections.**
+  Capsule collections, limited releases and single brand-to-brand projects
+  (for example, Born x Raised × Nike or PLEASURES × Puma) are not career moves.
+  Do not add them as `career` entries, including under `Other`, because every
+  entry can generate map connections. Record employment, founding and creative
+  leadership; include an ongoing design partnership only when sources establish
+  a sustained role beyond an individual collaboration. Collaboration context may
+  appear in notes without creating a separate tenure or connection. Apply this
+  rule when adding, researching or correcting data and updating related tests.
 - Starter data was written from memory. When adding or correcting entries,
   prefer adding a `sources` URL over guessing; mark uncertain years `approximate`.
 - `parentGroup` is the *current* owner, not historical.
+  A group brand list may also include licensed brands or regional operations.
+  Record those in sourced `regionalAffiliations` with the relevant territory,
+  never as global `parentGroup` ownership. Group profiles display them separately.
 
 ## Styling
 

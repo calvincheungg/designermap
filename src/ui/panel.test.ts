@@ -11,6 +11,18 @@ const renderPanel = (selection: Selection, visibleHouses = houses) => ({
 });
 
 describe('group navigation and tag display', () => {
+  it('shows states and provinces in directory menus while keeping house locations concise', () => {
+    expect(renderPanel({ kind: 'house', id: 'commonProjects' }).html).toContain('New York, USA');
+    expect(renderPanel({ kind: 'house', id: 'aritzia' }).html).toContain('Vancouver, Canada');
+    expect(renderPanel({ kind: 'house', id: 'psychoBunny' }).html).toContain('Montreal, Canada');
+    expect(renderPanel({ kind: 'house', id: 'dior' }).html).toContain('Paris, France');
+    const singleCity = renderPanel(null, houses.filter((house) => house.id === 'aritzia')).html;
+    expect(singleCity).toContain('Canada · Vancouver, British Columbia (1)');
+    const multipleCities = renderPanel(null, houses.filter((house) => ['aritzia', 'canadaGoose'].includes(house.id))).html;
+    expect(multipleCities).toContain('Vancouver, British Columbia (1)');
+    expect(multipleCities).toContain('Toronto, Ontario (1)');
+  });
+
   it('shows capitalized tag labels while keeping filter values intact', () => {
     const { html } = renderPanel({ kind: 'house', id: 'missoni' });
     expect(html).toContain('data-tag-value="knitwear"');
@@ -38,6 +50,13 @@ describe('group navigation and tag display', () => {
     expect(html).not.toContain('data-tag-kind="product" data-tag-value="womenswear"');
     expect(html).toContain('data-tag-kind="product" data-tag-value="jewelry"');
     expect(html).toContain('>Jewelry</button>');
+    expect(html).toContain('data-tag-kind="marketPositioning" data-tag-value="High Luxury"');
+    expect(html).toContain('>High Luxury</button>');
+  });
+
+  it('links a corporate founder to its existing group profile', () => {
+    const { html } = renderPanel({ kind: 'house', id: 'cos' });
+    expect(html).toContain(`<th>Founder:</th><td><a href="#" data-select="group:${GroupId.HMGroup}">H&amp;M Group</a>`);
   });
 
   it('keeps the historical Fenty fashion house separate from Fenty Beauty', () => {

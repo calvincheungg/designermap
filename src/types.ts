@@ -17,12 +17,26 @@ import type { CountryCode } from './data/countries';
 /** [latitude, longitude] */
 export type LatLng = [lat: number, lng: number];
 
+export interface RegionalAffiliation {
+  group: GroupId;
+  territory: string;
+  relationship: 'Licensing and distribution' | 'Regional operations';
+  sources: readonly string[];
+}
+
 export interface HouseData {
   name: string;
+  /** Alternate or historical names accepted by Find. */
+  aliases?: readonly string[];
   /** Editorial filter tags for the house overall, rather than a particular era. */
   tags: HouseTags;
   founded?: number;
-  founder?: string;
+  /** Designer profile IDs; names are resolved from designers.ts, never copied. */
+  founders?: readonly string[];
+  /** Corporate or collective founders, separate from individual designers. */
+  founderOrganization?: string;
+  founderGroup?: GroupId;
+  founderHouse?: string;
   /** Places the house on the world map; must be a key in data/cities.ts. */
   city: string;
   country: CountryCode;
@@ -46,11 +60,16 @@ export interface HouseData {
   /** Optional brand color used for the initials badge + timeline accents. */
   color?: string;
   parentGroup?: GroupId;
+  /** Regional business relationships; these do not imply global ownership. */
+  regionalAffiliations?: readonly RegionalAffiliation[];
   notes?: string;
   sources?: string[];
 }
 
 export type Role =
+  | 'CEO'
+  | 'President'
+  | 'Managing Director'
   | 'Creative Director'
   | 'Artistic Director'
   | 'Co-Creative Director'

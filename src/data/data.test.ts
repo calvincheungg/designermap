@@ -1,14 +1,273 @@
 import { describe, expect, it } from 'vitest';
-import { CountryCode, GroupId, careerOf, formatTenureYears, getDesigner, getHouse, isActiveIn, movesOf, tenuresAt, yearRange } from './index';
-import { BrandCategory } from './tags';
+import { CountryCode, GroupId, careerOf, formatTenureYears, getDesigner, getHouse, isActiveIn, isBusinessLeadership, movesOf, tenuresAt, yearRange } from './index';
+import { BrandCategory, ProductTag } from './tags';
 
 /** A house's formal succession: everything except supporting design-team roles. */
-const directorsOf = (house: string) => tenuresAt(house).filter((t) => t.role !== 'Other');
+const directorsOf = (house: string) => tenuresAt(house).filter((t) => t.role !== 'Other' && !isBusinessLeadership(t));
 import { validateData } from './validate';
 
 describe('data', () => {
+  it('records business leadership separately from creative direction and supports executive career moves', () => {
+    expect(tenuresAt('nike').filter(isBusinessLeadership).map((tenure) => [tenure.designerId, tenure.start, tenure.end])).toEqual([
+      ['markParker', 2006, 2020], ['johnDonahoe', 2020, 2024], ['elliottHill', 2024, null],
+    ]);
+    expect(directorsOf('nike').map((tenure) => tenure.designerId)).not.toContain('elliottHill');
+    expect(tenuresAt('hoka').filter(isBusinessLeadership)).toEqual(expect.arrayContaining([
+      expect.objectContaining({ designerId: 'robinGreen', role: 'President', start: 2024, end: null }),
+    ]));
+    expect(tenuresAt('onRunning').filter(isBusinessLeadership).map((tenure) => [tenure.designerId, tenure.start, tenure.end])).toEqual([
+      ['martinHoffmann', 2021, 2026], ['davidAllemann', 2026, null], ['casparCoppetti', 2026, null],
+    ]);
+    expect(movesOf('davidAllemann')).toEqual([]);
+    expect(movesOf('casparCoppetti')).toEqual([]);
+    expect(movesOf('kevinPlank')).toEqual([]);
+    expect(movesOf('bjornGulden')).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        from: expect.objectContaining({ house: 'puma', role: 'CEO' }),
+        to: expect.objectContaining({ house: 'adidas', role: 'CEO' }),
+        year: 2023, concurrent: false,
+      }),
+    ]));
+  });
+
+  it('connects Elizabeth and James to the Olsen founders alongside The Row', () => {
+    expect(getHouse('elizabethAndJames')?.founders).toEqual(['maryKateOlsen', 'ashleyOlsen']);
+    expect(getHouse('elizabethAndJames')?.parentGroup).toBeUndefined();
+    for (const id of ['maryKateOlsen', 'ashleyOlsen']) {
+      expect(movesOf(id)).toEqual(expect.arrayContaining([
+        expect.objectContaining({
+          from: expect.objectContaining({ house: 'theRow' }),
+          to: expect.objectContaining({ house: 'elizabethAndJames', role: 'Founder' }),
+          year: 2007,
+          concurrent: true,
+        }),
+      ]));
+    }
+  });
+
   it('passes validation', () => {
     expect(validateData()).toEqual([]);
+  });
+
+  it('adds the Authentic portfolio additions and keeps True Religion and Robin’s Jean separate', () => {
+    const authentic = ['guess', 'nautica', 'aeropostale', 'sperry', 'volcom', 'juicyCouture',
+      'billabong', 'quiksilver', 'luckyBrand', 'vince', 'rvca', 'tapout', 'element'];
+    for (const id of [...authentic, 'trueReligion', 'robinsJean']) {
+      expect(getHouse(id)?.sources?.length, id).toBeGreaterThan(0);
+      expect(getHouse(id)?.notes?.length, id).toBeGreaterThan(100);
+      expect(tenuresAt(id).length, id).toBeGreaterThan(0);
+      for (const tenure of tenuresAt(id)) {
+        expect(tenure.sources?.length, `${id}: ${tenure.designerId}`).toBeGreaterThan(0);
+      }
+    }
+    for (const id of authentic) expect(getHouse(id)?.parentGroup, id).toBe(GroupId.AuthenticBrands);
+    expect(getHouse('trueReligion')?.parentGroup).toBe(GroupId.ACON);
+    expect(getHouse('robinsJean')?.parentGroup).toBeUndefined();
+    expect(getHouse('billabong')?.country).toBe(CountryCode.Australia);
+    expect(getHouse('quiksilver')?.country).toBe(CountryCode.Australia);
+    expect(getHouse('billabong')?.tags.product).toContain(ProductTag.Swimwear);
+    expect(getHouse('quiksilver')?.tags.product).toContain(ProductTag.Swimwear);
+  });
+
+  it('connects Volcom to Quiksilver and scopes Nautica Japan and Vince leadership accurately', () => {
+    expect(movesOf('richardWoolcott')).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        from: expect.objectContaining({ house: 'quiksilver', role: 'Other' }),
+        to: expect.objectContaining({ house: 'volcom', start: 1991 }),
+      }),
+    ]));
+    expect(directorsOf('nautica')).toEqual(expect.arrayContaining([
+      expect.objectContaining({ designerId: 'akioHasegawa', roleDetail: 'Nautica Japan', start: 2020, end: 2023 }),
+    ]));
+    expect(tenuresAt('nautica').map((t) => t.designerId)).not.toContain('lilYachty');
+    expect(careerOf('reaLaccone').map((t) => [t.start, t.end])).toEqual([[2002, 2013], [2015, 2017]]);
+    expect(careerOf('johnnySchillereff')[0]?.end).toBe(2020);
+  });
+
+  it('fills Costume National’s creative succession and distinguishes business and supporting roles', () => {
+    expect(directorsOf('costumeNational').map((t) => [t.designerId, t.role, t.start, t.end])).toEqual([
+      ['ennioCapasa', 'Founder', 1986, 2016],
+      ['kojiUdo', 'Menswear Director', 2017, 2020],
+      ['yasutoshiEzumi', 'Womenswear Director', 2017, 2020],
+    ]);
+    for (const id of ['carloCapasa', 'rachelScott']) {
+      expect(tenuresAt('costumeNational')).toEqual(expect.arrayContaining([
+        expect.objectContaining({ designerId: id, role: 'Other' }),
+      ]));
+    }
+    for (const tenure of tenuresAt('costumeNational')) expect(tenure.sources?.length).toBeGreaterThan(0);
+    for (const [designer, from, to] of [
+      ['ennioCapasa', 'yohjiYamamoto', 'costumeNational'],
+      ['yasutoshiEzumi', 'alexanderMcQueen', 'costumeNational'],
+      ['rachelScott', 'costumeNational', 'diotima'],
+    ] as const) {
+      expect(movesOf(designer), designer).toEqual(expect.arrayContaining([
+        expect.objectContaining({ from: expect.objectContaining({ house: from }), to: expect.objectContaining({ house: to }) }),
+      ]));
+    }
+  });
+
+  it('adds Vera Wang’s bridal focus and Ralph Lauren career connection', () => {
+    expect(getHouse('veraWang')?.tags.product).toContain(ProductTag.Bridal);
+    expect(getHouse('veraWang')?.sources?.length).toBeGreaterThan(0);
+    expect(directorsOf('veraWang')).toEqual(expect.arrayContaining([
+      expect.objectContaining({ designerId: 'veraWang', role: 'Founder', start: 1990, end: null }),
+    ]));
+    expect(movesOf('veraWang')).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        from: expect.objectContaining({ house: 'ralphLauren', role: 'Other' }),
+        to: expect.objectContaining({ house: 'veraWang', start: 1990 }),
+      }),
+    ]));
+  });
+
+  it('records Virginia Burlina’s sourced studio roles and distinguishes reported appointments', () => {
+    const career = careerOf('virginiaBurlina');
+    expect(career.map((t) => t.house).sort()).toEqual([
+      'acneStudios', 'burberry', 'driesVanNoten', 'loewe', 'maisonMargiela',
+    ]);
+    for (const tenure of career) {
+      expect(tenure.role).toBe('Other');
+      expect(tenure.sources?.length).toBeGreaterThan(0);
+      expect(directorsOf(tenure.house).map((t) => t.designerId)).not.toContain('virginiaBurlina');
+    }
+    expect(movesOf('virginiaBurlina')).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        from: expect.objectContaining({ house: 'driesVanNoten' }),
+        to: expect.objectContaining({ house: 'burberry', start: 2018 }),
+      }),
+    ]));
+    expect(getDesigner('virginiaBurlina')?.notes).toContain('prospective successor');
+    expect(tenuresAt('alexanderMcQueen').map((t) => t.designerId)).not.toContain('virginiaBurlina');
+  });
+
+  it('records Yeezy Gap as a partnership alongside Kanye’s Yeezy leadership', () => {
+    expect(movesOf('kanyeWest')).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        from: expect.objectContaining({ house: 'yeezy' }),
+        to: expect.objectContaining({ house: 'gap', role: 'Other', start: 2020, end: 2022 }),
+        concurrent: true,
+      }),
+    ]));
+    expect(tenuresAt('gap')).toEqual(expect.arrayContaining([
+      expect.objectContaining({ designerId: 'demna', role: 'Other', start: 2022, end: 2022 }),
+      expect.objectContaining({ designerId: 'kanyeWest', roleDetail: 'Retail employee, Chicago store' }),
+    ]));
+    for (const id of ['kanyeWest', 'demna']) {
+      expect(directorsOf('gap').map((t) => t.designerId)).not.toContain(id);
+    }
+  });
+
+  it('shows only a start year for an omitted end and reserves Present for an explicit null', () => {
+    const tenure = { house: 'cecilieBahnsen', role: 'Founder' as const, start: 2015 };
+    expect(formatTenureYears(tenure)).toBe('2015');
+    expect(formatTenureYears({ ...tenure, approximate: true })).toBe('~2015');
+    expect(formatTenureYears({ ...tenure, end: null })).toBe('2015–Present');
+    expect(formatTenureYears({ ...tenure, end: 2020 })).toBe('2015–2020');
+    expect(formatTenureYears({ ...tenure, end: 2015 })).toBe('2015');
+  });
+
+  it('adds G-STAR, Donna Karan, ICECREAM, Born x Raised and PLEASURES with sourced leadership', () => {
+    for (const id of ['gStar', 'donnaKaran', 'icecream', 'bornXRaised', 'pleasures']) {
+      expect(getHouse(id)?.notes?.length, id).toBeGreaterThan(100);
+      expect(getHouse(id)?.sources?.length, id).toBeGreaterThan(0);
+      expect(tenuresAt(id).length, id).toBeGreaterThan(1);
+      for (const tenure of tenuresAt(id)) {
+        expect(tenure.sources?.length, `${id}: ${tenure.designerId}`).toBeGreaterThan(0);
+      }
+    }
+    expect(getHouse('gStar')?.parentGroup).toBe(GroupId.WHPGlobal);
+    expect(getHouse('donnaKaran')?.parentGroup).toBe(GroupId.GIII);
+    expect(getHouse('donnaKaran')?.founded).toBe(1984);
+    expect(getHouse('dkny')?.founded).toBe(1989);
+    expect(getHouse('icecream')?.founded).toBe(2004);
+    expect(getHouse('billionaireBoysClub')?.founded).toBe(2003);
+  });
+
+  it('connects the additions through careers and excludes one-off collaboration connections', () => {
+    for (const [designer, from, to] of [
+      ['danielLee', 'donnaKaran', 'celine'],
+      ['donnaKaran', 'donnaKaran', 'dkny'],
+      ['pharrellWilliams', 'billionaireBoysClub', 'icecream'],
+      ['pharrellWilliams', 'billionaireBoysClub', 'gStar'],
+      ['aitorThroup', 'cpCompany', 'gStar'],
+    ] as const) {
+      expect(movesOf(designer), designer).toEqual(expect.arrayContaining([
+        expect.objectContaining({ from: expect.objectContaining({ house: from }), to: expect.objectContaining({ house: to }) }),
+      ]));
+    }
+    expect(directorsOf('gStar')).toEqual(expect.arrayContaining([
+      expect.objectContaining({ designerId: 'aitorThroup', start: 2016, end: 2018 }),
+    ]));
+    expect(directorsOf('gStar').map((t) => t.designerId)).not.toContain('pharrellWilliams');
+    expect(directorsOf('puma').map((t) => t.designerId)).not.toContain('alexJamesPleasures');
+    expect(directorsOf('nike').map((t) => t.designerId)).not.toContain('alex2ToneErdmann');
+    expect(careerOf('alex2ToneErdmann').map((t) => t.house)).toEqual(['bornXRaised']);
+    expect(careerOf('alexJamesPleasures').map((t) => t.house)).toEqual(['pleasures']);
+    expect(movesOf('alex2ToneErdmann')).toEqual([]);
+    expect(movesOf('alexJamesPleasures')).toEqual([]);
+    expect(careerOf('chrisSpantoPrintup')[0]?.end).toBe(2023);
+  });
+
+  it('includes the fashion, denim and knitwear additions with sourced leadership', () => {
+    for (const id of [
+      'soniaRykiel', 'carolinaHerrera', 'elieSaab', 'vionnet', 'maryQuant', 'dickies', 'uniqlo', 'rabanne',
+      'gap', 'lee', 'wrangler', 'momotaro', 'ironHeart', 'toogood', 'woodWood', 'studioNicholson',
+      'cecilieBahnsen', 'carolChristianPoell', 'borisBidjanSaberi', 'elevenBbs', 'guidi',
+      'ninetyNinePercentIs', 'pringleOfScotland',
+    ]) {
+      expect(getHouse(id)?.sources?.length, id).toBeGreaterThan(0);
+      expect(tenuresAt(id).length, id).toBeGreaterThan(0);
+      for (const tenure of tenuresAt(id)) {
+        expect(tenure.sources?.length, `${id}: ${tenure.designerId}`).toBeGreaterThan(0);
+      }
+    }
+    expect(getHouse('dickies')?.parentGroup).toBe(GroupId.BluestarAlliance);
+    expect(getHouse('elieSaab')?.country).toBe(CountryCode.Lebanon);
+    expect(getHouse('pringleOfScotland')?.city).toBe('Hawick');
+  });
+
+  it('links the new houses through careers without treating collaborations as house leadership', () => {
+    expect(careerOf('clareWaightKeller')).toEqual(expect.arrayContaining([
+      expect.objectContaining({ house: 'pringleOfScotland', start: 2005, end: 2011 }),
+      expect.objectContaining({ house: 'uniqlo', role: 'Creative Director', start: 2024 }),
+    ]));
+    expect(directorsOf('uniqlo').map((t) => t.designerId)).not.toContain('jonathanAnderson');
+    expect(careerOf('borisBidjanSaberi').map((t) => t.house)).toEqual(['borisBidjanSaberi', 'elevenBbs', 'salomon']);
+  });
+
+  it('derives the researched designer connections to the new houses', () => {
+    for (const [designer, from, to, year] of [
+      ['cecilieBahnsen', 'erdem', 'cecilieBahnsen', 2015],
+      ['nickWakeman', 'diesel', 'studioNicholson', 2010],
+      ['patrickRobinson', 'armani', 'rabanne', 2005],
+      ['patrickRobinson', 'rabanne', 'gap', 2007],
+      ['alistairCarr', 'balenciaga', 'pringleOfScotland', 2011],
+      ['massimoNicosia', 'pringleOfScotland', 'zegna', 2017],
+      ['sophiaKokosalaki', 'vionnet', 'diesel', 2009],
+    ] as const) {
+      expect(movesOf(designer), designer).toEqual(expect.arrayContaining([
+        expect.objectContaining({ from: expect.objectContaining({ house: from }), to: expect.objectContaining({ house: to }), year }),
+      ]));
+    }
+  });
+
+  it('keeps newly researched internships and collaborations out of formal house succession', () => {
+    for (const [designer, house] of [
+      ['wesGordon', 'tomFord'], ['wesGordon', 'oscarDeLaRentaHouse'],
+      ['cecilieBahnsen', 'johnGalliano'], ['cecilieBahnsen', 'asics'],
+      ['cecilieBahnsen', 'theNorthFace'], ['cecilieBahnsen', 'uniqlo'],
+      ['borisBidjanSaberi', 'salomon'], ['nickWakeman', 'paraboot'],
+      ['rebekkaBay', 'uniqlo'],
+    ] as const) {
+      const tenure = tenuresAt(house).find((t) => t.designerId === designer);
+      expect(tenure?.role, `${designer} at ${house}`).toBe('Other');
+      expect(tenure?.sources?.length).toBeGreaterThan(0);
+      expect(directorsOf(house).map((t) => t.designerId)).not.toContain(designer);
+    }
+    const internship = careerOf('wesGordon').find((t) => t.house === 'tomFord');
+    expect(internship?.start).toBeUndefined();
+    expect(internship?.end).toBeUndefined();
   });
 
   it('records sourced leadership for the five recently added brands', () => {
@@ -146,6 +405,7 @@ describe('data', () => {
     expect(movesOf('jonathanAnderson').map((m) => [m.from.house, m.to.house, m.concurrent])).toEqual([
       ['prada', 'jwAnderson', false], // left Prada (visual merchandising) to launch his label
       ['jwAnderson', 'loewe', true],
+      ['loewe', 'uniqlo', true], // JW Anderson collaboration alongside Loewe
       ['loewe', 'dior', false],
     ]);
   });
@@ -155,6 +415,7 @@ describe('data', () => {
       ['maisonMargiela', 'louisVuitton', 2013, false],
       ['louisVuitton', 'vetements', 2014, false],
       ['vetements', 'balenciaga', 2015, true],
+      ['balenciaga', 'gap', 2022, true],
       ['balenciaga', 'gucci', 2025, false],
     ]);
     expect(movesOf('guramGvasalia')).toEqual([]);

@@ -134,7 +134,7 @@ export const graphStyle: StylesheetJson = [
     },
   },
   {
-    // Houses involved in the selection get a navy border; nothing else is dimmed.
+    // Outline the selected brand, or all career houses for a selected designer.
     selector: 'node.highlight[kind = "house"]',
     style: { 'border-width': 2, 'border-color': NAVY, 'border-style': 'solid' },
   },

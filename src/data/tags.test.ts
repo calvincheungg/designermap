@@ -5,6 +5,30 @@ import { Aesthetic, BrandCategory, CollectionTag, MarketPositioning, ProductTag,
 // Use a brand with a distinctive primary product so broad catalogue tags cannot
 // accidentally bring it back into unrelated results.
 describe('house tag filters', () => {
+  it('filters High Luxury separately from Luxury and allows selecting both', () => {
+    const highLuxury = { marketPositioning: [MarketPositioning.HighLuxury] };
+    const luxury = { marketPositioning: [MarketPositioning.Luxury] };
+    const both = { marketPositioning: [MarketPositioning.HighLuxury, MarketPositioning.Luxury] };
+    for (const house of [houses.dior, houses.chanel, houses.hermes, houses.theRow, houses.loroPiana]) {
+      expect(matchesHouseFilters(house.tags, highLuxury), house.name).toBe(true);
+      expect(matchesHouseFilters(house.tags, luxury), house.name).toBe(false);
+      expect(matchesHouseFilters(house.tags, both), house.name).toBe(true);
+    }
+    for (const house of [houses.lemaire, houses.acneStudios, houses.jilSander]) {
+      expect(matchesHouseFilters(house.tags, highLuxury), house.name).toBe(false);
+      expect(matchesHouseFilters(house.tags, luxury), house.name).toBe(true);
+      expect(matchesHouseFilters(house.tags, both), house.name).toBe(true);
+    }
+    expect(matchesHouseFilters(houses.tedBaker.tags, both)).toBe(false);
+    expect(matchesHouseFilters(houses.dior.tags, {
+      ...highLuxury, brandCategory: [BrandCategory.Couture],
+    })).toBe(true);
+    expect(matchesHouseFilters(houses.dior.tags, {
+      ...highLuxury, brandCategory: [BrandCategory.Outdoor],
+    })).toBe(false);
+    expect(brandCategories).not.toContain('High Luxury');
+  });
+
   it('matches all houses when filters are empty', () => {
     for (const house of Object.values(houses)) {
       expect(matchesHouseFilters(house.tags, {})).toBe(true);
@@ -71,7 +95,7 @@ describe('house tag filters', () => {
   });
 
   it('keeps market positioning independent of brand identity', () => {
-    expect(marketPositionings).toEqual(['Luxury', 'Premium', 'Mid-market', 'Budget']);
+    expect(marketPositionings).toEqual(['High Luxury', 'Luxury', 'Premium', 'Mid-market', 'Budget']);
     expect(brandCategories).not.toContain('Luxury');
     expect(brandCategories).not.toContain('Contemporary');
     const tags = houses.palmAngels.tags;

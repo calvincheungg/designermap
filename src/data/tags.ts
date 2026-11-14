@@ -1,5 +1,7 @@
 /** Import these enums when editing a house to get autocomplete and typo checks. */
 export enum MarketPositioning {
+  /** Highest market tier; an editorial assessment of pricing and exclusivity. */
+  HighLuxury = 'High Luxury',
   Luxury = 'Luxury',
   Premium = 'Premium',
   MidMarket = 'Mid-market',
@@ -8,6 +10,7 @@ export enum MarketPositioning {
 
 export enum BrandCategory {
   DesignerFashion = 'Designer Fashion',
+  Casualwear = 'Casualwear',
   AvantGarde = 'Avant-garde',
   Streetwear = 'Streetwear',
   Sportswear = 'Sportswear',
@@ -54,6 +57,8 @@ export enum CollectionTag {
 
 export enum ProductTag {
   ReadyToWear = 'Ready-to-wear',
+  Bridal = 'bridal',
+  Swimwear = 'swimwear',
   Couture = 'couture',
   Footwear = 'footwear',
   Denim = 'denim',
@@ -65,6 +70,7 @@ export enum ProductTag {
   Jewelry = 'jewelry',
   Eyewear = 'eyewear',
   Luggage = 'luggage',
+  Textiles = 'textiles',
 }
 
 export const brandCategories = Object.values(BrandCategory);

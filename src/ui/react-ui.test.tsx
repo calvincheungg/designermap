@@ -65,6 +65,44 @@ describe('React interface interactions', () => {
     expect(screen.getByRole('combobox').getAttribute('aria-expanded')).toBe('false');
   });
 
+  it('ignores punctuation, whitespace and case across house, designer and group searches', () => {
+    const items = [
+      { label: 'G-STAR', aliases: ['G-Star RAW'], hint: 'house', value: 'gStar' },
+      { label: 'H&M', hint: 'house', value: 'hm' },
+      { label: '99%IS-', hint: 'house', value: '99is' },
+      { label: 'Ryan O’Connor', hint: 'designer', value: 'ryan' },
+      { label: 'LVMH Moët Hennessy–Louis Vuitton', hint: 'group', value: 'lvmh' },
+      { label: 'Chanel', hint: 'house', value: 'chanel' },
+    ];
+    for (const query of ['gstar', 'G STAR', 'g-star raw', 'gstarraw', ' G . S_T/A—R\tR A W ']) {
+      expect(matchingItems(items, query).map((item) => item.value), query).toEqual(['gStar']);
+    }
+    for (const punctuation of ['-', '–', '—', '.', ',', ':', ';', "'", '’', '“', '/', '\\', '_', '&', '%', '+', '!', '?', '(', ')', '[', ']', '{', '}', '@', '#', '$', '^', '*', '=', '|', '~', '`', '<', '>']) {
+      expect(matchingItems(items, `G${punctuation}STAR`).map((item) => item.value), punctuation).toEqual(['gStar']);
+    }
+    expect(matchingItems(items, 'h m').map((item) => item.value)).toEqual(['hm', 'lvmh']);
+    expect(matchingItems(items, '99is').map((item) => item.value)).toEqual(['99is']);
+    expect(matchingItems(items, "RYAN O'CONNOR").map((item) => item.value)).toEqual(['ryan']);
+    expect(matchingItems(items, 'moethennessylouisvuitton').map((item) => item.value)).toEqual(['lvmh']);
+    expect(matchingItems(items, 'nothing like this')).toEqual([]);
+    expect(matchingItems(items, '---', 2)).toEqual(items.slice(0, 2));
+  });
+
+  it('navigates from each linked co-founder in the house identity to their profile', async () => {
+    function Harness() {
+      const [selection, setSelection] = useState<Selection>({ kind: 'house', id: 'clarks' });
+      return <PanelContent selection={selection} onSelect={setSelection} onTag={() => {}} />;
+    }
+    const user = userEvent.setup();
+    render(<Harness />);
+    const founderRow = screen.getByRole('row', { name: 'Founder: Cyrus Clark, James Clark' });
+    expect(within(founderRow).getByRole('link', { name: 'Cyrus Clark' })).toBeTruthy();
+    await user.click(within(founderRow).getByRole('link', { name: 'James Clark' }));
+    expect(screen.getByRole('heading', { name: 'James Clark' })).toBeTruthy();
+    await user.click(screen.getByRole('link', { name: 'Clarks' }));
+    expect(screen.getByRole('heading', { name: 'Clarks' })).toBeTruthy();
+  });
+
   it('navigates house → group → house through React links and dispatches clickable tags', async () => {
     const onTag = vi.fn();
     function Harness() {
@@ -80,6 +118,43 @@ describe('React interface interactions', () => {
     await user.click(screen.getByRole('button', { name: 'Outerwear' }));
     expect(onTag).toHaveBeenCalledWith('product', 'outerwear');
     expect(document.querySelector(`[data-select="group:${GroupId.Moncler}"]`)).toBeTruthy();
+  });
+
+  it('shows sportswear executives in business leadership and opens their profiles', async () => {
+    function Harness() {
+      const [selection, setSelection] = useState<Selection>({ kind: 'house', id: 'nike' });
+      return <PanelContent selection={selection} onSelect={setSelection} onTag={() => {}} />;
+    }
+    const user = userEvent.setup();
+    render(<Harness />);
+    const business = screen.getByText('Business leadership', { selector: 'legend' }).closest('fieldset')!;
+    expect(within(business).getByRole('columnheader', { name: 'Leader' })).toBeTruthy();
+    expect(within(business).getByRole('link', { name: 'Mark Parker' })).toBeTruthy();
+    const creative = screen.getByText('Creative directors', { selector: 'legend' }).closest('fieldset')!;
+    expect(within(creative).queryByRole('link', { name: 'Elliott Hill' })).toBeNull();
+    await user.click(within(business).getByRole('link', { name: 'Elliott Hill' }));
+    expect(screen.getByRole('heading', { name: 'Elliott Hill' })).toBeTruthy();
+    expect(screen.getByText('CEO (President and CEO)')).toBeTruthy();
+  });
+
+  it('separates owned brands from regional relationships and links both directions', async () => {
+    function Harness() {
+      const [selection, setSelection] = useState<Selection>({ kind: 'group', id: GroupId.TSI });
+      return <PanelContent selection={selection} onSelect={setSelection} onTag={() => {}} />;
+    }
+    const user = userEvent.setup();
+    render(<Harness />);
+    const ownership = screen.getByText(/^Current Brands in This Map/).closest('fieldset')!;
+    expect(within(ownership).getByRole('link', { name: 'Margaret Howell' })).toBeTruthy();
+    expect(within(ownership).getByRole('link', { name: 'Sugar Cane' })).toBeTruthy();
+    expect(within(ownership).queryByRole('link', { name: 'Alpha Industries' })).toBeNull();
+    const regional = screen.getByText('Regional Relationships (4)').closest('fieldset')!;
+    await user.click(within(regional).getByRole('link', { name: 'Alpha Industries' }));
+    expect(screen.getByRole('heading', { name: 'Alpha Industries' })).toBeTruthy();
+    expect(screen.getByText(/Japan · Licensing and distribution/)).toBeTruthy();
+    expect(screen.queryByRole('columnheader', { name: 'Group:' })).toBeNull();
+    await user.click(screen.getByRole('link', { name: 'TSI Holdings' }));
+    expect(screen.getByRole('heading', { name: 'TSI Holdings' })).toBeTruthy();
   });
 
   it('uses React logo fallback when an image fails', () => {

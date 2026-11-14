@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { allMoves, designers, getDesigner, getGroup, getHouse, groups, houses, yearRange } from './data';
+import { allMoves, designers, getDesigner, getGroup, getHouse, groups, houses, isBusinessLeadership, yearRange } from './data';
 import { matchesHouseFilters, type HouseFilters } from './data/tags';
 import type { DesignerGraph } from './graph/graph';
 import { Filters, setFilterValue, type FilterGroup } from './ui/filters';
@@ -12,9 +12,9 @@ const moveCount = allMoves().length;
 const LINES_KEY = 'designer-map:show-lines';
 const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 const searchItems: ListItem<NonNullable<Selection>>[] = [
-  ...houses.map((h) => ({ label: h.name, hint: 'house', value: { kind: 'house' as const, id: h.id } })),
+  ...houses.map((h) => ({ label: h.name, aliases: h.aliases, hint: 'house', value: { kind: 'house' as const, id: h.id } })),
   ...groups.map((g) => ({ label: g.name, hint: 'group', value: { kind: 'group' as const, id: g.id } })),
-  ...designers.map((d) => ({ label: d.name, hint: 'designer', value: { kind: 'designer' as const, id: d.id } })),
+  ...designers.map((d) => ({ label: d.name, hint: d.career.some(isBusinessLeadership) ? 'leader' : 'designer', value: { kind: 'designer' as const, id: d.id } })),
 ].sort((a, b) => collator.compare(a.label, b.label) || a.hint.localeCompare(b.hint));
 
 function Clock() {
@@ -60,7 +60,7 @@ export function App() {
   useLayoutEffect(() => { graph.current?.setHouseFilter(matchingIds); }, [matchingIds]);
   useLayoutEffect(() => { graph.current?.setYear(visibleYear); }, [visibleYear]);
   useLayoutEffect(() => {
-    graph.current?.select(selection?.kind === 'group' ? null : selection, request.reveal);
+    graph.current?.select(selection, request.reveal);
   }, [selection, request]);
   useLayoutEffect(() => { if (panel.current) panel.current.scrollTop = 0; }, [request, visibleHouses]);
   useEffect(() => { if (!keepSelection) select(null); }, [keepSelection, select]);

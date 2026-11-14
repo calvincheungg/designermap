@@ -1,16 +1,16 @@
-import { useState, type ReactNode } from 'react';
+import { Fragment, useState, type ReactNode } from 'react';
 import {
-  careerOf, countryNames, designers, formatTenureYears, getDesigner, getGroup,
-  getHouse, groups, houses, housesInGroup, logoUrl, movesOf, tenuresAt,
+  careerOf, countryNames, designers, formatTenureYears, foundersOf, getDesigner, getGroup,
+  getHouse, groups, houses, housesInGroup, isBusinessLeadership, logoUrl, movesOf, regionalHousesInGroup, tenuresAt,
 } from '../data';
 import type { Selection as GraphSelection } from '../graph/graph';
-import type { GroupId } from '../data/groups';
 import type { House, HouseTenure, Tenure } from '../types';
 import { frameIcon, initialsIcon, logoInfo } from '../graph/icons';
 import { tagLabel } from './labels';
 import type { HouseFilters } from '../data/tags';
+import { formatCity } from '../data/cities';
 
-export type Selection = GraphSelection | { kind: 'group'; id: GroupId };
+export type Selection = GraphSelection;
 interface Actions {
   onSelect: (selection: Selection, reveal?: boolean) => void;
   onTag: (group: keyof HouseFilters, value: string) => void;
@@ -24,7 +24,7 @@ function EntityLink({ kind, id, children, onSelect }: {
     event.preventDefault();
     if (kind === 'group') {
       const group = getGroup(id);
-      if (group) onSelect({ kind, id: group.id });
+      if (group) onSelect({ kind, id: group.id }, true);
     } else onSelect({ kind, id }, true);
   }}>{children}</a>;
 }
@@ -69,9 +69,9 @@ function Directory({ visibleHouses, onSelect }: { visibleHouses: readonly House[
     <fieldset><legend>Fashion houses ({visibleHouses.length})</legend><ul className="tree-view scroll-box">
       {byCountry.map(([country, list]) => {
         const cities = [...Map.groupBy(list, (h) => h.city)].sort(([a], [b]) => a.localeCompare(b));
-        return <li key={country}><details><summary>{country}{cities.length === 1 ? ` · ${cities[0]![0]}` : ''} ({list.length})</summary>
+        return <li key={country}><details><summary>{country}{cities.length === 1 ? ` · ${formatCity(cities[0]![0])}` : ''} ({list.length})</summary>
           {cities.length === 1 ? <HouseList list={list} onSelect={onSelect} /> : <ul>{cities.map(([city, cityHouses]) =>
-            <li key={city}><details><summary>{city} ({cityHouses.length})</summary><HouseList list={cityHouses} onSelect={onSelect} /></details></li>)}</ul>}
+            <li key={city}><details><summary>{formatCity(city)} ({cityHouses.length})</summary><HouseList list={cityHouses} onSelect={onSelect} /></details></li>)}</ul>}
         </details></li>;
       })}
     </ul></fieldset>
@@ -80,14 +80,14 @@ function Directory({ visibleHouses, onSelect }: { visibleHouses: readonly House[
         <EntityLink kind="group" id={group.id} onSelect={onSelect}>{group.name}</EntityLink> ({housesInGroup(group.id).length})
       </li>)}
     </ul></fieldset>
-    <fieldset><legend>Designers ({visibleDesigners.length})</legend><ul className="tree-view scroll-box">
+    <fieldset><legend>Designers &amp; leaders ({visibleDesigners.length})</legend><ul className="tree-view scroll-box">
       {visibleDesigners.map((designer) => <li key={designer.id}><EntityLink kind="designer" id={designer.id} onSelect={onSelect}>{designer.name}</EntityLink></li>)}
     </ul></fieldset>
   </>;
 }
 
-function TenureTable({ list, supporting, onSelect }: { list: HouseTenure[]; supporting?: boolean; onSelect: Actions['onSelect'] }) {
-  return <div className="sunken-panel"><table className="interactive"><thead><tr><th>Years</th><th>Designer</th><th>Role</th></tr></thead><tbody>
+function TenureTable({ list, supporting, business, onSelect }: { list: HouseTenure[]; supporting?: boolean; business?: boolean; onSelect: Actions['onSelect'] }) {
+  return <div className="sunken-panel"><table className="interactive"><thead><tr><th>Years</th><th>{business ? 'Leader' : 'Designer'}</th><th>Role</th></tr></thead><tbody>
     {list.map((tenure, index) => <tr key={`${tenure.designerId}:${index}`}>
       <td className="nowrap">{formatTenureYears(tenure)}</td>
       <td><EntityLink kind="designer" id={tenure.designerId} onSelect={onSelect}>{getDesigner(tenure.designerId)?.name ?? tenure.designerId}</EntityLink></td>
@@ -97,8 +97,16 @@ function TenureTable({ list, supporting, onSelect }: { list: HouseTenure[]; supp
 }
 
 function HouseProfile({ house, onSelect, onTag }: { house: House } & Actions) {
+  const founderLinks: ReactNode[] = foundersOf(house.id).map((designer) =>
+    <EntityLink kind="designer" id={designer.id} onSelect={onSelect}>{designer.name}</EntityLink>);
+  if (house.founderHouse) founderLinks.push(
+    <EntityLink kind="house" id={house.founderHouse} onSelect={onSelect}>{getHouse(house.founderHouse)?.name}</EntityLink>);
+  if (house.founderGroup) founderLinks.push(
+    <EntityLink kind="group" id={house.founderGroup} onSelect={onSelect}>{getGroup(house.founderGroup)?.name}</EntityLink>);
+  if (house.founderOrganization) founderLinks.push(house.founderOrganization);
   const tenures = tenuresAt(house.id);
-  const directors = tenures.filter((t) => t.role !== 'Other');
+  const directors = tenures.filter((t) => t.role !== 'Other' && !isBusinessLeadership(t));
+  const business = tenures.filter(isBusinessLeadership);
   const team = tenures.filter((t) => t.role === 'Other');
   const tagGroups: [keyof HouseFilters, string, readonly string[]][] = [
     ['marketPositioning', 'Market Positioning', [house.tags.marketPositioning]],
@@ -109,16 +117,25 @@ function HouseProfile({ house, onSelect, onTag }: { house: House } & Actions) {
   ];
   return <>
     <div className="identity"><HouseLogo key={`${house.id}:${house.logo}`} house={house} /><div><h2>{house.name}</h2><Fields rows={[
-      ['Founded', house.founded], ['Founder', house.founder], ['Based in', `${house.city}, ${countryNames[house.country]}`],
+      ['Founded', house.founded],
+      ['Founder', founderLinks.length ? <>{founderLinks.map((link, index) => <Fragment key={index}>{index > 0 && ', '}{link}</Fragment>)}</> : undefined],
+      ['Based in', `${house.city}, ${countryNames[house.country]}`],
       ['Group', house.parentGroup && <EntityLink kind="group" id={house.parentGroup} onSelect={onSelect}>{getGroup(house.parentGroup)?.name ?? house.parentGroup}</EntityLink>],
       ['Website', house.website && <Website url={house.website} />],
       ['Instagram', house.instagram && <a href={`https://www.instagram.com/${house.instagram}/`} target="_blank" rel="noreferrer">@{house.instagram}</a>],
     ]} /></div></div>
+    {!!house.regionalAffiliations?.length && <fieldset><legend>Regional Relationships</legend><ul>
+      {house.regionalAffiliations.map((affiliation) => <li key={`${affiliation.group}:${affiliation.territory}`}>
+        <EntityLink kind="group" id={affiliation.group} onSelect={onSelect}>{getGroup(affiliation.group)?.name}</EntityLink>
+        {` · ${affiliation.territory} · ${affiliation.relationship}`}
+      </li>)}
+    </ul></fieldset>}
     <fieldset className="house-tags"><legend>Tags</legend>{tagGroups.map(([group, label, values]) =>
       <div className="tag-group" key={group}><p>{label}</p><div className="tag-list">{values.map((value) =>
         <button key={value} className="tag" data-tag-kind={group} data-tag-value={value} title={`Filter by ${tagLabel(value)}`} onClick={() => onTag(group, value)}>{tagLabel(value)}</button>
       )}</div></div>)}</fieldset>
-    <fieldset><legend>Creative directors</legend>{directors.length ? <TenureTable list={directors} onSelect={onSelect} /> : <p className="hint">None recorded yet. Add a career entry in designers.ts.</p>}</fieldset>
+    <fieldset><legend>Creative directors</legend>{directors.length ? <TenureTable list={directors} onSelect={onSelect} /> : <p className="hint">No creative directors recorded.</p>}</fieldset>
+    {!!business.length && <fieldset><legend>Business leadership</legend><TenureTable list={business} business onSelect={onSelect} /></fieldset>}
     {!!team.length && <fieldset><legend>Design team &amp; other roles</legend><TenureTable list={team} supporting onSelect={onSelect} /></fieldset>}
     <Notes text={house.notes} />
   </>;
@@ -128,11 +145,20 @@ function GroupProfile({ id, onSelect }: { id: string; onSelect: Actions['onSelec
   const group = getGroup(id);
   if (!group) return <p>No group with id “{id}”.</p>;
   const brands = housesInGroup(id);
+  const regionalBrands = regionalHousesInGroup(id);
   return <><h2>{group.name}</h2><p>{group.description}</p><Fields rows={[["Official Website", <Website url={group.website} />]]} />
     <fieldset><legend>Current Brands in This Map ({brands.length})</legend>
-      <p className="hint">Current affiliations recorded in this map. The official website has more information on the wider portfolio.</p>
+      <p className="hint">Current ownership recorded in this map. The official website has more information on the wider portfolio.</p>
       <ul className="tree-view">{brands.map((house) => <li key={house.id}><EntityLink kind="house" id={house.id} onSelect={onSelect}>{house.name}</EntityLink></li>)}</ul>
-    </fieldset><Notes text={group.notes} /></>;
+    </fieldset>
+    {!!regionalBrands.length && <fieldset><legend>Regional Relationships ({regionalBrands.length})</legend>
+      <ul className="tree-view">{regionalBrands.map((house) => <li key={house.id}>
+        <EntityLink kind="house" id={house.id} onSelect={onSelect}>{house.name}</EntityLink>
+        <ul>{house.regionalAffiliations?.filter((affiliation) => affiliation.group === id).map((affiliation) =>
+          <li key={affiliation.territory}>{affiliation.territory} · {affiliation.relationship}</li>)}</ul>
+      </li>)}</ul>
+    </fieldset>}
+    <Notes text={group.notes} /></>;
 }
 
 function DesignerProfile({ id, onSelect }: { id: string; onSelect: Actions['onSelect'] }) {

@@ -3,10 +3,29 @@ import { houses } from '../data';
 import { cities, type CityName } from '../data/cities';
 import { boxesOverlap, housesByCity, layoutMap, mapBoxes, mapSvgMarkup, pinScale, project } from './geo';
 import subdivisions from '../data/map/north-america-subdivisions.json';
+import { mapElements, nodeId } from './elements';
 
 const allCities = new Set(housesByCity().keys());
 
 describe('world map layout', () => {
+  it('keeps map labels concise and preserves city IDs and coordinates', () => {
+    const markers = mapElements().filter((element) => element.data.kind === 'marker');
+    for (const [city, label] of [
+      ['New York', 'New York'],
+      ['Los Angeles', 'Los Angeles'],
+      ['Rockford', 'Rockford'],
+      ['Toronto', 'Toronto'],
+      ['Vancouver', 'Vancouver'],
+      ['Montreal', 'Montreal'],
+      ['Paris', 'Paris'],
+    ] as const) {
+      const marker = markers.find((element) => element.data.id === nodeId.city(city));
+      expect(marker?.data.label).toBe(label);
+      expect(marker?.data.city).toBe(city);
+      expect(marker?.data.tip).toEqual(project(cities[city]));
+    }
+  });
+
   it('projects internal boundaries for Canada and the USA into the clipped map layer', () => {
     expect(subdivisions.features.map((f) => f.properties.country).sort()).toEqual(['CA', 'US']);
     const markup = mapSvgMarkup();

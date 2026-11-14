@@ -1,5 +1,6 @@
 import type { Designer, House, HouseTenure, Move, Tenure } from '../types';
 import { designers as designerRecords } from './designers';
+import type { DesignerId } from './designers';
 import { houses as houseRecords } from './houses';
 import { groups as groupRecords, GroupId, type GroupData } from './groups';
 
@@ -20,6 +21,11 @@ export const housesInGroup = (id: string): House[] => houses
   .filter((house) => house.parentGroup === id)
   .sort((a, b) => a.name.localeCompare(b.name));
 
+/** Licensed or regional operations, kept separate from owned group brands. */
+export const regionalHousesInGroup = (id: string): House[] => houses
+  .filter((house) => house.regionalAffiliations?.some((affiliation) => affiliation.group === id))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
 export const houses: House[] = Object.entries(houseRecords).map(([id, h]) => ({ id, ...h }));
 export const designers: Designer[] = Object.entries(designerRecords).map(([id, d]) => ({
   id,
@@ -29,8 +35,17 @@ export const designers: Designer[] = Object.entries(designerRecords).map(([id, d
 const houseById = new Map(houses.map((h) => [h.id, h]));
 const designerById = new Map(designers.map((d) => [d.id, d]));
 
+// Read the literal records here so misspelled founder IDs fail type checking,
+// without a circular dependency between house and designer ID inference.
+const founderIdsByHouse = new Map<string, readonly DesignerId[]>(Object.entries(houseRecords)
+  .map(([id, house]) => [id, 'founders' in house ? house.founders : []]));
+
 export const getHouse = (id: string) => houseById.get(id);
 export const getDesigner = (id: string) => designerById.get(id);
+
+/** Founders in editorial display order, with names owned by designer profiles. */
+export const foundersOf = (houseId: string): Designer[] => (founderIdsByHouse.get(houseId) ?? [])
+  .map((id) => designerById.get(id)!);
 
 const startYear = (t: Tenure) => t.start ?? (typeof t.end === 'number' ? t.end : -Infinity);
 const byStart = (a: Tenure, b: Tenure) => startYear(a) - startYear(b) || 0;
@@ -47,6 +62,10 @@ export function tenuresAt(houseId: string): HouseTenure[] {
     .filter((t) => t.house === houseId)
     .sort(byStart);
 }
+
+/** Business appointments must never be presented as creative direction. */
+export const isBusinessLeadership = (tenure: Pick<Tenure, 'role'>): boolean =>
+  tenure.role === 'CEO' || tenure.role === 'President' || tenure.role === 'Managing Director';
 
 /** Who was at the house in a given year. */
 export function tenuresAtInYear(houseId: string, year: number): HouseTenure[] {
@@ -110,12 +129,12 @@ export function yearRange(): [number, number] {
   return [Math.min(...years), Math.max(...years)];
 }
 
-/** "2012–2016", "2016–present", "~1964–1983", "2005–?", or "2021" for a single year. */
+/** "2012–2016", "2016–Present", "~1964–1983", or "2021" when no end year is supplied. */
 export function formatTenureYears(t: Tenure): string {
   const prefix = t.approximate ? '~' : '';
   if (t.start === undefined && t.end === undefined) return 'Unknown';
-  if (t.start !== undefined && t.end === t.start) return `${prefix}${t.start}`;
-  const end = t.end === null ? 'present' : (t.end ?? '?');
+  if (t.start !== undefined && (t.end === undefined || t.end === t.start)) return `${prefix}${t.start}`;
+  const end = t.end === null ? 'Present' : t.end;
   return `${prefix}${t.start ?? '?'}–${end}`;
 }
 
