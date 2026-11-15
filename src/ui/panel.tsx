@@ -1,14 +1,15 @@
-import { Fragment, useState, type ReactNode } from 'react';
+import { Fragment, useId, useState, type ReactNode } from 'react';
 import {
-  careerOf, countryNames, designers, formatTenureYears, foundersOf, getDesigner, getGroup,
-  getHouse, groups, houses, housesInGroup, isBusinessLeadership, logoUrl, movesOf, regionalHousesInGroup, tenuresAt,
+  careerOf, collaborationsOf, countryNames, designers, formatTenureYears, foundersOf, getDesigner, getGroup,
+  getHouse, groups, houses, housesInGroup, isBusinessLeadership, labelsOf, logoUrl, movesOf, parentHouseOf, regionalHousesInGroup, tenuresAt,
 } from '../data';
 import type { Selection as GraphSelection } from '../graph/graph';
-import type { House, HouseTenure, Tenure } from '../types';
+import type { Collaboration, House, HouseTenure, Tenure } from '../types';
 import { frameIcon, initialsIcon, logoInfo } from '../graph/icons';
 import { tagLabel } from './labels';
 import type { HouseFilters } from '../data/tags';
 import { formatCity } from '../data/cities';
+import { SelectBox } from './listbox';
 
 export type Selection = GraphSelection;
 interface Actions {
@@ -33,8 +34,21 @@ function Fields({ rows }: { rows: [string, ReactNode][] }) {
   return <table className="fields"><tbody>{rows.filter(([, value]) => value !== undefined && value !== null && value !== '' && value !== false)
     .map(([label, value]) => <tr key={label}><th>{label}:</th><td>{value}</td></tr>)}</tbody></table>;
 }
-function Notes({ text }: { text?: string }) {
-  return text ? <fieldset><legend>Notes</legend><p>{text}</p></fieldset> : null;
+function ProfileSection({ title, className, defaultOpen = true, children }: { title: string; className?: string; defaultOpen?: boolean; children: ReactNode }) {
+  const [open, setOpen] = useState(defaultOpen);
+  const contentId = useId();
+  return <fieldset className={className}>
+    <legend><button className="section-toggle" aria-expanded={open} aria-controls={contentId}
+      type="button" onClick={() => setOpen((value) => !value)}>
+      <span aria-hidden="true">{open ? '▾' : '▸'}</span> {title}
+    </button></legend>
+    <div id={contentId} hidden={!open}>{children}</div>
+  </fieldset>;
+}
+function Description({ text, defaultOpen = false }: { text?: string; defaultOpen?: boolean }) {
+  return text ? <ProfileSection key={text} title="Description" defaultOpen={defaultOpen}>
+    <div className="sunken-panel description-box"><p>{text}</p></div>
+  </ProfileSection> : null;
 }
 function Website({ url }: { url: string }) {
   let label = url;
@@ -55,8 +69,15 @@ function HouseLogo({ house }: { house: House }) {
 }
 
 function HouseList({ list, onSelect }: { list: readonly House[]; onSelect: Actions['onSelect'] }) {
-  return <ul>{[...list].sort((a, b) => a.name.localeCompare(b.name)).map((house) =>
-    <li key={house.id}><EntityLink kind="house" id={house.id} onSelect={onSelect}>{house.name}</EntityLink></li>)}</ul>;
+  const ids = new Set(list.map((house) => house.id));
+  const renderBranch = (house: House): ReactNode => {
+    const children = list.filter((child) => child.parentHouse === house.id).sort((a, b) => a.name.localeCompare(b.name));
+    const link = <EntityLink kind="house" id={house.id} onSelect={onSelect}>{house.name}</EntityLink>;
+    return <li key={house.id}>{children.length ? <details><summary>{link} ({children.length} labels)</summary>
+      <ul>{children.map(renderBranch)}</ul></details> : link}</li>;
+  };
+  return <ul>{[...list].filter((house) => !house.parentHouse || !ids.has(house.parentHouse))
+    .sort((a, b) => a.name.localeCompare(b.name)).map(renderBranch)}</ul>;
 }
 
 function Directory({ visibleHouses, onSelect }: { visibleHouses: readonly House[]; onSelect: Actions['onSelect'] }) {
@@ -96,7 +117,29 @@ function TenureTable({ list, supporting, business, onSelect }: { list: HouseTenu
   </tbody></table></div>;
 }
 
-function HouseProfile({ house, onSelect, onTag }: { house: House } & Actions) {
+function CollaborationRow({ house, projects, onSelect }: {
+  house: House; projects: Collaboration[]; onSelect: Actions['onSelect'];
+}) {
+  const years = [...new Set(projects.map((project) => project.year))].sort((a, b) => b - a);
+  const [chosenYear, setChosenYear] = useState(years[0]!);
+  const year = years.includes(chosenYear) ? chosenYear : years[0]!;
+  const partners = projects[0]!.houses.filter((id) => id !== house.id);
+  const query = `${[house.id, ...partners].map((id) => getHouse(id)?.name ?? id).join(' x ')} ${year}`;
+  return <tr>
+    <td>{years.length > 1 ? <SelectBox label={`Search year for ${partners.map((id) => getHouse(id)?.name ?? id).join(', ')}`}
+      values={years} value={year} onChange={setChosenYear} /> : year}</td>
+    <td>{partners.map((id, index) => <Fragment key={id}>
+      {index > 0 && ', '}<EntityLink kind="house" id={id} onSelect={onSelect}>{getHouse(id)?.name ?? id}</EntityLink>
+    </Fragment>)}</td>
+    <td><a href={`https://www.google.com/search?q=${encodeURIComponent(query)}`} target="_blank" rel="noopener noreferrer">Search</a></td>
+  </tr>;
+}
+
+function HouseProfile({ house, year, onSelect, onTag }: { house: House; year: number } & Actions) {
+  const collaborations = collaborationsOf(house.id).filter((project) => project.year <= year).toReversed();
+  const partnerships = Map.groupBy(collaborations, (project) => project.houses.filter((id) => id !== house.id).toSorted().join('|'));
+  const parent = parentHouseOf(house.id);
+  const labels = labelsOf(house.id);
   const founderLinks: ReactNode[] = foundersOf(house.id).map((designer) =>
     <EntityLink kind="designer" id={designer.id} onSelect={onSelect}>{designer.name}</EntityLink>);
   if (house.founderHouse) founderLinks.push(
@@ -117,27 +160,37 @@ function HouseProfile({ house, onSelect, onTag }: { house: House } & Actions) {
   ];
   return <>
     <div className="identity"><HouseLogo key={`${house.id}:${house.logo}`} house={house} /><div><h2>{house.name}</h2><Fields rows={[
-      ['Founded', house.founded],
+      ['Founded', house.founded !== undefined ? <>{house.founded}{house.closed !== undefined && <><span className="field-separator"> | </span><strong>Ended:</strong> {house.closed}</>}</> : undefined],
+      ['Closed', house.founded === undefined ? house.closed : undefined],
       ['Founder', founderLinks.length ? <>{founderLinks.map((link, index) => <Fragment key={index}>{index > 0 && ', '}{link}</Fragment>)}</> : undefined],
       ['Based in', `${house.city}, ${countryNames[house.country]}`],
+      ['Label of', parent && <EntityLink kind="house" id={parent.id} onSelect={onSelect}>{parent.name}</EntityLink>],
       ['Group', house.parentGroup && <EntityLink kind="group" id={house.parentGroup} onSelect={onSelect}>{getGroup(house.parentGroup)?.name ?? house.parentGroup}</EntityLink>],
       ['Website', house.website && <Website url={house.website} />],
       ['Instagram', house.instagram && <a href={`https://www.instagram.com/${house.instagram}/`} target="_blank" rel="noreferrer">@{house.instagram}</a>],
     ]} /></div></div>
+    {!!labels.length && <fieldset><legend>Labels ({labels.length})</legend><HouseList list={labels} onSelect={onSelect} /></fieldset>}
     {!!house.regionalAffiliations?.length && <fieldset><legend>Regional Relationships</legend><ul>
       {house.regionalAffiliations.map((affiliation) => <li key={`${affiliation.group}:${affiliation.territory}`}>
         <EntityLink kind="group" id={affiliation.group} onSelect={onSelect}>{getGroup(affiliation.group)?.name}</EntityLink>
         {` · ${affiliation.territory} · ${affiliation.relationship}`}
       </li>)}
     </ul></fieldset>}
-    <fieldset className="house-tags"><legend>Tags</legend>{tagGroups.map(([group, label, values]) =>
-      <div className="tag-group" key={group}><p>{label}</p><div className="tag-list">{values.map((value) =>
-        <button key={value} className="tag" data-tag-kind={group} data-tag-value={value} title={`Filter by ${tagLabel(value)}`} onClick={() => onTag(group, value)}>{tagLabel(value)}</button>
-      )}</div></div>)}</fieldset>
-    <fieldset><legend>Creative directors</legend>{directors.length ? <TenureTable list={directors} onSelect={onSelect} /> : <p className="hint">No creative directors recorded.</p>}</fieldset>
+    <ProfileSection title="Creative directors">{directors.length ? <TenureTable list={directors} onSelect={onSelect} /> : <p className="hint">No creative directors recorded.</p>}</ProfileSection>
     {!!business.length && <fieldset><legend>Business leadership</legend><TenureTable list={business} business onSelect={onSelect} /></fieldset>}
     {!!team.length && <fieldset><legend>Design team &amp; other roles</legend><TenureTable list={team} supporting onSelect={onSelect} /></fieldset>}
-    <Notes text={house.notes} />
+    <ProfileSection title={`Collaboration history (${partnerships.size})`}>
+      {collaborations.length ? <>
+        <div className="sunken-panel"><table className="interactive">
+        <thead><tr><th>Year</th><th>With</th><th></th></tr></thead>
+        <tbody>{[...partnerships].map(([partners, projects]) => <CollaborationRow key={`${house.id}:${partners}`} house={house} projects={projects} onSelect={onSelect} />)}</tbody>
+      </table></div></> : <p className="hint">No collaborations recorded{Number.isFinite(year) ? ` through ${year}` : ''}.</p>}
+    </ProfileSection>
+    <Description text={house.notes} defaultOpen />
+    <ProfileSection title="Tags" className="house-tags">{tagGroups.map(([group, label, values]) =>
+      <div className="tag-group" key={group}><p>{label}</p><div className="tag-list">{values.map((value) =>
+        <button key={value} className="tag" data-tag-kind={group} data-tag-value={value} title={`Filter by ${tagLabel(value)}`} onClick={() => onTag(group, value)}>{tagLabel(value)}</button>
+      )}</div></div>)}</ProfileSection>
   </>;
 }
 
@@ -146,7 +199,7 @@ function GroupProfile({ id, onSelect }: { id: string; onSelect: Actions['onSelec
   if (!group) return <p>No group with id “{id}”.</p>;
   const brands = housesInGroup(id);
   const regionalBrands = regionalHousesInGroup(id);
-  return <><h2>{group.name}</h2><p>{group.description}</p><Fields rows={[["Official Website", <Website url={group.website} />]]} />
+  return <><h2>{group.name}</h2><Fields rows={[["Official Website", <Website url={group.website} />]]} />
     <fieldset><legend>Current Brands in This Map ({brands.length})</legend>
       <p className="hint">Current ownership recorded in this map. The official website has more information on the wider portfolio.</p>
       <ul className="tree-view">{brands.map((house) => <li key={house.id}><EntityLink kind="house" id={house.id} onSelect={onSelect}>{house.name}</EntityLink></li>)}</ul>
@@ -158,7 +211,7 @@ function GroupProfile({ id, onSelect }: { id: string; onSelect: Actions['onSelec
           <li key={affiliation.territory}>{affiliation.territory} · {affiliation.relationship}</li>)}</ul>
       </li>)}</ul>
     </fieldset>}
-    <Notes text={group.notes} /></>;
+    <Description text={[group.description, group.notes].filter(Boolean).join('\n\n')} /></>;
 }
 
 function DesignerProfile({ id, onSelect }: { id: string; onSelect: Actions['onSelect'] }) {
@@ -176,7 +229,7 @@ function DesignerProfile({ id, onSelect }: { id: string; onSelect: Actions['onSe
         <span className="hint">(alongside <EntityLink kind="house" id={move.from.house} onSelect={onSelect}>{getHouse(move.from.house)?.name ?? move.from.house}</EntityLink>)</span></> : <>
         <EntityLink kind="house" id={move.from.house} onSelect={onSelect}>{getHouse(move.from.house)?.name ?? move.from.house}</EntityLink>{' → '}
         <EntityLink kind="house" id={move.to.house} onSelect={onSelect}>{getHouse(move.to.house)?.name ?? move.to.house}</EntityLink></>}
-    </li>)}</ul> : <p className="hint">No moves between houses recorded.</p>}</fieldset><Notes text={designer.notes} /></>;
+    </li>)}</ul> : <p className="hint">No moves between houses recorded.</p>}</fieldset><Description text={designer.notes} /></>;
 }
 
 export function panelTitle(selection: Selection): string {
@@ -185,12 +238,12 @@ export function panelTitle(selection: Selection): string {
   return name ? `${name} Properties` : 'Not found';
 }
 
-export function PanelContent({ selection, visibleHouses = houses, onSelect, onTag }: {
-  selection: Selection; visibleHouses?: readonly House[];
+export function PanelContent({ selection, visibleHouses = houses, year = Infinity, onSelect, onTag }: {
+  selection: Selection; visibleHouses?: readonly House[]; year?: number;
 } & Actions) {
   if (selection?.kind === 'house') {
     const house = getHouse(selection.id);
-    return house ? <HouseProfile house={house} onSelect={onSelect} onTag={onTag} /> : <p>No house with id “{selection.id}”.</p>;
+    return house ? <HouseProfile key={house.id} house={house} year={year} onSelect={onSelect} onTag={onTag} /> : <p>No house with id “{selection.id}”.</p>;
   }
   if (selection?.kind === 'designer') return <DesignerProfile id={selection.id} onSelect={onSelect} />;
   if (selection?.kind === 'group') return <GroupProfile id={selection.id} onSelect={onSelect} />;

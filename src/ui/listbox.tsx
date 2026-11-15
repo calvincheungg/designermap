@@ -1,4 +1,71 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+
+/** Styled list and arrow keep the opened menu consistent across operating systems. */
+export function SelectBox({ label, values, value, onChange }: {
+  label: string; values: readonly number[]; value: number; onChange: (value: number) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(value);
+  const [position, setPosition] = useState({ left: 0, top: 0, width: 0, maxHeight: 240 });
+  const button = useRef<HTMLButtonElement>(null);
+  const list = useRef<HTMLUListElement>(null);
+  const id = useId();
+  const activeValue = values.includes(active) ? active : value;
+  useLayoutEffect(() => {
+    if (!open || !button.current) return;
+    const rect = button.current.getBoundingClientRect();
+    const below = window.innerHeight - rect.bottom - 8;
+    const above = rect.top - 8;
+    const height = Math.min(240, values.length * 24 + 2);
+    const upwards = below < height && above > below;
+    const maxHeight = Math.max(24, Math.min(height, upwards ? above : below));
+    setPosition({ left: rect.left, top: upwards ? rect.top - maxHeight : rect.bottom, width: rect.width, maxHeight });
+  }, [open, values.length]);
+  useLayoutEffect(() => {
+    if (open) list.current?.querySelector('.active')?.scrollIntoView?.({ block: 'nearest' });
+  }, [open, activeValue]);
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: Event) => {
+      if (event.target instanceof Node && list.current?.contains(event.target)) return;
+      setOpen(false);
+    };
+    window.addEventListener('resize', close);
+    window.addEventListener('scroll', close, true);
+    return () => {
+      window.removeEventListener('resize', close);
+      window.removeEventListener('scroll', close, true);
+    };
+  }, [open]);
+  function pick(next: number) { onChange(next); setOpen(false); }
+  return <>
+    <button ref={button} type="button" className="w98-select" role="combobox" aria-label={label}
+      aria-haspopup="listbox" aria-controls={open ? id : undefined} aria-expanded={open}
+      aria-activedescendant={open ? `${id}-${activeValue}` : undefined}
+      onClick={() => { setActive(value); setOpen(!open); }} onBlur={() => setOpen(false)}
+      onKeyDown={(event) => {
+        if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+          event.preventDefault();
+          const index = values.indexOf(open ? activeValue : value);
+          const next = event.key === 'Home' ? 0 : event.key === 'End' ? values.length - 1
+            : Math.max(0, Math.min(values.length - 1, index + (event.key === 'ArrowDown' ? 1 : -1)));
+          setActive(values[next]!); setOpen(true);
+        } else if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          if (open) pick(activeValue);
+          else { setActive(value); setOpen(true); }
+        } else if (event.key === 'Escape') { event.preventDefault(); setOpen(false); }
+        else if (event.key === 'Tab') setOpen(false);
+      }}><span>{value}</span><span className="w98-select-arrow" aria-hidden="true" /></button>
+    {open && createPortal(<ul id={id} ref={list} className="w98-listbox w98-select-options" role="listbox" aria-label={label}
+      style={position}>
+      {values.map((year) => <li key={year} id={`${id}-${year}`} role="option" aria-selected={year === value}
+        className={year === activeValue ? 'active' : undefined} onMouseMove={() => setActive(year)}
+        onMouseDown={(event) => event.preventDefault()} onClick={() => pick(year)}>{year}</li>)}
+    </ul>, document.body)}
+  </>;
+}
 
 export interface ListItem<T> { label: string; aliases?: readonly string[]; hint?: string; value: T }
 const words = (value: string) => value.normalize('NFKD').replace(/\p{M}/gu, '').toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);

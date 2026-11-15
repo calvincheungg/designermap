@@ -15,6 +15,8 @@ Follow the user's latest scope and the data conventions in `CLAUDE.md`.
 - Resolve the identity: label versus retailer, diffusion line, similarly named
   company or generic product term. Ask once if the name remains ambiguous;
   continue independent work on identifiable brands.
+- Do not add retailers as brands or add retailer collaborations. Distinguish
+  clothing labels that sell their own designs from multi-brand retailers.
 
 ## 2. Establish the brand
 
@@ -30,8 +32,25 @@ Research these fields:
 | Creative identity | Design approach, signature materials/products, collection coverage |
 | Classification | Existing market tier, categories, 1–3 aesthetics and up to 4 primary product specialties |
 
+Write brand descriptions (`notes` in `houses.ts`) around what the brand is and
+what it makes: clothing and accessory ranges, style, silhouettes, signature
+pieces, materials and craft. Use concise, concrete language that helps readers
+understand the clothes and creative identity. Include history when it explains
+that identity. Keep corporate ownership, acquisitions, financing and business
+structure secondary; use the dedicated ownership fields and sources for those
+facts. Include business context in the description only when it is necessary to
+understand the brand or distinguish it from another label. Avoid filling the
+description with research-process commentary or lists of unverified business
+details; report unresolved questions in the research summary instead.
+
 Separate retail founding, label launch, incorporation, independence and relaunch
 dates. Explain material differences in notes instead of silently choosing a date.
+For a confirmed brand shutdown or current pause, record its year in `closed`;
+Properties shows it as "Ended" beside `founded`. Verify the year operations ended
+or paused rather than using an announcement year or final runway presentation
+by default. A brand that remains paused counts as ended even if the pause was
+announced as temporary. Omit `closed` when the end year is unconfirmed or the
+brand has since resumed trading; preserve earlier pauses and relaunches in notes.
 Judge market tier across core products and comparable existing brands, not one
 expensive item, a collaboration or the owner's other labels. Treat tags as
 editorial judgments rather than externally certified facts.
@@ -70,6 +89,12 @@ unknown. If a connected house is missing, preserve the sourced context in notes;
 do not recursively add every related brand unless the user requests expansion.
 No one-off collaborations, capsules, endorsements, friendships, stockist
 relationships or shared ownership as career entries or designer connections.
+Record researched brand collaborations in `src/data/collaborations.ts` instead,
+with at least two distinct existing house IDs and the release year. Each release
+has its own stable ID, including repeat partnerships.
+Do not generate descriptions for new collaborations or show collaboration
+descriptions in the interface. Record participants and year; exact collection
+names are not needed. The history links to a Google search for the brands and year.
 An ongoing partnership requires evidence of a sustained creative role.
 
 ## 4. Resolve evidence and uncertainty
@@ -78,8 +103,9 @@ An ongoing partnership requires evidence of a sustained creative role.
   passages; search snippets alone are discovery aids for important claims.
 - Prefer primary sources; use reputable secondary sources when primary history
   is unavailable. Search in the brand's native language when useful.
-- Save direct supporting URLs in house/person `sources`, and attach tenure
-  sources to the relevant career entry. Reuse a source across supported facts.
+- Source URLs are optional internal metadata. Preserve existing research links,
+  but new links need not be provided. Keep source links out of the interface and
+  task summaries unless explicitly requested; continue verifying the facts.
 - Check source dates against event dates. Verify current roles and ownership
   against recent evidence, rather than assuming an old announcement still holds.
 - Resolve conflicting dates or spellings with the strongest evidence. Explain

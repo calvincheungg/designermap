@@ -30,10 +30,12 @@ Run `npm run check && npm test` before committing.
 src/types.ts          data model
 src/data/houses.ts    SOURCE OF TRUTH: houses (key = house id)
 src/data/designers.ts SOURCE OF TRUTH: designers + career tenures
+src/data/collaborations.ts SOURCE OF TRUTH: dated brand collaborations (2+ houses)
 src/data/cities.ts    city → [lat, lng]; every house city must be listed here
 src/data/index.ts     derived queries: tenuresAt, movesOf, allMoves, yearRange…
 src/data/validate.ts  sanity checks (also run in tests + logged in browser)
 src/graph/geo.ts      projection, world SVG markup, city-box placement + overlap removal
+src/graph/locations.ts display-only regional pin groups and their anchor cities
 src/graph/            Cytoscape: elements.ts (per view), style.ts, icons.ts, graph.ts
 src/ui/panel.tsx      React Properties components for house / designer / group / directory
 src/ui/listbox.tsx    React Win98 Find combobox (replaces <datalist>)
@@ -48,6 +50,11 @@ Key rules:
 - **Each fact is written once.** Tenures live only in `designers.ts` (`career`).
   A house's director list and a designer's moves are *derived*, never stored.
   Don't add a `directors` array to houses or a `moves` array to designers.
+- Record a confirmed brand shutdown or current pause in the house's optional
+  `closed` year, using the year operations ended or paused. Properties displays
+  `Founded: 2006 | Ended: 2023` on one row. Omit `closed` when the end year is
+  unconfirmed or the brand is active again; keep earlier pauses and relaunches
+  in the description.
 - **Ids are object keys** (camelCase). `HouseId` is `keyof typeof houses`, so a
   bad `house:` reference in a career is a compile error. Keep the
   `satisfies Record<string, …>` pattern; don't widen to `string`.
@@ -73,8 +80,14 @@ Key rules:
     Cytoscape, ResizeObserver, pending image callbacks and delayed fit timers.
   - Keep data queries and graph layout independent of React. Use React components
     and event handlers for interface changes rather than HTML strings or DOM mutation.
-  - One `marker` node per city: a pixel-art Win98 pin
-    (`icons.ts cityMarkerIcon`) whose tip sits exactly on the city. Pins scale
+  - One `marker` node per map location (city or region): a pixel-art Win98 pin
+    (`icons.ts cityMarkerIcon`) whose tip sits exactly on the city or a region's
+    representative anchor city. `graph/locations.ts` consolidates nearby cities
+    in California and Italy into stable regional pins, while major cities such as
+    Los Angeles, San Francisco and Milan retain distinct pins; house cities, Properties
+    and the directory retain their actual locations. Map grouping, expansion,
+    counts and move endpoints use `mapLocationForCity` / `housesByMapLocation`.
+    Pins scale
     with the map when zoomed out but cap at ~26px on screen (`sizeMarkers`,
     re-run on every zoom); colliding labels are hidden via `text-opacity`
     (an empty `label` bypass would *remove* the override). Clicking a pin
@@ -84,7 +97,13 @@ Key rules:
     `move` edges are rebuilt on every expand/collapse: each end attaches to the
     house if its city is open, else to the pin. Selecting a brand reveals its
     direct move connections: `autoRevealed` restricts automatically opened cities
-    to those brands, keeping manually opened cities intact. Changing or clearing
+    to those brands. If the user manually opened the selected brand's city,
+    show only its revealed family when it has visible sublabels at that map
+    location; otherwise keep the city's brands visible. Keep an already visible
+    parent icon at its current position and place its sublabels beside it.
+    Tapping the selected brand
+    again clears selection and restores that city's full grid. Other manually
+    opened cities stay intact. Changing or clearing
     the selection replaces these automatic reveals. Only the selected brand gets
     an outline; connected brands retain their normal borders. Selecting a designer
     opens their career cities and highlights their houses and moves.
@@ -92,10 +111,42 @@ Key rules:
     frames them on the map, without expanding their designer connections or
     outlining individual brands. Group reveals also respect year and tag filters.
     Map min zoom: `MAP_MIN_ZOOM` or map-fills-view.
-  - Designers aren't nodes; selecting one highlights their houses + move edges.
+  - Designers aren't nodes; selecting one highlights their career houses, with connection lines hidden.
   - "Show move lines" checkbox → `DesignerGraph.setShowMoves`: off hides `move`
-    edges via the `lines-off` class, except the current selection's own lines.
+    edges via the `lines-off` class, including the selected brand’s lines.
     Remembered in localStorage (`designer-map:show-lines`).
+  - "Show collaboration lines" → `DesignerGraph.setShowCollaborations`: an
+    independent switch remembered as `designer-map:show-collaborations`.
+    Collaboration lines are red and dashed, without permanent arrowheads. Selecting a brand reveals its
+    recorded partners and pulses outward to each partner, including
+    every other participant in a project with three or more brands. Turning
+    the switch off hides all collaboration arrows and their automatic reveals.
+    The year and tag filters apply to these releases and their endpoints.
+    Draw one collaboration line per brand pair, combining repeat releases and
+    shared multi-brand projects. Its hover details show the release year, or `(Multiple)`
+    when releases through the selected year span more than one distinct year.
+    Connection labels appear only on hover in a reserved strip above the canvas,
+    never over brand icons. The map's All / Designers / Collaborations filter
+    controls both lines and automatic partner reveals. Selected brands show only
+    their direct connections. Hide all move and collaboration lines without a
+    brand selection, including when cities are expanded or a designer/group is selected.
+    A travelling pulse repeats every three seconds on each selected
+    line and on hovered connections; designer pulses follow career direction. Respect
+    reduced motion and clear pulse resources on relayout and destruction.
+    Brand Properties lists the recorded collaboration history through the
+    selected year, newest partnership first, with Year, Partner brands and Search
+    columns. Repeat partnerships share one row, grouped by the exact set of
+    partner brands; a year selector defaults to the latest recorded release.
+    Keep individual release years in the data and group only in the interface.
+    Search opens Google in a new tab for the selected brand × all partner brands
+    plus the release year. Do not display collection names or source links.
+- Brand profile descriptions, creative directors, collaboration history and tags
+  use matching fieldset headings with clickable expand/collapse buttons. All open
+  by default; descriptions show their text in a separate inset box.
+  Each newly selected brand starts with these sections expanded. Collaboration descriptions are
+  not displayed at all; do not generate descriptions for new collaborations.
+  Do not display research/source links in the UI
+  or add them to future summaries unless explicitly requested.
 - The world map is an SVG *under* the Cytoscape canvas, drawn in model
   coordinates and kept aligned by mirroring pan/zoom onto an SVG `<g transform>`
   (`syncMapLayer`). Use the SVG attribute, not a CSS transform, or
@@ -110,6 +161,10 @@ Key rules:
 
 ## Data conventions
 
+- Brand descriptions should focus on what the brand is, the clothes and
+  accessories it makes, and its style, signature pieces, materials and craft.
+  Keep corporate ownership and business details secondary; prefer dedicated
+  fields for those facts. See the description guidance in `docs/brand-research.md`.
 - **For every brand research, addition or correction, follow
   [the brand research workflow](docs/brand-research.md).** Read it when starting
   that task, including research of the associated designers and career links.
@@ -147,18 +202,42 @@ Key rules:
   rather than its cheapest entry product, most expensive piece or a collaboration.
   Group ownership, age and the Couture tag do not automatically determine tier;
   couture remains a separate brand/product classification.
-- **Exclude one-off collaborations from career tenures and map connections.**
+- **Exclude one-off collaborations from career tenures and career-move connections.**
+  Store brand collaborations separately in `src/data/collaborations.ts`, keyed
+  by a stable project/release ID, with `houses` (at least two distinct house IDs)
+  and a required release `year`. Optional fields are `name`, `notes` and `sources`.
+  New collaborations only need participants and year; do not generate exact
+  collection names or descriptions. Existing names and notes may remain as metadata.
+  Add separate records for separate releases, including repeat brand pairings.
+  Query through `collaborationsOf`, `collaborationsInYear` and `getCollaboration`.
   Capsule collections, limited releases and single brand-to-brand projects
   (for example, Born x Raised × Nike or PLEASURES × Puma) are not career moves.
   Do not add them as `career` entries, including under `Other`, because every
   entry can generate map connections. Record employment, founding and creative
   leadership; include an ongoing design partnership only when sources establish
   a sustained role beyond an individual collaboration. Collaboration context may
-  appear in notes without creating a separate tenure or connection. Apply this
+  appear in notes without creating a separate tenure or career-move connection. Apply this
   rule when adding, researching or correcting data and updating related tests.
-- Starter data was written from memory. When adding or correcting entries,
-  prefer adding a `sources` URL over guessing; mark uncertain years `approximate`.
+  Dedicated collaboration arrows are derived only from collaboration records.
+  The initial 50 releases are an editorial selection of notable projects, not
+  a ranked top 50 or complete histories. Use the release year rather than an
+  earlier runway presentation or announcement; record the actual participating
+  labels, and do not substitute a designer's namesake brand for the person.
+- Starter data was written from memory. Verify additions rather than guessing;
+  mark uncertain years `approximate`. Source URLs are optional internal research
+  metadata; preserve existing metadata, but no need to provide new source links.
 - `parentGroup` is the *current* owner, not historical.
+  `parentHouse` links a distinct label to its parent fashion house, independently
+  of ownership, licences or founding. Each label keeps its own tags, city and
+  creative tenures. Do not link sister brands solely because they share an owner.
+  The directory nests families; Properties links both directions. On the map,
+  labels share their root house’s pin and grid, with only main houses counted in
+  pins or shown on city expansion. Selecting a house reveals its direct labels;
+  selecting a nested label reveals its ancestry and its own direct labels.
+  Search and designer selection can reveal a specific label directly. Year/tag
+  filters retain a parent as navigation context when only its labels match.
+  Hidden-label career arrows attach to the nearest visible ancestor, while the
+  underlying career and actual house locations remain unchanged.
   A group brand list may also include licensed brands or regional operations.
   Record those in sourced `regionalAffiliations` with the relevant territory,
   never as global `parentGroup` ownership. Group profiles display them separately.
@@ -186,4 +265,4 @@ Key rules:
   - `add/remove/toggleClass` restyle every element passed, changed or not. Use
     `setClass` in `graph.ts`, which only touches elements whose state changes;
     never `cy.elements().removeClass(…)`.
-  - `housesByCity()` is memoized; treat its result as read-only.
+  - `housesByMapLocation()` is memoized; treat its result as read-only.

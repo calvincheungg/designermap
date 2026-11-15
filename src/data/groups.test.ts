@@ -6,7 +6,7 @@ describe('group profiles', () => {
     const owned = housesInGroup(GroupId.TSI).map((house) => house.id);
     const regional = regionalHousesInGroup(GroupId.TSI).map((house) => house.id);
     expect(owned).toEqual(expect.arrayContaining(['margaretHowell', 'sugarCane', 'huf', 'andWander']));
-    expect(regional.sort()).toEqual(['alphaIndustries', 'avirex', 'schott', 'stussy']);
+    expect(regional.sort()).toEqual(['alphaIndustries', 'avirex', 'schott', 'stussy', 'whitesville']);
     for (const id of regional) expect(owned).not.toContain(id);
     expect(housesInGroup(GroupId.CentricBrands).map((house) => house.id)).toContain('avirex');
     expect(regionalHousesInGroup('unknown')).toEqual([]);
@@ -25,7 +25,7 @@ describe('group profiles', () => {
 
   it('derives brand membership from each house rather than storing a second list', () => {
     expect(housesInGroup(GroupId.Moncler).map((h) => h.id)).toEqual(['moncler', 'stoneIsland']);
-    expect(housesInGroup(GroupId.Prada).map((h) => h.id).sort()).toEqual(['churchs', 'miuMiu', 'prada', 'versace']);
+    expect(housesInGroup(GroupId.Prada).map((h) => h.id).sort()).toEqual(['churchs', 'miuMiu', 'prada', 'versace', 'versaceJeansCouture']);
     for (const group of groups) {
       expect(housesInGroup(group.id).map((h) => h.id).sort()).toEqual(
         houses.filter((h) => h.parentGroup === group.id).map((h) => h.id).sort(),
@@ -41,7 +41,7 @@ describe('group profiles', () => {
 
   it('groups the existing WHP portfolio and Vera Wang under the same stable ID', () => {
     expect(housesInGroup(GroupId.WHPGlobal).map((h) => h.id).sort()).toEqual([
-      'gStar', 'marcJacobs', 'ragAndBone', 'veraWang',
+      'gStar', 'heavenMarcJacobs', 'marcJacobs', 'ragAndBone', 'veraWang',
     ]);
     expect(housesInGroup(GroupId.LVMH).map((h) => h.id)).not.toContain('marcJacobs');
     expect(houses.find((h) => h.id === 'marcJacobs')?.notes).toContain('owned equally');

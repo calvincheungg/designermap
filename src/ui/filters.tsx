@@ -4,11 +4,11 @@ import { tagLabel } from './labels';
 
 export type FilterGroup = keyof HouseFilters;
 export const filterFields = [
-  ['marketPositioning', 'Market Positioning', marketPositionings],
-  ['brandCategory', 'Fashion Brand Type', brandCategories],
+  ['marketPositioning', 'Market', marketPositionings],
+  ['brandCategory', 'Category', brandCategories],
   ['aesthetic', 'Aesthetic', aesthetics],
   ['collections', 'Collections', collectionTags],
-  ['product', 'Primary Product', productTags],
+  ['product', 'Product', productTags],
 ] as const;
 
 /** Validate values against the group's enum before updating the typed filter state. */

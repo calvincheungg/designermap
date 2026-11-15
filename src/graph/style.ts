@@ -97,6 +97,7 @@ export const graphStyle: StylesheetJson = [
   {
     selector: 'edge',
     style: {
+      label: '',
       width: 1,
       'line-color': '#808080',
       'curve-style': 'bezier',
@@ -145,17 +146,23 @@ export const graphStyle: StylesheetJson = [
   {
     selector: 'edge.highlight',
     style: {
-      label: 'data(label)',
       'line-color': NAVY,
       'target-arrow-color': NAVY,
       width: 2,
-      // Draw above the house icons so the "Name 'YY" label is never hidden behind a logo.
-      'z-compound-depth': 'top',
-      'z-index-compare': 'manual',
-      'z-index': 1000,
+      // Keep connections behind brand icons; details live outside the canvas.
+      'z-compound-depth': 'bottom',
     },
   },
   // Only unrelated arrows fade, so the selection's moves stand out; houses stay fully visible.
+  {
+    selector: 'edge[kind = "collaboration"], edge.highlight[kind = "collaboration"]',
+    style: {
+      'line-color': '#cc0000',
+      'target-arrow-color': '#cc0000',
+      'target-arrow-shape': 'none',
+      'line-style': 'dashed',
+    },
+  },
   { selector: 'edge.faded', style: { opacity: 0.15, 'text-opacity': 0.3 } },
   { selector: '.hidden, .collapsed, .lines-off', style: { display: 'none' } },
 ];

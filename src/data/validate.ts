@@ -1,4 +1,5 @@
-import { collectionTags, designers, getDesigner, getGroup, getHouse, houses, marketPositionings } from './index';
+import { collaborations, collectionTags, designers, getDesigner, getGroup, getHouse, houses, marketPositionings } from './index';
+import type { Collaboration } from '../types';
 import { cityRegions, type CityName } from './cities';
 import { CountryCode } from './countries';
 
@@ -26,6 +27,10 @@ export function validateData(): string[] {
   }
 
   for (const h of houses) {
+    if (h.closed !== undefined) {
+      if (!Number.isInteger(h.closed) || h.closed <= 0) problems.push(`${h.id}: closure year must be a positive integer`);
+      if (h.founded !== undefined && h.closed < h.founded) problems.push(`${h.id}: closure before founding`);
+    }
     if (h.country === CountryCode.UnitedStates || h.country === CountryCode.Canada) {
       const location = cityRegions[h.city as CityName];
       if (!location?.region || location.country !== h.country) problems.push(`${h.id}: city needs a matching state or province`);
@@ -40,6 +45,17 @@ export function validateData(): string[] {
     }
     if (new Set(h.founders).size !== (h.founders?.length ?? 0)) problems.push(`${h.id}: duplicate founder references`);
     if (h.founderHouse && !getHouse(h.founderHouse)) problems.push(`${h.id}: unknown founding house ${h.founderHouse}`);
+    if (h.parentHouse && !getHouse(h.parentHouse)) problems.push(`${h.id}: unknown parent house ${h.parentHouse}`);
+    const family = new Set([h.id]);
+    let parent = h.parentHouse;
+    while (parent) {
+      if (family.has(parent)) {
+        problems.push(`${h.id}: cyclic parent-house relationship`);
+        break;
+      }
+      family.add(parent);
+      parent = getHouse(parent)?.parentHouse;
+    }
     if (h.founderGroup && !getGroup(h.founderGroup)) problems.push(`${h.id}: unknown founding group ${h.founderGroup}`);
     if (!marketPositionings.includes(h.tags.marketPositioning)) {
       problems.push(`${h.id}: choose a valid market positioning`);
@@ -68,6 +84,22 @@ export function validateData(): string[] {
     }
   }
 
+  problems.push(...validateCollaborations());
+  return problems;
+}
+
+/** Runtime checks also catch duplicate participants, which tuple types cannot. */
+export function validateCollaborations(records: readonly Collaboration[] = collaborations): string[] {
+  const problems: string[] = [];
+  for (const collaboration of records) {
+    const { id, houses: participants, year } = collaboration;
+    if (participants.length < 2) problems.push(`${id}: collaboration needs at least two houses`);
+    if (new Set(participants).size !== participants.length) problems.push(`${id}: duplicate collaboration houses`);
+    for (const houseId of participants) {
+      if (!getHouse(houseId)) problems.push(`${id}: unknown collaboration house ${houseId}`);
+    }
+    if (!Number.isInteger(year) || year < 1) problems.push(`${id}: collaboration year must be a positive integer`);
+  }
   return problems;
 }
 

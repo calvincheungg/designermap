@@ -18,6 +18,1766 @@ import type { HouseId } from './houses';
  * ⚠️ STARTER DATA, written from memory. Verify each entry and add `sources`.
  */
 export const designers = {
+  michaelBudman: {
+    name: "Michael Budman",
+    career: [
+      {"house": "roots", "role": "Founder", "roleDetail": "Co-founder", "start": 1973, "sources": ["https://www.roots.com/us/en/our-story.html"]},
+    ],
+    notes: "Co-founded Roots with Don Green, drawing on their experiences at Camp Tamakwa in Ontario. Individual current design responsibilities are unconfirmed.",
+    sources: ["https://www.roots.com/us/en/our-story.html"],
+  },
+  donGreen: {
+    name: "Don Green",
+    career: [
+      {"house": "roots", "role": "Founder", "roleDetail": "Co-founder", "start": 1973, "sources": ["https://www.roots.com/us/en/our-story.html"]},
+    ],
+    notes: "Co-founded Roots with Michael Budman after they met at summer camp in Ontario. Founding is recorded separately from creative leadership.",
+    sources: ["https://www.roots.com/us/en/our-story.html"],
+  },
+  joeyGollish: {
+    name: "Joey Gollish",
+    career: [
+      {"house": "roots", "role": "Creative Director", "roleDetail": "Creative director in residence", "start": 2023, "end": null, "sources": ["https://investors.roots.com/news-and-events/press-releases/press-release-details/2023/ROOTS-TAPS-MR.-SATURDAYS-JOEY-GOLLISH-AS-NEW-CREATIVE-DIRECTOR-IN-RESIDENCE-/default.aspx"]},
+    ],
+    notes: "Founder and creative director of Mr. Saturday, which is not separately represented. Joined Roots in March 2023 with a residency initially expected to run through 2025; a January 2026 interview confirms his continuing creative role.",
+    sources: ["https://investors.roots.com/news-and-events/press-releases/press-release-details/2023/ROOTS-TAPS-MR.-SATURDAYS-JOEY-GOLLISH-AS-NEW-CREATIVE-DIRECTOR-IN-RESIDENCE-/default.aspx", "https://gentspost.com/from-mr-saturday-to-roots-how-joey-gollish-is-reshaping-canadian-style-from-the-inside/"],
+  },
+  karunaScheinfeld: {
+    name: "Karuna Scheinfeld",
+    career: [
+      {"house": "ralphLauren", "role": "Other", "roleDetail": "Early fashion career; exact title unconfirmed", "sources": ["https://investors.roots.com/news-and-events/press-releases/press-release-details/2020/Roots-Appoints-Karuna-Scheinfeld-as-Chief-Product-Officer/default.aspx"]},
+      {"house": "dolceGabbana", "role": "Other", "roleDetail": "Early fashion career; exact title unconfirmed", "sources": ["https://investors.roots.com/news-and-events/press-releases/press-release-details/2020/Roots-Appoints-Karuna-Scheinfeld-as-Chief-Product-Officer/default.aspx"]},
+      {"house": "abercrombieFitch", "role": "Other", "roleDetail": "Senior design leadership", "sources": ["https://investors.roots.com/news-and-events/press-releases/press-release-details/2020/Roots-Appoints-Karuna-Scheinfeld-as-Chief-Product-Officer/default.aspx"]},
+      {"house": "americanEagle", "role": "Other", "roleDetail": "Senior design leadership", "sources": ["https://investors.roots.com/news-and-events/press-releases/press-release-details/2020/Roots-Appoints-Karuna-Scheinfeld-as-Chief-Product-Officer/default.aspx"]},
+      {"house": "woolrich", "role": "Head Designer", "roleDetail": "Vice president of design, menswear and womenswear", "sources": ["https://investors.roots.com/news-and-events/press-releases/press-release-details/2020/Roots-Appoints-Karuna-Scheinfeld-as-Chief-Product-Officer/default.aspx"]},
+      {"house": "canadaGoose", "role": "Head Designer", "roleDetail": "Vice president of design, menswear and womenswear", "end": 2020, "sources": ["https://investors.roots.com/news-and-events/press-releases/press-release-details/2020/Roots-Appoints-Karuna-Scheinfeld-as-Chief-Product-Officer/default.aspx"]},
+      {"house": "roots", "role": "Head Designer", "roleDetail": "Chief product officer; led creative and design teams", "start": 2020, "end": 2024, "sources": ["https://investors.roots.com/news-and-events/press-releases/press-release-details/2020/Roots-Appoints-Karuna-Scheinfeld-as-Chief-Product-Officer/default.aspx"]},
+    ],
+    notes: "Parsons-trained designer whose product leadership at Roots included its creative and design teams. Left at the end of 2024. Also co-founded Four Objects, which is not separately represented; earlier employment dates are unconfirmed.",
+    sources: ["https://investors.roots.com/news-and-events/press-releases/press-release-details/2020/Roots-Appoints-Karuna-Scheinfeld-as-Chief-Product-Officer/default.aspx", "https://investors.roots.com/news-and-events/press-releases/press-release-details/2024/Roots-Announces-Chief-Product-Officer-Transition/default.aspx", "https://investors.roots.com/news-and-events/press-releases/press-release-details/2023/ROOTS-TAPS-MR.-SATURDAYS-JOEY-GOLLISH-AS-NEW-CREATIVE-DIRECTOR-IN-RESIDENCE-/default.aspx"],
+  },
+  adrianAitcheson: {
+    name: "Adrian Aitcheson",
+    career: [
+      {"house": "roots", "role": "Head Designer", "roleDetail": "Head designer; first tenure including Olympic collections", "sources": ["https://www.glory.media/how-adrian-aitcheson-defined-the-identity-of-canadian-fashion"]},
+      {"house": "eckoUnltd", "role": "Head Designer", "roleDetail": "Design director", "sources": ["https://www.glory.media/how-adrian-aitcheson-defined-the-identity-of-canadian-fashion"]},
+      {"house": "canadaGoose", "role": "Other", "roleDetail": "Outerwear design", "sources": ["https://www.glory.media/how-adrian-aitcheson-defined-the-identity-of-canadian-fashion"]},
+      {"house": "roots", "role": "Head Designer", "roleDetail": "Director of menswear design and special projects; return tenure", "sources": ["https://www.glory.media/how-adrian-aitcheson-defined-the-identity-of-canadian-fashion"]},
+      {"house": "ovo", "role": "Other", "roleDetail": "Chief product officer", "sources": ["https://www.glory.media/how-adrian-aitcheson-defined-the-identity-of-canadian-fashion"]},
+    ],
+    notes: "Founded Too Black Guys in 1990 and later Pour L’Amour; those labels are not separately represented. Had separate stints at Roots and also designed Olympic apparel for Hudson’s Bay, which is not separately represented. Exact tenure dates and current role status are unconfirmed.",
+    sources: ["https://www.glory.media/how-adrian-aitcheson-defined-the-identity-of-canadian-fashion"],
+  },
+  dianeBald: {
+    name: "Diane Bald",
+    career: [
+      {"house": "roots", "role": "Other", "roleDetail": "Design director; brand environment and leather goods", "sources": ["https://zoomer.com/the-zoomerist-home/2017/11/16/roots-history"]},
+    ],
+    notes: "Architect whose Roots design work encompassed stores and interiors as well as leather bags and goods. Exact appointment dates and current role status are unconfirmed.",
+    sources: ["https://zoomer.com/the-zoomerist-home/2017/11/16/roots-history"],
+  },
+  lorenzWagner: {
+    name: "Lorenz Wagner",
+    career: [
+      { house: 'lowa', role: 'Founder', start: 1923, end: 1953 },
+    ],
+    notes: "Shoemaker who established the workshop that became LOWA in Jetzendorf. Remained involved until his death in 1953; the brand name derives from his first and last names.",
+    sources: ["https://lowa.com/en/experience-lowa/about-lowa"],
+  },
+  jukkaLehtinen: {
+    name: "Jukka Lehtinen",
+    career: [
+      { house: 'nike', role: 'Other', roleDetail: 'Intern, Hilversum', start: 2008, sources: ['https://presentforever.substack.com/p/zig-zag-wanderer'] },
+      { house: 'tarvas', role: 'Founder', roleDetail: 'Co-founder and footwear development', start: 2017, end: null },
+    ],
+    notes: "Interned at Nike in Hilversum in 2008, then worked at Karhu for about seven years before co-founding Tarvas. Karhu is not separately represented; its employment dates are unconfirmed.",
+    sources: ["https://manwomanshows.com/journal/tarvas/", "https://presentforever.substack.com/p/zig-zag-wanderer"],
+  },
+  pekkaKeinanen: {
+    name: "Pekka Keinänen",
+    career: [
+      { house: 'tarvas', role: 'Founder', roleDetail: 'Co-founder and footwear development', start: 2017, end: null },
+    ],
+    notes: "Tarvas co-founder with a shoemaking workshop background; develops footwear as part of its three-person core team.",
+    sources: ["https://helsinkidesignweek.com/2021/03/25/made-in-finland-tarvas-keeps-its-feet-on-the-finnish-ground/?lang=en", "https://presentforever.substack.com/p/zig-zag-wanderer"],
+  },
+  harriSaarikoski: {
+    name: "Harri Saarikoski",
+    career: [
+      { house: 'tarvas', role: 'Founder', roleDetail: 'Co-founder and footwear development', start: 2017, end: null },
+    ],
+    notes: "Tarvas co-founder, part of the footwear industry trio behind the label’s design, prototyping and development. Previously worked alongside Jukka Lehtinen at Karhu, which is not separately represented; employment dates are unconfirmed.",
+    sources: ["https://helsinkidesignweek.com/2021/03/25/made-in-finland-tarvas-keeps-its-feet-on-the-finnish-ground/?lang=en", "https://presentforever.substack.com/p/zig-zag-wanderer"],
+  },
+  setsumasaKobayashi: {
+    name: "Setsumasa Kobayashi",
+    career: [
+      { house: 'mountainResearch', role: 'Founder', start: 2006 },
+      { house: 'mountainResearch', role: 'Head Designer', start: 2006, end: 2024 },
+    ],
+    notes: "Trained at a shoe factory in Florence and worked for a Japanese footwear company before designing collection footwear for Takeo Kikuchi. Those employers are not separately represented. Founded General Research before launching Mountain Research in 2006, then handed clothing design leadership to longtime assistant Masahiro Abe for Autumn/Winter 2024. His broader role remains unconfirmed.",
+    sources: ["https://www.eyecmag.com/news/2024/7/23/mountain-research-appoints-a-new-chief-designer-masahiro-abe", "https://havenshop.com/features/editorial/setsumasa-kobayashi-mountain-research/"],
+  },
+  masahiroAbe: {
+    name: "Masahiro Abe",
+    career: [
+      { house: 'mountainResearch', role: 'Other', roleDetail: 'Chief design assistant, apparel and footwear', end: 2024 },
+      { house: 'mountainResearch', role: 'Head Designer', start: 2024 },
+    ],
+    notes: "Longtime assistant to Setsumasa Kobayashi, appointed chief designer for Autumn/Winter 2024. Earlier employment dates and the present status of the appointment remain unconfirmed.",
+    sources: ["https://www.eyecmag.com/news/2024/7/23/mountain-research-appoints-a-new-chief-designer-masahiro-abe"],
+  },
+  hiroyukiOshima: {
+    name: "Hiroyuki Oshima",
+    career: [
+      { house: 'herill', role: 'Founder', roleDetail: 'Founder and designer', start: 2019, end: null },
+    ],
+    notes: "Bunka Fashion College graduate who worked at a designer label and in product planning for a major Japanese select shop before launching HERILL. The first-person biography does not name those earlier employers.",
+    sources: ["https://ronherman.jp/journal/4", "https://1ldkshop.com/blog-annex/?p=62094"],
+  },
+  kazuyaToiIto: {
+    name: "Kazuya (Toi) Ito",
+    career: [
+      { house: 'haven', role: 'Other', roleDetail: 'In-house apparel and graphic design' },
+      { house: 'reigningChamp', role: 'Other', roleDetail: 'Graphic design within the apparel design team' },
+    ],
+    notes: "Graphic designer and early HAVEN in-house brand team member. Later joined Reigning Champ’s apparel design team; employment dates and current status are unconfirmed. Collaboration projects are kept separate from career tenures.",
+    sources: ["https://itokazuya.com/portfolio/Kazuya_Works_2023.pdf"],
+  },
+  abrimaErwiah: {
+    name: 'Abrima Erwiah',
+    career: [
+      { house: 'hermes', role: 'Other', roleDetail: 'Public relations' },
+      { house: 'bottegaVeneta', role: 'Other', roleDetail: 'Marketing, communications and brand strategy' },
+      { house: 'studio189', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2013, end: null },
+    ],
+    notes: 'Worked in luxury public relations at Paciotti and at Bureau Betak before Studio 189; those businesses are not separately represented. Spent almost a decade at Bottega Veneta before co-founding Studio 189. Exact dates of her earlier roles are unconfirmed.',
+    sources: ['https://fashionista.com/2021/04/abrima-erwiah-studio-189-career-interview', 'https://studiooneeightynine.com/pages/about-us', 'https://cfda.com/news/studio-189-designs-fashion-for-social-change/'],
+  },
+  rosarioDawson: {
+    name: 'Rosario Dawson',
+    career: [{ house: 'studio189', role: 'Founder', roleDetail: 'Co-founder', start: 2013, end: null }],
+    notes: 'Actor and activist who co-founded Studio 189 with Abrima Erwiah to support African artisans and community-led production.',
+    sources: ['https://studiooneeightynine.com/pages/about-us', 'https://www.prnewswire.co.uk/news-releases/scotch-amp-soda-in-collaboration-with-studio-189-introduces-limited-edition-handmade-bag-849824168.html'],
+  },
+  akiraYokota: {
+    name: 'Akira Yokota',
+    career: [{ house: 'nanga', role: 'Other', roleDetail: 'Sleeping-bag development and transition from the predecessor sewing business' }],
+    notes: 'Second-generation head of Yokota Sewing who shifted its production toward sleeping bags in 1988, laying the foundation for NANGA. The predecessor was founded by Komazo Yokota in 1941; neither date is treated as the launch of the NANGA clothing brand.',
+    sources: ['https://www.nanga.co.jp/en/company/history'],
+  },
+  sandyLiang: {
+    name: 'Sandy Liang',
+    career: [
+      { house: 'openingCeremony', role: 'Other', roleDetail: 'Design intern' },
+      { house: 'jasonWuLabel', role: 'Other', roleDetail: 'Intern' },
+      { house: 'sandyLiang', role: 'Founder', roleDetail: 'Founder and designer', start: 2014, end: null },
+    ],
+    notes: 'New York designer and Parsons graduate whose work draws on Chinatown, childhood and her grandmother’s wardrobe. Also interned in press at 3.1 Phillip Lim and at Richard Chai; those houses are not separately represented. Internship dates remain unconfirmed.',
+    sources: ['https://cfda.com/news/sandy-liang-brings-her-downtown-aesthetic-to-la/', 'https://www.wmagazine.com/fashion/sandy-liang-designer-interview-vans-collaboration-fleece', 'https://fashionista.com/2015/03/sandy-liang'],
+  },
+  shinpeiYamagishi: {
+    name: 'Shinpei Yamagishi',
+    career: [
+      { house: 'mountainResearch', role: 'Other', roleDetail: 'Sales, product-planning assistance and public relations' },
+      { house: 'bedJwFord', role: 'Founder', roleDetail: 'Co-founder and artistic director', start: 2010, end: null },
+    ],
+    notes: 'Self-taught designer raised in Ishikawa. Worked in vintage buying and product planning, then in sales, product-planning assistance and PR at Mountain Research before founding BED j.w. FORD with Keisuke Kosaka. Earlier employment dates remain unknown.',
+    sources: ['https://www.fhcm.paris/en/house/bed-jw-ford', 'https://tokyo-fashion-award.jp/winners/bed_j_w_ford.php', 'https://apparel-web.com/pickup/412764'],
+  },
+  keisukeKosaka: {
+    name: 'Keisuke Kosaka',
+    career: [{ house: 'bedJwFord', role: 'Other', roleDetail: 'Co-founder and company representative', start: 2010 }],
+    notes: 'Co-founded BED j.w. FORD with Shinpei Yamagishi. The documented company-representative role is distinct from Yamagishi’s artistic direction; its present status is unconfirmed.',
+    sources: ['https://tokyo-fashion-award.jp/winners/bed_j_w_ford.php'],
+  },
+  taewanKim: {
+    name: 'Taewan Kim',
+    career: [{ house: 'tonywack', role: 'Founder', roleDetail: 'Founder and designer', start: 2012 }],
+    notes: 'Designer identified by TONYWACK stockist Goodhood as the label’s founder. Earlier employment and present individual creative responsibilities remain unconfirmed.',
+    sources: ['https://milled.com/goodhoodstore.com/seoul-searching-the-korean-brands-changing-the-way-we-dress-h6USqJsCjSCo9PoX'],
+  },
+  peterKolks: {
+    name: 'Peter Kolks',
+    career: [{ house: 'popTradingCompany', role: 'Founder', roleDetail: 'Co-founder; brand and clothing development', start: 2013 }],
+    notes: 'Co-founded Pop Trading Company with Ric van Rest, developing it from skate distribution and retail into its own clothing label. The founders date their clothing collections to 2016; exact present individual duties are unconfirmed.',
+    sources: ['https://goodhoodstore.com/en-us/blogs/features/talking-heads-pop-trading-co', 'https://www.flatspot.com/blogs/blog/introducing-pop-trading-company'],
+  },
+  ricVanRest: {
+    name: 'Ric van Rest',
+    career: [{ house: 'popTradingCompany', role: 'Founder', roleDetail: 'Co-founder', start: 2013 }],
+    notes: 'Co-founded the Amsterdam skate company with Peter Kolks. The business began in 2013 and launched its own apparel in 2016; exact individual design responsibilities and present role status are unconfirmed.',
+    sources: ['https://goodhoodstore.com/en-us/blogs/features/talking-heads-pop-trading-co', 'https://www.flatspot.com/blogs/blog/introducing-pop-trading-company'],
+  },
+  toshihikoFukawa: {
+    name: 'Toshihiko Fukawa',
+    career: [{ house: 'subu', role: 'Founder', roleDetail: 'Founder, director and designer', start: 2016, end: null }],
+    notes: 'Japanese designer, 府川俊彦, behind SUBU’s winter-sandal concept. His current design leadership is confirmed in a January 2026 first-person interview.',
+    sources: ['https://fashiontechnews.zozo.com/en/articles/subu', 'https://prtimes.jp/main/html/rd/p/000000068.000150214.html', 'https://interbelle.co.jp/media_sp/information/subu-%E3%82%B9%E3%83%96-%E9%9D%B4-%E3%82%B5%E3%83%B3%E3%83%80%E3%83%AB-%E5%86%AC-popup-%E8%A1%A8%E5%8F%82%E9%81%93-beams-%E3%82%B7%E3%83%A5%E3%83%BC%E3%82%BA-%E3%81%99%E3%81%B6/'],
+  },
+  thomasTeehan: {
+    name: 'Thomas Teehan',
+    career: [
+      { house: 'padmoreBarnes', role: 'Other', roleDetail: 'Trainee shoe designer and pattern cutter; subsequent design work', start: 1979, end: 1986 },
+      { house: 'clarks', role: 'Other', roleDetail: 'Shoemaking and design training at Somerset headquarters' },
+    ],
+    notes: 'Trained at Clarks while employed by its then-subsidiary Padmore & Barnes. Continued at Padmore & Barnes after studying in Leicester, then became chief designer and pattern cutter at Westcoast Footwear in 1986. Later established an orthopedic-footwear business; those businesses are not separately represented.',
+    sources: ['https://teehanorthopaedicshoesireland.com/about-us-2/'],
+  },
+  scottSternberg: {
+    name: 'Scott Sternberg',
+    career: [{ house: 'bandOfOutsiders', role: 'Founder', roleDetail: 'Founder and creative director', start: 2004, end: 2015 }],
+    notes: 'Former talent agent who founded Band of Outsiders in Los Angeles. Launched the casual clothing label Entireworld in 2018 after leaving Band of Outsiders; Entireworld is not separately represented.',
+    sources: ['https://press.nordstrom.com/static-files/5cbaa2c9-db58-4008-9cb8-917e19ec74c8', 'https://www.gq.com/story/scott-sternberg-entireworld-band-of-outsiders-interview'],
+  },
+  niklausHodel: {
+    name: 'Niklaus Hodel',
+    career: [
+      { house: 'louisVuitton', role: 'Other', roleDetail: 'Design role under Kim Jones' },
+      { house: 'driesVanNoten', role: 'Other', roleDetail: 'Design team' },
+      { house: 'bandOfOutsiders', role: 'Creative Director', roleDetail: 'Joint design leadership with Matthias Weber and Florian Feder', start: 2016, end: 2016 },
+    ],
+    notes: 'Antwerp-trained designer and co-founder of the footwear label WeberHodelFeder in 2012. His Band of Outsiders team presented Spring/Summer 2017 in 2016 and departed that December; prior employment dates are unconfirmed.',
+    sources: ['https://www.gq.com/story/band-of-outsiders-new-designers', 'https://www.wwdjapan.com/articles/362462'],
+  },
+  matthiasWeber: {
+    name: 'Matthias Weber',
+    career: [
+      { house: 'hm', role: 'Other', roleDetail: 'Design team' },
+      { house: 'bandOfOutsiders', role: 'Creative Director', roleDetail: 'Joint design leadership with Niklaus Hodel and Florian Feder', start: 2016, end: 2016 },
+    ],
+    notes: 'Antwerp-trained designer and co-founder of WeberHodelFeder in 2012. Presented Band of Outsiders Spring/Summer 2017 during 2016 before the team departed that December. Earlier H&M employment dates are unconfirmed.',
+    sources: ['https://www.gq.com/story/band-of-outsiders-new-designers', 'https://www.wwdjapan.com/articles/362462'],
+  },
+  florianFeder: {
+    name: 'Florian Feder',
+    career: [
+      { house: 'driesVanNoten', role: 'Other', roleDetail: 'Design team' },
+      { house: 'bandOfOutsiders', role: 'Creative Director', roleDetail: 'Joint design leadership with Niklaus Hodel and Matthias Weber', start: 2016, end: 2016 },
+    ],
+    notes: 'Antwerp-trained designer and co-founder of WeberHodelFeder in 2012. Presented Band of Outsiders Spring/Summer 2017 during 2016 before the team departed that December. Earlier Dries Van Noten employment dates are unconfirmed.',
+    sources: ['https://www.gq.com/story/band-of-outsiders-new-designers', 'https://www.wwdjapan.com/articles/362462'],
+  },
+  angeloVanMol: {
+    name: 'Angelo Van Mol',
+    career: [{ house: 'bandOfOutsiders', role: 'Creative Director', start: 2016 }],
+    notes: 'Royal Academy of Fine Arts Antwerp graduate with Savile Row training. Launched his own menswear label in 2011 and was appointed to Band of Outsiders in December 2016 for Autumn/Winter 2017. Exact departure date and present status are unconfirmed.',
+    sources: ['https://www.wwdjapan.com/articles/362462', 'https://www.gq-magazine.co.uk/article/band-of-outsiders-daniel-hettmann', 'https://www.dazeddigital.com/fashion/article/11722/1/angelo-van-mol'],
+  },
+  jackCarlson: {
+    name: 'Jack Carlson',
+    career: [{ house: 'rowingBlazers', role: 'Founder', roleDetail: 'Co-founder, designer and creative director; later creative advisor', start: 2017, end: 2025 }],
+    notes: 'Designer, author, archaeologist and former US national rowing-team coxswain. Left Rowing Blazers in March 2025 and became creative director and president of J.Press in 2025; J.Press is not separately represented.',
+    sources: ['https://rowingblazers.com/pages/about-us', 'https://fashionista.com/2025/03/jack-carlson-exits-rowing-blazers', 'https://www.onward-hd.co.jp/en/pickup/20250909.html'],
+  },
+  davidRosenzweig: {
+    name: 'David Rosenzweig',
+    career: [{ house: 'rowingBlazers', role: 'Other', roleDetail: 'Co-founder and director of strategy', start: 2017 }],
+    notes: 'Co-founded Rowing Blazers with Jack Carlson. The February 2024 acquisition announcement retained him as director of strategy, overseeing collaborations and partnerships; his subsequent departure was reported in March 2025 without a precise date.',
+    sources: ['https://www.prnewswire.com/news-releases/burch-creative-capital-takes-majority-stake-in-rowing-blazers-302073342.html', 'https://www.businessoffashion.com/news/retail/rowing-blazers-founder-jack-carlson-exit/'],
+  },
+  ruslanKarablin: {
+    name: 'Ruslan Karablin',
+    career: [{ house: 'ssur', role: 'Founder', roleDetail: 'Founder and designer', start: 1988, end: null }],
+    notes: 'Also known as Russ Karablin. Odesa-born artist raised in Coney Island, Brooklyn. Developed SSUR through his own artwork and subversive graphics; the label dates its founding to 1988 and its first T-shirt line to 1990.',
+    sources: ['https://www.ssur.com/pages/about-ssur', 'https://www.kidrobot.com/blogs/news/ssur-artist-profile'],
+  },
+  daisukeYokoyama: {
+    name: 'Daisuke Yokoyama',
+    career: [{ house: 'sasquatchfabrix', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2003, end: null }],
+    notes: 'Studied spatial design at Nagaoka Institute of Design and worked in graphic design before founding Sasquatchfabrix. with university classmate Katsuki Araki through Wonder Worker Guerrilla Band. Continued the label alone after Araki moved to Fukuoka. Collaborations with other brands are separate from employment.',
+    sources: ['https://www.beams.co.jp/special/talk/archive/2016/0422/', 'https://slamjam.com/blogs/editorial/an-interview-with-sasquatchfabrix-s-daisuke-yokoyama', 'https://www.diverse-web.com/en/collections/14'],
+  },
+  katsukiAraki: {
+    name: 'Katsuki Araki',
+    career: [{ house: 'sasquatchfabrix', role: 'Founder', roleDetail: 'Co-founder and original co-designer', start: 2003 }],
+    notes: 'Textile-design graduate of Nagaoka Institute of Design and co-founder of Wonder Worker Guerrilla Band. Worked in apparel before starting Sasquatchfabrix. with Daisuke Yokoyama. Yokoyama’s first-person account dates Araki’s move to Fukuoka to 2011, while the accompanying biography dates solo collections to Autumn/Winter 2013; the exact end of Araki’s design tenure remains unspecified.',
+    sources: ['https://www.beams.co.jp/special/talk/archive/2016/0422/', 'https://www.nagaoka-id.ac.jp/contents/pdf/info/nidnews011.pdf'],
+  },
+  hidetakaMiyagi: {
+    name: 'Hidetaka Miyagi',
+    career: [{ house: 'miyagihidetaka', role: 'Founder', roleDetail: 'Founder and designer', start: 2018, end: null }],
+    notes: 'Footwear designer who established mythography before moving into clothing with MIYAGIHIDETAKA in 2018. Also develops the flannel-shirt and fabric label Rafu, launched in 2022. Those labels are not separately represented. His brand collaborations do not represent employment at the partner houses.',
+    sources: ['https://juicestore.com/blogs/editorial/miyagihidetaka-interview', 'https://www.houyhnhnm.jp/en/news/393634/', 'https://www.miyagihidetaka.com/about', 'https://www.houyhnhnm.jp/en/feature/98743/'],
+  },
+  tsuyoshiNoguchi: {
+    name: 'Tsuyoshi Noguchi',
+    career: [
+      { house: 'minedenim', role: 'Creative Director', roleDetail: 'Brand director', start: 2016, end: null, sources: ['https://minedenim.co.jp/pages/about-minedenim', 'https://www.honeyee.com/detail/96474'] },
+    ],
+    notes: 'Stylist who apprenticed with Atsushi Okubo before becoming independent in 1989. His magazine, advertising and celebrity styling work is distinct from employment at the brands he styles. Directs MINEDENIM from its 2016 launch; WILDSIDE projects and HYSTERIC GLAMOUR friendships are not career tenures.',
+    sources: ['https://www.honeyee.com/detail/96474', 'https://wildside-online.com/shop/pages/content_detail_220720_01.aspx'],
+  },
+  junichiroMorinaga: {
+    name: 'Junichiro Morinaga',
+    career: [
+      { house: 'regalShoeCo', role: 'Other', roleDetail: 'Footwear designer', start: 2011, end: 2016, sources: ['https://jp.linkedin.com/in/潤一郎-森永-20107744'] },
+    ],
+    notes: 'Leather-goods and footwear designer, 森永潤一郎. His professional profile documents REGAL Shoe & Co. from November 2011 to April 2016, following alfredoBANNISTER from 2004 to 2009. Founded the Japanese leather-goods project HOFF and also designs CaBas; those labels are not separately represented. His role at REGAL Shoe & Co. is documented as designer, rather than brand creative director.',
+    sources: ['https://www.hoff-tokyo.net/about', 'https://jp.linkedin.com/in/潤一郎-森永-20107744', 'https://award.jlia.or.jp/2012/vote/item_detail.php-no=J12P-1503.html'],
+  },
+  lisaKulson: {
+    name: 'Lisa Kulson',
+    career: [
+      { house: 'theory', role: 'Head Designer', roleDetail: 'Founding head designer — first tenure', start: 1997, sources: ['https://cfda.com/member/lisa-kulson/'] },
+      { house: 'theory', role: 'Other', roleDetail: 'Creative consultant — returning tenure', start: 2003, sources: ['https://cfda.com/member/lisa-kulson/'] },
+      { house: 'theory', role: 'Creative Director', roleDetail: 'Creative director — returning tenure', start: 2014, sources: ['https://cfda.com/member/lisa-kulson/'] },
+      { house: 'tommyHilfiger', role: 'Other', roleDetail: 'Design work for the launch of H by Tommy Hilfiger', sources: ['https://cfda.com/member/lisa-kulson/'] },
+    ],
+    notes: 'Left Theory to develop her own label before returning as a consultant in 2003 and creative director in 2014. Exact end dates of these separate tenures remain unconfirmed.',
+    sources: ['https://cfda.com/member/lisa-kulson/'],
+  },
+  tomVanDorpe: {
+    name: 'Tom Van Dorpe',
+    career: [
+      { house: 'theKooples', role: 'Artistic Director', roleDetail: 'Artistic director', start: 2020, end: 2021, sources: ['https://fashionunited.com/news/people/tom-van-dorpe-exits-the-kooples-after-one-year/2021051039855'] },
+    ],
+    notes: 'Stylist and creative consultant. Prior work for Fenty, Calvin Klein, Hugo Boss and Max Mara is documented, but the departure report does not distinguish employment from styling commissions, so those projects are not separate career tenures.',
+    sources: ['https://fashionunited.com/news/people/tom-van-dorpe-exits-the-kooples-after-one-year/2021051039855'],
+  },
+  hillaryTaymour: {
+    name: 'Hillary Taymour',
+    career: [
+      { house: 'collinaStrada', role: 'Founder', roleDetail: 'Founder and designer', start: 2008, end: null, sources: ['https://cfda.com/news/hillary-taymour-i-wear-collina-strada/'] },
+    ],
+    sources: ['https://cfda.com/news/hillary-taymour-i-wear-collina-strada/', 'https://collinastrada.com/pages/about'],
+  },
+  charlieEngman: {
+    name: 'Charlie Engman',
+    career: [
+      { house: 'collinaStrada', role: 'Other', roleDetail: 'Art director; image and runway development', sources: ['https://cfda.com/news/hillary-taymour-i-wear-collina-strada/'] },
+    ],
+    notes: 'Photographer and long-term creative collaborator of Hillary Taymour. Exact dates and present contractual status of the art-director role are unconfirmed.',
+    sources: ['https://cfda.com/news/hillary-taymour-i-wear-collina-strada/'],
+  },
+  albertaFerrettiDesigner: {
+    name: 'Alberta Ferretti',
+    career: [
+      { house: 'philosophy', role: 'Founder', roleDetail: 'Founder and original designer', start: 1984, end: 2012, sources: ['https://aeffe.com/documents/001_HeaderMenuDocuments/020_InvestorRelations/022_IPOinfo/Italiano/Documenti/Prospetto%20IPO%20-%20Aeffe.pdf'] },
+    ],
+    notes: 'Also founded the Alberta Ferretti main label, which is not separately represented. Stepped down from Philosophy’s design helm when Natalie Ratabesi was appointed in 2012; retired from creative direction of her main label in 2024.',
+    sources: ['https://aeffe.com/documents/001_HeaderMenuDocuments/020_InvestorRelations/022_IPOinfo/Italiano/Documenti/Prospetto%20IPO%20-%20Aeffe.pdf', 'https://www.vogue.co.uk/article/philosophy-names-natalie-ratabesi-creative-director'],
+  },
+  natalieRatabesi: {
+    name: 'Natalie Ratabesi',
+    career: [
+      { house: 'philosophy', role: 'Creative Director', roleDetail: 'Philosophy di Alberta Ferretti / Philosophy by Natalie Ratabesi', start: 2012, end: 2014, sources: ['https://www.vogue.co.uk/article/philosophy-names-natalie-ratabesi-creative-director'] },
+      { house: 'vince', role: 'Womenswear Director', roleDetail: 'Women’s creative director', start: 2014, sources: ['https://www.vogue.co.uk/article/philosophy-names-natalie-ratabesi-creative-director'] },
+      { house: 'dior', role: 'Other', roleDetail: 'Design team', sources: ['https://www.vogue.co.uk/article/philosophy-names-natalie-ratabesi-creative-director'] },
+      { house: 'valentino', role: 'Other', roleDetail: 'Design team', sources: ['https://www.vogue.co.uk/article/philosophy-names-natalie-ratabesi-creative-director'] },
+      { house: 'gucci', role: 'Other', roleDetail: 'Design team', sources: ['https://www.vogue.co.uk/article/philosophy-names-natalie-ratabesi-creative-director'] },
+      { house: 'ralphLauren', role: 'Creative Director', roleDetail: 'Senior creative director; exact line scope and dates unconfirmed', sources: ['https://www.vogue.co.uk/article/philosophy-names-natalie-ratabesi-creative-director'] },
+    ],
+    notes: 'Also worked at Oscar de la Renta before Ralph Lauren; that house is not separately represented. Exact earlier design-team dates and the end of her Vince tenure are unconfirmed.',
+    sources: ['https://www.vogue.co.uk/article/philosophy-names-natalie-ratabesi-creative-director', 'https://fashionweekdaily.com/natalie-ratabesi-philosophy/', 'https://www.vogue.com/article/natalie-ratabesi-creative-director-vince-fall-2015'],
+  },
+  lorenzoSerafini: {
+    name: 'Lorenzo Serafini',
+    career: [
+      { house: 'philosophy', role: 'Creative Director', roleDetail: 'Philosophy di Lorenzo Serafini', start: 2014, end: 2024, sources: ['https://www.cameramoda.it/en/associazione/news/1423/'] },
+      { house: 'robertoCavalli', role: 'Womenswear Director', roleDetail: 'Led womenswear', sources: ['https://www.cameramoda.it/en/associazione/news/1423/'] },
+      { house: 'dolceGabbana', role: 'Womenswear Director', roleDetail: 'Head of the women’s creative team', sources: ['https://www.cameramoda.it/en/associazione/news/1423/'] },
+    ],
+    notes: 'Previously creative director of D&G, which is not separately represented. Took over creative direction of Alberta Ferretti in 2024 after ten years at Philosophy; the main label is not separately represented. The Philosophy adult line was integrated into it from Autumn/Winter 2025.',
+    sources: ['https://www.cameramoda.it/en/associazione/news/1423/', 'https://www.albertaferretti.com/en/pages/philosophy-di-lorenzo-serafini-alberta-ferretti'],
+  },
+  anyaHindmarchDesigner: {
+    name: 'Anya Hindmarch',
+    career: [
+      { house: 'anyaHindmarch', role: 'Founder', roleDetail: 'Founder and designer', start: 1987, end: null, sources: ['https://www.anyahindmarch.com/pages/about-anya'] },
+    ],
+    sources: ['https://www.anyahindmarch.com/pages/about-anya'],
+  },
+  julianDunkerton: {
+    name: 'Julian Dunkerton',
+    career: [
+      { house: 'superdry', role: 'Other', roleDetail: 'Business co-founder; brand and product development', start: 2003, end: null, sources: ['https://corporate.superdry.com/about-superdry/our-history/'] },
+    ],
+    notes: 'Co-founded Cult Clothing in 1985 before developing the Superdry brand with James Holder. Cult Clothing is not separately represented.',
+    sources: ['https://corporate.superdry.com/about-superdry/our-history/', 'https://corporate.superdry.com/about-superdry/leadership/'],
+  },
+  jamesHolder: {
+    name: 'James Holder',
+    career: [
+      { house: 'superdry', role: 'Founder', roleDetail: 'Co-founder, brand and design director', start: 2003, sources: ['https://corporate.superdry.com/media/zhqnp3m3/supergroup-2015-notice-of-meeting.pdf'] },
+    ],
+    notes: 'Earlier founded Bench, which is not separately represented. The precise end of his Superdry design tenure is unconfirmed.',
+    sources: ['https://corporate.superdry.com/media/zhqnp3m3/supergroup-2015-notice-of-meeting.pdf'],
+  },
+  philDickinson: {
+    name: 'Phil Dickinson',
+    career: [
+      { house: 'superdry', role: 'Creative Director', roleDetail: 'Product design and wider brand creative direction', start: 2019, sources: ['https://www.theindustry.fashion/superdry-appoints-former-nike-executive-as-creative-director/'] },
+      { house: 'nike', role: 'Other', roleDetail: 'Senior creative leadership, including football and sportswear', sources: ['https://www.theindustry.fashion/superdry-appoints-former-nike-executive-as-creative-director/'] },
+      { house: 'umbro', role: 'Other', roleDetail: 'Brand and creative leadership', sources: ['https://www.theindustry.fashion/superdry-appoints-former-nike-executive-as-creative-director/'] },
+    ],
+    notes: 'Founded London design agency Some Ideas in 2013. Agency clients are not recorded as personal employment. Exact earlier career dates and the end of his Superdry role remain unconfirmed.',
+    sources: ['https://www.theindustry.fashion/superdry-appoints-former-nike-executive-as-creative-director/'],
+  },
+  danielBrixHesselager: {
+    name: 'Daniel Brix Hesselager',
+    career: [
+      { house: 'rains', role: 'Other', roleDetail: 'Business co-founder', start: 2012, sources: ['https://careers.rains.com/home'] },
+    ],
+    sources: ['https://careers.rains.com/home', 'https://lex.dk/Rains'],
+  },
+  philipLotko: {
+    name: 'Philip Lotko',
+    career: [
+      { house: 'rains', role: 'Founder', roleDetail: 'Co-founder; brand and creative development', start: 2012, sources: ['https://careers.rains.com/home'] },
+    ],
+    notes: 'Current individual creative responsibilities are not established by the historical co-founder interviews.',
+    sources: ['https://careers.rains.com/home', 'https://www.voguescandinavia.com/articles/come-backstage-to-see-all-the-drenched-details-of-rains-ss24-runway'],
+  },
+  kennethDavids: {
+    name: 'Kenneth Davids',
+    career: [
+      { house: 'rains', role: 'Other', roleDetail: 'Business co-founder', start: 2012, sources: ['https://careers.rains.com/home'] },
+    ],
+    sources: ['https://careers.rains.com/home', 'https://lex.dk/Rains'],
+  },
+  tanneVinter: {
+    name: 'Tanne Vinter',
+    career: [
+      { house: 'rains', role: 'Head Designer', roleDetail: 'Head of design', sources: ['https://www.vogue.com/fashion-shows/fall-2024-menswear/rains'] },
+    ],
+    notes: 'Documented as head of design for the Spring and Autumn 2024 collections. Exact appointment dates and current status are unconfirmed.',
+    sources: ['https://www.vogue.com/fashion-shows/fall-2024-menswear/rains'],
+  },
+  johanneDindler: {
+    name: 'Johanne Dindler',
+    career: [
+      { house: 'rains', role: 'Other', roleDetail: 'Lead designer', sources: ['https://www.vogue.com/fashion-shows/fall-2024-menswear/rains'] },
+      { house: 'moncler', role: 'Other', roleDetail: 'Design team, Moncler Genius', sources: ['https://www.vogue.com/fashion-shows/fall-2024-menswear/rains'] },
+      { house: 'adidas', role: 'Other', roleDetail: 'Design team, statement collaborations', sources: ['https://www.vogue.com/fashion-shows/fall-2024-menswear/rains'] },
+    ],
+    notes: 'Her first Rains collection was presented in January 2024; collection dates are not used as employment start dates. Exact dates and current status remain unconfirmed.',
+    sources: ['https://www.vogue.com/fashion-shows/fall-2024-menswear/rains'],
+  },
+  coleBuxtonDesigner: {
+    name: 'Cole Buxton',
+    career: [
+      { house: 'coleBuxton', role: 'Founder', roleDetail: 'Founder and designer', start: 2014, end: null, sources: ['https://www.endclothing.com/ca/features/cole-buxton-from-instagram-to-the-world'] },
+    ],
+    notes: 'Studied performance sportswear design before developing his label. The co-founder interview describes a shared creative partnership with Jonny Wilson.',
+    sources: ['https://www.endclothing.com/ca/features/cole-buxton-from-instagram-to-the-world', 'https://www.endclothing.com/gb/brands/cole-buxton/cole-buxton'],
+  },
+  jonnyWilson: {
+    name: 'Jonny Wilson',
+    career: [
+      { house: 'coleBuxton', role: 'Founder', roleDetail: 'Co-founder and brand director', end: null, sources: ['https://www.endclothing.com/ca/features/cole-buxton-from-instagram-to-the-world'] },
+    ],
+    notes: 'Exact start of his involvement is unconfirmed; the label’s 2014 founding is not automatically assigned to his personal tenure.',
+    sources: ['https://www.endclothing.com/ca/features/cole-buxton-from-instagram-to-the-world', 'https://www.endclothing.com/gb/brands/cole-buxton/cole-buxton'],
+  },
+  andrewRosen: {
+    name: 'Andrew Rosen',
+    career: [
+      { house: 'theory', role: 'Other', roleDetail: 'Business founder; later founder and advisor', start: 1997, sources: ['https://www.fastretailing.com/eng/ir/news/1903270700.html'] },
+    ],
+    notes: 'Stepped down as Theory CEO in April 2019 and became founder and advisor. The current status of that advisory role is unconfirmed.',
+    sources: ['https://www.fastretailing.com/eng/ir/news/1903270700.html'],
+  },
+  elieTahari: {
+    name: 'Elie Tahari',
+    career: [
+      { house: 'theory', role: 'Other', roleDetail: 'Business co-founder', start: 1997, sources: ['https://www.acaddys.com/theory'] },
+    ],
+    notes: 'Also founded his own namesake fashion label, which is not separately represented. Exact end date of his Theory involvement is unconfirmed.',
+    sources: ['https://www.acaddys.com/theory'],
+  },
+  martinAndersson: {
+    name: 'Martin Andersson',
+    career: [
+      { house: 'theory', role: 'Menswear Director', roleDetail: 'Menswear creative director', start: 2017, end: null, sources: ['https://www.vogue.com/fashion-shows/spring-2018-menswear/theory'] },
+      { house: 'cos', role: 'Other', roleDetail: 'Earlier menswear design role; exact title and dates unconfirmed', sources: ['https://www.vogue.com/fashion-shows/spring-2018-menswear/theory'] },
+    ],
+    notes: 'Theory’s July 2017 presentation identifies him as its new menswear creative director; its Spring 2027 presentation in June 2026 confirms continued leadership.',
+    sources: ['https://www.vogue.com/fashion-shows/spring-2018-menswear/theory', 'https://www.vogue.com/fashion-shows/spring-2027-menswear/theory'],
+  },
+  dushaneNoble: {
+    name: 'Dushane Noble',
+    career: [
+      { house: 'theory', role: 'Other', roleDetail: 'Director of knitwear', start: 2018, end: 2024, sources: ['https://fashionshow.fitnyc.edu/2025/bio/Critic/dushane-noble/'] },
+      { house: 'theory', role: 'Womenswear Director', roleDetail: 'Head of design, women’s ready-to-wear', start: 2024, end: null, sources: ['https://fashionshow.fitnyc.edu/2025/bio/Critic/dushane-noble/'] },
+      { house: 'helmutLang', role: 'Other', roleDetail: 'Senior knitwear designer', start: 2011, end: 2014, sources: ['https://fashionshow.fitnyc.edu/2025/bio/Critic/dushane-noble/'] },
+      { house: 'donnaKaran', role: 'Other', roleDetail: 'Earlier design role', sources: ['https://fashionshow.fitnyc.edu/2025/bio/Critic/dushane-noble/'] },
+    ],
+    notes: 'Earlier design experience includes Oscar de la Renta, Peter Som and TSE, which are not separately represented. His FIT biography documents four years working on Narciso Rodriguez knitwear without giving exact calendar bounds.',
+    sources: ['https://fashionshow.fitnyc.edu/2025/bio/Critic/dushane-noble/', 'https://www.vogue.com/fashion-shows/spring-2027-ready-to-wear/theory'],
+  },
+  francescoFucci: {
+    name: 'Francesco Fucci',
+    career: [
+      { house: 'theory', role: 'Womenswear Director', roleDetail: 'Womenswear creative director', start: 2018, sources: ['https://www.vogue.co.uk/article/francesco-fucci-creative-director-theory-womenswear-the-row'] },
+      { house: 'theRow', role: 'Head Designer', roleDetail: 'Head designer', sources: ['https://www.vogue.co.uk/article/francesco-fucci-creative-director-theory-womenswear-the-row'] },
+      { house: 'calvinKlein', role: 'Other', roleDetail: 'Design team under Francisco Costa', start: 2008, sources: ['https://www.vogue.co.uk/article/francesco-fucci-creative-director-theory-womenswear-the-row'] },
+    ],
+    notes: 'Also held a senior design-director role at Diane von Furstenberg, which is not separately represented. Theory appointment was reported in May 2018; exact end date and earlier role bounds are unconfirmed.',
+    sources: ['https://www.vogue.co.uk/article/francesco-fucci-creative-director-theory-womenswear-the-row'],
+  },
+  lucasOssendrijver: {
+    name: 'Lucas Ossendrijver',
+    career: [
+      { house: 'theory', role: 'Other', roleDetail: 'Recurring Theory Project design partnership, men’s and women’s collections', start: 2021, sources: ['https://www.fastretailing.com/eng/group/news/2107281500.html'] },
+      { house: 'lanvin', role: 'Menswear Director', roleDetail: 'Head of menswear', sources: ['https://www.fastretailing.com/eng/group/news/2107281500.html'] },
+      { house: 'dior', role: 'Other', roleDetail: 'Dior Homme design team under Hedi Slimane', sources: ['https://www.fastretailing.com/eng/group/news/2107281500.html'] },
+    ],
+    notes: 'Theory announced a sustained creative partnership in 2021 with first collections in 2022, rather than a single capsule. Exact employment bounds at Dior and Lanvin, and the end of the Theory mandate, remain unconfirmed.',
+    sources: ['https://www.fastretailing.com/eng/group/news/2107281500.html'],
+  },
+  kateSpadeDesigner: {
+    name: 'Kate Spade',
+    career: [
+      { house: 'kateSpade', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1993, end: 2006, sources: ['https://cfda.com/member/kate-spade/'] },
+    ],
+    notes: 'Also known as Kate Brosnahan Spade and Kate Valentine. Later co-founded Frances Valentine, which is not separately represented. Her CFDA biography dates the sale and departure to 2006.',
+    sources: ['https://cfda.com/member/kate-spade/'],
+  },
+  andySpade: {
+    name: 'Andy Spade',
+    career: [
+      { house: 'kateSpade', role: 'Other', roleDetail: 'Business co-founder', start: 1993, end: 2006, sources: ['https://cfda.com/member/kate-spade/'] },
+    ],
+    sources: ['https://cfda.com/member/kate-spade/'],
+  },
+  elyceArons: {
+    name: 'Elyce Arons',
+    career: [
+      { house: 'kateSpade', role: 'Other', roleDetail: 'Business co-founder', start: 1993, sources: ['https://cfda.com/member/kate-spade/'] },
+    ],
+    notes: 'Later co-founded Frances Valentine, which is not separately represented. Exact departure year from Kate Spade is unconfirmed.',
+    sources: ['https://cfda.com/member/kate-spade/'],
+  },
+  pamelaBell: {
+    name: 'Pamela Bell',
+    career: [
+      { house: 'kateSpade', role: 'Other', roleDetail: 'Founding partner', sources: ['https://cfda.com/wp-content/uploads/2025/05/CFDA-Annual-Report-2018.pdf'] },
+    ],
+    notes: 'Also a founding partner of Jack Spade and founder of prinkshop; neither label is separately represented. Exact Kate Spade tenure dates are unconfirmed.',
+    sources: ['https://cfda.com/wp-content/uploads/2025/05/CFDA-Annual-Report-2018.pdf'],
+  },
+  deborahLloyd: {
+    name: 'Deborah Lloyd',
+    career: [
+      { house: 'kateSpade', role: 'Creative Director', roleDetail: 'President and chief creative officer', start: 2007, end: 2017, sources: ['https://investors.tapestry.com/news-releases/news-release-details/tapestry-appoints-nicola-glass-creative-director-kate-spade'] },
+      { house: 'bananaRepublic', role: 'Head Designer', roleDetail: 'Executive vice president of design and product development', sources: ['https://investors.tapestry.com/news-releases/news-release-details/tapestry-appoints-nicola-glass-creative-director-kate-spade'] },
+      { house: 'burberry', role: 'Other', roleDetail: 'Design team; exact title and dates unconfirmed', sources: ['https://investors.tapestry.com/news-releases/news-release-details/tapestry-appoints-nicola-glass-creative-director-kate-spade'] },
+    ],
+    notes: 'The company’s 2017 proxy statement documents six years at Banana Republic and five at Burberry, without exact calendar bounds.',
+    sources: ['https://investors.tapestry.com/news-releases/news-release-details/tapestry-appoints-nicola-glass-creative-director-kate-spade', 'https://www.sec.gov/Archives/edgar/data/352363/000104746917003209/a2231530zdef14a.htm'],
+  },
+  nicolaGlass: {
+    name: 'Nicola Glass',
+    career: [
+      { house: 'kateSpade', role: 'Creative Director', roleDetail: 'Creative director', start: 2018, end: 2021, sources: ['https://investors.tapestry.com/news-releases/news-release-details/tapestry-appoints-nicola-glass-creative-director-kate-spade'] },
+      { house: 'michaelKors', role: 'Other', roleDetail: 'Accessories design team; later senior vice president of accessories design', start: 2004, end: 2017, sources: ['https://investors.tapestry.com/news-releases/news-release-details/tapestry-appoints-nicola-glass-creative-director-kate-spade'] },
+      { house: 'gucci', role: 'Other', roleDetail: 'Accessories designer', sources: ['https://investors.tapestry.com/news-releases/news-release-details/tapestry-appoints-nicola-glass-creative-director-kate-spade'] },
+    ],
+    notes: 'The January 2018 Kate Spade start and April 2021 departure are documented by Tapestry; earlier Gucci dates are unknown.',
+    sources: ['https://investors.tapestry.com/news-releases/news-release-details/tapestry-appoints-nicola-glass-creative-director-kate-spade', 'https://investors.tapestry.com/news-releases/news-release-details/kate-spade-announces-new-structure-creative-organization'],
+  },
+  tomMora: {
+    name: 'Tom Mora',
+    career: [
+      { house: 'kateSpade', role: 'Head Designer', roleDetail: 'Senior vice president and head of design, ready-to-wear and lifestyle', start: 2022, end: 2024, sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Earlier design role', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'tommyHilfiger', role: 'Other', roleDetail: 'Earlier design role', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'coach', role: 'Other', roleDetail: 'Earlier design role', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'jCrew', role: 'Other', roleDetail: 'Earlier design role', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+    ],
+    notes: 'Earlier creative director of women’s and licensed product at Cole Haan, which is not separately represented. Served on Kate Spade’s design team before the formal 2022 title announcement; exact joining year is unconfirmed.',
+    sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/', 'https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/briefings/retail/can-jonathan-saunders-spark-a-kate-spade-revival/'],
+  },
+  jenniferLyu: {
+    name: 'Jennifer Lyu',
+    career: [
+      { house: 'kateSpade', role: 'Head Designer', roleDetail: 'Senior vice president and head of design, leather goods and accessories', start: 2022, end: 2024, sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'toryBurch', role: 'Head Designer', roleDetail: 'Led handbag and small-leather-goods design', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'emilioPucci', role: 'Other', roleDetail: 'Senior design role; exact title and dates unconfirmed', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'louisVuitton', role: 'Other', roleDetail: 'Senior design role; exact title and dates unconfirmed', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'prada', role: 'Other', roleDetail: 'Senior design role; exact title and dates unconfirmed', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+    ],
+    notes: 'Also held design leadership across accessories, footwear and ready-to-wear at 3.1 Phillip Lim, which is not separately represented. Exact joining date to Kate Spade before the 2022 title announcement is unconfirmed.',
+    sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/', 'https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/briefings/retail/can-jonathan-saunders-spark-a-kate-spade-revival/'],
+  },
+  jonathanSaunders: {
+    name: 'Jonathan Saunders',
+    career: [
+      { house: 'kateSpade', role: 'Creative Director', roleDetail: 'Executive creative director', start: 2026, end: null, sources: ['https://tapestry.gcs-web.com/news-releases/news-release-details/kate-spade-new-york-names-jonathan-saunders-executive-creative'] },
+    ],
+    notes: 'Previously chief creative officer at Diane von Furstenberg and chief creative director at & Other Stories; those labels and his own namesake label are not separately represented. Earlier print commissions and consulting for Alexander McQueen, Chloé, Pucci, Calvin Klein and Tiffany are documented without sufficient project scope to establish separate sustained employment tenures.',
+    sources: ['https://tapestry.gcs-web.com/news-releases/news-release-details/kate-spade-new-york-names-jonathan-saunders-executive-creative'],
+  },
+  alexandreElicha: {
+    name: 'Alexandre Elicha',
+    career: [
+      { house: 'theKooples', role: 'Founder', roleDetail: 'Co-founder; menswear design', start: 2008, sources: ['https://www.theindustry.fashion/the_directory/the-kooples/', 'https://www.marieclaire.com/fashion/news/a24780/the-kooples-brothers-design-interview/'] },
+    ],
+    sources: ['https://www.theindustry.fashion/the_directory/the-kooples/'],
+  },
+  laurentElicha: {
+    name: 'Laurent Elicha',
+    career: [
+      { house: 'theKooples', role: 'Founder', roleDetail: 'Co-founder; womenswear design', start: 2008, sources: ['https://www.theindustry.fashion/the_directory/the-kooples/', 'https://www.marieclaire.com/fashion/news/a24780/the-kooples-brothers-design-interview/'] },
+    ],
+    sources: ['https://www.theindustry.fashion/the_directory/the-kooples/'],
+  },
+  raphaelElicha: {
+    name: 'Raphaël Elicha',
+    career: [
+      { house: 'theKooples', role: 'Other', roleDetail: 'Co-founder; image and photography', start: 2008, sources: ['https://www.theindustry.fashion/the_directory/the-kooples/'] },
+    ],
+    sources: ['https://www.theindustry.fashion/the_directory/the-kooples/'],
+  },
+  pierreKaczmarek: {
+    name: 'Pierre Kaczmarek',
+    career: [
+      { house: 'theKooples', role: 'Creative Director', roleDetail: 'Creative director', start: 2023, sources: ['https://culted.com/fashion/the-kooples-fw24-paris-fashion-week/'] },
+    ],
+    notes: 'Previously founded Afterhomework, which is not separately represented. Exact departure date and present status at The Kooples are unconfirmed.',
+    sources: ['https://culted.com/fashion/the-kooples-fw24-paris-fashion-week/'],
+  },
+  louisUlysseChopard: {
+    name: 'Louis-Ulysse Chopard',
+    career: [
+      { house: 'chopard', role: 'Founder', roleDetail: 'Founder and watchmaker', start: 1860, end: 1915, sources: ['https://www.chopard.com/en-gb/our-history.html'] },
+    ],
+    sources: ['https://www.chopard.com/en-gb/our-history.html'],
+  },
+  carolineScheufele: {
+    name: 'Caroline Scheufele',
+    career: [
+      { house: 'chopard', role: 'Artistic Director', roleDetail: 'Artistic director; jewellery and high jewellery', end: null, sources: ['https://www.chopard.com/en-us/high-jewellery-universe/carolines-dreams.html'] },
+    ],
+    notes: 'Developed Chopard’s first Happy Diamonds jewellery collection in 1985. The start of her artistic-director title is unconfirmed.',
+    sources: ['https://www.chopard.com/en-us/high-jewellery-universe/carolines-dreams.html', 'https://www.chopard.com/en-gb/our-history.html'],
+  },
+  ronaldKurowski: {
+    name: 'Ronald Kurowski',
+    career: [
+      { house: 'chopard', role: 'Other', roleDetail: 'Watch designer; creator of the Happy Diamonds concept', sources: ['https://www.hautehorlogerie.org/en/watches-and-culture/watchmaking-scene/watches-and-novelties/happy-diamonds'] },
+    ],
+    notes: 'The Happy Diamonds watch launched in 1976; the product date is not treated as the start of his employment.',
+    sources: ['https://www.hautehorlogerie.org/en/watches-and-culture/watchmaking-scene/watches-and-novelties/happy-diamonds'],
+  },
+  davidBenDavid: {
+    name: 'David Ben David',
+    career: [
+      { house: 'sprayground', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2010, end: null, sources: ['https://www.sprayground.com/pages/about-us'] },
+    ],
+    notes: 'Also known as DBD and David BenDavid.',
+    sources: ['https://www.sprayground.com/pages/about-us', 'https://www.sprayground.co.il/pages/about-us'],
+  },
+  eddieShabot: {
+    name: 'Eddie Shabot',
+    career: [
+      { house: 'sprayground', role: 'Other', roleDetail: 'Business co-founder', start: 2010, sources: ['https://www.sprayground.co.il/pages/about-us'] },
+    ],
+    sources: ['https://www.sprayground.co.il/pages/about-us'],
+  },
+  moniqueLhuillierDesigner: {
+    name: 'Monique Lhuillier',
+    career: [
+      { house: 'moniqueLhuillier', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1996, end: null, sources: ['https://moniquelhuillier.com/pages/about'] },
+    ],
+    sources: ['https://moniquelhuillier.com/pages/about', 'https://cfda.com/member/monique-lhuillier/'],
+  },
+  tomBugbee: {
+    name: 'Tom Bugbee',
+    career: [
+      { house: 'moniqueLhuillier', role: 'Other', roleDetail: 'Business co-founder', start: 1996, end: null, sources: ['https://moniquelhuillier.com/pages/about'] },
+    ],
+    sources: ['https://moniquelhuillier.com/pages/about'],
+  },
+  charlieConstantinouDesigner: {
+    name: 'Charlie Constantinou',
+    career: [
+      { house: 'charlieConstantinou', role: 'Founder', roleDetail: 'Founder and designer', start: 2022, end: null, sources: ['https://londonfashionweek.co.uk/designers/charlie-constantinou'] },
+    ],
+    sources: ['https://londonfashionweek.co.uk/designers/charlie-constantinou', 'https://www.ssense.com/en-tw/editorial/fashion/charlie-constantinou-interview'],
+  },
+  patricDiCaprio: {
+    name: 'Patric DiCaprio',
+    career: [
+      { house: 'vaquera', role: 'Founder', roleDetail: 'Founder and co-designer', start: 2013, end: null, sources: ['https://www.fhcm.paris/en/house/vaquera'] },
+    ],
+    sources: ['https://www.fhcm.paris/en/house/vaquera'],
+  },
+  brynTaubensee: {
+    name: 'Bryn Taubensee',
+    career: [
+      { house: 'vaquera', role: 'Co-Creative Director', roleDetail: 'Co-designer with Patric DiCaprio', start: 2016, end: null, sources: ['https://www.fhcm.paris/en/house/vaquera'] },
+    ],
+    sources: ['https://www.fhcm.paris/en/house/vaquera'],
+  },
+  claireSullivan: {
+    name: 'Claire Sullivan',
+    career: [
+      { house: 'vaquera', role: 'Co-Creative Director', roleDetail: 'Design collective member', start: 2016, sources: ['https://www.vogue.com/article/miss-claire-sullivan-lookbook-01'] },
+    ],
+    notes: 'Also credited as Claire Sully. Left the collective during the pandemic to develop her own label, Miss Claire Sullivan, which is not separately represented. Exact departure year is unconfirmed.',
+    sources: ['https://www.vogue.com/article/miss-claire-sullivan-lookbook-01'],
+  },
+  davidMoses: {
+    name: 'David Moses',
+    career: [
+      { house: 'vaquera', role: 'Co-Creative Director', roleDetail: 'Former design collective member', sources: ['https://www.pratt.edu/wp-content/uploads/2024/02/PrattManhattanGallery_TheNewVillage_ExhibitionCatalogue.pdf'] },
+      { house: 'eckhausLatta', role: 'Other', roleDetail: 'Design intern', sources: ['https://www.pratt.edu/wp-content/uploads/2024/02/PrattManhattanGallery_TheNewVillage_ExhibitionCatalogue.pdf'] },
+    ],
+    notes: 'Also a founding member of Moses Gauntlett Cheng, later Gauntlett Cheng, which is not separately represented. Exact career dates remain unconfirmed.',
+    sources: ['https://www.pratt.edu/wp-content/uploads/2024/02/PrattManhattanGallery_TheNewVillage_ExhibitionCatalogue.pdf'],
+  },
+  danColen: {
+    name: 'Dan Colen',
+    career: [
+      { house: 'skyHighFarmGoods', role: 'Founder', roleDetail: 'Artist and co-founder', start: 2022, end: null, sources: ['https://fashiontechnews.zozo.com/en/articles/skyhighfarm'] },
+      { house: 'skyHighFarmGoods', role: 'Creative Director', roleDetail: 'Chief creative officer', sources: ['https://www.vogue.com/article/inside-the-fashion-label-feeding-new-york-families'] },
+    ],
+    notes: 'Founded the separate Sky High Farm nonprofit in 2011; this clothing-brand tenure begins with the commercial brand’s 2022 launch. Chief creative officer is documented in a 2023 profile, but exact title dates and current status are unconfirmed.',
+    sources: ['https://fashiontechnews.zozo.com/en/articles/skyhighfarm', 'https://www.linkedin.com/company/sky-high-farm-goods'],
+  },
+  daphneSeybold: {
+    name: 'Daphne Seybold',
+    career: [
+      { house: 'skyHighFarmGoods', role: 'Other', roleDetail: 'Co-founder; brand development', start: 2022, end: null, sources: ['https://fashiontechnews.zozo.com/en/articles/skyhighfarm'] },
+      { house: 'commeDesGarcons', role: 'Other', roleDetail: 'Marketing and communications, Comme des Garçons / Dover Street Market', sources: ['https://fashiontechnews.zozo.com/en/articles/skyhighfarm'] },
+    ],
+    notes: 'Her first-person account documents the January 2022 clothing-brand launch after earlier marketing and communications employment. Exact earlier dates are unconfirmed.',
+    sources: ['https://fashiontechnews.zozo.com/en/articles/skyhighfarm', 'https://www.linkedin.com/company/sky-high-farm-goods'],
+  },
+  matsRombaut: {
+    name: 'Mats Rombaut',
+    career: [
+      { house: 'rombaut', role: 'Founder', roleDetail: 'Founder and creative director', start: 2013, end: null, sources: ['https://rombaut.com/pages/about'] },
+      { house: 'lanvin', role: 'Other', roleDetail: 'Menswear accessories and sneaker design', start: 2008, sources: ['https://rombaut.com/pages/about'] },
+    ],
+    notes: 'Worked on product development and production at Damir Doma for two years before developing Rombaut; exact dates are unconfirmed. Also co-founded Virón. Those labels are not separately represented.',
+    sources: ['https://rombaut.com/pages/about', 'https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/articles/sustainability/mats-rombauts-natural-approach/'],
+  },
+  thierryGillier: {
+    name: 'Thierry Gillier',
+    career: [
+      { house: 'zadigVoltaire', role: 'Founder', roleDetail: 'Founder', start: 1997, end: null, sources: ['https://zadig-et-voltaire.com/eu/fr/content/notre-histoire'] },
+      { house: 'zadigVoltaire', role: 'Creative Director', roleDetail: 'Returning creative direction', start: 2024, end: 2026, sources: ['https://zadig-et-voltaire.com/eu/fr/content/notre-histoire'] },
+    ],
+    sources: ['https://zadig-et-voltaire.com/eu/fr/content/notre-histoire', 'https://fashionunited.com/news/people/dan-sablon-takes-over-creative-direction-at-zadig-voltaire/2026022470748'],
+  },
+  ceciliaBonstrom: {
+    name: 'Cecilia Bönström',
+    career: [
+      { house: 'zadigVoltaire', role: 'Creative Director', roleDetail: 'Creative director', start: 2006, end: 2024, sources: ['https://fashionunited.com/news/people/dan-sablon-takes-over-creative-direction-at-zadig-voltaire/2026022470748'] },
+    ],
+    sources: ['https://fashionunited.com/news/people/dan-sablon-takes-over-creative-direction-at-zadig-voltaire/2026022470748'],
+  },
+  danSablon: {
+    name: 'Dan Sablon',
+    career: [
+      { house: 'zadigVoltaire', role: 'Creative Director', roleDetail: 'Creative director', start: 2026, end: null, sources: ['https://fashionunited.com/news/people/dan-sablon-takes-over-creative-direction-at-zadig-voltaire/2026022470748'] },
+    ],
+    notes: 'Previously worked with Marc Jacobs and on creative projects for Carhartt and Fenty x Puma. The appointment source does not distinguish employment from project commissions, so these are not recorded as separate career tenures. Also a stylist and magazine editor.',
+    sources: ['https://fashionunited.com/news/people/dan-sablon-takes-over-creative-direction-at-zadig-voltaire/2026022470748'],
+  },
+  aldoCipullo: {
+    name: 'Aldo Cipullo',
+    career: [
+      { house: 'tiffanyAndCo', role: 'Other', roleDetail: 'Jewellery designer', start: 1963, end: 1969, sources: ['https://www.cincinnatiartmuseum.org/media/297619/sb_label_sectionextended.pdf'] },
+      { house: 'cartier', role: 'Other', roleDetail: 'Jewellery designer, Cartier New York; Love and Juste un Clou collections', start: 1969, end: 1974, sources: ['https://www.cincinnatiartmuseum.org/media/297619/sb_label_sectionextended.pdf'] },
+    ],
+    notes: 'Previously designed for David Webb from 1960; that house is not separately represented.',
+    sources: ['https://www.cincinnatiartmuseum.org/media/297619/sb_label_sectionextended.pdf'],
+  },
+  mackenzieSehl: {
+    name: 'Mackenzie Sehl',
+    career: [
+      { house: 'kotn', role: 'Founder', roleDetail: 'Co-founder and chief creative officer', start: 2015, end: null, sources: ['https://wellfound.com/company/kotn/people'] },
+    ],
+    notes: 'Also known as Mackenzie Yeates. Co-founder and chief creative officer of Kotn; the precise appointment date to the creative title is unconfirmed. Earlier creative consulting at Ordinary Studios and brand direction at Watson & Co. are not separately mapped.',
+    sources: ['https://wellfound.com/company/kotn/people', 'https://kotn.com/pages/about'],
+  },
+  benjaminSehl: {
+    name: 'Benjamin Sehl',
+    career: [
+      { house: 'kotn', role: 'Other', roleDetail: 'Co-founder; digital and product leadership', start: 2015, end: null, sources: ['https://wellfound.com/company/kotn/people'] },
+    ],
+    sources: ['https://wellfound.com/company/kotn/people', 'https://kotn.com/pages/about'],
+  },
+  ramiHelali: {
+    name: 'Rami Helali',
+    career: [
+      { house: 'kotn', role: 'Other', roleDetail: 'Co-founder', start: 2015, end: null, sources: ['https://wellfound.com/company/kotn/people'] },
+    ],
+    sources: ['https://wellfound.com/company/kotn/people', 'https://kotn.com/pages/about'],
+  },
+  louisFrancoisCartier: {
+    name: 'Louis-François Cartier',
+    career: [
+      { house: 'cartier', role: 'Founder', roleDetail: 'Founder and jeweller', start: 1847, sources: ['https://www.musee-orsay.fr/fr/ressources/repertoire-artistes-personnalites/cartier-7148'] },
+    ],
+    sources: ['https://www.musee-orsay.fr/fr/ressources/repertoire-artistes-personnalites/cartier-7148'],
+  },
+  jeanneToussaint: {
+    name: 'Jeanne Toussaint',
+    career: [
+      { house: 'cartier', role: 'Other', roleDetail: 'Leather-goods designer; later accessories leadership', start: 1920, end: 1933, sources: ['https://365ayearof.cartier.com/fr/article/she-is-the-panther/'] },
+      { house: 'cartier', role: 'Creative Director', roleDetail: 'Jewellery creation', start: 1933, sources: ['https://365ayearof.cartier.com/fr/article/she-is-the-panther/'] },
+    ],
+    notes: 'Cartier documents her leather-goods work from 1920, accessories responsibility from 1925 and promotion to creative leadership in 1933. Exact departure year remains unconfirmed.',
+    sources: ['https://365ayearof.cartier.com/fr/article/she-is-the-panther/'],
+  },
+  jacquelineKarachi: {
+    name: 'Jacqueline Karachi-Langane',
+    career: [
+      { house: 'cartier', role: 'Creative Director', roleDetail: 'Director of the high-jewellery creation studio', sources: ['https://www.hautetime.com/one-on-one-with-jacqueline-karachi-langane-the-creative-director-of-cartier/'] },
+    ],
+    notes: 'A 2016 interview documents leadership of Cartier’s high-jewellery team after more than 30 years at the house. Exact appointment and departure dates remain unconfirmed; her scope is distinct from jewellery and watchmaking collections.',
+    sources: ['https://www.hautetime.com/one-on-one-with-jacqueline-karachi-langane-the-creative-director-of-cartier/'],
+  },
+  marieLaureCerede: {
+    name: 'Marie-Laure Cérède',
+    career: [
+      { house: 'cartier', role: 'Creative Director', roleDetail: 'Jewellery and watchmaking; excluded high jewellery', start: 2016, end: 2025, sources: ['https://www.vogue.com/article/chanel-taps-marie-laure-cerede-as-director-of-jewelry-creation-studio'] },
+      { house: 'chanel', role: 'Creative Director', roleDetail: 'Director of the jewellery creation studio', start: 2026, end: null, sources: ['https://www.vogue.com/article/chanel-taps-marie-laure-cerede-as-director-of-jewelry-creation-studio'] },
+    ],
+    notes: 'Chanel announced her appointment in June 2026 with an October start. Reports differ on the start of her Cartier leadership and its changing scope; the recorded 2016–2025 bounds follow Vogue’s appointment report.',
+    sources: ['https://www.vogue.com/article/chanel-taps-marie-laure-cerede-as-director-of-jewelry-creation-studio'],
+  },
+  nathalieVerdeille: {
+    name: 'Nathalie Verdeille',
+    career: [
+      { house: 'cartier', role: 'Creative Director', roleDetail: 'Jewellery', start: 2005, end: 2021, sources: ['https://www.theindustry.fashion/tiffany-and-co-hires-nathalie-verdeille-as-artistic-director-of-jewellery/'] },
+      { house: 'tiffanyAndCo', role: 'Artistic Director', roleDetail: 'Jewellery and high jewellery; later chief artistic officer', start: 2021, end: null, sources: ['https://www.theindustry.fashion/tiffany-and-co-hires-nathalie-verdeille-as-artistic-director-of-jewellery/'] },
+    ],
+    notes: 'Led high-jewellery design at Chaumet from 2001 to 2005 before joining Cartier. Chaumet is not separately represented. Tiffany’s 2026 collection announcement confirms her continuing creative leadership.',
+    sources: ['https://www.theindustry.fashion/tiffany-and-co-hires-nathalie-verdeille-as-artistic-director-of-jewellery/', 'https://press.tiffany.com/'],
+  },
+  charlesLewisTiffany: {
+    name: 'Charles Lewis Tiffany',
+    career: [
+      { house: 'tiffanyAndCo', role: 'Other', roleDetail: 'Co-founder and merchant', start: 1837, end: 1902, sources: ['https://press.tiffany.com/our-story/tiffanys-legacy-pioneer-of-american-luxury/'] },
+    ],
+    sources: ['https://press.tiffany.com/our-story/tiffanys-legacy-pioneer-of-american-luxury/', 'https://press.tiffany.com/spokespeople/charles-lewis-tiffany/'],
+  },
+  johnBYoung: {
+    name: 'John B. Young',
+    career: [
+      { house: 'tiffanyAndCo', role: 'Other', roleDetail: 'Business co-founder', start: 1837, end: 1853, sources: ['https://press.tiffany.com/our-story/tiffanys-legacy-pioneer-of-american-luxury/'] },
+    ],
+    sources: ['https://press.tiffany.com/our-story/tiffanys-legacy-pioneer-of-american-luxury/', 'https://press.tiffany.com/spokespeople/charles-lewis-tiffany/'],
+  },
+  louisComfortTiffany: {
+    name: 'Louis Comfort Tiffany',
+    career: [
+      { house: 'tiffanyAndCo', role: 'Artistic Director', roleDetail: 'First art director', start: 1902, sources: ['https://press.tiffany.com/our-story/tiffanys-legacy-pioneer-of-american-luxury/'] },
+    ],
+    notes: 'Also ran his own glass and decorative-arts practice. Its work is distinct from the jewellery house; the exact end of the house appointment is unconfirmed.',
+    sources: ['https://press.tiffany.com/our-story/tiffanys-legacy-pioneer-of-american-luxury/'],
+  },
+  edwardCMoore: {
+    name: 'Edward C. Moore',
+    career: [
+      { house: 'tiffanyAndCo', role: 'Head Designer', roleDetail: 'Chief of the design department; silversmith', sources: ['https://press.tiffany.com/our-story/tiffanys-legacy-pioneer-of-american-luxury/'] },
+    ],
+    notes: 'Tiffany credits him with developing its silver design studio and training apprentices. Exact tenure years remain unconfirmed.',
+    sources: ['https://press.tiffany.com/our-story/tiffanys-legacy-pioneer-of-american-luxury/'],
+  },
+  jeanSchlumberger: {
+    name: 'Jean Schlumberger',
+    career: [
+      { house: 'schiaparelli', role: 'Other', roleDetail: 'Led button and costume-jewellery design', start: 1937, sources: ['https://press.tiffany.com/the-designers/jean-schlumberger/'] },
+      { house: 'tiffanyAndCo', role: 'Other', roleDetail: 'Jewellery designer and vice president; signature designer studio', start: 1956, end: 1987, sources: ['https://press.tiffany.com/the-designers/jean-schlumberger/'] },
+    ],
+    sources: ['https://press.tiffany.com/the-designers/jean-schlumberger/', 'https://www.tiffany.com/shared/pdfs/Tiffany_RobbReport.pdf'],
+  },
+  elsaPeretti: {
+    name: 'Elsa Peretti',
+    career: [
+      { house: 'tiffanyAndCo', role: 'Other', roleDetail: 'Jewellery and object designer; sustained exclusive designer partnership', start: 1974, end: 2021, sources: ['https://press.tiffany.com/statement-on-behalf-of-tiffany-co-elsa-peretti/'] },
+    ],
+    sources: ['https://press.tiffany.com/statement-on-behalf-of-tiffany-co-elsa-peretti/'],
+  },
+  palomaPicasso: {
+    name: 'Paloma Picasso',
+    career: [
+      { house: 'saintLaurent', role: 'Other', roleDetail: 'Jewellery designer for Yves Saint Laurent’s collections', sources: ['https://press.tiffany.com/the-designers/paloma-picasso/'] },
+      { house: 'tiffanyAndCo', role: 'Other', roleDetail: 'Jewellery designer; signature designer collections', start: 1980, sources: ['https://press.tiffany.com/the-designers/paloma-picasso/'] },
+    ],
+    notes: 'Also designed gold jewellery for Zolotas, which is not separately represented. Tiffany’s biography documents the ongoing designer relationship through 2021; present appointment status is unconfirmed.',
+    sources: ['https://press.tiffany.com/the-designers/paloma-picasso/'],
+  },
+  francescaAmfitheatrof: {
+    name: 'Francesca Amfitheatrof',
+    career: [
+      { house: 'tiffanyAndCo', role: 'Head Designer', roleDetail: 'Design director', start: 2013, end: 2017, sources: ['https://www.vogue.co.uk/article/reed-krakoff-appointed-artistic-officer-tiffany-co'] },
+      { house: 'louisVuitton', role: 'Artistic Director', roleDetail: 'Watches and jewellery', start: 2018, end: 2025, sources: ['https://www.businessoffashion.com/news/luxury/francesca-amfitheatrof-jewellery-louis-vuitton-exit/'] },
+    ],
+    sources: ['https://www.vogue.co.uk/article/reed-krakoff-appointed-artistic-officer-tiffany-co', 'https://www.businessoffashion.com/news/luxury/francesca-amfitheatrof-jewellery-louis-vuitton-exit/'],
+  },
+  johnLoring: {
+    name: 'John Loring',
+    career: [
+      { house: 'tiffanyAndCo', role: 'Head Designer', roleDetail: 'Design director', start: 1979, end: 2009, sources: ['https://press.tiffany.com/spokespeople/john-loring/'] },
+    ],
+    sources: ['https://press.tiffany.com/spokespeople/john-loring/'],
+  },
+  royRaymond: {
+    name: 'Roy Raymond',
+    career: [
+      { house: 'victoriasSecret', role: 'Other', roleDetail: 'Retail co-founder', start: 1977, end: 1982, sources: ['https://fashionista.com/2024/10/victorias-secret-fashion-show-history-comeback'] },
+    ],
+    sources: ['https://fashionista.com/2024/10/victorias-secret-fashion-show-history-comeback'],
+  },
+  gayeRaymond: {
+    name: 'Gaye Raymond',
+    career: [
+      { house: 'victoriasSecret', role: 'Other', roleDetail: 'Retail co-founder', start: 1977, end: 1982, sources: ['https://fashionista.com/2024/10/victorias-secret-fashion-show-history-comeback'] },
+    ],
+    sources: ['https://fashionista.com/2024/10/victorias-secret-fashion-show-history-comeback'],
+  },
+  adamSelman: {
+    name: 'Adam Selman',
+    career: [
+      { house: 'victoriasSecret', role: 'Creative Director', roleDetail: 'Senior vice president and executive creative director', start: 2025, end: null, sources: ['https://www.victoriassecretandco.com/news-releases/news-release-details/victorias-secret-co-announces-key-leadership-appointments-drive'] },
+    ],
+    notes: 'Previously chief design officer at Savage X Fenty and founder of Adam Selman and Adam Selman Sport. Those labels are not separately represented; Savage X Fenty is distinct from Rihanna’s 2019 Fenty maison. Began his career working under designer Zaldy Goco.',
+    sources: ['https://www.victoriassecretandco.com/news-releases/news-release-details/victorias-secret-co-announces-key-leadership-appointments-drive', 'https://vsnow.victoriassecret.com/2026-fashion-show-credits/'],
+  },
+  janieSchaffer: {
+    name: 'Janie Schaffer',
+    career: [
+      { house: 'victoriasSecret', role: 'Head Designer', roleDetail: 'Chief design officer — first tenure', start: 2008, end: 2015, sources: ['https://www.victoriassecretandco.com/static-files/d79bd844-8f3d-4de9-be75-d838729451a5'] },
+      { house: 'victoriasSecret', role: 'Head Designer', roleDetail: 'Chief design officer — returning tenure', start: 2020, sources: ['https://www.victoriassecretandco.com/static-files/d79bd844-8f3d-4de9-be75-d838729451a5'] },
+    ],
+    notes: 'Her first-person 2022 company interview dates her earlier departure to 2015 and her return to about two years earlier. Contemporary 2020 reporting gives a different earlier departure year; the first tenure here follows her own account. Current status of the returning tenure is unconfirmed. Previously founded Knickerbox.',
+    sources: ['https://www.victoriassecretandco.com/static-files/d79bd844-8f3d-4de9-be75-d838729451a5', 'https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/articles/retail/l-brands-replaces-victorias-secret-ceo/'],
+  },
+  jenniferZuccarini: {
+    name: 'Jennifer Zuccarini',
+    career: [
+      { house: 'victoriasSecret', role: 'Head Designer', roleDetail: 'Design director of intimates', sources: ['https://www.whowhatwear.com/living/career/second-life-podcast-jennifer-zuccarini'] },
+    ],
+    notes: 'Co-founded Kiki de Montparnasse in 2005, then held a four-year design-director tenure at Victoria’s Secret before founding Fleur du Mal. Calendar bounds are unconfirmed. Her own labels are not separately represented.',
+    sources: ['https://www.whowhatwear.com/living/career/second-life-podcast-jennifer-zuccarini'],
+  },
+  philippPleinDesigner: {
+    name: 'Philipp Plein',
+    career: [
+      { house: 'philippPlein', role: 'Founder', roleDetail: 'Founder and designer', start: 2004, end: null, sources: ['https://pleingroup.com/the-group-history/'] },
+    ],
+    notes: 'Began a furniture design business in 1998; the fashion label launched in 2004. Also developed Plein Sport and Billionaire, which are not separately represented.',
+    sources: ['https://pleingroup.com/the-group-history/'],
+  },
+  pierreMaheo: {
+    name: 'Pierre Mahéo',
+    career: [
+      { house: 'officineGenerale', role: 'Founder', roleDetail: 'Founder and creative director', start: 2012, end: null, sources: ['https://us.officinegenerale.com/pages/a-propos'] },
+    ],
+    notes: 'Trained through an apprenticeship in a French tailoring business before developing Officine Générale. The official biography does not name that employer or give exact apprenticeship dates.',
+    sources: ['https://us.officinegenerale.com/pages/a-propos', 'https://www.vogue.com/article/after-us-store-opening-spree-officine-generale-plots-next-steps'],
+  },
+  justinCassinDesigner: {
+    name: 'Justin Cassin',
+    career: [
+      { house: 'justinCassin', role: 'Founder', roleDetail: 'Founder and creative director', end: null, sources: ['https://justincassin.com'] },
+    ],
+    notes: 'Australian menswear designer with international operations. Studied fashion in the United States and worked for other labels before his Australian fashion-week debut in 2017; those employers and the precise label launch year remain unconfirmed.',
+    sources: ['https://justincassin.com', 'https://icon.ink/articles/justin-cassin-interview-fashion-week-australia-resort-2020/', 'https://nowfashion.com/brand/justin-cassin'],
+  },
+  stephaneRaynor: {
+    name: 'Stephane Raynor',
+    career: [
+      { house: 'boyLondon', role: 'Founder', roleDetail: 'Co-founder', start: 1976, sources: ['https://www.boy-london.com/blogs/news/a-nutshell-history-of-an-iconic-trademark'] },
+    ],
+    notes: 'Previously ran Acme Attractions with John Krivine. Exact present design responsibilities at BOY London remain unconfirmed.',
+    sources: ['https://www.boy-london.com/blogs/news/a-nutshell-history-of-an-iconic-trademark'],
+  },
+  johnKrivine: {
+    name: 'John Krivine',
+    career: [
+      { house: 'boyLondon', role: 'Other', roleDetail: 'Business co-founder', start: 1976, sources: ['https://www.boy-london.com/blogs/news/a-nutshell-history-of-an-iconic-trademark'] },
+    ],
+    sources: ['https://www.boy-london.com/blogs/news/a-nutshell-history-of-an-iconic-trademark'],
+  },
+  perryEllisDesigner: {
+    name: 'Perry Ellis',
+    career: [
+      { house: 'perryEllis', role: 'Founder', roleDetail: 'Founder and designer', start: 1976, end: 1986, sources: ['https://www.perryellis.com/pages/about-us'] },
+    ],
+    notes: 'Designed the Portfolio collection for Manhattan Industries from 1976, then established Perry Ellis Sportswear in 1978. Earlier work included John Meyer of Norwich and Vera; those labels are not separately represented.',
+    sources: ['https://www.perryellis.com/pages/about-us', 'https://fgd.iuh.edu.vn/wp-content/uploads/2021/04/contemporary-fashion-cleaned-1.pdf'],
+  },
+  patriciaPastor: {
+    name: 'Patricia Pastor',
+    career: [
+      { house: 'perryEllis', role: 'Other', roleDetail: 'Design assistant to Perry Ellis', end: 1986, sources: ['https://www.upi.com/Archives/1988/12/27/In-a-surprise-move-the-Perry-Ellis-Co-announced/4138599202000/'] },
+      { house: 'perryEllis', role: 'Womenswear Director', roleDetail: 'Chief womenswear designer following Ellis’s death', start: 1986, end: 1988, sources: ['https://www.upi.com/Archives/1988/12/27/In-a-surprise-move-the-Perry-Ellis-Co-announced/4138599202000/'] },
+    ],
+    sources: ['https://www.upi.com/Archives/1988/12/27/In-a-surprise-move-the-Perry-Ellis-Co-announced/4138599202000/'],
+  },
+  michaelMaccari: {
+    name: 'Michael Maccari',
+    career: [
+      { house: 'perryEllis', role: 'Creative Director', roleDetail: 'Brand-wide creative direction', start: 2014, sources: ['https://cfda.com/member/michael-maccari/'] },
+      { house: 'armaniExchange', role: 'Head Designer', roleDetail: 'Fashion director and senior vice president of design', sources: ['https://cfda.com/member/michael-maccari/'] },
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Design team', sources: ['https://cfda.com/member/michael-maccari/'] },
+      { house: 'calvinKlein', role: 'Other', roleDetail: 'Design team', sources: ['https://cfda.com/member/michael-maccari/'] },
+      { house: 'jCrew', role: 'Other', roleDetail: 'Design team', sources: ['https://cfda.com/member/michael-maccari/'] },
+      { house: 'donnaKaran', role: 'Other', roleDetail: 'Design team', sources: ['https://cfda.com/member/michael-maccari/'] },
+    ],
+    notes: 'CFDA identifies his Perry Ellis leadership as a completed tenure but does not give its end year. Earlier career dates are unconfirmed.',
+    sources: ['https://cfda.com/member/michael-maccari/'],
+  },
+  michaelMiille: {
+    name: 'Michael Miille',
+    career: [
+      { house: 'perryEllis', role: 'Creative Director', roleDetail: 'Creative direction for Perry Ellis and Original Penguin', start: 2024, sources: ['https://www.nasdaq.com/press-release/perry-ellis-international-welcomes-michael-miille-as-creative-director-2024-01-17'] },
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Earlier creative and design leadership; exact title unconfirmed', sources: ['https://www.nasdaq.com/press-release/perry-ellis-international-welcomes-michael-miille-as-creative-director-2024-01-17'] },
+    ],
+    notes: 'The appointment announcement also documents earlier work at PVH without identifying a particular portfolio brand. Current status and the end date of the Perry Ellis appointment are unconfirmed.',
+    sources: ['https://www.nasdaq.com/press-release/perry-ellis-international-welcomes-michael-miille-as-creative-director-2024-01-17'],
+  },
+  katePhelan: {
+    name: 'Kate Phelan',
+    career: [
+      { house: 'topshop', role: 'Creative Director', roleDetail: 'Global creative director', start: 2011, end: 2017, sources: ['https://www.theindustry.fashion/topshop-and-topman-creative-directors-to-depart-as-david-hagglund-appointed/'] },
+    ],
+    notes: 'Fashion stylist and editor with a long career at British Vogue; the publication is not represented as a fashion house.',
+    sources: ['https://www.theindustry.fashion/topshop-and-topman-creative-directors-to-depart-as-david-hagglund-appointed/', 'https://www.vogue.co.uk/article/kate-phelan-biography'],
+  },
+  davidHagglund: {
+    name: 'David Hägglund',
+    career: [
+      { house: 'topshop', role: 'Creative Director', roleDetail: 'Creative director, Topshop and Topman', start: 2017, sources: ['https://www.theindustry.fashion/topshop-and-topman-creative-directors-to-depart-as-david-hagglund-appointed/'] },
+    ],
+    notes: 'Founded a Stockholm creative agency and previously worked as art director at Vogue Paris. Agency clients are not recorded as personal design employment. Exact departure year from Topshop is unconfirmed.',
+    sources: ['https://www.theindustry.fashion/topshop-and-topman-creative-directors-to-depart-as-david-hagglund-appointed/'],
+  },
+  jacquiMarkham: {
+    name: 'Jacqui Markham',
+    career: [
+      { house: 'topshop', role: 'Head Designer', roleDetail: 'Design director, Topshop and Topman', sources: ['https://fashionunited.uk/news/people/whistles-names-former-topshop-design-head-as-creative-director/2025042981353'] },
+      { house: 'asos', role: 'Head Designer', roleDetail: 'Design director', start: 2013, end: 2015, sources: ['https://fashionunited.uk/news/people/whistles-names-former-topshop-design-head-as-creative-director/2025042981353'] },
+    ],
+    notes: 'Also designed at Oasis and Karen Millen, directed design at Urban Outfitters Europe (2019–2020), and became creative director of Whistles in 2025. These labels are not separately represented. Her later Topshop consulting dates remain unconfirmed.',
+    sources: ['https://fashionunited.uk/news/people/whistles-names-former-topshop-design-head-as-creative-director/2025042981353', 'https://www.retailgazette.co.uk/blog/2025/04/whistles-appoints-jacqui-markham/'],
+  },
+  abderrahmaneTrabsini: {
+    name: 'Abderrahmane Trabsini',
+    career: [
+      { house: 'dailyPaper', role: 'Founder', roleDetail: 'Co-founder and design director', start: 2012, end: null, sources: ['https://londonfashionweek.co.uk/designers/daily-paper'] },
+    ],
+    sources: ['https://londonfashionweek.co.uk/designers/daily-paper', 'https://nl.linkedin.com/in/abderrahmane-trabsini-58040961', 'https://www.versus.uk.com/articles/versus-and-zalando-spotlight-football-cultures-leading-voices-in-the-fitting-room/'],
+  },
+  husseinSuleiman: {
+    name: 'Hussein Suleiman',
+    career: [
+      { house: 'dailyPaper', role: 'Other', roleDetail: 'Co-founder', start: 2012, end: null, sources: ['https://londonfashionweek.co.uk/designers/daily-paper'] },
+    ],
+    sources: ['https://londonfashionweek.co.uk/designers/daily-paper', 'https://dailypaperclothing.com/pages/about-us'],
+  },
+  jeffersonOsei: {
+    name: 'Jefferson Osei',
+    career: [
+      { house: 'dailyPaper', role: 'Other', roleDetail: 'Co-founder', start: 2012, end: null, sources: ['https://londonfashionweek.co.uk/designers/daily-paper'] },
+    ],
+    sources: ['https://londonfashionweek.co.uk/designers/daily-paper', 'https://dailypaperclothing.com/pages/about-us'],
+  },
+  garthMariano: {
+    name: 'Garth Mariano',
+    career: [{ house: 'butterGoods', role: 'Founder', roleDetail: 'Co-founder and graphic designer', start: 2008 }],
+    notes: 'Founded Butter Goods with Matt Evans after studying graphic design and working at Beyond Skate. Exact present role dates unconfirmed.',
+    sources: ['https://theskateboardersjournal.com/buttergoods-x-dc-chicago-mission/'],
+  },
+  mattEvans: {
+    name: 'Matt Evans',
+    career: [{ house: 'butterGoods', role: 'Founder', roleDetail: 'Co-founder', start: 2008 }],
+    sources: ['https://theskateboardersjournal.com/buttergoods-x-dc-chicago-mission/'],
+  },
+  arthurLasenbyLiberty: {
+    name: 'Arthur Lasenby Liberty',
+    career: [{ house: 'libertyLondon', role: 'Other', roleDetail: 'Founder and retailer', start: 1875, end: 1917 }],
+    sources: ['https://www.libertylondon.com/uk/information/our-heritage.html'],
+  },
+  maryAnnDunkley: {
+    name: 'Mary-Ann Dunkley',
+    career: [
+      { house: 'paulSmith', role: 'Other', roleDetail: 'Junior textile designer, later textile design manager', end: 2016, approximate: true },
+      { house: 'libertyLondon', role: 'Head Designer', roleDetail: 'Head of design / design director, Liberty Fabrics', start: 2016, end: null, approximate: true },
+    ],
+    notes: 'A December 2018 interview dates her move to Liberty to two years earlier, after 17 years at Paul Smith; the transition year is approximate. Liberty’s design-studio page identifies her as design director.',
+    sources: ['https://www.libertyfabric.com/design-studio/', 'https://www.stylist.co.uk/life/careers/liberty-london-work-life-fabric-design-mary-ann-dunkley/241205'],
+  },
+  noahRaf: {
+    name: 'Noah Raf',
+    career: [{ house: 'madhappy', role: 'Founder', roleDetail: 'Co-founder; brand strategy and creative oversight', start: 2017 }],
+    sources: ['https://cfda.com/news/madhappy-is-the-youth-label-bringing-optimism-to-the-fashion-industry/'],
+  },
+  peimanRaf: {
+    name: 'Peiman Raf',
+    career: [{ house: 'madhappy', role: 'Other', roleDetail: 'Co-founder; operations and production', start: 2017 }],
+    sources: ['https://cfda.com/news/madhappy-is-the-youth-label-bringing-optimism-to-the-fashion-industry/'],
+  },
+  masonSpector: {
+    name: 'Mason Spector',
+    career: [{ house: 'madhappy', role: 'Founder', roleDetail: 'Co-founder; creative oversight', start: 2017 }],
+    sources: ['https://cfda.com/news/madhappy-is-the-youth-label-bringing-optimism-to-the-fashion-industry/'],
+  },
+  joshuaSitt: {
+    name: 'Joshua Sitt',
+    career: [{ house: 'madhappy', role: 'Other', roleDetail: 'Co-founder; operations and production', start: 2017 }],
+    sources: ['https://cfda.com/news/madhappy-is-the-youth-label-bringing-optimism-to-the-fashion-industry/'],
+  },
+  christelleKocher: {
+    name: 'Christelle Kocher',
+    career: [
+      { house: 'koche', role: 'Founder', roleDetail: 'Founder and artistic director', start: 2015, end: null, sources: ['https://www.fhcm.paris/en/house/koche'] },
+      { house: 'bottegaVeneta', role: 'Other', roleDetail: 'Design team', sources: ['https://www.koche.fr/pages/about-who-we-are'] },
+      { house: 'driesVanNoten', role: 'Other', roleDetail: 'Design team', sources: ['https://www.koche.fr/pages/about-who-we-are'] },
+      { house: 'chloe', role: 'Other', roleDetail: 'Design team', sources: ['https://www.koche.fr/pages/about-who-we-are'] },
+      { house: 'soniaRykiel', role: 'Other', roleDetail: 'Design team', sources: ['https://www.fhcm.paris/en/news/hands-up-christelle-kocher-koche'] },
+      { house: 'emporioArmani', role: 'Other', roleDetail: 'Design team', sources: ['https://www.fhcm.paris/en/news/hands-up-christelle-kocher-koche'] },
+    ],
+    notes: 'Also worked at Martine Sitbon before founding Koché. Became artistic director of feather and embroidery atelier Lemarié in 2010; that atelier is not separately represented. Dates of her earlier design-team roles remain unconfirmed.',
+    sources: ['https://www.koche.fr/pages/about-who-we-are', 'https://www.fhcm.paris/en/house/koche', 'https://www.fhcm.paris/en/news/hands-up-christelle-kocher-koche'],
+  },
+  borreAkkersdijk: {
+    name: 'Borre Akkersdijk',
+    nationality: 'Dutch',
+    career: [
+      { house: 'byborre', role: 'Founder', roleDetail: 'Co-founder and textile designer', start: 2015, end: null, sources: ['https://news.byborre.com/about/'] },
+      { house: 'byborre', role: 'Creative Director', roleDetail: 'Chief creative officer; exact tenure dates unconfirmed', sources: ['https://d21buns5ku92am.cloudfront.net/67067/pdf/campaigns/228278-20230720080005000000000-byborre-and-ace-tate-collaborate-to-inspi.pdf'] },
+      { house: 'nike', role: 'Other', roleDetail: 'Textile design consultant', sources: ['https://www.woolmarkchallenge.com/latest-news/judges/borre-akkersdijk/'] },
+      { house: 'louisVuitton', role: 'Other', roleDetail: 'Textile design consultant', sources: ['https://www.woolmarkchallenge.com/latest-news/judges/borre-akkersdijk/'] },
+    ],
+    notes: 'Textile designer from Wamel who studied at the Fashion Institute of Technology and graduated from Design Academy Eindhoven in 2009. Worked at Studio Edelkoort during his studies and began the practice behind BYBORRE in October 2010. Woolmark documents consulting for Nike and Louis Vuitton before his focus on 3D knitted fabrics; exact dates are unknown. BYBORRE’s July 2023 press release identifies him as chief creative officer, while its current biography confirms his continuing founder role.',
+    sources: ['https://www.woolmarkchallenge.com/latest-news/judges/borre-akkersdijk/', 'https://news.byborre.com/about/', 'https://d21buns5ku92am.cloudfront.net/67067/pdf/campaigns/228278-20230720080005000000000-byborre-and-ace-tate-collaborate-to-inspi.pdf'],
+  },
+  arnoudHaverlag: {
+    name: 'Arnoud Haverlag',
+    career: [{ house: 'byborre', role: 'Other', roleDetail: 'Business co-founder', start: 2015 }],
+    notes: 'Co-founded BYBORRE with Borre Akkersdijk in 2015. Stepped down as CEO effective July 31, 2023; a continuing operational founder role has not been confirmed.',
+    sources: ['https://d21buns5ku92am.cloudfront.net/67067/pdf/campaigns/228278-20230720080005000000000-byborre-and-ace-tate-collaborate-to-inspi.pdf', 'https://siliconcanals.com/arnoud-haverlag-steps-down-as-byborre-ceo/'],
+  },
+  danielWellehan: {
+    name: 'Daniel J. Wellehan Sr.',
+    career: [{ house: 'sebago', role: 'Other', roleDetail: 'Co-founder', start: 1946 }],
+    sources: ['https://www.sebago.com/pages/about'],
+  },
+  williamBeaudoin: {
+    name: 'William Beaudoin',
+    career: [{ house: 'sebago', role: 'Other', roleDetail: 'Co-founder', start: 1946 }],
+    sources: ['https://www.sebago.com/pages/about'],
+  },
+  josephCordeau: {
+    name: 'Joseph Cordeau',
+    career: [{ house: 'sebago', role: 'Other', roleDetail: 'Co-founder', start: 1946 }],
+    sources: ['https://www.sebago.com/pages/about'],
+  },
+  marcoTamponi: {
+    name: 'Marco Tamponi',
+    nationality: 'Italian',
+    career: [{ house: 'superga', role: 'Creative Director', notes: 'Identified as global brand manager and creative director in April 2025; exact creative appointment date and current status are unconfirmed.', sources: ['https://www.vogue.mx/articulo/como-llevar-tenis-superga-en-primavera-verano-2025'] }, { house: 'sebago', role: 'Creative Director', end: null }],
+    notes: 'Leads Sebago’s creative revival from Turin. His background spans sales, brand management and developing collections for the European market. Sources differ on his arrival: a 2025 interview recalls a call in 2017, while another says he had been with Sebago for six years. The precise start of his creative-director tenure remains unconfirmed.',
+    sources: ['https://www.thegentlemansjournal.com/article/sebago-turin-rowing-cup-torino-boat-shoe/', 'https://gentscafe.co/2025/05/23/the-beauty-of-what-endures-sebago-and-the-slow-rhythm-of-storytelling/', 'https://elpais.com/eps/2025-11-02/marco-tamponi-el-disenador-que-resucito-el-mocasin-de-fetiche-de-pijos-a-objeto-de-deseo-de-modernos.html'],
+  },
+  junghoonSon: {
+    name: 'Junghoon Son',
+    nationality: 'South Korean',
+    career: [{ house: 'vandyThePink', role: 'Founder', roleDetail: 'Founder and designer', start: 2017, end: null }],
+    notes: 'Known as Vandy. Born in South Korea and moved to the United States as a teenager. Began with custom sneakers and developed a label drawing on food culture and memories of life in Korea and America. BAPE’s collaborator biography uses Son; a Sneaker News introduction spells the surname Song.',
+    sources: ['https://en.jp.bape.com/pages/gallery-vandythepink', 'https://sneakernews.com/2024/11/13/vandythepink-salomon-speedcross-3-release-date/', 'https://www.onvandylab.org/faq'],
+  },
+  shinpeiGoto: {
+    name: 'Shinpei Goto',
+    nationality: 'Japanese',
+    born: 1992,
+    career: [{ house: 'masu', role: 'Head Designer', roleDetail: 'Designer', start: 2018, end: null }],
+    notes: 'Born in Nagoya. Studied tailoring at Bunka Fashion College and worked at the vintage store LAILA before graduating in 2014. Continued there repairing vintage garments and handling design and production for its in-house label for six seasons. Joined MASU for its Autumn/Winter 2018 rebranding; LAILA is not separately represented here.',
+    sources: ['https://rakutenfashionweektokyo.com/en/brands/detail/masu/', 'https://fashion-prize-of-tokyo.jp/winner_2024_masu.php', 'https://masu-onlinestore.com/en/pages/about-us'],
+  },
+  jimmyWu: {
+    name: 'Jimmy Wu',
+    career: [{ house: 'invincible', role: 'Founder', start: 2007, end: null }],
+    notes: 'Founder of INVINCIBLE in Taipei. Developed the retailer into a creative platform whose sneaker and clothing projects reinterpret global street culture through a Taiwanese perspective. Individual guest designers on collaborations are separate from its ongoing leadership.',
+    sources: ['https://www.jepoque.com/vol-2-jimmy-wu', 'https://urbansyndicate.co.uk/an-interview-with-jimmy-wu-the-vision-behind-invincible/amp/'],
+  },
+  jayGordon: {
+    name: 'Jay Gordon',
+    career: [{ house: 'bodega', role: 'Other', roleDetail: 'Co-founder', start: 2006 }],
+    notes: 'One of Bodega’s three co-founders, alongside Dan Natola and Oliver Mak. Their backgrounds in art, music and community events shaped the Boston retail concept; no separate garment creative-director tenure is established.',
+    sources: ['https://bdgastore.com/pages/about', 'https://www.rowdtla.com/collective/bodega'],
+  },
+  danNatola: {
+    name: 'Dan Natola',
+    career: [{ house: 'bodega', role: 'Other', roleDetail: 'Co-founder', start: 2006 }],
+    notes: 'Named Dan N. in Bodega’s own history. Connected with Jay Gordon and Oliver Mak through Boston’s Floorlords B-boy community before co-founding Bodega.',
+    sources: ['https://bdgastore.com/pages/about', 'https://www.rowdtla.com/collective/bodega'],
+  },
+  oliverMak: {
+    name: 'Oliver Mak',
+    career: [{ house: 'bodega', role: 'Other', roleDetail: 'Co-founder', start: 2006 }],
+    notes: 'DJ, event producer and arts organizer who co-founded Bodega with Jay Gordon and Dan Natola. Also directed its Fourth Wall Project gallery; the gallery is not a separate clothing label.',
+    sources: ['https://bdgastore.com/pages/about', 'https://www.rowdtla.com/collective/bodega', 'https://bostonhassle.com/compass-ketchup-bodega-2/'],
+  },
+  marcEcko: {
+    name: 'Marc Ecko',
+    nationality: 'American',
+    career: [{
+      house: 'eckoUnltd',
+      role: 'Founder',
+      roleDetail: 'Co-founder and founding designer',
+      start: 1993,
+      notes: 'Led the original label’s design and served as chief creative officer of its wider business. No longer involved in the Unltd. label by July 2014; the exact departure year is unconfirmed. Returned for a one-off anniversary capsule in 2023, which does not establish a new ongoing tenure.',
+    }],
+    notes: 'Born Marc Milecofsky. Began airbrushing T-shirts in New Jersey before co-founding Ecko Unltd. Also developed Marc Ecko Cut & Sew and co-founded Complex; these are distinct from the Unltd. clothing label. His later media and philanthropic roles do not establish current creative leadership of Ecko Unltd.',
+    sources: ['https://iconixbrand.com/ecko-unltd/', 'https://www.entrepreneur.com/business-news/who-wants-to-be-a-billionaire/188698', 'https://cache.krop.com/leahcaruso-57172e9c1d460fc.pdf', 'https://iconixbrand.com/ecko-unltd-celebrates-30th-anniversary-with-limited-edition-capsule-collection-designed-by-founder-marc-ecko/'],
+  },
+  marciTapper: {
+    name: 'Marci Tapper',
+    career: [{ house: 'eckoUnltd', role: 'Other', roleDetail: 'Business co-founder', start: 1993 }],
+    notes: 'Marc Ecko’s twin sister and a founding investor in the original business with Ecko and Seth Gerszberg. Her departure date and current involvement are unconfirmed; no garment creative-director role is established.',
+    sources: ['https://www.govinfo.gov/content/pkg/USCOURTS-njd-3_15-cv-05697/pdf/USCOURTS-njd-3_15-cv-05697-0.pdf', 'https://www.entrepreneur.com/business-news/who-wants-to-be-a-billionaire/188698'],
+  },
+  sethGerszberg: {
+    name: 'Seth Gerszberg',
+    career: [{
+      house: 'eckoUnltd', role: 'Other', roleDetail: 'Business co-founder', start: 1993,
+      notes: 'No longer involved in the label by July 2014; exact departure year unconfirmed.',
+    }],
+    notes: 'Co-founded the Ecko business with Marc Ecko and Marci Tapper. Led business development and operations at Marc Ecko Enterprises. His business leadership is distinct from Marc Ecko’s founding design role.',
+    sources: ['https://www.govinfo.gov/content/pkg/USCOURTS-njd-3_15-cv-05697/pdf/USCOURTS-njd-3_15-cv-05697-0.pdf', 'https://www.sec.gov/Archives/edgar/data/857737/000119312513243274/d545709dex991.htm', 'https://cache.krop.com/leahcaruso-57172e9c1d460fc.pdf'],
+  },
+  marcoBaldassari: {
+    name: 'Marco Baldassari',
+    nationality: 'Italian',
+    career: [{ house: 'eleventy', role: 'Founder', roleDetail: 'Co-founder and menswear creative director', start: 2007, end: null }],
+    notes: 'Worked as a fashion sales agent alongside Paolo Zuntini before establishing Eleventy. Leads the label’s menswear design, combining Italian tailoring with relaxed casual clothing.',
+    sources: ['https://eleventy-milano-usa.myshopify.com/pages/about-us', 'https://mr-mag.com/eleventy-the-new-luxury/', 'https://www.lofficielitalia.com/fashion/eleventy-intervista-marco-baldassari-direttore-creativo-anniversario-20-anni'],
+  },
+  paoloZuntini: {
+    name: 'Paolo Zuntini',
+    nationality: 'Italian',
+    career: [{ house: 'eleventy', role: 'Founder', roleDetail: 'Co-founder and womenswear creative director', start: 2007, end: null }],
+    notes: 'Co-founded Eleventy with Marco Baldassari after working in fashion sales. Leads the womenswear collections, adapting the label’s soft tailoring and natural-fibre fabrics to a relaxed wardrobe.',
+    sources: ['https://eleventy-milano-usa.myshopify.com/pages/about-us', 'https://mr-mag.com/eleventy-the-new-luxury/', 'https://d.repubblica.it/fashion/moda/2026/04/08/news/eleventy-425230345/'],
+  },
+  nicholasDaleyDesigner: {
+    name: 'Nicholas Daley',
+    nationality: 'British',
+    career: [
+      { house: 'paulSmith', role: 'Other', roleDetail: 'Design intern', sources: ['https://www.craftscouncil.org.uk/stories/meet-nicholas-daley-designer-merging-fashion-music-and-craft'] },
+      { house: 'nigelCabourn', role: 'Other', roleDetail: 'Design team', sources: ['https://www.craftscouncil.org.uk/stories/meet-nicholas-daley-designer-merging-fashion-music-and-craft'] },
+      { house: 'nicholasDaley', role: 'Founder', roleDetail: 'Founder and designer', start: 2015, end: null },
+    ],
+    notes: 'Central Saint Martins graduate whose work explores Jamaican-Scottish heritage, Black British music and textile craft. Also worked at Hardy Amies on Savile Row, a house not separately represented here; early employment dates remain unconfirmed.',
+    sources: ['https://nicholasdaley.net/pages/about', 'https://www.craftscouncil.org.uk/stories/meet-nicholas-daley-designer-merging-fashion-music-and-craft', 'https://www.thebureaubelfast.com/news/2017/02/interview-with-nicholas-daley/'],
+  },
+  priyaAhluwalia: {
+    name: 'Priya Ahluwalia',
+    nationality: 'British',
+    career: [{ house: 'ahluwalia', role: 'Founder', roleDetail: 'Founder and designer', start: 2018, end: null }],
+    notes: 'London designer of Indian-Nigerian heritage. Launched Ahluwalia after completing the University of Westminster’s MA Menswear course; uses vintage and surplus materials alongside photography, publishing and film to explore identity and community.',
+    sources: ['https://ahluwalia.world/pages/about', 'https://fashionista.com/2024/05/priya-ahluwalia-designer-career-interview'],
+  },
+  richardMaloneDesigner: {
+    name: 'Richard Malone',
+    nationality: 'Irish',
+    career: [
+      { house: 'louisVuitton', role: 'Other', roleDetail: 'Student design placement', sources: ['https://www.irishexaminer.com/lifestyle/fashionandbeauty/arid-20458521.html'] },
+      { house: 'richardMalone', role: 'Founder', roleDetail: 'Founder and designer', start: 2015 },
+    ],
+    notes: 'Wexford-born designer and multidisciplinary artist who graduated from Central Saint Martins in 2014. Completed a year-long placement at Louis Vuitton during their degree and launched a label in 2015. Their practice also spans sculpture, textiles and painting; current label tenure is unconfirmed.',
+    sources: ['https://londonfashionweek.co.uk/designers/richard-malone', 'https://www.irishexaminer.com/lifestyle/fashionandbeauty/arid-20458521.html', 'https://bsr.ac.uk/meet-the-artists-richard-malone/'],
+  },
+  stefanCookeDesigner: {
+    name: 'Stefan Cooke',
+    nationality: 'British',
+    career: [
+      { house: 'walterVanBeirendonck', role: 'Other', roleDetail: 'Design intern', sources: ['https://i-d.co/article/the-magical-miscommunication-of-stefan-cooke/'] },
+      { house: 'craigGreen', role: 'Other', roleDetail: 'Design intern', sources: ['https://i-d.co/article/the-magical-miscommunication-of-stefan-cooke/'] },
+      { house: 'stefanCooke', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2018, end: null },
+    ],
+    notes: 'Central Saint Martins graduate who established the London studio with Jake Burt. Interned at Walter Van Beirendonck and Craig Green, and personally assisted John Galliano before the latter’s Margiela appointment. The Galliano assistance is not assigned to a house because the employment entity is unconfirmed.',
+    sources: ['https://www.stefancooke.co.uk/pages/about-us', 'https://i-d.co/article/the-magical-miscommunication-of-stefan-cooke/'],
+  },
+  jakeBurt: {
+    name: 'Jake Burt',
+    career: [{ house: 'stefanCooke', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2018, end: null }],
+    notes: 'Also named Jacob Burt in the studio’s founding statement. Design partner of Stefan Cooke; their shared work combines fabric manipulation, subcultural references and precise cutting. Launched the Jake’s shop and separate label in 2025.',
+    sources: ['https://www.stefancooke.co.uk/pages/about-us', 'https://i-d.co/article/theres-something-about-jakes/'],
+  },
+  maxSvardh: {
+    name: 'Max Svärdh',
+    nationality: 'Swedish',
+    career: [
+      { house: 'axelArigato', role: 'Founder', roleDetail: 'Co-founder and board member', start: 2014, end: null },
+      { house: 'axelArigato', role: 'Creative Director', start: 2014, end: 2024 },
+    ],
+    notes: 'Co-founded Axel Arigato with Albin Johansson. Led its creative direction before Jens Werner’s appointment in 2024, remaining involved as a board member and co-owner.',
+    sources: ['https://axelarigato.com/about-us', 'https://fashionunited.com/news/people/axel-arigato-appoints-new-creative-director/2024061860440'],
+  },
+  albinJohansson: {
+    name: 'Albin Johansson',
+    nationality: 'Swedish',
+    career: [{ house: 'axelArigato', role: 'Founder', roleDetail: 'Co-founder', start: 2014 }],
+    notes: 'Business co-founder of Axel Arigato alongside creative co-founder Max Svärdh. Previously served as CEO; that business role is distinct from the label’s design leadership.',
+    sources: ['https://axelarigato.com/about-us', 'https://www.habit.se/article/view/1206066/albin_johansson_lamnar_vdposten_pa_axel_arigato_ny_vd_rekryteras_fran_adidas'],
+  },
+  jensWerner: {
+    name: 'Jens Werner',
+    career: [
+      { house: 'y3', role: 'Other', roleDetail: 'Designer', sources: ['https://fashionunited.com/news/people/axel-arigato-appoints-new-creative-director/2024061860440'] },
+      { house: 'toryBurch', role: 'Other', roleDetail: 'Design director, Tory Sport', sources: ['https://fashionunited.com/news/people/axel-arigato-appoints-new-creative-director/2024061860440'] },
+      { house: 'axelArigato', role: 'Other', roleDetail: 'Head of ready-to-wear', start: 2021, end: 2023 },
+      { house: 'axelArigato', role: 'Creative Director', start: 2024, end: null },
+    ],
+    notes: 'Self-taught designer with experience at Adidas’s Y-3 line, Tory Sport and J.Lindeberg. J.Lindeberg, where he served as creative director, is not separately represented. Returned to Axel Arigato as creative director in 2024 after an earlier ready-to-wear leadership role.',
+    sources: ['https://fashionunited.com/news/people/axel-arigato-appoints-new-creative-director/2024061860440', 'https://axel-arigato-815b1683.prezly.com/a-shopping-channel-a-holiday-hotline-and-a-giant-red-horse-heres-the-first-look-at-axel-arigatos-festive-campaign-2026'],
+  },
+  miraMikatiDesigner: {
+    name: 'Mira Mikati',
+    nationality: 'Lebanese',
+    career: [{ house: 'miraMikati', role: 'Founder', roleDetail: 'Founder and creative director', start: 2015, end: null }],
+    notes: 'Lebanese-born, Paris-raised designer based in London. Studied at ESMOD, Parsons and Central Saint Martins and co-founded the Beirut concept store Plum before launching her namesake label. Her earlier Façonnable capsule was a collaboration rather than a career tenure.',
+    sources: ['https://miramikati.com/pages/our-story', 'https://miramikati.com/pages/mira-mikati-x-kaws', 'https://aeworld.com/fashion/in-focus/designer-focus-mira-mikati/'],
+  },
+  rejinaPyoDesigner: {
+    name: 'Rejina Pyo',
+    nationality: 'South Korean',
+    career: [{ house: 'rejinaPyo', role: 'Founder', roleDetail: 'Founder and creative director', start: 2014, end: null }],
+    notes: 'Seoul-born designer and painter who moved to London in 2008 and studied at Central Saint Martins. Worked as a designer at Roksanda, a label not separately represented here, before establishing her own house. Current brand history uses 2014; earlier award biographies use 2013.',
+    sources: ['https://rejinapyo.com/pages/about', 'https://www.sfdf.co.kr/large/winners/winners_2018_02?lang=en'],
+  },
+  yasukoFuruta: {
+    name: 'Yasuko Furuta',
+    nationality: 'Japanese',
+    career: [
+      { house: 'cdg', role: 'Other', roleDetail: 'Part-time patternmaking assistant', notes: 'Worked for eight months after returning from Paris; exact years unconfirmed.', sources: ['https://fashionpost.jp/portraits/121465'] },
+      { house: 'toga', role: 'Founder', roleDetail: 'Founder and designer', start: 1997, end: null },
+    ],
+    notes: 'Studied design and patternmaking at Esmod Japon and Esmod Paris. Worked on freelance commercial projects and briefly assisted patternmakers at Comme des Garçons before establishing TOGA in Tokyo.',
+    sources: ['https://store.toga.jp/pages/about', 'https://andam.fr/en/laureats/toga-yasuko-furuta/', 'https://fashionpost.jp/portraits/121465', 'https://www.fashionsnap.com/article/my-truly-great-clothes-yasuko-furuta/'],
+  },
+  masafumiWatanabe: {
+    name: 'Masafumi Watanabe',
+    nationality: 'Japanese',
+    born: 1971,
+    career: [{ house: 'bedwinTheHeartbreakers', role: 'Founder', roleDetail: 'Founder and creative director', start: 2004, end: null }],
+    notes: 'Known as Bebetan or Bebe. Began as a model and studied design before moving to London, where he helped found Tenderloin. Later established BEDWIN and the DAYZ select shop. Tenderloin and DAYZ are not separately represented; early interviews differ on Tenderloin’s founding year.',
+    sources: ['https://rakutenfashionweektokyo.com/jp/brands/detail/bedwin-the-heartbreakers/', 'https://www.dlxtokyo.com/brand/bedwin.html', 'https://www.tokyoweekender.com/art_and_culture/fashion/bedwin-brand-masafumi-watanabe-interview/', 'https://dayzarchives.com/en/blogs/magazine/cod-vol1-part2'],
+  },
+  murrayMcCory: {
+    name: 'Murray McCory',
+    nationality: 'American',
+    died: 2024,
+    career: [
+      { house: 'janSport', role: 'Founder', roleDetail: 'Co-founder and backpack designer', start: 1967, end: 1982 },
+      { house: 'hellyHansen', role: 'Other', roleDetail: 'Outdoor apparel designer' },
+    ],
+    notes: 'Originally named Murray Pletz. Designed adjustable backpack frames and freestanding dome tents for JanSport; later designed outdoor clothing for Helly Hansen. Dates of the latter work remain unconfirmed.',
+    sources: ['https://www.washingtonpost.com/obituaries/2024/11/07/murray-mccory-dead-jansport/', 'https://www.washingtonpost.com/business/skip-yowell-co-founder-of-jansport-sporting-company-dies-at-69/2015/10/20/af0c8a7c-775c-11e5-b9c1-f03c48c96ac2_story.html'],
+  },
+  janisLewis: {
+    name: 'Janis Lewis',
+    nationality: 'American',
+    career: [{ house: 'janSport', role: 'Founder', roleDetail: 'Co-founder, pattern maker and seamstress', start: 1967, end: 2005 }],
+    notes: 'Known as Jan Lewis; the namesake of JanSport. Developed backpack patterns and selected fabrics for its early packs.',
+    sources: ['https://jansport.com.ph/pages/history', 'https://www.washingtonpost.com/business/skip-yowell-co-founder-of-jansport-sporting-company-dies-at-69/2015/10/20/af0c8a7c-775c-11e5-b9c1-f03c48c96ac2_story.html'],
+  },
+  skipYowell: {
+    name: 'Skip Yowell',
+    nationality: 'American',
+    died: 2015,
+    career: [{ house: 'janSport', role: 'Founder', roleDetail: 'Co-founder; sales, marketing and public relations', start: 1967, end: 2010 }],
+    sources: ['https://jansport.com.ph/pages/history', 'https://www.washingtonpost.com/business/skip-yowell-co-founder-of-jansport-sporting-company-dies-at-69/2015/10/20/af0c8a7c-775c-11e5-b9c1-f03c48c96ac2_story.html'],
+  },
+  ericRothenhaus: {
+    name: 'Eric Rothenhaus',
+    career: [{ house: 'janSport', role: 'Head Designer', roleDetail: 'Director of design', start: 2007, approximate: true }],
+    notes: 'Developed JanSport’s Heritage and Skip Yowell collections. A 2012 interview dates his arrival to about five years earlier; departure year unconfirmed.',
+    sources: ['https://gizmodo.com/can-a-backpack-be-chic-5891910'],
+  },
+  ahrenBonnema: {
+    name: 'Ahren Bonnema',
+    career: [{ house: 'janSport', role: 'Other', roleDetail: 'Product designer', end: null }],
+    notes: 'Credited by JanSport for its Good Latitude convertible duffel in 2026; start year unconfirmed.',
+    sources: ['https://www.linkedin.com/company/jansport'],
+  },
+  peterDuke: {
+    name: 'Peter Duke',
+    career: [{ house: 'smartwool', role: 'Founder', roleDetail: 'Co-founder', start: 1994, end: 2003 }],
+    notes: 'Founded Smartwool with Patty Duke. They sold their remaining stake in 2003 and later founded merino sock brand Point6, which is not separately represented.',
+    sources: ['https://www.rafequity.com/our-stories/', 'https://www.snewsnet.com/news/dukes-sell-remaining-interest-in-smartwool', 'https://www.snewsnet.com/news/point6-launch-heralds-return-of-peter-and-patty-duke'],
+  },
+  pattyDuke: {
+    name: 'Patty Duke',
+    career: [{ house: 'smartwool', role: 'Founder', roleDetail: 'Co-founder; product design and marketing', start: 1994, end: 2003 }],
+    notes: 'Co-founded Smartwool and later Point6 with Peter Duke. Sold her remaining Smartwool interest in 2003.',
+    sources: ['https://www.rafequity.com/our-stories/', 'https://www.snewsnet.com/news/dukes-sell-remaining-interest-in-smartwool'],
+  },
+  neilBaker: {
+    name: 'Neil Baker',
+    career: [
+      { house: 'nike', role: 'Other', roleDetail: 'Earlier design and brand work', sources: ['https://www.purposeandperspective.co/icebreaker'] },
+      { house: 'oakley', role: 'Other', roleDetail: 'Earlier design and brand work', sources: ['https://www.purposeandperspective.co/icebreaker'] },
+      { house: 'hoka', role: 'Other', roleDetail: 'Earlier design and brand work', sources: ['https://www.purposeandperspective.co/icebreaker'] },
+      { house: 'icebreaker', role: 'Other', roleDetail: 'Senior global creative director', sources: ['https://www.purposeandperspective.co/icebreaker', 'https://www.odt.co.nz/rural-life/rural-life-other/global-brand-executives-meet-wool-growers-wcw9i4db'] },
+      { house: 'smartwool', role: 'Other', roleDetail: 'Senior director, global design and brand', end: null },
+    ],
+    notes: 'His creative career includes Nike, Oakley, Hoka and icebreaker. The dates and precise scope of earlier appointments are unconfirmed.',
+    sources: ['https://www.purposeandperspective.co/icebreaker', 'https://www.odt.co.nz/rural-life/rural-life-other/global-brand-executives-meet-wool-growers-wcw9i4db', 'https://thebouldermag.com/colorado-made-gear-guide'],
+  },
+  lisaYang: {
+    name: 'Lisa Yang',
+    career: [{ house: 'lisaYang', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2014, end: null }],
+    notes: 'Grew up in Inner Mongolia in a family involved in textile production before settling in Stockholm. Established her cashmere label with Samuel Stenberg.',
+    sources: ['https://lisa-yang.com/pages/about', 'https://www.beigebrown.com/blogs/bb-insights/beige-brown-lisa-yang'],
+  },
+  samuelStenberg: {
+    name: 'Samuel Stenberg',
+    career: [{ house: 'lisaYang', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null }],
+    sources: ['https://lisa-yang.com/pages/about', 'https://se.linkedin.com/in/samuelstenberg'],
+  },
+  rohdiHeintz: {
+    name: 'Rohdi Heintz',
+    career: [{ house: 'bjornBorg', role: 'Head Designer', roleDetail: 'Lead designer of the original Björn Borg Collection', start: 1984 }],
+    sources: ['https://corporate.bjornborg.com/about/our-story'],
+  },
+  andersArnborger: {
+    name: 'Anders Arnborger',
+    career: [{ house: 'bjornBorg', role: 'Founder', roleDetail: 'Founder of the underwear business; developed the Classic Shorts concept', start: 1989, end: 2004 }],
+    notes: 'Developed the brand’s boxer shorts and established its underwear business, distinct from the original 1984 apparel collection. Sold his stake and left in 2004. Later founded underwear label Cirque Deluxe, which is not separately represented.',
+    sources: ['https://corporate.bjornborg.com/about/our-story', 'https://www.realtid.se/bors-finans/bjorn-borgs-grundare-ska-krossa-bjorn-borg/'],
+  },
+  andreasGran: {
+    name: 'Andreas Gran',
+    born: 1978,
+    career: [
+      { house: 'hm', role: 'Other', roleDetail: 'Fashion buyer', sources: ['https://storage.mfn.se/ffb7b7d6-00fb-4ed4-8f69-cbc262d21278/bjornborg-annual-report-2024.pdf'] },
+      { house: 'gant', role: 'Other', roleDetail: 'Designer and product manager', sources: ['https://storage.mfn.se/ffb7b7d6-00fb-4ed4-8f69-cbc262d21278/bjornborg-annual-report-2024.pdf'] },
+      { house: 'tigerOfSweden', role: 'Other', roleDetail: 'Head of accessories', sources: ['https://storage.mfn.se/ffb7b7d6-00fb-4ed4-8f69-cbc262d21278/bjornborg-annual-report-2024.pdf'] },
+      { house: 'tigerOfSweden', role: 'Menswear Director', roleDetail: 'Head of menswear design', end: 2019, sources: ['https://www.bjornborg.com/en/stories/interviews/andreas-gran/'] },
+      { house: 'bjornBorg', role: 'Head Designer', start: 2019, notes: 'Joined as head of design before becoming creative director; exact promotion date unconfirmed.' },
+      { house: 'bjornBorg', role: 'Creative Director', end: null },
+    ],
+    notes: 'Began his career as a freelance stylist before moving into buying, product design and creative leadership. Joined Björn Borg in 2019 after leading menswear design at Tiger of Sweden.',
+    sources: ['https://www.bjornborg.com/en/stories/interviews/andreas-gran/', 'https://storage.mfn.se/ffb7b7d6-00fb-4ed4-8f69-cbc262d21278/bjornborg-annual-report-2024.pdf', 'https://www.theofficialboard.com/biography/andreas-gran-e9359'],
+  },
+  williamGreen: {
+    name: 'William Green',
+    nationality: 'British',
+    died: 1901,
+    career: [{ house: 'grenson', role: 'Founder', roleDetail: 'Founder and shoemaker', start: 1866, end: 1901 }],
+    sources: ['https://www.grenson.com/our-heritage'],
+  },
+  timLittle: {
+    name: 'Tim Little',
+    career: [{ house: 'grenson', role: 'Creative Director', start: 2005 }],
+    notes: 'Founded Tim Little Shoes after a career in advertising that included handling the adidas footwear account. Joined Grenson to modernise its shoe design and subsequently bought the company. Resigned from its legal board in June 2026; the end of his creative role is unconfirmed. His own label is not separately represented.',
+    sources: ['https://gulfnews.com/entertainment/the-directory-mr-porter-six-degrees-of-togetherness-1.1290098', 'https://www.stitchdown.com/stitchdown-shoecast/tim-little-grenson-ceo-interview/', 'https://www.theindustry.fashion/british-shoe-brand-grenson-sold-to-castore/'],
+  },
+  karlToosbuy: {
+    name: 'Karl Toosbuy',
+    career: [{ house: 'ecco', role: 'Founder', roleDetail: 'Co-founder and trained shoemaker', start: 1963 }],
+    notes: 'Established ECCO in Bredebro with Birte Toosbuy after training and working in shoemaking.',
+    sources: ['https://us.ecco.com/stories/about-us'],
+  },
+  birteToosbuy: {
+    name: 'Birte Toosbuy',
+    career: [{ house: 'ecco', role: 'Founder', roleDetail: 'Co-founder', start: 1963 }],
+    sources: ['https://us.ecco.com/stories/about-us'],
+  },
+  ejnarTruelsen: {
+    name: 'Ejnar Truelsen',
+    career: [{ house: 'ecco', role: 'Head Designer', roleDetail: 'Chief designer', notes: 'Designed the JOKE shoe launched in 1978 and is documented as chief designer in later company material. Exact tenure dates unconfirmed.' }],
+    sources: ['https://enter.ecco.com/en/pages/1970', 'https://group.ecco.com/en/news/newsroom/news/2014'],
+  },
+  liamMaher: {
+    name: 'Liam Maher',
+    career: [
+      { house: 'timberland', role: 'Other', roleDetail: 'Director of global creative services', notes: 'Describes holding this role in the mid-1990s; exact dates unconfirmed.', sources: ['https://www.the-spin-off.com/news/portrait/Interview-Liam-Maher-13326'] },
+      { house: 'drMartens', role: 'Other', roleDetail: 'Footwear design consultant', sources: ['https://www.the-spin-off.com/news/portrait/Interview-Liam-Maher-13326'] },
+      { house: 'visvim', role: 'Other', roleDetail: 'Design consultant', sources: ['https://www.the-spin-off.com/news/portrait/Interview-Liam-Maher-13326'] },
+      { house: 'ecco', role: 'Creative Director', roleDetail: 'Vice president, global creative director', start: 2017 },
+    ],
+    notes: 'Previously directed brand identity and non-denim collections at Denham, a label not separately represented. Also consulted for ECCO Leather before joining ECCO’s creative leadership in 2017. Exact departure date or current status unconfirmed.',
+    sources: ['https://www.the-spin-off.com/news/portrait/Interview-Liam-Maher-13326'],
+  },
+  lindaFarrow: {
+    name: 'Linda Farrow',
+    career: [{ house: 'lindaFarrow', role: 'Founder', roleDetail: 'Founder and eyewear designer', start: 1970 }],
+    notes: 'Originally a fashion designer, she established a sunglasses label that applied runway ideas to eyewear. The business later paused production; exact dates of her departure are unconfirmed.',
+    sources: ['https://lindafarrow.co.uk/pages/about-us'],
+  },
+  simonJablon: {
+    name: 'Simon Jablon',
+    career: [{ house: 'lindaFarrow', role: 'Founder', roleDetail: 'Co-founder of the relaunch and creative director', start: 2003, end: null }],
+    notes: 'Revived his mother Linda Farrow’s eyewear label with Tracy Sedino after discovering its unsold archive in a London warehouse. Initially sold vintage stock before developing new designs.',
+    sources: ['https://lindafarrow.co.uk/pages/about-us', 'https://www.theceomagazine.com/executive-interviews/apparel-accessories/simon-jablon2/'],
+  },
+  tracySedino: {
+    name: 'Tracy Sedino',
+    career: [{ house: 'lindaFarrow', role: 'Founder', roleDetail: 'Co-founder of the relaunch; creative direction', start: 2003 }],
+    notes: 'Relaunched Linda Farrow with Simon Jablon in 2003. Contributed to the label’s creative direction and the development of its eyewear collaborations. Exact end of involvement or current status unconfirmed.',
+    sources: ['https://www.tatlerasia.com/style/fashion/the-sunny-side-of-things-15-minutes-with-tracy-sedino', 'https://www.businessoffashion.com/articles/news-analysis/4-niche-eyewear-brands-offering-an-alternative-to-the-licensing-behemoths/'],
+  },
+  robManiscalco: {
+    name: 'Rob Maniscalco',
+    career: [{ house: 'templa', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2016 }],
+    notes: 'Previously founded and led design at Melbourne label Claude Maus, then developed Templa with Dellano Pereira. Also founded footwear brand ONWUAD. Those labels are not separately represented. Templa design leadership is documented in 2018 and 2025; exact current status unconfirmed.',
+    sources: ['https://www.broadsheet.com.au/national/fashion/article/templa-avant-garde-silhouettes-slopes', 'https://silver-and-gold.com/featured/onwuad-2025-sandal-collection'],
+  },
+  dellanoPereira: {
+    name: 'Dellano Pereira',
+    career: [{ house: 'templa', role: 'Founder', roleDetail: 'Co-founder and brand direction', start: 2016 }],
+    notes: 'Previously worked on strategy for Claude Maus alongside Rob Maniscalco. Helped develop Templa’s technical outerwear concept, informed by his experience as a snowboarder.',
+    sources: ['https://www.broadsheet.com.au/national/fashion/article/templa-avant-garde-silhouettes-slopes'],
+  },
+  anatiRakocz: {
+    name: 'Anati Rakocz',
+    career: [
+      { house: 'annDemeulemeester', role: 'Other', roleDetail: 'Global commercial director', sources: ['https://coveteur.com/anati-rakocz-talks-upscale-outerwear-brand-templa'] },
+      { house: 'haiderAckermannLabel', role: 'Other', roleDetail: 'Global commercial director', sources: ['https://coveteur.com/anati-rakocz-talks-upscale-outerwear-brand-templa'] },
+      { house: 'templa', role: 'Founder', roleDetail: 'Founding partner; commercial direction', start: 2017 },
+    ],
+    notes: 'Joined Templa after working in commercial leadership at Ann Demeulemeester and Haider Ackermann. Began discussions with its founders in December 2016 and helped introduce the collection to international luxury retailers.',
+    sources: ['https://coveteur.com/anati-rakocz-talks-upscale-outerwear-brand-templa'],
+  },
+  klausSamsoe: {
+    name: 'Klaus Samsøe',
+    born: 1963,
+    nationality: 'Danish',
+    career: [{ house: 'samsoeSamsoe', role: 'Founder', roleDetail: 'Co-founder', start: 1993 }],
+    notes: 'Previously worked at Ivan Grundahl, Mads Nørgaard and Carli Gry. Founded Samsøe Samsøe with his brother Preben; the business passed to new owners in 2000. Later work includes Pullover and textile-recycling business Really.',
+    sources: ['https://lex.dk/Klaus_Sams%C3%B8e', 'https://a.storyblok.com/f/274250/x/84553abd5b/samsoe-samsoe-csr-report-2019_compressed-1.pdf'],
+  },
+  prebenSamsoe: {
+    name: 'Preben Samsøe',
+    born: 1965,
+    nationality: 'Danish',
+    career: [{ house: 'samsoeSamsoe', role: 'Founder', roleDetail: 'Co-founder', start: 1993 }],
+    sources: ['https://lex.dk/Klaus_Sams%C3%B8e', 'https://a.storyblok.com/f/274250/x/84553abd5b/samsoe-samsoe-csr-report-2019_compressed-1.pdf'],
+  },
+  miaKappelgaard: {
+    name: 'Mia Kappelgaard',
+    career: [{ house: 'samsoeSamsoe', role: 'Creative Director', end: 2020, notes: 'Previously led womenswear; exact start and title-change dates unconfirmed.' }],
+    notes: 'Joined Baum und Pferdgarten as senior designer in March 2020 after eight years at Samsøe Samsøe. Baum und Pferdgarten is not separately represented.',
+    sources: ['https://branchebladettoj.dk/brancheprofil/dansk-modebrand-henter-erfaren-designer/', 'https://elle.dk/interioer/bolig/paa-besoeg-hos-chefdesigner-mia-kappelgaard/'],
+  },
+  gitteWetter: {
+    name: 'Gitte Wetter',
+    career: [
+      { house: 'samsoeSamsoe', role: 'Menswear Director', roleDetail: 'Head of menswear design', end: 2024, notes: 'Worked in menswear design at the brand for more than fifteen years; exact leadership start unconfirmed.' },
+      { house: 'woodWood', role: 'Menswear Director', roleDetail: 'Head of menswear design', start: 2024, end: null, sources: ['https://fashionunited.de/nachrichten/personen/wood-wood-holt-menswear-designerin-von-samsoe-samsoe/2024081257685', 'https://ciff.dk/our-brands/wood-wood'] },
+    ],
+    sources: ['https://fashionunited.de/nachrichten/personen/wood-wood-holt-menswear-designerin-von-samsoe-samsoe/2024081257685', 'https://ciff.dk/our-brands/wood-wood'],
+  },
+  marlyRoosen: {
+    name: 'Marly Roosen',
+    career: [{ house: 'samsoeSamsoe', role: 'Womenswear Director', roleDetail: 'Head of womenswear design', end: null }],
+    sources: ['https://www.orangebag.nl/en/get-inspired/women/interiews/scandinavische-eenvoud-met-karakter-in-gesprek-met-samsoe-samsoe/', 'https://fashionunited.com/press/fashion/copenhagen-meets-london-end-x-samsoe-samsoe-unveil-24-piece-capsule/2026100975035'],
+  },
+  liamHodges: {
+    name: 'Liam Hodges',
+    nationality: 'British',
+    career: [{ house: 'samsoeSamsoe', role: 'Menswear Director', roleDetail: 'Head of menswear design', end: null }],
+    notes: 'Royal College of Art graduate who previously established his own menswear label, Liam Hodges, which is not separately represented. His role at Samsøe Samsøe is confirmed in October 2026; exact appointment date unconfirmed.',
+    sources: ['https://fashionunited.com/press/fashion/copenhagen-meets-london-end-x-samsoe-samsoe-unveil-24-piece-capsule/2026100975035', 'https://www.westminster.ac.uk/study/student-profiles/liam-hodges-0'],
+  },
+  manoloBlahnik: {
+    name: 'Manolo Blahnik',
+    born: 1942,
+    nationality: 'Spanish',
+    career: [{ house: 'manoloBlahnik', role: 'Founder', roleDetail: 'Founder and creative director', start: 1970, end: null }],
+    notes: 'Studied art and set design before learning shoemaking through factory visits. His early runway projects included footwear for Ossie Clark; subsequent runway collaborations are distinct from employment at those labels.',
+    sources: ['https://www.manoloblahnik.com/gb/the-company', 'https://www.manoloblahnik.com/int/the-journey', 'https://www.cultura.gob.es/dam/jcr%3Abedb7632-fa54-42b1-a347-ef6586cceca1/cvitaeblahnik.pdf'],
+  },
+  christopherShannon: {
+    name: 'Christopher Shannon',
+    nationality: 'British',
+    career: [
+      { house: 'helmutLang', role: 'Other', roleDetail: 'Design team; exact title unconfirmed', sources: ['https://www.lvmhprize.com/en/christopher-shannon'] },
+      { house: 'christopherShannon', role: 'Founder', roleDetail: 'Founder and designer', start: 2008, end: null },
+    ],
+    notes: 'Central Saint Martins graduate who worked with Kim Jones, Richard Nicoll, William Baker and Judy Blame before establishing his label. Blame later contributed jewellery and creative advice to Shannon’s collections. Returned from London to Liverpool and continued designing for direct online sales.',
+    sources: ['https://www.lvmhprize.com/en/christopher-shannon', 'https://i-d.co/article/christopher-shannon-is-in-it-for-passion-not-just-for-fashion/', 'https://www.destinedmag.com/post/designer-christopher-shannon-finds-his-way-back-to-liverpool', 'https://www.shopchristophershannon.com/'],
+  },
+  florentinGlemarec: {
+    name: 'Florentin Glémarec',
+    nationality: 'French',
+    career: [{ house: 'egonlab', role: 'Founder', roleDetail: 'Co-founder and co-creative director', start: 2019, end: null }],
+    notes: 'Previously co-founded Icosae, a label not separately represented. Earlier modelling for Comme des Garçons helped shape his interest in fashion; that work was not a design tenure.',
+    sources: ['https://egonlab.com/pages/about', 'https://regardmag.com/designer-profile-egonlab-florentin-glemarec-kevin-nompeix/', 'https://models.com/work/egonlab-egonlab-fw-26--show/2706406'],
+  },
+  kevinNompeix: {
+    name: 'Kevin Nompeix',
+    nationality: 'French',
+    career: [{ house: 'egonlab', role: 'Founder', roleDetail: 'Co-founder and co-creative director', start: 2019, end: null }],
+    sources: ['https://egonlab.com/pages/about', 'https://regardmag.com/designer-profile-egonlab-florentin-glemarec-kevin-nompeix/', 'https://models.com/work/egonlab-egonlab-fw-26--show/2706406'],
+  },
+  markThatcher: {
+    name: 'Mark Thatcher',
+    career: [{ house: 'teva', role: 'Founder', start: 1984 }],
+    notes: 'River guide who developed Teva’s original strapped sandal for use on the Colorado River.',
+    sources: ['https://tevaonline.ca/blogs/explore/the-original-since-1984'],
+  },
+  damonButler: {
+    name: 'Damon Butler',
+    career: [
+      { house: 'teva', role: 'Other', roleDetail: 'Senior designer and advanced concepts manager', start: 1997, end: 2000 },
+      { house: 'adidas', role: 'Other', roleDetail: 'Senior designer, adventure and mountain biking', start: 2000, end: 2004, sources: ['https://static1.squarespace.com/static/5729716940261d0fbc261f05/t/5b0ec9ca0e2e72b352ba3799/1527695821175/Damon%2BButler%2Br.pdf'] },
+      { house: 'adidas', role: 'Other', roleDetail: 'Category designer, cleated footwear and training', start: 2004, end: 2006, sources: ['https://static1.squarespace.com/static/5729716940261d0fbc261f05/t/5b0ec9ca0e2e72b352ba3799/1527695821175/Damon%2BButler%2Br.pdf'] },
+      { house: 'ugg', role: 'Other', roleDetail: 'Footwear design consultant' },
+      { house: 'birkenstock', role: 'Other', roleDetail: 'Footwear design consultant' },
+      { house: 'fila', role: 'Other', roleDetail: 'Footwear design consultant through Nomad Design', sources: ['https://static1.squarespace.com/static/5729716940261d0fbc261f05/t/5b0ec9ca0e2e72b352ba3799/1527695821175/Damon%2BButler%2Br.pdf'] },
+    ],
+    notes: 'Footwear designer who developed Teva’s XPD sandals and closed footwear. Founded consultancy bipedesign in 2006. His consulting work also includes Ahnu, Berghaus, Birkenstock, Merrell and Speedo; earlier roles include senior footwear design at British Knights and Lugz.',
+    sources: ['https://static1.squarespace.com/static/5729716940261d0fbc261f05/t/5b0ec9ca0e2e72b352ba3799/1527695821175/Damon%2BButler%2Br.pdf'],
+  },
+  agnesTrouble: {
+    name: 'Agnès Troublé',
+    born: 1941,
+    nationality: 'French',
+    career: [{ house: 'agnesB', role: 'Founder', roleDetail: 'Founder and designer', start: 1975, end: null }],
+    notes: 'Worked in fashion at Elle and designed for Dorothée Bis before establishing her own label. Her freelance design work also included Limitex, Pierre d’Alby, V de V and Eversbin.',
+    sources: ['https://rakutenfashionweektokyo.com/en/brands/detail/agnes-b/', 'https://www.larousse.fr/encyclopedie/personnage/Agn%C3%A8s_Troubl%C3%A9_dite_Agn%C3%A8s_B/180612'],
+  },
+  hikaruIwanaga: {
+    name: 'Hikaru Iwanaga',
+    nationality: 'Japanese',
+    career: [{ house: 'bountyHunter', role: 'Founder', roleDetail: 'Co-founder', start: 1995 }],
+    sources: ['https://en.jp.bape.com/pages/gallery-bountyhunter', 'https://toypunks.blogspot.com/2007/03/we-began-filming-in-japan-on-march-5th.html'],
+  },
+  takaBountyHunter: {
+    name: 'TAKA',
+    career: [{ house: 'bountyHunter', role: 'Founder', roleDetail: 'Co-founder', start: 1995 }],
+    sources: ['https://en.jp.bape.com/pages/gallery-bountyhunter'],
+  },
+  christopherKane: {
+    name: 'Christopher Kane',
+    nationality: 'British',
+    career: [
+      { house: 'christopherKane', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2006, end: 2023 },
+      { house: 'mulberry', role: 'Creative Director', roleDetail: 'Women’s ready-to-wear only', start: 2026, end: null, sources: ['https://www.mulberry.com/plugins/investor_relations/pdf/CK_ANNOUNCEMENT_Press%20Release_EN.pdf'] },
+    ],
+    notes: 'Central Saint Martins graduate who founded his London label with sister Tammy. Also led design at Versus until autumn 2012; that label is not separately represented. Recovered his namesake brand’s intellectual property with Tammy following its 2023 closure. The 2024 Self-Portrait residency was a capsule project.',
+    sources: ['https://www.kering.com/en/news/christopher-kane-announce-appointment-ceo/', 'https://www.wallpaper.com/fashion-beauty/christopher-kane-mulberry-debut-show-review-london-fashion-week', 'https://www.nssmag.com/en/fashion/33550/christopher-kane-closes'],
+  },
+  tammyKane: {
+    name: 'Tammy Kane',
+    nationality: 'British',
+    career: [{ house: 'christopherKane', role: 'Founder', roleDetail: 'Co-founder and deputy creative director', start: 2006, end: 2023 }],
+    notes: 'Design and textiles graduate who developed the label with her brother Christopher. Joined him at Mulberry’s studio in 2026; an exact formal title there is unconfirmed.',
+    sources: ['https://www.kering.com/en/news/christopher-kane-announce-appointment-ceo/', 'https://www.anothermag.com/fashion-beauty/13192/christopher-and-tammy-kane-on-not-being-inspired', 'https://www.vogue.com/article/what-will-christopher-kane-do-now-that-hes-at-mulberry'],
+  },
+  christianCowan: {
+    name: 'Christian Cowan',
+    nationality: 'British',
+    career: [{ house: 'christianCowan', role: 'Founder', roleDetail: 'Founder and creative director', start: 2017, end: null }],
+    sources: ['https://christiancowan.com/pages/about', 'https://www.whowhatwear.com/living/who-what-wear-podcast-christian-cowan'],
+  },
+  gabrielWhaley: {
+    name: 'Gabriel Whaley',
+    career: [{ house: 'mschf', role: 'Founder', roleDetail: 'Co-founder', start: 2016 }],
+    sources: ['https://www.sothebys.com/en/articles/talking-art-blurred-lines-with-mschf', 'https://galeriemagazine.com/creative-mind-mschf/'],
+  },
+  danielGreenberg: {
+    name: 'Daniel Greenberg',
+    career: [{ house: 'mschf', role: 'Founder', roleDetail: 'Co-founder' }],
+    sources: ['https://static.perrotin.com/pdf/press_review/2025_02_28_womens_wear_daily_mschf_cofounder_talks_jesus_shoes_satan_shoes_and_new_book_13253.pdf'],
+  },
+  stephenTetreault: {
+    name: 'Stephen Tetreault',
+    career: [{ house: 'mschf', role: 'Founder', roleDetail: 'Co-founder' }],
+    sources: ['https://galeriemagazine.com/creative-mind-mschf/'],
+  },
+  lukasBentel: {
+    name: 'Lukas Bentel',
+    career: [{ house: 'mschf', role: 'Founder', roleDetail: 'Co-founder and chief creative officer', start: 2019, end: 2026 }],
+    notes: 'Trained in furniture design at RISD and computer music and multimedia at Brown. Previously co-founded Hello Velocity with Kevin Wiesner. Left MSCHF in October 2026 to pursue solo art and design.',
+    sources: ['https://www.designscene.net/2026/11/lukas-bentel.html'],
+  },
+  kevinWiesner: {
+    name: 'Kevin Wiesner',
+    career: [{ house: 'mschf', role: 'Founder', roleDetail: 'Co-founder and creative director' }],
+    notes: 'Previously co-founded Hello Velocity with Lukas Bentel. Creative leadership at MSCHF is documented, but an exact appointment year and current title are unconfirmed.',
+    sources: ['https://galeriemagazine.com/creative-mind-mschf/', 'https://www.designscene.net/2026/11/lukas-bentel.html', 'https://elpais.com/smoda/moda/2025-09-28/mschf-el-colectivo-que-revoluciona-el-arte-usando-la-moda-el-dinero-hoy-es-la-metrica-para-evaluarlo-todo.html'],
+  },
+  ashleyLennon: {
+    name: 'Ashley Lennon',
+    career: [{ house: 'museumOfPeaceQuiet', role: 'Founder', roleDetail: 'Co-founder; concept, design and production', start: 2019, end: null }],
+    sources: ['https://fashionmovesforward.com/the-latest/2020/5/the-art-of-peace-quiet-an-interview-with-ashley-lennon', 'https://hypebeast.com/2026/10/museum-of-peace-quiet-lightwork-capital-partnership-global-expansion'],
+  },
+  christionLennon: {
+    name: 'Christion Lennon',
+    career: [{ house: 'museumOfPeaceQuiet', role: 'Founder', roleDetail: 'Co-founder; concept, design and production', start: 2019, end: null }],
+    notes: 'Also co-founded Quiet Golf with Raul and Diego Diaz; that label is not separately represented.',
+    sources: ['https://fashionmovesforward.com/the-latest/2020/5/the-art-of-peace-quiet-an-interview-with-ashley-lennon', 'https://hypebeast.com/2023/7/quiet-golf-flagship-store-costa-mesa-interview', 'https://hypebeast.com/2026/10/museum-of-peace-quiet-lightwork-capital-partnership-global-expansion'],
+  },
+  shaneGonzales: {
+    name: 'Shane Gonzales',
+    nationality: 'American',
+    career: [
+      { house: 'ssur', role: 'Other', roleDetail: 'Intern, subsequently design and marketing', start: 2012, sources: ['https://www.complex.com/style/a/jian-deleon/shane-gonzales-midnight-studios-complex-interview', 'https://www.nylon.com/articles/first-look-midnight'] },
+      { house: 'midnightStudios', role: 'Founder', roleDetail: 'Founder and creative director', start: 2014, end: 2023 },
+      { house: 'aliceHollywood', role: 'Founder', roleDetail: 'Founder and designer', start: 2023, end: null, sources: ['https://www.alicehollywood.com/pages/about'] },
+    ],
+    notes: 'Los Angeles designer whose work draws on punk, skateboarding and music. Interned at SSUR in 2012 before moving into design and marketing there; his departure date is unconfirmed. Moved from Midnight Studios to Alice Hollywood in 2023.',
+    sources: ['https://www.alicehollywood.com/pages/about', 'https://www.nylon.com/articles/first-look-midnight'],
+  },
+  takuMidorikawa: {
+    name: 'Taku Midorikawa',
+    nationality: 'Japanese',
+    born: 1982,
+    career: [
+      { house: 'midorikawa', role: 'Founder', roleDetail: 'Founder and designer', start: 2017, end: null },
+    ],
+    notes: 'Tokyo-born designer who graduated from Bunka Fashion College in 2003. Previously developed The Library Police Group art project with mask artist Shin Murayama; established Midorikawa for Spring/Summer 2017.',
+  },
+  jongkyuChoi: {
+    name: 'Jongkyu Choi',
+    nationality: 'South Korean',
+    career: [
+      { house: 'thisisneverthat', role: 'Founder', roleDetail: 'Co-founder and co-designer', start: 2010, notes: 'The founders described joint clothing design in their 2016 interview. Current individual design scope is not confirmed.' },
+    ],
+    notes: 'Studied fashion design and spent time studying in Japan before launching thisisneverthat with Nadan Cho and Inwook Park.',
+  },
+  nadanCho: {
+    name: 'Nadan Cho',
+    nationality: 'South Korean',
+    career: [
+      { house: 'thisisneverthat', role: 'Founder', roleDetail: 'Co-founder, co-designer and visual direction', start: 2010, notes: 'Described shared design and his art direction and styling in a 2016 interview. Current individual design scope is not confirmed.' },
+    ],
+    notes: 'Studied fashion design and spent time in New York before co-founding thisisneverthat. His work has included the brand’s imagery, styling and visual archives.',
+  },
+  inwookPark: {
+    name: 'Inwook Park',
+    nationality: 'South Korean',
+    career: [
+      { house: 'thisisneverthat', role: 'Founder', roleDetail: 'Co-founder and co-designer', start: 2010 },
+      { house: 'thisisneverthat', role: 'Creative Director', notes: 'Identified as creative director in a November 2022 interview; exact appointment date and present scope are unconfirmed.' },
+    ],
+    notes: 'Studied fashion and spent time in Japan before co-founding thisisneverthat with Jongkyu Choi and Nadan Cho.',
+  },
+  satoshiYamane: {
+    name: 'Satoshi Yamane',
+    nationality: 'Japanese',
+    born: 1975,
+    career: [
+      { house: 'crocs', role: 'Other', roleDetail: 'Global apparel product-line manager and chief designer, Asia creative team', start: 2007, end: 2009 },
+      { house: 'fce', role: 'Founder', roleDetail: 'Founder, creative director and menswear designer', start: 2010, end: null },
+    ],
+    notes: 'Designed for MENS BIGI from 1997 to 2003, then helped establish Crocs Japan and worked in sales and marketing from 2003 to 2007 before taking product and creative roles. Founded Open Your Eyes and launched Ficouture, later renamed F/CE. Also plays bass in toe.',
+  },
+  asamiYamane: {
+    name: 'Asami Yamane',
+    nationality: 'Japanese',
+    born: 1977,
+    career: [
+      { house: 'fce', role: 'Other', roleDetail: 'Womenswear designer', start: 2013, end: null },
+    ],
+    notes: 'Worked as a buyer and womenswear PR manager at Ciaopanic from 2000 to 2013, then joined Open Your Eyes to design womenswear. Develops F/CE. collections with Satoshi Yamane.',
+  },
   yvesSaintLaurent: {
     name: 'Yves Saint Laurent',
     born: 1936,
@@ -77,6 +1837,8 @@ export const designers = {
     born: 1961,
     nationality: 'American',
     career: [
+      { house: 'chloe', role: 'Other', roleDetail: 'Intern; exact department and dates unconfirmed', sources: ['https://lgbthistorymonth.com/tom-ford?tab=biography'] },
+      { house: 'perryEllis', role: 'Other', roleDetail: 'Design team', sources: ['https://lgbthistorymonth.com/tom-ford?tab=biography'] },
       { house: 'gucci', role: 'Other', roleDetail: 'Chief designer, women\'s ready-to-wear', start: 1990, end: 1994, notes: 'Recruited by Dawn Mello.' },
       { house: 'gucci', role: 'Creative Director', start: 1994, end: 2004 },
       {
@@ -416,7 +2178,10 @@ export const designers = {
     name: 'Marc Jacobs',
     born: 1963,
     nationality: 'American',
+    notes: 'Designed the Fendi by Marc Jacobs capsule, shown in September 2022 and released in May 2023. Fendi described it as his interpretation of the house, rather than a collaboration with the Marc Jacobs label.',
+    sources: ['https://www.timeinternational.co.id/fendi-by-marc-jacobs/'],
     career: [
+      { house: 'perryEllis', role: 'Womenswear Director', roleDetail: 'Womenswear design leadership', start: 1989, end: 1993, notes: 'Appointment was announced in late 1988; the New School archive dates his joining to 1989.', sources: ['https://findingaids.archives.newschool.edu/repositories/3/archival_objects/25023', 'https://www.newschool.edu/parsons/profile/marc-jacobs/'] },
       { house: 'marcJacobs', role: 'Founder', roleDetail: 'Founder, creative director', start: 1984, end: null },
       {
         house: 'louisVuitton',
@@ -432,7 +2197,10 @@ export const designers = {
     name: 'Rick Owens',
     born: 1962,
     nationality: 'American',
-    career: [{ house: 'rickOwens', role: 'Founder', start: 1994, end: null }],
+    career: [
+      { house: 'rickOwens', role: 'Founder', start: 1994, end: null },
+      { house: 'drkshdw', role: 'Head Designer', end: null, sources: ['https://cfda.com/member/rick-owens/', 'https://www.rickowens.eu/blogs/interviews/new-order-april-2009'] },
+    ],
   },
 
   /* ---------- Japanese designers ---------- */
@@ -442,6 +2210,7 @@ export const designers = {
     nationality: 'Japanese',
     career: [
       { house: 'yohjiYamamoto', role: 'Founder', start: 1972, end: null },
+      { house: 'yohjiYamamotoPourHomme', role: 'Head Designer', start: 1984, end: null, sources: ['https://www.yohjiyamamoto.co.jp/news/detail/yohji-yamamoto-chronicle-yohji-yamamoto-pour-homme/'] },
       { house: 'y3', role: 'Creative Director', start: 2002, end: null },
     ],
   },
@@ -449,7 +2218,15 @@ export const designers = {
     name: 'Rei Kawakubo',
     born: 1942,
     nationality: 'Japanese',
-    career: [{ house: 'commeDesGarcons', role: 'Founder', start: 1969, end: null }],
+    career: [
+      { house: 'commeDesGarcons', role: 'Founder', start: 1969, end: null },
+      { house: 'tao', role: 'Head Designer', roleDetail: 'Original Tricot Comme des Garçons line', start: 1981, end: 1987, sources: ['https://www.mistore.jp/shopping/brand/women_b/002108.html'] },
+      { house: 'cdgHommePlus', role: 'Artistic Director', start: 1984, end: null, sources: ['https://www.fhcm.paris/en/house/comme-des-garcons-homme-plus', 'https://www.imn.jp/en/brand/comme-des-garons-homme-plus'] },
+      { house: 'cdgHommeDeux', role: 'Head Designer', end: null, sources: ['https://www.imn.jp/en/brand/comme-des-garons-homme-deux'] },
+      { house: 'cdgPlay', role: 'Head Designer', end: null, sources: ['https://shop.doverstreetmarket.com/collections/comme-des-garcons-play'] },
+      { house: 'cdgGirl', role: 'Head Designer', end: null, sources: ['https://m.ssfshop.com/CDGGIRL/main?brandShopNo=BDMA33A24&brndShopId=CGWCG'] },
+      { house: 'cdgCommeDesGarcons', role: 'Head Designer', notes: 'Authorship confirmed in the 2015 collection review; precise tenure dates and present status are unconfirmed.', sources: ['https://www.vogue.com/fashion-shows/fall-2015-ready-to-wear/comme-des-garcons-comme-des-garcons'] },
+    ],
   },
   junyaWatanabe: {
     name: 'Junya Watanabe',
@@ -459,12 +2236,15 @@ export const designers = {
       {
         house: 'commeDesGarcons',
         role: 'Other',
-        roleDetail: 'Pattern cutter, then Tricot line designer',
+        roleDetail: 'Pattern cutter',
         start: 1984,
-        end: null,
-        approximate: true,
+        end: 1987,
+        sources: ['https://www.fashion-press.net/brands/22/'],
       },
+      { house: 'tao', role: 'Head Designer', roleDetail: 'Tricot Comme des Garçons, before its later tao name', start: 1987, end: 2002, sources: ['https://www.mistore.jp/shopping/brand/women_b/002108.html'] },
       { house: 'junyaWatanabe', role: 'Founder', start: 1992, end: null },
+      { house: 'junyaWatanabeMan', role: 'Head Designer', roleDetail: 'Junya Watanabe MAN', start: 2001, end: null, sources: ['https://www.fashion-press.net/brands/22/', 'https://shop.doverstreetmarket.com/collections/junya-watanabe-man'] },
+      { house: 'cdgHomme', role: 'Head Designer', start: 2003, end: null, notes: 'Dover Street Market dates his design leadership to 2003, distinct from his Spring/Summer 2004 first collection.', sources: ['https://shop.doverstreetmarket.com/collections/cdg-homme'] },
     ],
   },
   isseyMiyake: {
@@ -478,7 +2258,12 @@ export const designers = {
     name: 'Jun Takahashi',
     born: 1969,
     nationality: 'Japanese',
-    career: [{ house: 'undercover', role: 'Founder', start: 1990, end: null }],
+    career: [
+      { house: 'undercover', role: 'Founder', start: 1990, end: null },
+      { house: 'undercoverism', role: 'Creative Director', roleDetail: 'Original UNDERCOVER menswear identity', start: 2009, end: 2015, sources: ['https://hbx.com/archives/brands/undercoverism', 'https://www.highsnobiety.com/p/undercoverism-fw21-collection-lookbook/'] },
+      { house: 'undercoverism', role: 'Creative Director', roleDetail: 'Revived menswear line', start: 2021, end: 2023, sources: ['https://www.highsnobiety.com/p/undercoverism-fw21-collection-lookbook/', 'https://www.fashion-press.net/brands/68'] },
+      { house: 'theShepherdUndercover', role: 'Creative Director', start: 2016, end: null, sources: ['https://undercoverism.com/historyofu/', 'https://undercoverism.com/new/20261015_1/newarrival'] },
+    ],
   },
   chitoseAbe: {
     name: 'Chitose Abe',
@@ -877,6 +2662,7 @@ export const designers = {
     nationality: 'American',
     career: [
       { house: 'ralphLauren', role: 'Founder', roleDetail: 'Founder, chief creative officer', start: 1967, end: null },
+      { house: 'rrl', role: 'Founder', roleDetail: 'Founder of Double RL', start: 1993, notes: 'Launch documented by the official timeline; this records founding rather than a separately dated current line-design appointment.', sources: ['https://www.ralphlauren.com/rl-50th-anniversary-the-timeline'] },
     ],
   },
   gregLauren: {
@@ -910,14 +2696,21 @@ export const designers = {
   daoYiChow: {
     name: 'Dao-Yi Chow',
     nationality: 'American',
+    notes: 'Previously vice president of marketing and creative director at Sean John, where he met Maxwell Osborne. Sean John is not separately represented.',
+    sources: ['https://cfda.com/wp-content/uploads/2025/06/2013-CFDA-Annual-Report-Hi_Optimized.pdf'],
     career: [
+      { house: 'sergioTacchini', role: 'Creative Director', roleDetail: 'Global creative director', start: 2019, notes: 'Confirmed in 2019; departure year and current status are unconfirmed.', sources: ['https://www.vogue.com/article/dao-yi-chow-sergio-tacchini-tennis-collection'] },
+      { house: 'publicSchool', role: 'Founder', roleDetail: 'Co-founder and co-designer with Maxwell Osborne', start: 2008, end: null, notes: 'The label resumed runway collections in 2026 after a prolonged hiatus.', sources: ['https://cfda.com/member/maxwell-osborne/', 'https://www.gq.com/story/public-school-comeback-fall-2026'] },
       { house: 'dkny', role: 'Co-Creative Director', roleDetail: 'with Maxwell Osborne', start: 2015, end: 2017 },
     ],
   },
   maxwellOsborne: {
     name: 'Maxwell Osborne',
     nationality: 'American',
+    notes: 'Previously oversaw woven design at Sean John, where he met Dao-Yi Chow. Sean John is not separately represented.',
+    sources: ['https://cfda.com/wp-content/uploads/2025/06/2013-CFDA-Annual-Report-Hi_Optimized.pdf'],
     career: [
+      { house: 'publicSchool', role: 'Founder', roleDetail: 'Co-founder and co-designer with Dao-Yi Chow', start: 2008, end: null, notes: 'The label resumed runway collections in 2026 after a prolonged hiatus.', sources: ['https://cfda.com/member/maxwell-osborne/', 'https://www.gq.com/story/public-school-comeback-fall-2026'] },
       { house: 'dkny', role: 'Co-Creative Director', roleDetail: 'with Dao-Yi Chow', start: 2015, end: 2017 },
     ],
   },
@@ -933,7 +2726,7 @@ export const designers = {
       { house: 'jeanPaulGaultier', role: 'Other', roleDetail: 'Guest couture designer', start: 2023, end: 2023 },
       { house: 'canadaGoose', role: 'Creative Director', start: 2023, end: 2024 },
       { house: 'berluti', role: 'Creative Director', start: 2016, end: 2018 },
-      { house: 'haiderAckermannLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2003, approximate: true },
+      { house: 'haiderAckermannLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2003, end: 2020, approximate: true, sources: ['https://www.vanityfair.com/story/haider-ackermann-tom-ford', 'https://www.wipo.int/amc/en/domains/decisions/pdf/2023/d2023-3195.pdf'] },
     ],
   },
   thomBrowne: {
@@ -1150,7 +2943,7 @@ export const designers = {
       { house: 'jeanPaulGaultier', role: 'Other', roleDetail: 'Guest couture designer', start: 2022, end: 2022 },
       { house: 'maisonMargiela', role: 'Creative Director', start: 2025, end: null },
       { house: 'diesel', role: 'Creative Director', start: 2020, end: null },
-      { house: 'yProject', role: 'Creative Director', start: 2013, end: 2025 },
+      { house: 'yProject', role: 'Creative Director', start: 2013, end: 2024, sources: ['https://www.vogue.com/article/what-happened-to-y-project'] },
     ],
   },
   duranLantink: {
@@ -1413,6 +3206,8 @@ export const designers = {
     name: 'Dario Vitale',
     nationality: 'Italian',
     career: [
+      { house: 'emporioArmani', role: 'Creative Director', start: 2026, end: null, notes: 'Appointed with immediate effect on 16 September 2026.', sources: ['https://www.armani.com/en-us/announcement/'] },
+      { house: 'armani', role: 'Other', roleDetail: 'Creative director, Giorgio Armani accessories', start: 2026, end: null, notes: 'Accessories scope, separate from overall house direction.', sources: ['https://www.armani.com/en-us/announcement/'] },
       { house: 'miuMiu', role: 'Other', roleDetail: 'Design team; design director (ready-to-wear) and image director from 2023', start: 2010, end: 2025, notes: 'Left January 2025 for Versace.' },
       {
         house: 'versace',
@@ -1449,7 +3244,10 @@ export const designers = {
   silvanaArmani: {
     name: 'Silvana Armani',
     nationality: 'Italian',
-    career: [{ house: 'armani', role: 'Womenswear Director', start: 2025, end: null, approximate: true }],
+    career: [
+      { house: 'armani', role: 'Womenswear Director', start: 2025, end: null, approximate: true },
+      { house: 'armaniPrive', role: 'Artistic Director', end: null, sources: ['https://www.fhcm.paris/en/house/giorgio-armani-prive'] },
+    ],
   },
   leoDellOrco: {
     name: "Leo Dell'Orco",
@@ -1568,6 +3366,7 @@ export const designers = {
     career: [
       { house: 'prada', role: 'Other', roleDetail: 'Design team under Miuccia Prada', start: 2008, end: 2015, approximate: true },
       { house: 'marni', role: 'Creative Director', start: 2016, end: 2025, notes: 'Stepped down June 2025.' },
+      { house: 'gu', role: 'Creative Director', start: 2026, end: null, notes: 'Appointed in January 2026; first collection Fall/Winter 2026.', sources: ['https://www.fastretailing.com/eng/group/news/2601081538.html', 'https://www.fastretailing.com/eng/ir/library/pdf/faq20261008_en.pdf'] },
     ],
   },
   renzoRosso: {
@@ -1589,12 +3388,16 @@ export const designers = {
   morenoFerrari: {
     name: 'Moreno Ferrari',
     nationality: 'Italian',
-    career: [{ house: 'cpCompany', role: 'Head Designer', start: 1994, end: 2010, approximate: true }],
+    career: [{ house: 'cpCompany', role: 'Head Designer', end: 2000, notes: 'Appointment year unconfirmed. C.P. Company’s official archive documents Alessandro Pungetti taking over from Ferrari in 2000.', sources: ['https://archive.cpcompany.com/item/tbd-book'] }],
   },
   paulHarvey: {
     name: 'Paul Harvey',
     nationality: 'British',
-    career: [{ house: 'stoneIsland', role: 'Head Designer', start: 1996, end: 2008 }],
+    career: [
+      { house: 'stoneIsland', role: 'Head Designer', start: 1996, end: 2008 },
+      { house: 'cpCompany', role: 'Other', roleDetail: 'Co-designer with Alessandro Pungetti', start: 2012, notes: 'Joined the new design team in November 2012, confirmed in the pair’s January 2013 interview. End date and current status unconfirmed.', sources: ['https://www.the-spin-off.com/news/stories/Interview-C.P.s-Alessandro-Pungetti-and-Paul-Harvey-6347'] },
+    ],
+    notes: 'Co-founded and designed Ten c with Alessandro Pungetti; that brand is not currently represented in the dataset.',
   },
   francescoRagazzi: {
     name: 'Francesco Ragazzi',
@@ -1935,7 +3738,8 @@ export const designers = {
     born: 1982,
     nationality: 'Taiwanese-American',
     career: [
-      { house: 'hugoBoss', role: 'Artistic Director', roleDetail: 'Boss womenswear', start: 2013, end: 2016, approximate: true },
+      { house: 'jasonWuLabel', role: 'Founder', roleDetail: 'Founder and designer', start: 2007, end: null, sources: ['https://jasonwustudio.com/pages/about', 'https://cfda.com/member/jason-wu/'] },
+      { house: 'boss', role: 'Artistic Director', roleDetail: 'BOSS womenswear', start: 2013, end: 2018, sources: ['https://group.hugoboss.com/en/investors/publications/financial-releases/publication/jason-wu-presents-his-last-gallery-collection'] },
     ],
   },
   ingoWilts: {
@@ -1947,9 +3751,9 @@ export const designers = {
         role: 'Creative Director',
         roleDetail: 'Chief Brand Officer',
         start: 2016,
-        end: 2023,
-        approximate: true,
-        notes: 'Led Boss design for years before becoming Chief Brand Officer.',
+        end: 2022,
+        notes: 'Stepped down from the board in February 2022, continuing collection projects through December.',
+        sources: ['https://group.hugoboss.com/en/newsroom/news/news-detail/hugo-boss-restructures-creative-leadership-team'],
       },
     ],
   },
@@ -1961,9 +3765,9 @@ export const designers = {
         house: 'hugoBoss',
         role: 'Creative Director',
         roleDetail: 'Senior Vice President, Creative Direction',
-        start: 2023,
+        start: 2022,
         end: null,
-        approximate: true,
+        sources: ['https://group.hugoboss.com/en/newsroom/news/news-detail/hugo-boss-restructures-creative-leadership-team', 'https://group.hugoboss.com/en/newsroom/stories/boss-fashion-show-milan-fw26'],
       },
     ],
   },
@@ -2143,7 +3947,10 @@ export const designers = {
   shinsukeTakizawa: {
     name: 'Shinsuke Takizawa',
     nationality: 'Japanese',
-    career: [{ house: 'neighborhood', role: 'Founder', roleDetail: 'Founder, creative director', start: 1994, end: null }],
+    career: [
+      { house: 'neighborhood', role: 'Founder', roleDetail: 'Founder, creative director', start: 1994, end: null },
+      { house: 'luker', role: 'Founder', roleDetail: 'Founder and designer', start: 2009, sources: ['https://hypebeast.com/2010/4/interview-shinsuke-takizawa-neighborhood-id-magazine'] },
+    ],
   },
   takahiroMiyashita: {
     name: 'Takahiro Miyashita',
@@ -2157,7 +3964,13 @@ export const designers = {
   masaakiHonma: {
     name: 'Masaaki Honma',
     nationality: 'Japanese',
-    career: [{ house: 'mastermindJapan', role: 'Founder', roleDetail: 'Founder, designer', start: 1997, end: null }],
+    career: [
+      { house: 'mastermindJapan', role: 'Founder', roleDetail: 'Founder, designer', start: 1997, end: null },
+      { house: 'mastermindWorld', role: 'Founder', roleDetail: 'Founder and designer of the global collection line', start: 2017, end: null, sources: ['https://mastermindtokyo.com/pages/about', 'https://www.mrporter.com/en-hk/journal/lifestyle/the-world-according-to-masterminds-mr-masaaki-homma-1062434'] },
+      { house: 'yohjiYamamoto', role: 'Other', roleDetail: 'Retail sales', sources: ['https://rakutenfashionweektokyo.com/en/topics/interview/mastermind/'] },
+    ],
+    notes: 'Also romanised Masaaki Homma. Worked in retail sales at Yohji Yamamoto and subsequently managed a specialty boutique before founding mastermind JAPAN. Exact retail-tenure dates are unconfirmed. MASTERMIND WORLD is the global line launched in 2017; the same name was used for a 2010 Hong Kong show, rather than a separate brand launch.',
+    sources: ['https://rakutenfashionweektokyo.com/en/topics/interview/mastermind/', 'https://mastermindtokyo.com/pages/about'],
   },
   atsuhikoMori: {
     name: 'Atsuhiko Mori',
@@ -2501,6 +4314,7 @@ export const designers = {
       { house: 'balenciaga', role: 'Other', roleDetail: 'Designer under Nicolas Ghesquière', start: 2002, end: 2012, approximate: true },
       { house: 'louisVuitton', role: 'Other', roleDetail: 'Women\'s ready-to-wear creative director under Nicolas Ghesquière', start: 2013, end: 2017, approximate: true },
       { house: 'chloe', role: 'Creative Director', start: 2017, end: 2020 },
+      { house: 'ecco', role: 'Other', roleDetail: 'Creative partner; recurring seasonal footwear collections', start: 2023, end: null, sources: ['https://us.ecco.com/campaigns/natacha-ramsay-levi', 'https://www.atpress.ne.jp/news/617193'] },
     ],
   },
   gabrielaHearst: {
@@ -2605,7 +4419,7 @@ export const designers = {
     career: [
       { house: 'balenciaga', role: 'Other', roleDetail: 'Designer under Nicolas Ghesquière', start: 2004, end: 2008 },
       { house: 'celine', role: 'Other', roleDetail: 'Design director, ready-to-wear, under Phoebe Philo', start: 2008, end: 2018 },
-      { house: 'ralphLauren', role: 'Creative Director', roleDetail: 'Polo Ralph Lauren womenswear (sub-label)', start: 2018, end: 2024 },
+      { house: 'poloRalphLauren', role: 'Creative Director', roleDetail: 'Polo Ralph Lauren womenswear', start: 2018, end: 2024, sources: ['https://www.fashiondive.com/news/polo-ralph-lauren-creative-director-michael-rider-exits/716313/'] },
       { house: 'celine', role: 'Creative Director', start: 2025, end: null },
     ],
   },
@@ -2771,6 +4585,7 @@ export const designers = {
     nationality: 'Chinese',
     career: [
       { house: 'fengChenWang', role: 'Founder', roleDetail: 'Founder, designer', start: 2015, end: null },
+      { house: 'underArmour', role: 'Other', roleDetail: 'Long Term Creative Partner — Rebel Daughter womenswear', start: 2026, end: null, sources: ['https://www.vogue.com/fashion-shows/spring-2027-menswear/feng-chen-wang', 'https://about.underarmour.com/en/stories/2026/10/under-armour-and-feng-chen-wang-bring-rebel-daughter-to-china---.html'] },
     ],
   },
   umaWangDesigner: {
@@ -2852,11 +4667,15 @@ export const designers = {
     name: 'Willy Chavarria',
     nationality: 'American',
     career: [
-      { house: 'ralphLauren', role: 'Other', roleDetail: 'Designer, RLX', start: 1999, end: 2004 },
-      { house: 'americanEagle', role: 'Head Designer', roleDetail: 'Design director', notes: 'Employment confirmed by his first-person career account. The CFDA places the role within 2002–2012, which conflicts with the existing Ralph Lauren chronology; exact dates remain unresolved.', sources: ['https://www.highsnobiety.com/p/willy-chavarria/', 'https://cfda.com/member/willy-chavarria/'] },
-      { house: 'calvinKlein', role: 'Other', roleDetail: 'Senior vice president of design, menswear', start: 2021, end: 2024 },
-      { house: 'willyChavarria', role: 'Founder', roleDetail: 'Founder, designer', start: 2015, end: null },
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Designer, initially RLX; subsequently other categories', start: 1999, end: 2004, approximate: true, notes: 'Fashionista’s first-person account dates his move to New York and Ralph Lauren to 1999. The CFDA reports five years there; 2004 is an estimated end derived from that duration, rather than a separately documented departure.', sources: ['https://fashionista.com/2017/07/willy-chavarria-interview-spring-2018-collection', 'https://cfda.com/member/willy-chavarria/'] },
+      { house: 'americanEagle', role: 'Other', roleDetail: 'Design director', notes: 'Followed Ralph Lauren and ended before his namesake label launched in 2015. The CFDA places the role within 2002–2012, which conflicts with the 1999 Ralph Lauren start and reported five-year duration; exact dates remain unresolved. This was a design-director position within the company, not confirmed brand-wide creative leadership.', sources: ['https://fashionista.com/2017/07/willy-chavarria-interview-spring-2018-collection', 'https://cfda.com/member/willy-chavarria/'] },
+      { house: 'dickies', role: 'Creative Director', roleDetail: 'Dickies Construct, licensed premium menswear line at Whispering Smith', start: 2014, notes: 'The December 2014 company announcement names Chavarria as creative director for the new ongoing line, targeting a fall/winter 2015 debut. Departure date is unconfirmed. Separate from the Dickies 1922 / Palmer Trading Company capsules.', sources: ['https://www.prnewswire.com/news-releases/williamson-dickie-mfg-co-signs-new-mens-premium-apparel-license-300004741.html'] },
+      { house: 'yeezy', role: 'Other', roleDetail: 'Design development', notes: 'A 2021 appointment report describes two years developing Yeezy with Kanye West. Exact employment years are unconfirmed; this was an ongoing role rather than a single collaboration.', sources: ['https://www.nssmag.com/en/fashion/25805/willy-chavarria-calvin-klein'] },
+      { house: 'calvinKlein', role: 'Other', roleDetail: 'Senior vice president of design, North America and Global Essentials menswear', start: 2021, end: 2024, sources: ['https://www.nssmag.com/en/fashion/25805/willy-chavarria-calvin-klein', 'https://www.wallpaper.com/fashion-beauty/willy-chavarria-interview-ss-2025'] },
+      { house: 'willyChavarria', role: 'Founder', roleDetail: 'Founder, designer', start: 2015, end: null, sources: ['https://fashionista.com/2017/07/willy-chavarria-interview-spring-2018-collection', 'https://www.wallpaper.com/fashion-beauty/willy-chavarria-interview-ss-2025'] },
     ],
+    notes: 'Earlier design employment at Joe Boxer (following shipping work and an internship with Nicholas Graham) and cycling-apparel maker Voler is documented in his first-person Fashionista career account; exact years are unconfirmed. He also opened Palmer Trading Company in 2010 and developed its in-house label before launching Willy Chavarria. Those businesses are not currently houses in this dataset.',
+    sources: ['https://fashionista.com/2017/07/willy-chavarria-interview-spring-2018-collection', 'https://cfda.com/member/willy-chavarria/'],
   },
   telfarClemens: {
     name: 'Telfar Clemens',
@@ -2932,6 +4751,7 @@ export const designers = {
     name: 'Olivier Theyskens',
     nationality: 'Belgian',
     career: [
+      { house: 'theory', role: 'Artistic Director', roleDetail: 'Theory and Theyskens’ Theory', start: 2010, end: 2014, sources: ['https://www.ifmparis.fr/en/faculty/rodica-muravetchi-2'] },
       { house: 'rochas', role: 'Creative Director', start: 2002, end: 2006 },
       { house: 'ninaRicci', role: 'Creative Director', start: 2006, end: 2009 },
     ],
@@ -2994,7 +4814,7 @@ export const designers = {
     nationality: 'Japanese',
     career: [
       { house: 'junyaWatanabe', role: 'Other', roleDetail: 'Designer under Junya Watanabe', start: 2000, end: 2006, approximate: true },
-      { house: 'whiteMountaineering', role: 'Founder', roleDetail: 'Founder, designer', start: 2006, end: null },
+      { house: 'whiteMountaineering', role: 'Founder', roleDetail: 'Founder and designer; stepped down March 31, 2026', start: 2006, end: 2026, sources: ['https://www.wwdjapan.com/articles/2298948', 'https://www.fashionsnap.com/article/yosuke-aizawa-future-interview/'] },
     ],
   },
 
@@ -3559,6 +5379,7 @@ export const designers = {
     born: 1964,
     nationality: 'American',
     career: [
+      { house: 'tiffanyAndCo', role: 'Artistic Director', roleDetail: 'Chief artistic officer', start: 2017, end: 2021, sources: ['https://www.vogue.co.uk/article/reed-krakoff-appointed-artistic-officer-tiffany-co', 'https://echanges.dila.gouv.fr/OPENDATA/AMF/MKW/2021/01/FCMKW119547_20210107.pdf'] },
       { house: 'tommyHilfiger', role: 'Other', roleDetail: 'Senior VP, marketing and design', start: 1993, end: 1996, approximate: true },
       { house: 'coach', role: 'Creative Director', roleDetail: 'Executive creative director', start: 1996, end: 2013 },
     ],
@@ -3668,8 +5489,9 @@ export const designers = {
     nationality: 'American',
     career: [
       { house: 'supreme', role: 'Other', roleDetail: 'Brand director', start: 2005, end: 2017, approximate: true },
-      { house: 'awakeNy', role: 'Founder', roleDetail: 'Founder, creative director', start: 2012, end: null, approximate: true },
+      { house: 'awakeNy', role: 'Founder', roleDetail: 'Founder, creative director', start: 2012, end: null },
     ],
+    sources: ['https://awakenyclothing.com/pages/about', 'https://www.gapinc.com/en-ca/articles/2026/03/gap-and-awake-ny-announce-collaboration-rooted-in'],
   },
   heronPreston: {
     name: 'Heron Preston',
@@ -3745,6 +5567,7 @@ export const designers = {
     career: [
       { house: 'acronym', role: 'Founder', roleDetail: 'Co-founder, designer', start: 1994, end: null },
       { house: 'stoneIsland', role: 'Other', roleDetail: 'Designer, Stone Island Shadow Project', start: 2008, approximate: true },
+      { house: 'tilak', role: 'Other', roleDetail: 'Ongoing technical apparel design partnership', start: 2000, approximate: true, notes: 'Hugh dates the relationship to 2000 or 2001 and describes shared product development over many years. By the 2026 anniversary interview he was no longer actively designing for Tilak; the exact departure year is unconfirmed.', sources: ['https://www.highsnobiety.com/p/tilak-40th-anniversary-interview/'] },
     ],
   },
   michaelaSachenbacher: {
@@ -4208,7 +6031,8 @@ export const designers = {
     name: 'Hirofumi Kiyonaga',
     nationality: 'Japanese',
     career: [
-      { house: 'sophnet', role: 'Founder', roleDetail: 'Founder, designer', start: 1998, end: null, approximate: true },
+      { house: 'sophnet', role: 'Founder', roleDetail: 'Founder, designer', start: 1998, end: 2022, sources: ['https://www.jleague.jp/news/article/22897/'] },
+      { house: 'fcRealBristol', role: 'Founder', roleDetail: 'Founder and creative leadership', start: 1999, end: 2022, sources: ['https://www.jleague.jp/news/article/22897/'] },
       { house: 'uniformExperiment', role: 'Founder', roleDetail: 'Co-founder with Hiroshi Fujiwara', start: 2004, end: null, approximate: true },
     ],
   },
@@ -4447,7 +6271,10 @@ export const designers = {
   yoshiyukiMiyamae: {
     name: 'Yoshiyuki Miyamae',
     nationality: 'Japanese',
-    career: [{ house: 'isseyMiyake', role: 'Head Designer', roleDetail: "Women's collection", start: 2011, end: 2019 }],
+    career: [
+      { house: 'isseyMiyake', role: 'Head Designer', roleDetail: "Women's collection", start: 2011, end: 2019 },
+      { house: 'apocAble', role: 'Head Designer', roleDetail: 'Designer leading the engineering team', start: 2021, end: null, sources: ['https://www.sony.com/en/SonyInfo/design/stories/perspectives12/', 'https://uk.isseymiyake.com/blogs/apocable-dialogues/episode_18'] },
+    ],
   },
   satoshiKondo: {
     name: 'Satoshi Kondo',
@@ -4971,6 +6798,10 @@ export const designers = {
       house: 'nike', role: 'Other', roleDetail: 'Designer; later Vice President of Creative Concepts', start: 1981,
       notes: 'Joined Nike as an architect in 1981 before becoming a footwear designer. The Smithsonian identified him as VP of Creative Concepts in 2019; the exact promotion and departure dates are unconfirmed.',
       sources: ['https://www.cooperhewitt.org/2019/09/26/nda-20-yrs-qa-with-tinker-hatfield/'],
+    }, {
+      house: 'jordanBrand', role: 'Other', roleDetail: 'Air Jordan footwear designer', start: 1987,
+      notes: 'Assigned to the Air Jordan line in 1987, before the standalone brand. Exact end and current role are unconfirmed.',
+      sources: ['https://www.smithsonianmag.com/smithsonian-institution/slam-dunk-design-air-jordan-180978826/'],
     }],
   },
   adiDassler: {
@@ -6189,8 +8020,9 @@ export const designers = {
         role: 'Founder',
         roleDetail: 'Founder and designer of the secondary line',
         start: 2013,
+        end: 2025,
         approximate: true,
-        sources: ['https://sabukaru.online/articles/looking-to-the-past-to-innovate-the-future-a-talk-with-boris-bidjan-saberi', 'https://salomon.com.au/pages/boris-bidjan-saberi'],
+        sources: ['https://sabukaru.online/articles/looking-to-the-past-to-innovate-the-future-a-talk-with-boris-bidjan-saberi', 'https://salomon.com.au/pages/boris-bidjan-saberi', 'https://hypebeast.com/2025/5/boris-bidjan-saberi-ending-operations-news', 'https://rawlooks.com/brand/boris-bidjan-saberi/'],
       },
     ],
   },
@@ -6270,6 +8102,7 @@ export const designers = {
     name: 'Patrick Robinson',
     nationality: 'American',
     career: [
+      { house: 'perryEllis', role: 'Other', roleDetail: 'Senior design and leadership roles; exact title and years unconfirmed', sources: ['https://www.gapinc.com/en-us/articles/2007/05/gap-inc-names-patrick-robinson-head-of-design-of-g'] },
       {
         house: 'armani',
         role: 'Head Designer',
@@ -6319,12 +8152,13 @@ export const designers = {
       {
         house: 'uniqlo',
         role: 'Other',
-        roleDetail: 'Marimekko creative director for the UNIQLO x Marimekko Summer 2024 collaboration',
-        start: 2024,
-        end: 2024,
-        notes: 'Represents her Marimekko role in this capsule; not an in-house Uniqlo appointment.',
-        sources: ['https://www.uniqlo.com/ph/en/contents/collaboration/uniqloxmarimekko/24ss/article/01/'],
+        roleDetail: 'Creative director, Global Innovation Center',
+        start: 2017,
+        end: 2020,
+        sources: ['https://company.marimekko.com/investors/management/management-group/'],
       },
+      { house: 'everlane', role: 'Head Designer', roleDetail: 'Head of design and product', start: 2015, end: 2017 },
+      { house: 'marimekko', role: 'Creative Director', roleDetail: 'Chief creative officer and creative director', start: 2020, end: null },
     ],
   },
   alistairCarr: {
@@ -7363,6 +9197,11 @@ export const designers = {
   craigAtkinson: {
     name: 'Craig Atkinson',
     career: [{
+      house: 'wingsHorns',
+      role: 'Founder',
+      roleDetail: 'Co-founder',
+      start: 2004,
+    }, {
       house: 'reigningChamp',
       role: 'Founder',
       roleDetail: 'Co-founder',
@@ -7543,7 +9382,9 @@ export const designers = {
   },
   raulLopez: {
     name: "Raul Lopez",
-    career: [{
+    career: [
+      { house: 'luar', role: 'Founder', roleDetail: 'Founder and creative director', start: 2011, end: null, sources: ['https://www.vogue.com/article/after-the-burnouts-raul-lopez-on-how-he-bounced-back', 'https://b879be244561.diariolibre.com/revista/moda/2026/09/11/dominicano-raul-lopez-nominado-a-premios-cfda-de-moda-2026/3656150'] },
+      {
       house: 'hoodByAir',
       role: 'Founder',
     }],
@@ -8295,7 +10136,8 @@ export const designers = {
         role: 'Founder',
         roleDetail: 'Co-founder and creative director',
         start: 2003,
-        sources: ['https://juicestore.com/pages/about-us', 'https://www.tatlerasia.com/the-scene/people-parties/kevin-poon-on-the-business-of-being-cool'],
+        end: null,
+        sources: ['https://news.adidas.com/brands/adidas-originals-and-clot-by-edison-chen-release-a-collaborative-collection-with-heritage-classics--/s/0aa382ba-2844-4d3c-adb3-b87afa91aeca', 'https://juicestore.com/pages/about-us', 'https://www.tatlerasia.com/the-scene/people-parties/kevin-poon-on-the-business-of-being-cool'],
       },
       {
         house: 'vlone',
@@ -10142,6 +11984,7 @@ export const designers = {
   toddSnyder: {
     name: 'Todd Snyder',
     career: [
+      { house: 'toddSnyder', role: 'Founder', roleDetail: 'Founder and designer', start: 2011, end: null, sources: ['https://www.toddsnyder.com/pages/bio', 'https://www.toddsnyder.com/pages/todd-snyder-15th-anniversary-collection'] },
       {
         house: 'woolrich',
         role: 'Creative Director',
@@ -10554,6 +12397,12 @@ export const designers = {
     name: 'Raif Adelberg',
     career: [
       {
+        house: 'wingsHorns',
+        role: 'Founder',
+        roleDetail: 'Co-founder and founding designer',
+        start: 2004,
+      },
+      {
         house: 'mooseKnuckles',
         role: 'Head Designer',
         sources: ['https://www.prnewswire.com/news-releases/moose-knuckles-appoints-ludovico-bruno-as-global-creative-director-and-raif-adelberg-as-design-director-marking-a-new-era-of-creative-leadership-302612333.html'],
@@ -10562,7 +12411,7 @@ export const designers = {
       },
     ],
     sources: ['https://www.prnewswire.com/news-releases/moose-knuckles-appoints-ludovico-bruno-as-global-creative-director-and-raif-adelberg-as-design-director-marking-a-new-era-of-creative-leadership-302612333.html'],
-    notes: 'Founded wings+horns, Maison François Marie, HER_MAN and the Richard Kidd concept store; also led bag design at Herschel Supply Co. These labels are not yet in the dataset. Collaborations with other brands are excluded from career tenures.',
+    notes: 'Co-founded wings+horns. Also founded Maison François Marie, HER_MAN and the Richard Kidd concept store, and led bag design at Herschel Supply Co.; those labels are not yet in the dataset. Collaborations with other brands are excluded from career tenures.',
   },
   yukiMatsuda: {
     name: 'Yuki Matsuda',
@@ -10757,12 +12606,13 @@ export const designers = {
   michaelKerr: {
     name: 'Michael Kerr',
     career: [
+      { house: 'roots', role: 'Other', roleDetail: 'Design team', sources: ['https://www.wearglobalnetwork.com/news/nobis-introduces-michael-kerr-as-new-design-director/'] },
       { house: 'nike', role: 'Other', roleDetail: 'Design team', sources: ['https://www.wearglobalnetwork.com/news/nobis-introduces-michael-kerr-as-new-design-director/'] },
       { house: 'canadaGoose', role: 'Other', roleDetail: 'Design team', sources: ['https://www.wearglobalnetwork.com/news/nobis-introduces-michael-kerr-as-new-design-director/'] },
       { house: 'theNorthFace', role: 'Other', roleDetail: 'Design team', sources: ['https://www.wearglobalnetwork.com/news/nobis-introduces-michael-kerr-as-new-design-director/'] },
       { house: 'nobis', role: 'Head Designer', roleDetail: 'Senior design director', notes: 'Introduced as the new senior design director in June 2021 with his first collection for Fall/Winter 2021. Exact appointment and departure years unconfirmed.', sources: ['https://mr-mag.com/nobis-unveils-first-collection-from-its-new-senior-design-director/', 'https://www.nobis.ch/blogs/news/nobis-pop-up-store-eastside-geneva'] },
     ],
-    notes: 'Also worked on the design team at Roots, a brand not currently in the dataset; exact earlier dates and titles unconfirmed.',
+    notes: 'Worked on design teams at Roots, Nike, Canada Goose and The North Face before Nobis; exact earlier dates and titles are unconfirmed.',
   },
   stefanEngstrom: {
     name: 'Stefan Engström',
@@ -10986,6 +12836,2525 @@ export const designers = {
     career: [{ house: 'rawMango', role: 'Founder', roleDetail: 'Founder and textile designer', start: 2008, end: null, sources: ['https://rawmango.com/pages/raw-mango', 'https://www.wallpaper.com/fashion-beauty/raw-mango-aw-2026-london-fashion-week-debut'] }],
     notes: 'Previously worked at Shades of India and on textile-development projects in Chanderi. Also developed an eponymous stitched-garment line after Raw Mango; those labels are not currently in the dataset.',
     sources: ['https://www.woolmark.com/gb/fashion/against-the-tide/'],
+  },
+  johnBlundstone: {
+    name: 'John Blundstone',
+    career: [{ house: 'blundstone', role: 'Founder', start: 1870, sources: ['https://www.blundstone.com/pages/our-story'] }],
+    notes: 'Established footwear manufacturing in Hobart in 1870. The official brand history does not establish the end of his personal involvement.',
+  },
+  klausMaertens: {
+    name: 'Klaus Maertens',
+    nationality: 'German',
+    career: [{ house: 'drMartens', role: 'Founder', roleDetail: 'Inventor of the air-cushioned sole; co-founder of the German precursor', start: 1947, sources: ['https://www.drmartensplc.com/about-us/our-brand/'] }],
+    notes: 'Developed the prototype sole in 1945; began formal production with Herbert Funck in 1947. These dates precede the British Dr. Martens boot launch in 1960. End of personal involvement unconfirmed.',
+  },
+  herbertFunck: {
+    name: 'Herbert Funck',
+    career: [{ house: 'drMartens', role: 'Founder', roleDetail: 'Engineer; co-founder of the German precursor', start: 1947, sources: ['https://www.drmartensplc.com/about-us/our-brand/'] }],
+    notes: 'Partnered with Klaus Maertens to produce air-cushioned footwear from 1947. The current corporate history spells his surname Funck; some older accounts use Funk. End of personal involvement unconfirmed.',
+  },
+  billGriggs: {
+    name: 'Bill Griggs',
+    nationality: 'British',
+    career: [{ house: 'drMartens', role: 'Founder', roleDetail: 'Founder of the British AirWair boot business; design adaptation', start: 1960, sources: ['https://www.drmartensplc.com/about-us/our-brand/'] }],
+    notes: 'Acquired UK manufacturing rights to the air-cushioned sole in 1959 through R. Griggs Group. Adapted the sole and upper and introduced the yellow welt stitching and AirWair heel loop for the 1960 boot launch. End of personal involvement unconfirmed.',
+  },
+  damienWilson: {
+    name: 'Damien Wilson',
+    career: [
+      { house: 'fredPerry', role: 'Other', roleDetail: 'Design and creative concepts', notes: 'Wilson describes doing a similar role at Fred Perry before Dr. Martens in his Bodega interview; exact title and dates are unconfirmed.', sources: ['https://bdgastore.com/blogs/blogdega/in-conversation-w-damien-wilson-of-dr-martens'] },
+      { house: 'drMartens', role: 'Creative Director', notes: 'Confirmed as creative director in Bodega’s 2021 anniversary interview and described as former creative director in the brand’s May 2023 Jadon anniversary film coverage. Exact appointment and departure dates remain unconfirmed.', sources: ['https://bdgastore.com/blogs/blogdega/in-conversation-w-damien-wilson-of-dr-martens', 'https://mr-mag.com/dr-martens-celebrates-10-years-of-the-jadon-boot/'] },
+    ],
+  },
+  darrenMcKoy: {
+    name: 'Darren McKoy',
+    career: [
+      { house: 'adidas', role: 'Other', roleDetail: 'Global product manager, Adidas Originals', start: 2008, end: 2010, sources: ['https://cdn.rt.emap.com/wp-content/uploads/sites/2/2013/01/10022529/Next-Gen-2013-2.pdf'] },
+      { house: 'theNorthFace', role: 'Other', roleDetail: 'Product manager, EMEA', start: 2010, end: 2012, sources: ['https://www.worldfootwear.com/news/darren-mckoy-ex-dr-martens-joins-timberland/10667.html'] },
+      { house: 'asics', role: 'Other', roleDetail: 'EMEA footwear product / category manager, ASICS and Onitsuka Tiger', start: 2012, notes: 'Started in February 2012; worked at ASICS before joining Dr. Martens in 2015. Exact departure date unconfirmed.', sources: ['https://cdn.rt.emap.com/wp-content/uploads/sites/2/2013/01/10022529/Next-Gen-2013-2.pdf', 'https://www.worldfootwear.com/news/darren-mckoy-ex-dr-martens-joins-timberland/10667.html'] },
+      { house: 'onitsukaTiger', role: 'Other', roleDetail: 'EMEA footwear product manager, shared ASICS role', start: 2012, notes: 'The same ASICS employment covered Onitsuka Tiger; this was not a separate move between companies. Exact end date unconfirmed.', sources: ['https://cdn.rt.emap.com/wp-content/uploads/sites/2/2013/01/10022529/Next-Gen-2013-2.pdf'] },
+      { house: 'drMartens', role: 'Other', roleDetail: 'Footwear category manager; subsequently product and merchandising director', start: 2015, end: 2021, sources: ['https://www.worldfootwear.com/news/darren-mckoy-ex-dr-martens-joins-timberland/10667.html', 'https://fashionunited.de/nachrichten/personen/dr-martens-beruft-neuen-creative-director/2022033045869'] },
+      { house: 'drMartens', role: 'Creative Director', roleDetail: 'Global creative director', start: 2021, end: 2025, notes: 'FashionUnited reports a December 2021 start, with the appointment announced in March 2022; Vogue dates the new role to March 2022. Departure was reported in January 2025.', sources: ['https://fashionunited.de/nachrichten/personen/dr-martens-beruft-neuen-creative-director/2022033045869', 'https://www.vogue.com/article/dr-martens-new-creative-director-darren-mckoy', 'https://www.worldfootwear.com/news/darren-mckoy-ex-dr-martens-joins-timberland/10667.html'] },
+      { house: 'timberland', role: 'Creative Director', roleDetail: 'Global vice president of product design and creative direction', start: 2025, end: null, sources: ['https://www.worldfootwear.com/news/darren-mckoy-ex-dr-martens-joins-timberland/10667.html', 'https://www.theofficialboard.com/biography/darren-mckoy-75e15'] },
+    ],
+    notes: 'Also known as DMac. Earlier roles at Hip Store, Sports Direct and Mamas & Papas are described in Drapers’ 2013 profile; those businesses are not currently houses in this dataset.',
+    sources: ['https://cdn.rt.emap.com/wp-content/uploads/sites/2/2013/01/10022529/Next-Gen-2013-2.pdf', 'https://www.drmartensplc.com/application/files/8716/9520/5561/Dr._Martens_plc__Product_teach-in_transcript.pdf'],
+  },
+  thomasMasonFounder: {
+    name: 'Thomas Mason',
+    career: [{ house: 'thomasMason', role: 'Founder', start: 1796, sources: ['https://www.thomasmason.co.uk/en/about/'] }],
+  },
+  phillipProyce: {
+    name: 'Phillip Proyce',
+    career: [{ house: 'ladyWhiteCo', role: 'Founder', roleDetail: 'Co-founder and designer; also known as Phil Proyce', start: 2015, end: null, sources: ['https://www.wallpaper.com/fashion-beauty/lady-white-co-renovated-la-silverlake-store-woe', 'https://ladywhiteco.com/pages/about'] }],
+    notes: 'Previously worked at Rising Sun before developing Lady White Co.; the prior label is not in this dataset and exact employment dates are unconfirmed.',
+    sources: ['https://www.insidehook.com/style/defining-take-ivy-2-0-next-menswear-movement'],
+  },
+  sarahProyce: {
+    name: 'Sarah Proyce',
+    career: [{ house: 'ladyWhiteCo', role: 'Founder', roleDetail: 'Co-founder', start: 2015, end: null, sources: ['https://www.wallpaper.com/fashion-beauty/lady-white-co-renovated-la-silverlake-store-woe'] }],
+    notes: 'Identified as co-founder alongside Phil Proyce in November 2026 reporting. A separate product-design title has not been verified.',
+  },
+  doWonChang: {
+    name: 'Do Won Chang',
+    career: [{ house: 'forever21', role: 'Founder', roleDetail: 'Co-founder; also known as Don Chang', start: 1984, notes: 'Historical founding role; subsequent ownership passed to Authentic and its partners in 2020. No current role is asserted.', sources: ['https://laedc.org/newsroom/releases/2010/100928_EddyAwards_DoWonChang.pdf', 'https://corporate.authentic.com/press-releases/abg-forever-21-acquisition-finalized'] }],
+  },
+  jinSookChang: {
+    name: 'Jin Sook Chang',
+    career: [{ house: 'forever21', role: 'Founder', roleDetail: 'Co-founder', start: 1984, notes: 'Historical founding role. A current creative appointment is not confirmed.', sources: ['https://laedc.org/newsroom/releases/2010/100928_EddyAwards_DoWonChang.pdf'] }],
+  },
+  estherChang: {
+    name: 'Esther Chang',
+    career: [{ house: 'forever21', role: 'Other', roleDetail: 'Head of visuals: graphics, store displays and window design', notes: 'The April 2010 interview confirms leadership of the visuals department, not clothing creative direction. Joined a little over a year before the interview; exact start and departure dates are unconfirmed.', sources: ['https://www.inquirer.com/philly/phillywomen/Forever_21s_stylish_sisters_may_be_the_fast-fashion_brands_secret_weapons.html'] }],
+  },
+  dovCharney: {
+    name: 'Dov Charney',
+    career: [{ house: 'americanApparel', role: 'Founder', start: 1989, end: 2014, notes: 'Founder and former company leader; left the company in December 2014 after a period as consultant following his June removal as CEO.', sources: ['https://www.sec.gov/Archives/edgar/data/1421296/000110465915083104/a15-24601_1ex99da.htm'] }],
+    notes: 'Later established Los Angeles Apparel, a separate business not currently represented in this dataset.',
+    sources: ['https://www.axios.com/2017/12/15/disgraced-american-apparel-founder-stages-retail-comeback-1513307212'],
+  },
+  irisAlonzo: {
+    name: 'Iris Alonzo',
+    career: [
+      { house: 'americanApparel', role: 'Creative Director', start: 2004, end: 2014, notes: 'Joined in 2004; Vogue describes an eleven-year creative-director history. First dismissal was in summer 2014.', sources: ['https://rakutenfashionweektokyo.com/en/brands/detail/american-apparel/', 'https://www.vogue.com/article/everybody-iris-alonzo-carolina-crespo-american-apparel-creative-directors-new-project', 'https://fashionista.com/2015/02/american-apparel-creative-director-fired'] },
+      { house: 'americanApparel', role: 'Creative Director', roleDetail: 'Senior creative director', start: 2014, end: 2015, notes: 'Rehired in October 2014, dismissed again in February 2015.', sources: ['https://fashionista.com/2015/02/american-apparel-creative-director-fired'] },
+    ],
+    notes: 'Subsequently founded Everybody.World with Carolina Crespo; that label is not currently in the dataset.',
+    sources: ['https://www.vogue.com/article/everybody-iris-alonzo-carolina-crespo-american-apparel-creative-directors-new-project'],
+  },
+  marshaBrady: {
+    name: 'Marsha Brady',
+    career: [{ house: 'americanApparel', role: 'Creative Director', end: 2015, notes: 'Joined the company in 2004 according to its Tokyo fashion-week biography; the exact promotion date is unconfirmed. Remained through the 2014 management changes and was dismissed in February 2015.', sources: ['https://rakutenfashionweektokyo.com/en/brands/detail/american-apparel/', 'https://fashionista.com/2015/02/american-apparel-creative-director-fired'] }],
+    notes: 'Previously worked in textile colour analysis, interiors and her own handbag production; a commissioned handbag stocked by Barneys is not recorded as employment there.',
+  },
+  carolinaCrespo: {
+    name: 'Carolina Crespo',
+    career: [{ house: 'americanApparel', role: 'Other', roleDetail: 'Graphics and childrenswear director', end: 2015, notes: 'Vogue reports fifteen years at the company, but does not establish exact start or promotion dates.', sources: ['https://www.vogue.com/article/everybody-iris-alonzo-carolina-crespo-american-apparel-creative-directors-new-project'] }],
+    notes: 'Later co-founded Everybody.World with Iris Alonzo, a label outside the current dataset.',
+  },
+  jamesCrockett: {
+    name: 'James Crockett',
+    career: [{ house: 'crockettJones', role: 'Founder', start: 1879, sources: ['https://www.crockettandjones.com/pages/our-heritage'] }],
+  },
+  charlesJones: {
+    name: 'Charles Jones',
+    career: [{ house: 'crockettJones', role: 'Founder', start: 1879, sources: ['https://www.crockettandjones.com/pages/our-heritage'] }],
+  },
+  jonathanJones: {
+    name: 'Jonathan Jones',
+    career: [{ house: 'crockettJones', role: 'Other', roleDetail: 'Footwear design and product development alongside managing-director duties', notes: 'The company’s 2014 museum interview describes Jones designing and developing most shoes and deciding collection changes. Joined the company in 1977, which is not assumed to be the start of this particular responsibility. Exact design-tenure dates and present scope remain unconfirmed.', sources: ['https://northamptonmuseums.wordpress.com/2014/02/03/interview-with-crockett-and-jones/', 'https://www.crockettandjones.com/pages/our-heritage'] }],
+  },
+  johnBStetson: {
+    name: 'John B. Stetson',
+    career: [{ house: 'stetson', role: 'Founder', roleDetail: 'Founder and hat maker', start: 1865, sources: ['https://stetson.com/pages/about-us'] }],
+  },
+  balthasarMerz: {
+    name: 'Balthasar Merz',
+    career: [{ house: 'merzBSchwanen', role: 'Founder', roleDetail: 'Founder of the original Swabian textile business', start: 1911, sources: ['https://www.merzbschwanen.com/pages/about-us'] }],
+  },
+  peterPlotnicki: {
+    name: 'Peter Plotnicki',
+    career: [{ house: 'merzBSchwanen', role: 'Founder', roleDetail: 'Co-founder of the revived label; designer and trained menswear tailor', start: 2011, end: null, sources: ['https://www.merzbschwanen.com/pages/about-us', 'https://www.merzbschwanen.com/blogs/press/interview-with-peter-plotnicki-of-merz-b-schwanen'] }],
+  },
+  gittaPlotnicki: {
+    name: 'Gitta Plotnicki',
+    career: [{ house: 'merzBSchwanen', role: 'Founder', roleDetail: 'Co-founder of the revived label; fashion designer', start: 2011, end: null, sources: ['https://www.merzbschwanen.com/pages/about-us'] }],
+  },
+  albertoAspesi: {
+    name: 'Alberto Aspesi',
+    career: [{ house: 'aspesi', role: 'Founder', roleDetail: 'Founder and designer', start: 1969, end: 2017, sources: ['https://aspesi.com/en-row/pages/history', 'https://thesmudgereport.com/alberto-aspesi-is-back-with-a-capsule-collection-for-his-namesake-brand/'] }],
+    notes: 'Returned for a spring 2026 womenswear capsule; this isolated project is not recorded as a new ongoing tenure.',
+  },
+  lawrenceSteele: {
+    name: 'Lawrence Steele',
+    nationality: 'American',
+    career: [
+      { house: 'moschino', role: 'Other', roleDetail: 'Design assistant to Franco Moschino', sources: ['https://www.vogue.com/fashion-shows/fall-2023-ready-to-wear/aspesi'] },
+      { house: 'prada', role: 'Other', roleDetail: 'Designer', sources: ['https://www.vogue.com/fashion-shows/fall-2023-ready-to-wear/aspesi'] },
+      { house: 'aspesi', role: 'Other', roleDetail: 'Design consultant; exclusive art direction from 2004', start: 1997, end: 2017, notes: 'Steele’s 2024 first-person interview dates initial consulting to 1997 and exclusive art direction to 2004. Appointment reporting generally describes the 2004–2017 period as his consultancy.', sources: ['https://www.ilfoglio.it/moda/2024/01/13/news/viva-le-sciure-milanesi-parla-lex-direttore-creativo-di-aspesi--96911', 'https://www.pambianconews.com/2020/11/18/lawrence-steele-e-il-primo-direttore-creativo-di-aspesi-305008/'] },
+      { house: 'marni', role: 'Other', roleDetail: 'Associate creative director', notes: 'Worked alongside Francesco Risso before returning to Aspesi in 2020; exact employment dates are unconfirmed.', sources: ['https://www.pambianconews.com/2020/11/18/lawrence-steele-e-il-primo-direttore-creativo-di-aspesi-305008/', 'https://www.ilfoglio.it/moda/2024/01/13/news/viva-le-sciure-milanesi-parla-lex-direttore-creativo-di-aspesi--96911'] },
+      { house: 'aspesi', role: 'Creative Director', start: 2020, end: 2023, notes: 'Appointed in November 2020 for menswear, womenswear and communication. Departure confirmed in a January 2024 interview; later reporting dates the tenure through 2023.', sources: ['https://www.pambianconews.com/2020/11/18/lawrence-steele-e-il-primo-direttore-creativo-di-aspesi-305008/', 'https://www.ilfoglio.it/moda/2024/01/13/news/viva-le-sciure-milanesi-parla-lex-direttore-creativo-di-aspesi--96911', 'https://thesmudgereport.com/alberto-aspesi-is-back-with-a-capsule-collection-for-his-namesake-brand/'] },
+    ],
+    notes: 'Also established an eponymous label in the 1990s, outside the current house dataset.',
+  },
+  shigeharuTagaki: {
+    name: 'Shigeharu Tagaki',
+    career: [{ house: 'studioDartisan', role: 'Founder', roleDetail: 'Founder and designer', start: 1979, notes: 'Founder identity is documented by specialist Japanese-denim reporting; departure date and current involvement are unconfirmed.', sources: ['https://www.japanalogue.com/studio-dartisan/', 'https://shopdartisan.com/pages/about-us'] }],
+    notes: 'Studied and worked in France before establishing the Osaka label. No earlier employment at another represented house has been verified.',
+  },
+  toruNogami: {
+    name: 'Toru Nogami',
+    career: [{ house: 'samuraiJeans', role: 'Founder', roleDetail: 'Founder and denim designer', start: 1998, end: null, sources: ['https://www.samurai-j.com/en/from-seed-to-jeans', 'https://www.samurai-jeans.com/en/policies/legal-notice'] }],
+  },
+  jamesEden: {
+    name: 'James Eden',
+    career: [{ house: 'privateWhiteVc', role: 'Founder', roleDetail: 'Co-founder; later product design and overall creative direction', start: 2010, end: null, notes: '2010 records the modern label’s rebranding. His first-person design account establishes later hands-on creative leadership without a separately verified appointment date.', sources: ['https://www.merchantandmakers.com/private-white-vc/', 'https://www.privatewhitevc.com/pages/meet-the-makers', 'https://www.linkedin.com/posts/james-eden-87549a96_for-the-past-2-years-i-have-been-responsible-activity-7110191132684242945-j0s_'] }],
+    notes: 'Great-grandson of Jack White, whose ownership of the predecessor factory is distinct from founding the modern label.',
+  },
+  michaelStoll: {
+    name: 'Michael Stoll',
+    career: [{ house: 'privateWhiteVc', role: 'Founder', roleDetail: 'Co-founder; manufacturing and garment-development expertise', end: null, notes: 'Identified alongside James Eden under Meet the Founders on the official website. Exact start of the founding partnership is unconfirmed.', sources: ['https://www.privatewhitevc.com/pages/meet-the-makers'] }],
+  },
+  nickAshley: {
+    name: 'Nick Ashley',
+    career: [
+      { house: 'kenzo', role: 'Other', roleDetail: 'Design role', sources: ['https://www.countryandtownhouse.com/style/lcm-guide-designers-watch/'] },
+      { house: 'tods', role: 'Other', roleDetail: 'Design role', sources: ['https://www.countryandtownhouse.com/style/lcm-guide-designers-watch/'] },
+      { house: 'dunhill', role: 'Menswear Director', roleDetail: 'Head of menswear', sources: ['https://www.merchantandmakers.com/private-white-vc/', 'https://www.scmp.com/magazines/post-magazine/article/1327477/behind-label-private-white-vc'] },
+      { house: 'privateWhiteVc', role: 'Creative Director', start: 2010, end: 2018, approximate: true, notes: 'The Rake’s May 2018 profile describes eight years since launch under Ashley’s direction and a recent step back into a brand-ambassador role. These are estimated tenure boundaries; no exact appointment or departure announcement was located.', sources: ['https://therake.com/stories/pocket-guide-nick-ashley-private-white-v-c', 'https://www.merchantandmakers.com/private-white-vc/'] },
+    ],
+    notes: 'Previously creative director of his family’s Laura Ashley business and ran an eponymous label, neither currently represented here. Exact dates of his earlier design employment are unconfirmed.',
+    sources: ['https://therake.com/stories/pocket-guide-nick-ashley-private-white-v-c'],
+  },
+  alessandroPungetti: {
+    name: 'Alessandro Pungetti',
+    career: [
+      { house: 'zegna', role: 'Other', roleDetail: 'Design consultant', sources: ['https://archive.cpcompany.com/item/tbd-book'] },
+      { house: 'cpCompany', role: 'Head Designer', start: 2000, end: 2008, notes: 'Called to take over design in 2000; the official archive identifies his collections from 2001 to 2008.', sources: ['https://archive.cpcompany.com/item/tbd-book'] },
+      { house: 'cpCompany', role: 'Other', roleDetail: 'Co-designer with Paul Harvey', start: 2012, notes: 'Rejoined in November 2012, confirmed in the duo’s January 2013 interview. End date and present status unconfirmed.', sources: ['https://www.the-spin-off.com/news/stories/Interview-C.P.s-Alessandro-Pungetti-and-Paul-Harvey-6347'] },
+      { house: 'aquascutum', role: 'Creative Director', roleDetail: 'Aquascutum Active, licensed line developed by Icons Srl', start: 2026, end: null, notes: 'Appointed for spring/summer 2027, announced in 2026. This is line-specific leadership, not an appointment over all Aquascutum operations.', sources: ['https://aquascutum-active.com/blogs/news/aquascutum-active-at-pitti-immagine-uomo-110'] },
+    ],
+    notes: 'Co-founded Ten c with Paul Harvey, a brand not currently in the dataset. The C.P. Company archive also documents earlier consulting for Iceberg and Cruciani; individual dates are unconfirmed.',
+    sources: ['https://archive.cpcompany.com/item/tbd-book', 'https://www.the-spin-off.com/news/stories/Interview-C.P.s-Alessandro-Pungetti-and-Paul-Harvey-6347'],
+  },
+  nickMartire: {
+    name: 'Nick Martire',
+    career: [{ house: 'norda', role: 'Founder', roleDetail: 'Co-founder', start: 2020, end: null, sources: ['https://nordarun.com/blogs/stories/the-founders', 'https://hypebeast.com/2022/10/norda-001-trail-running-sneaker-release-dates-interview', 'https://www.linkedin.com/posts/norda-run_perpetual-forward-motion-norda-founders-activity-7448372317560254464-m6ez'] }],
+    notes: 'Previously worked at Aldo, including as vice president; that company is not currently in the house dataset.',
+    sources: ['https://hypebeast.com/2022/10/norda-001-trail-running-sneaker-release-dates-interview'],
+  },
+  willaMartire: {
+    name: 'Willa Martire',
+    career: [{ house: 'norda', role: 'Founder', roleDetail: 'Co-founder; also known as Willamina Martire', start: 2020, end: null, sources: ['https://nordarun.com/blogs/stories/the-founders', 'https://www.linkedin.com/posts/norda-run_perpetual-forward-motion-norda-founders-activity-7448372317560254464-m6ez'] }],
+  },
+  louisMartinTremblay: {
+    name: 'Louis-Martin Tremblay',
+    career: [
+      { house: 'aimeLeonDore', role: 'Other', roleDetail: 'Footwear design consultant', notes: 'Worked with Teddy Santis through his design practice before norda; exact dates unconfirmed.', sources: ['https://hypebeast.com/2022/10/norda-001-trail-running-sneaker-release-dates-interview'] },
+      { house: 'norda', role: 'Head Designer', roleDetail: 'Head of design', end: null, notes: 'Joined the original launch team as a partner; current scope is confirmed by the 2026 creative-director announcement. Exact appointment date unconfirmed.', sources: ['https://nordarun.com/blogs/stories/the-founders', 'https://www.linkedin.com/posts/norda-run_perpetual-forward-motion-norda-founders-activity-7448372317560254464-m6ez'] },
+    ],
+    notes: 'Founded Atelier LMTL and previously consulted for Aldo, neither currently a house in this dataset.',
+  },
+  gerardCleal: {
+    name: 'Gerard Cleal',
+    career: [{ house: 'norda', role: 'Other', roleDetail: 'Art director; original brand-development partner', end: null, notes: 'Joined the launch team as a partner; the current art-director title is distinct from Adam John’s creative-director appointment.', sources: ['https://nordarun.com/blogs/stories/the-founders', 'https://www.linkedin.com/posts/norda-run_perpetual-forward-motion-norda-founders-activity-7448372317560254464-m6ez'] }],
+  },
+  adamJohn: {
+    name: 'Adam John',
+    career: [{ house: 'norda', role: 'Creative Director', roleDetail: 'Brand creative direction', start: 2026, end: null, notes: 'Promoted after earlier creative-lead and brand-director positions; their precise dates are unconfirmed. Footwear design remains separately led by Louis-Martin Tremblay.', sources: ['https://www.linkedin.com/posts/norda-run_perpetual-forward-motion-norda-founders-activity-7448372317560254464-m6ez'] }],
+  },
+  romanKamler: {
+    name: 'Roman Kamler',
+    career: [{ house: 'tilak', role: 'Founder', roleDetail: 'Founder and original product maker', start: 1986, end: null, sources: ['https://www.tilak.com/en/about-us', 'https://www.highsnobiety.com/p/tilak-40th-anniversary-interview/'] }],
+  },
+  abeBurmeister: {
+    name: 'Abe Burmeister',
+    career: [{ house: 'outlier', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2008, notes: 'Founding association is confirmed by the official site. Exact current individual responsibilities are unconfirmed.', sources: ['https://outlier.nyc/', 'https://www.gq.com/story/outlier-pants-for-the-end-of-the-world'] }],
+  },
+  tylerClemens: {
+    name: 'Tyler Clemens',
+    career: [{ house: 'outlier', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2008, notes: 'Founding association and historical design work are documented; exact present role and any departure date remain unconfirmed.', sources: ['https://outlier.nyc/', 'https://www.gq.com/story/outlier-pants-for-the-end-of-the-world'] }],
+  },
+  willieNorris: {
+    name: 'Willie Norris',
+    career: [{ house: 'outlier', role: 'Head Designer', roleDetail: 'Design director', end: 2024, notes: 'The first-person 2023 interview confirms brand-wide design direction; GQ reports her departure in 2024. Exact appointment year unconfirmed.', sources: ['https://coveteur.com/design-director-willie-norris', 'https://www.gq.com/story/how-short-shorts-took-over-summer-2024'] }],
+    notes: 'Previously worked at Zero + Maria Cornejo, later founded Willie Norris Workshop and moved to Tomboyx in 2024. Those labels are not currently represented in the house dataset. Helmut Lang and Away collaborations are not employment links.',
+    sources: ['https://metacast.app/podcast/the-cutting-room-floor/yLtsmxAS/s1-ep10-outlier-s-menswear-designer-willie-norris/m065Mb5t', 'https://www.gq.com/story/how-short-shorts-took-over-summer-2024'],
+  },
+  jeremyBresnen: {
+    name: 'Jeremy Bresnen',
+    career: [{ house: 'cieleAthletics', role: 'Founder', roleDetail: 'Co-founder; creative, product and brand direction', start: 2014, end: null, sources: ['https://www.edc.ca/en/success-stories/ciele-athletics.html', 'https://runningsupply.substack.com/p/a-conversation-with-jeremy-bresnen', 'https://nsga.org/news/ciele-athletics-names-first-ceo/'] }],
+    notes: 'Came from technical snow and ski apparel design and ran a skate shop before Ciele. Exact earlier employment dates are unconfirmed.',
+    sources: ['https://www.articleoneeyewear.com/blog/23'],
+  },
+  mikeGiles: {
+    name: 'Mike Giles',
+    career: [{ house: 'cieleAthletics', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null, sources: ['https://www.edc.ca/en/success-stories/ciele-athletics.html', 'https://nsga.org/news/ciele-athletics-names-first-ceo/'] }],
+    notes: 'Previously worked in furniture design; no earlier employment at a represented clothing house has been verified.',
+    sources: ['https://runningmagazine.ca/bridge-the-gap/the-runners-behind-the-ciele-athletics-hats/'],
+  },
+  timSoar: {
+    name: 'Tim Soar',
+    career: [{ house: 'soarRunning', role: 'Founder', roleDetail: 'Founder and designer', start: 2015, end: null, sources: ['https://www.soarrunning.com/en-us/pages/about', 'https://believeintherun.com/articles/soar-running-studio-visit/'] }],
+    notes: 'Earlier founded POST Design, worked as a DJ and music consultant, and launched a fashion menswear label in 2006. The latter is distinct from SOAR Running. Music consultancy clients such as Adidas and Fendi are not recorded as clothing design employment.',
+    sources: ['https://notjustalabel.com/soar'],
+  },
+  timWest: {
+    name: 'Tim West',
+    career: [{ house: 'banditRunning', role: 'Founder', roleDetail: 'Original founder', start: 2020, end: null, sources: ['https://banditrunning.com/pages/about'] }],
+  },
+  nickWest: {
+    name: 'Nick West',
+    career: [{ house: 'banditRunning', role: 'Founder', roleDetail: 'Co-founder; joined the founding team after launch', start: 2021, end: null, notes: 'Joined in November 2021 according to the official timeline, rather than at the October 2020 sock launch.', sources: ['https://banditrunning.com/pages/about'] }],
+  },
+  ardithSingh: {
+    name: 'Ardith Singh',
+    career: [{ house: 'banditRunning', role: 'Founder', roleDetail: 'Co-founder and chief design officer', start: 2021, end: null, notes: 'Joined in November 2021; the official Summer 2026 design report confirms continuing design leadership.', sources: ['https://banditrunning.com/pages/about', 'https://www.linkedin.com/posts/banditrunning_were-thrilled-to-announce-with-the-business-activity-6876928559001284608-qFsh'] }],
+    notes: 'Previously spent five years as senior vice president of design at Bandier, developing its private-label business. Bandier is not currently in the house dataset; its outside brand collaborations are not recorded as employment.',
+    sources: ['https://www.linkedin.com/posts/banditrunning_were-thrilled-to-announce-with-the-business-activity-6876928559001284608-qFsh'],
+  },
+  michaelVanDiem: {
+    name: 'Michael van Diem',
+    career: [{ house: 'enfinLeve', role: 'Founder', roleDetail: 'Founder and lead designer', start: 2012, notes: 'Named and interviewed in the 2020 TCHWR profile. Current individual role and any departure date are unconfirmed.', sources: ['https://enfinleve.com/pages/about-us', 'https://www.tchwr.com/2020/08/30/dark-side-techwear-the-enfin-leve-interview/'] }],
+    notes: 'Studied pattern making and worked for an unnamed avant-garde designer before founding the label. No employer identity or dated career connection is established by the interview.',
+  },
+  euijaeLee: {
+    name: 'Euijae Lee',
+    career: [{ house: 'cayl', role: 'Founder', roleDetail: 'Founder and designer; also styled Lee Euijae', start: 2011, end: null, sources: ['https://www.eyecmag.com/news/2020/7/11/interview-euijae-lee-of-cayl-climb-as-you-love', 'https://www.haveanicetime.jp/journal/mari_vol2/'] }],
+    notes: 'Studied engineering and operated a small climbing-equipment shop before establishing CAYL. Product design is informed by his own hiking and climbing; brand collaborations do not establish employment at those partners.',
+  },
+  hidehikoYamane: {
+    name: 'Hidehiko Yamane',
+    career: [{ house: 'evisu', role: 'Founder', roleDetail: 'Founder and original denim designer', start: 1991, end: 2022, sources: ['https://trendland.com/denim-profile-the-future-of-making-history/', 'https://jingdaily.com/posts/jing-mastermind-evisu-founder-hidehiko-yamane-comeback'] }],
+    notes: 'Worked at Osaka vintage shop Lapine before Evisu. After retiring from Evisu, launched Yamane in 2024. Neither business is currently represented as a separate house.',
+    sources: ['https://www.beams.co.jp/special/beamsplus/philosophy/en/vol13/', 'https://jingdaily.com/posts/jing-mastermind-evisu-founder-hidehiko-yamane-comeback'],
+  },
+  scottMorrison: {
+    name: 'Scott Morrison',
+    career: [{ house: 'evisu', role: 'Creative Director', roleDetail: 'Creative director and CEO, international business', start: 2009, end: 2010, notes: 'International operation then held worldwide rights excluding Japan. Departure accompanied closure of the New York office and relocation to Hong Kong.', sources: ['https://trendland.com/denim-profile-the-future-of-making-history/', 'https://coolhunting.com/style/evisus-comeback/', 'https://fashionunited.com/v1/fashion/evisu-ny-closing-down/201008123160'] }],
+    notes: 'Previously worked at Mudd and founded Paper Denim & Cloth in 1999; also designed at Earnest Sewn. Those labels are not currently represented in the dataset.',
+    sources: ['https://trendland.com/denim-profile-the-future-of-making-history/', 'https://coolhunting.com/style/evisus-comeback/'],
+  },
+  kenichiIwaya: {
+    name: 'Ken-ichi Iwaya',
+    career: [{ house: 'pureBlueJapan', role: 'Founder', roleDetail: 'Founder and denim designer', start: 1997, end: null, sources: ['https://japan-forward.com/interview-pure-blue-japan-ceo-iwaya-on-his-passion-for-denim/', 'https://www.heddels.com/2018/11/behind-the-blue-an-interview-with-kenichi-iwaya-of-pure-blue-japan/'] }],
+    notes: 'Also styled Kenichi Iwaya. Previously worked in sales at an unnamed Okayama textile company; no earlier employment at a represented house is established.',
+  },
+  kenichiShiotani: {
+    name: 'Kenichi Shiotani',
+    born: 1973,
+    career: [
+      { house: 'evisu', role: 'Other', roleDetail: 'Employee before founding Warehouse; exact position unconfirmed', notes: 'Prior employment confirmed by the brothers’ interview; exact dates are unknown.', sources: ['https://www.beams.co.jp/special/beamsplus/philosophy/en/vol13/'] },
+      { house: 'warehouseCo', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1995, notes: 'Historical design role confirmed by the 2019 interview; current individual status is unconfirmed.', sources: ['https://www.beams.co.jp/special/beamsplus/philosophy/en/vol13/'] },
+    ],
+  },
+  kojiShiotani: {
+    name: 'Koji Shiotani',
+    born: 1973,
+    career: [
+      { house: 'evisu', role: 'Other', roleDetail: 'Employee before founding Warehouse; exact position unconfirmed', notes: 'Prior employment confirmed by the brothers’ interview; exact dates are unknown.', sources: ['https://www.beams.co.jp/special/beamsplus/philosophy/en/vol13/'] },
+      { house: 'warehouseCo', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1995, notes: 'Historical design role confirmed by the 2019 interview; current individual status is unconfirmed.', sources: ['https://www.beams.co.jp/special/beamsplus/philosophy/en/vol13/'] },
+    ],
+  },
+  johnGluckow: {
+    name: 'John Gluckow',
+    career: [
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Retail sales, then Polo Sport display associate', start: 1992, notes: 'Describes a year in sales and a year in display before studying menswear; exact end date omitted.', sources: ['https://www.heddels.com/2020/09/conversation-john-gluckow/'] },
+      { house: 'rrl', role: 'Other', roleDetail: 'Intern, then design assistant and vintage research', start: 1997, end: 1998, notes: 'Joined in early 1997 and went independent in 1998, according to his first-person interview.', sources: ['https://www.heddels.com/2020/09/conversation-john-gluckow/'] },
+      { house: 'warehouseCo', role: 'Other', roleDetail: 'Designer of the ongoing John Gluckow collection partnership', end: null, notes: 'The current official brand page describes a continuing collection with recurring staples, rather than a single capsule. Exact appointment date unconfirmed; not core Warehouse creative direction.', sources: ['https://ware-house.co.jp/brand/'] },
+    ],
+    notes: 'Founded his earlier clothing line with Jelado’s Yohei Goto in 2013 and operated Strongarm Clothing & Supply. These businesses are not currently represented as houses.',
+  },
+  maurizioDonadi: {
+    name: 'Maurizio Donadi',
+    career: [
+      { house: 'spiewak', role: 'Head Designer', roleDetail: 'Creative team lead for the relaunch', start: 2014, notes: 'The 2014 relaunch coverage identifies him as leading the New York creative team. Exact departure year unconfirmed.' },
+      { house: 'diesel', role: 'Other', roleDetail: 'US retail director', notes: 'Five-year historical tenure; exact years unconfirmed.', sources: ['https://www.thomasmason.co.uk/en/articles/maurizio-donadis-camouflage-fatigue-pants/'] },
+      { house: 'armani', role: 'Other', roleDetail: 'Executive vice president; concept designer working with Giorgio Armani', notes: 'Six-year historical tenure, described in his interview; calendar dates unconfirmed.', sources: ['https://www.thomasmason.co.uk/en/articles/maurizio-donadis-camouflage-fatigue-pants/'] },
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Concept designer, RRL and Rugby', notes: 'Three-and-a-half-year historical company tenure; dates unconfirmed.', sources: ['https://www.thomasmason.co.uk/en/articles/maurizio-donadis-camouflage-fatigue-pants/'] },
+      { house: 'rrl', role: 'Other', roleDetail: 'Concept designer reporting to Ralph Lauren', sources: ['https://www.thomasmason.co.uk/en/articles/maurizio-donadis-camouflage-fatigue-pants/'] },
+      { house: 'levis', role: 'Other', roleDetail: 'Head of Levi’s XX; developed Made & Crafted and Vintage Clothing', sources: ['https://www.thomasmason.co.uk/en/articles/maurizio-donadis-camouflage-fatigue-pants/'] },
+    ],
+    notes: 'Earlier worked at Benetton in stock, retail management and marketing. Later established Conduit Creative Office, Atelier & Repairs and Transnomadica; those businesses are not represented as houses. Historical roles above do not imply continuing appointments.',
+    sources: ['https://www.thomasmason.co.uk/en/articles/maurizio-donadis-camouflage-fatigue-pants/', 'https://www.the-spin-off.com/news/stories/The-People-Maurizio-Donadi-will-design-the-Fay-Archive-collection-18170'],
+  },
+  brooksFitch: {
+    name: 'Brooks Fitch',
+    career: [
+      { house: 'rrl', role: 'Other', roleDetail: 'Outerwear and tailored clothing designer; senior concept and showroom designer', start: 2010, end: 2017, sources: ['https://www.brooksfitch.info/'] },
+      { house: 'reDone', role: 'Creative Director', roleDetail: 'Creative and design director, main line and heritage product lines', start: 2017, notes: 'Personal portfolio documents the role in 2017; exact appointment and departure dates unconfirmed. Capsule-specific credits are not separate careers at partner brands.', sources: ['https://www.brooksfitch.info/'] },
+      { house: 'fuckingAwesome', role: 'Head Designer', roleDetail: 'Design director', start: 2019, end: 2020, sources: ['https://www.brooksfitch.info/'] },
+      { house: 'filson', role: 'Head Designer', roleDetail: 'Director of design and concept', start: 2021, notes: 'Documented in 2021 by his portfolio; tenure boundaries and present status unconfirmed.', sources: ['https://www.brooksfitch.info/'] },
+    ],
+  },
+  andrewChen: {
+    name: 'Andrew Chen',
+    career: [{ house: 'threeSixteen', role: 'Founder', roleDetail: 'Founder and co-owner', start: 2003, end: null, sources: ['https://www.esquire.com/style/mens-fashion/a34621829/five-fits-with-andrew-chen-3sixteen/', 'https://mitchmoxley.substack.com/p/issue-38-3sixteens-andrew-chen-is'] }],
+    notes: 'Also co-opened Self Edge New York with Johan Lam, Kiya Babzani and Demitra Babzani in 2009. Retail partnerships and product collaborations are not design employment at stocked brands.',
+  },
+  johanLam: {
+    name: 'Johan Lam',
+    career: [{ house: 'threeSixteen', role: 'Founder', roleDetail: 'Founding collaborator; co-owner from 2007', start: 2003, notes: 'Chen says Lam was involved from day one but only became an owner in 2007. Current individual responsibilities unconfirmed.', sources: ['https://www.esquire.com/style/mens-fashion/a34621829/five-fits-with-andrew-chen-3sixteen/'] }],
+    notes: 'Previously a store buyer at El Mercado in Los Angeles, later co-opened Self Edge New York. Neither retailer is represented as a house.',
+  },
+  wesleyScott: {
+    name: 'Wesley Scott',
+    career: [{ house: 'threeSixteen', role: 'Head Designer', roleDetail: 'Lead designer, collection', end: null, notes: 'Lead design role documented in a founder interview and university profile; brand lookbooks continue to credit production work in 2026. Exact start date unconfirmed.', sources: ['https://mitchmoxley.substack.com/p/issue-38-3sixteens-andrew-chen-is', 'https://www.ienyc.edu/alumni-impact/wesley-scott/', 'https://www.3sixteen.com/blogs/news/fw26-lookbook'] }],
+    notes: 'Also co-founder, partner and designer of Mount Sunny’s clothing collection; that business is not currently represented as a house.',
+  },
+  seanBarron: {
+    name: 'Sean Barron',
+    career: [{ house: 'reDone', role: 'Founder', roleDetail: 'Co-founder', start: 2014, notes: 'Founding confirmed by the official history; current individual appointment unconfirmed following the 2025 ownership change.', sources: ['https://shopredone.com/pages/about-us'] }],
+    notes: 'Previously founded Katayone Adeli and had the clothing company Joie. Neither house is currently represented. The founder interview does not establish employment at Levi’s or Hanes.',
+    sources: ['https://coveteur.com/redone-denim-designers-sean-barron-jamie-mazur-interview'],
+  },
+  jamieMazur: {
+    name: 'Jamie Mazur',
+    career: [{ house: 'reDone', role: 'Founder', roleDetail: 'Co-founder', start: 2014, notes: 'Founding confirmed by the official history; current individual appointment unconfirmed following the 2025 ownership change.', sources: ['https://shopredone.com/pages/about-us'] }],
+    notes: 'Previously ran Underground Denim, reselling jeans to college students. Resale of Seven and True Religion clothing does not establish employment at those labels.',
+    sources: ['https://coveteur.com/redone-denim-designers-sean-barron-jamie-mazur-interview'],
+  },
+  robLo: {
+    name: 'Rob Lo',
+    career: [{ house: 'purpleBrand', role: 'Founder', roleDetail: 'Co-founder; design and product development', start: 2017, end: null, notes: 'The 2023 founder interview and official LinkedIn use 2017, while the current About page dates the brand to 2018. His continuing work at the Vancouver studio is documented in 2026.', sources: ['https://coolhunting.com/style/interview-purple-brand-co-founder-luke-cosby/', 'https://montecristomagazine.com/magazine/summer-2026/at-purple-brand-jeans-vancouver-headquarters-form-follows-function'] }],
+    notes: 'Previously associated with Vancouver retailer Roden Gray; no design employment at a represented house has been verified.',
+    sources: ['https://www.solestop.com/blogs/news/new-release-purple-denim'],
+  },
+  jeanClaudeLeBlanc: {
+    name: 'Jean-Claude LeBlanc',
+    career: [{ house: 'purpleBrand', role: 'Founder', roleDetail: 'Co-founder; industrial designer', notes: 'His official biography confirms co-founding PURPLE. Exact dates and present individual role are unconfirmed.', sources: ['https://jeanclaudeleblanc.com/pages/jcl-biography', 'https://www.solestop.com/blogs/news/new-release-purple-denim'] }],
+    notes: 'Previously co-founded clothing company Blanc & Noir; launched lifestyle-object collection JCL in 2023. These are not represented as houses.',
+  },
+  lukeCosby: {
+    name: 'Luke Cosby',
+    career: [{ house: 'purpleBrand', role: 'Founder', roleDetail: 'Co-founder', start: 2017, end: null, notes: 'Founding dated 2017 by his interview, versus 2018 on the current About page. A July 2026 footwear-launch interview confirms continuing involvement.', sources: ['https://coolhunting.com/style/interview-purple-brand-co-founder-luke-cosby/', 'https://shopping.yahoo.com/style/shoes/articles/purple-brand-best-known-denim-203102449.html'] }],
+    notes: 'Describes a wholesale and sales background, including selling R13 denim. That does not establish design employment at R13.',
+  },
+  yasumiInoue: {
+    name: 'Yasumi Inoue',
+    career: [{ house: 'fortyFiveR', role: 'Founder', roleDetail: 'Co-founder and head designer', end: null, notes: 'Founding and current creative leadership documented; exact personal start year omitted because sources differ between the 1977 brand founding and 1978 launch/incorporation.', sources: ['https://www.japanhouselondon.uk/read-and-watch/45r/', 'https://cnalifestyle.channelnewsasia.com/style-beauty/japanese-fashion-brand-45r-singapore-407701', 'https://45rglobal.com/blogs/journal/terakoya_45r-boys'] }],
+    notes: 'Also styled Inoue Yasumi. Leads a design team and draws on vintage garments and textiles. No prior employment at a represented house has been verified.',
+  },
+  shinjiTakahashi: {
+    name: 'Shinji Takahashi',
+    career: [{ house: 'fortyFiveR', role: 'President', roleDetail: 'Company president', start: 1989, end: null, notes: 'Company history dates the appointment to 1989; a 2026 Ginza store report confirms his continuing role. The 6397 history says he joined in 1979, after the original launch.', sources: ['https://45rpm.jp/en/company/history', 'https://sidefame.com.hk/pages/45r-ginza-store-opening', 'https://6397news.com/blogs/stories/6397-visits-45r'] }],
+  },
+  hiroshiMasuyama: {
+    name: 'Hiroshi Masuyama',
+    career: [{ house: 'fortyFiveR', role: 'Founder', roleDetail: 'Founding company president', start: 1978, notes: 'Official history identifies the first president at incorporation in 1978; 6397 explicitly names him as a founder. The brand’s 1977 origin is recorded separately. Departure date unconfirmed.', sources: ['https://45rpm.jp/en/company/history', 'https://6397news.com/blogs/stories/6397-visits-45r'] }],
+  },
+  margarethaLey: {
+    name: 'Margaretha Ley',
+    career: [
+      { house: 'escada', role: 'Founder', roleDetail: 'Co-founder and chief designer', start: 1978, end: 1992, sources: ['https://www.escada.com/pages/about-escada', 'https://fashiongear.fibre2fashion.com/brand-story/escada/history.asp'] },
+    ],
+    notes: 'Trained with Stockholm court tailor Leja and worked as head designer at Mondi before Escada. Her earlier work as a model for Jacques Fath and Dior is not recorded as design employment.',
+  },
+  wolfgangLey: {
+    name: 'Wolfgang Ley',
+    career: [
+      { house: 'escada', role: 'Founder', roleDetail: 'Commercial co-founder', start: 1978, sources: ['https://www.escada.com/pages/about-escada'] },
+    ],
+    notes: 'Business co-founder; no separate creative-director appointment is inferred.',
+  },
+  brianRennie: {
+    name: 'Brian Rennie',
+    career: [
+      { house: 'escada', role: 'Head Designer', roleDetail: 'Design director', start: 1994, end: 2006, sources: ['https://www.ots.at/presseaussendung/OTS_20060915_OTS0145/euro-adhoc-escada-ag-fuehrungswechsel-wechsel-in-der-kreativen-fuehrung-der-marke-escada-d'] },
+      { house: 'gant', role: 'Head Designer', roleDetail: 'Design director, all collections', start: 2007, notes: 'Appointment announced for September 24, 2007; precise departure date unconfirmed.', sources: ['https://www.globenewswire.com/us/Attachment/DownloadAttachment?articleid=86316&fileId=187563&filename=Brian+Rennie&filetype=3&islogo=0'] },
+    ],
+    notes: 'Later became creative director at Basler in 2011, a label not currently represented.',
+    sources: ['https://www.fabeau.de/news/basler-fashion-gewinnt-brian-rennie/'],
+  },
+  damianoBiella: {
+    name: 'Damiano Biella',
+    career: [
+      { house: 'gucci', role: 'Other', roleDetail: 'Designer', sources: ['https://www.ots.at/presseaussendung/OTS_20060915_OTS0145/euro-adhoc-escada-ag-fuehrungswechsel-wechsel-in-der-kreativen-fuehrung-der-marke-escada-d'] },
+      { house: 'celine', role: 'Other', roleDetail: 'Designer', sources: ['https://www.ots.at/presseaussendung/OTS_20060915_OTS0145/euro-adhoc-escada-ag-fuehrungswechsel-wechsel-in-der-kreativen-fuehrung-der-marke-escada-d'] },
+      { house: 'carolinaHerrera', role: 'Other', roleDetail: 'Designer', sources: ['https://www.ots.at/presseaussendung/OTS_20060915_OTS0145/euro-adhoc-escada-ag-fuehrungswechsel-wechsel-in-der-kreativen-fuehrung-der-marke-escada-d'] },
+      { house: 'valentino', role: 'Head Designer', roleDetail: 'Design director', start: 2003, notes: 'Historical appointment preceding Escada; exact departure date unconfirmed.', sources: ['https://www.ots.at/presseaussendung/OTS_20060915_OTS0145/euro-adhoc-escada-ag-fuehrungswechsel-wechsel-in-der-kreativen-fuehrung-der-marke-escada-d'] },
+      { house: 'escada', role: 'Creative Director', roleDetail: 'Creative director', start: 2006, end: 2009, sources: ['https://www.ots.at/presseaussendung/OTS_20060915_OTS0145/euro-adhoc-escada-ag-fuehrungswechsel-wechsel-in-der-kreativen-fuehrung-der-marke-escada-d', 'https://www.vogue.co.uk/article/escada-creative-director-leaves-the-business'] },
+    ],
+    notes: 'His 2009 departure reporting mentioned possible continuing consultancy; its actual scope and duration are unconfirmed.',
+  },
+  bettinaHammerl: {
+    name: 'Bettina Hammerl',
+    career: [
+      { house: 'escada', role: 'Other', roleDetail: 'Brand director', notes: 'Confirmed brand-management role in 2012. Reports of assuming creative leadership in 2009 were speculative and are not treated as a confirmed creative-director appointment.', sources: ['https://fashionunited.com/v1/apparel/escada-promotes-daniel-wingate/201211271001'] },
+    ],
+  },
+  karenSchoeller: {
+    name: 'Karen Schoeller',
+    career: [
+      { house: 'escada', role: 'Head Designer', roleDetail: 'Design director within Escada / Escada Sport', start: 2009, notes: '2009 design restructuring documented; precise line allocation, departure and current status are unconfirmed.', sources: ['https://fashiongear.fibre2fashion.com/brand-story/escada/history.asp'] },
+    ],
+  },
+  danielWingate: {
+    name: 'Daniel Wingate',
+    career: [
+      { house: 'jCrew', role: 'Other', roleDetail: 'Design-team role', sources: ['https://wingate-collection.com/pages/about-us'] },
+      { house: 'hugoBoss', role: 'Other', roleDetail: 'Designer, Hugo Boss Woman', sources: ['https://wingate-collection.com/pages/about-us'] },
+      { house: 'escada', role: 'Other', roleDetail: 'Design-team role before line leadership', start: 2004, end: 2009, sources: ['https://wingate-collection.com/pages/about-us', 'https://fashiongear.fibre2fashion.com/brand-story/escada/history.asp'] },
+      { house: 'escada', role: 'Head Designer', roleDetail: 'Design director, mainline', start: 2009, end: 2012, sources: ['https://fashiongear.fibre2fashion.com/brand-story/escada/history.asp', 'https://fashionunited.com/v1/apparel/escada-promotes-daniel-wingate/201211271001'] },
+      { house: 'escada', role: 'Head Designer', roleDetail: 'Fashion director, Escada and Escada Sport', start: 2012, end: 2017, notes: 'Contemporaneous promotion release confirms November 2012. His later biography also mentions 2013; uses the dated announcement.', sources: ['https://fashionunited.com/v1/apparel/escada-promotes-daniel-wingate/201211271001', 'https://wingate-collection.com/pages/about-us'] },
+    ],
+    notes: 'Also designed at Geoffrey Beene, Strenesse and Marc O’Polo, then founded WINGATE. Those labels are not currently represented.',
+  },
+  niallSloan: {
+    name: 'Niall Sloan',
+    career: [
+      { house: 'hunter', role: 'Head Designer', roleDetail: 'Global design director', start: 2013, end: 2017, approximate: true, notes: 'His June 2017 Escada appointment announcement describes four years at Hunter; the start year is an evidence-based estimate.', sources: ['https://fashionunited.uk/news/people/escada-names-niall-sloan-as-its-new-global-design-director/2017061424831'] },
+      { house: 'burberry', role: 'Other', roleDetail: 'Design team; later head of womenswear at Prorsum', notes: 'A ten-year historical stint is documented; exact calendar years are unconfirmed.', sources: ['https://fashionunited.uk/news/people/escada-names-niall-sloan-as-its-new-global-design-director/2017061424831', 'https://www.theindustry.fashion/escada-appoints-niall-sloan-as-global-design-director/'] },
+      { house: 'escada', role: 'Head Designer', roleDetail: 'Global design director', start: 2017, end: 2019, sources: ['https://fashionunited.uk/news/people/escada-names-niall-sloan-as-its-new-global-design-director/2017061424831', 'https://fashionunited.com/news/people/escada-names-new-global-design-director/2019100230234'] },
+    ],
+    notes: 'At Hunter, oversaw women’s, men’s and children’s design before moving to Escada. Earlier spent ten years working with Christopher Bailey at Burberry.',
+  },
+  emmaCook: {
+    name: 'Emma Cook',
+    career: [
+      { house: 'donnaKaran', role: 'Other', roleDetail: 'Design-team role', sources: ['https://fashionunited.com/news/people/escada-names-new-global-design-director/2019100230234'] },
+      { house: 'victoriaBeckham', role: 'Other', roleDetail: 'Design consultant', sources: ['https://fashionunited.com/news/people/escada-names-new-global-design-director/2019100230234'] },
+      { house: 'stellaMcCartney', role: 'Other', roleDetail: 'Design consultant', sources: ['https://fashionunited.com/news/people/escada-names-new-global-design-director/2019100230234'] },
+      { house: 'aries', role: 'Other', roleDetail: 'Design consultant', sources: ['https://fashionunited.com/news/people/escada-names-new-global-design-director/2019100230234'] },
+      { house: 'escada', role: 'Head Designer', roleDetail: 'Global design director', start: 2019, notes: 'Appointed October 2019. Exact departure year and present status are unconfirmed; not marked current.', sources: ['https://fashionunited.com/news/people/escada-names-new-global-design-director/2019100230234'] },
+    ],
+    notes: 'Previously worked at Martine Sitbon and Ruffo, consulted for Ports 1961, and ran her namesake label from 2000 to 2015. Those labels are not currently represented. Consultancy roles above are documented design work, not capsule credits.',
+  },
+  larryLeight: {
+    name: 'Larry Leight',
+    career: [
+      { house: 'oliverPeoples', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 1987, end: 2015, sources: ['https://www.oliverpeoples.com/en-us/pages/corporate-contact-us', 'https://www.latimes.com/fashion/la-ig-leights-20160614-snap-story.html'] },
+    ],
+    notes: 'Later joined Garrett Leight California Optical as a design consultant and developed Mr. Leight with his son. Those eyewear labels are not currently represented.',
+  },
+  dennisLeight: {
+    name: 'Dennis Leight',
+    career: [
+      { house: 'oliverPeoples', role: 'Founder', roleDetail: 'Original co-founder and retail partner', notes: 'Original partnership documented; exact participation dates and departure unconfirmed.', sources: ['https://www.newyorker.com/magazine/1989/08/28/in-fashion-visionaries', 'https://eyevaneyewear.com/en/about/interview_2/'] },
+    ],
+  },
+  kennySchwartz: {
+    name: 'Kenneth “Kenny” Schwartz',
+    career: [
+      { house: 'oliverPeoples', role: 'Founder', roleDetail: 'Co-founder; merchandising and design leadership', notes: 'Also styled Ken Schwartz. First-person account dates early shop development to 1984–86, while the brand uses 1987. Exact tenure boundaries unconfirmed.', sources: ['https://eyevaneyewear.com/en/about/interview_1/', 'https://www.latimes.com/lifestyle/image/story/2026-11-13/oliver-peoples-leight-family-la-eyewear'] },
+    ],
+    notes: 'Previously operated his own optical shop in Eagle Rock from 1976. Early retail buying from EYEVAN is not design employment there.',
+  },
+  cindyLeight: {
+    name: 'Cindy Leight',
+    career: [
+      { house: 'oliverPeoples', role: 'Founder', roleDetail: 'Original co-founder and partner', notes: 'Named among the original partners in the 1989 contemporary account; exact dates and responsibilities unconfirmed.', sources: ['https://www.newyorker.com/magazine/1989/08/28/in-fashion-visionaries'] },
+    ],
+  },
+  doreChodorow: {
+    name: 'Doré Chodorow',
+    career: [
+      { house: 'oliverPeoples', role: 'Founder', roleDetail: 'Co-founder and founding president', start: 1987, end: 1999, sources: ['https://eyevaneyewear.com/en/about/interview_2/'] },
+    ],
+  },
+  jeffLancaster: {
+    name: 'Jeff Lancaster',
+    career: [
+      { house: 'oliverPeoples', role: 'Other', roleDetail: 'Eyewear designer', notes: 'Historical designer credited in the brand’s 1990 campaign; employment boundaries unconfirmed.', sources: ['https://www.latimes.com/lifestyle/image/story/2026-11-13/oliver-peoples-leight-family-la-eyewear'] },
+    ],
+  },
+  giampieroTagliaferri: {
+    name: 'Giampiero Tagliaferri',
+    career: [
+      { house: 'oliverPeoples', role: 'Creative Director', roleDetail: 'Creative director; brand and boutique design', start: 2016, approximate: true, notes: 'January 2022 profile says appointment was six years earlier and reports he had recently left the full-time role. Exact departure date unconfirmed; later consultancy is described but not marked current.', sources: ['https://www.architecturaldigest.com/gallery/inside-the-los-angeles-home-of-giampiero-tagliaferri-former-creative-director-of-oliver-peoples'] },
+    ],
+    notes: 'Subsequently concentrated on his own interiors practice. Earlier Oliver Peoples work in Milan included marketing strategy and design.',
+  },
+  arthurDAngelo: {
+    name: 'Arthur D’Angelo',
+    career: [
+      { house: 'fortySeven', role: 'Founder', roleDetail: 'Co-founder of Twins Enterprise, later ’47', start: 1947, sources: ['https://www.47brand.com/pages/press'] },
+    ],
+  },
+  henryDAngelo: {
+    name: 'Henry D’Angelo',
+    career: [
+      { house: 'fortySeven', role: 'Founder', roleDetail: 'Co-founder of Twins Enterprise, later ’47', start: 1947, sources: ['https://www.47brand.com/pages/press'] },
+    ],
+  },
+  jacquesSpreiregen: {
+    name: 'Jacques Spreiregen',
+    career: [
+      { house: 'kangol', role: 'Founder', roleDetail: 'Founder', start: 1938, sources: ['https://kangol.com/pages/our-story'] },
+    ],
+    notes: 'Entered the beret-importing business in 1918; Kangol’s brand launch is separately dated 1938.',
+  },
+  grahamSmith: {
+    name: 'Graham Smith',
+    career: [
+      { house: 'lanvin', role: 'Other', roleDetail: 'Millinery work', start: 1958, end: 1959, sources: ['https://www.encyclopedia.com/fashion/news-wires-white-papers-and-books/smith-graham'] },
+      { house: 'kangol', role: 'Head Designer', roleDetail: 'Consultant design director', start: 1981, end: 1991, sources: ['https://kangol.com/pages/our-story', 'https://www.encyclopedia.com/fashion/news-wires-white-papers-and-books/smith-graham'] },
+    ],
+    notes: 'Earlier worked at Michael of Carlos Place, then ran his own millinery business. Those operations are not represented as houses.',
+  },
+  davidStoddard: {
+    name: 'David Stoddard',
+    career: [
+      { house: 'brixton', role: 'Founder', roleDetail: 'Co-founder; brand concept and creative vision', start: 2004, notes: 'The 2024 brand announcement identifies him as co-founder and chief brand advisor; present individual status unconfirmed.', sources: ['https://au.rollingstone.com/music/music-news/brixton-fender-jaguar-collection-43697/', 'https://www.prnewswire.com/news-releases/brixton-appoints-seth-ellison-ex--levis-and-action-sports-executive-as-chief-executive-officer-302119848.html'] },
+    ],
+    notes: 'Previously worked at TransWorld in advertising sales. That media business is not represented as a fashion house.',
+  },
+  jasonYoung: {
+    name: 'Jason Young',
+    career: [
+      { house: 'brixton', role: 'Founder', roleDetail: 'Co-founder; logistics and sales', start: 2004, sources: ['https://au.rollingstone.com/music/music-news/brixton-fender-jaguar-collection-43697/'] },
+    ],
+    notes: 'Previously a TransWorld colleague of Stoddard and Chapin. No separate creative-director title is inferred.',
+  },
+  mikeChapin: {
+    name: 'Mike Chapin',
+    career: [
+      { house: 'brixton', role: 'Founder', roleDetail: 'Co-founder; finance', start: 2004, sources: ['https://au.rollingstone.com/music/music-news/brixton-fender-jaguar-collection-43697/'] },
+    ],
+    notes: 'Previously worked at TransWorld. Business co-founding is separate from creative direction.',
+  },
+  robertJamieson: {
+    name: 'Robert Jamieson',
+    career: [
+      { house: 'jamiesonsOfShetland', role: 'Founder', roleDetail: 'Founder of the family wool and knitwear business', notes: 'Official history says early 1890s; exact start year omitted.', sources: ['https://www.jamiesonsofshetland.co.uk/pages/about-us'] },
+    ],
+  },
+  koheiOkuyama: {
+    name: 'Kohei Okuyama',
+    career: [
+      { house: 'batoner', role: 'Founder', roleDetail: 'Founder, director and knitwear designer', start: 2013, notes: 'Third-generation member of Okuyama Meriyasu. Historical founding and hands-on design documented; exact present appointment unconfirmed.', sources: ['https://www.dicexdice.com/special/batoner/interview/', 'https://www.shipsltd.co.jp/pages/sp_shipsm_okuyama-meriyasu_20230921.aspx'] },
+    ],
+    notes: 'Worked in apparel planning before returning to the family knitting factory; an earlier named employer at a represented house has not been verified.',
+  },
+  keijiroKomori: {
+    name: 'Keijiro Komori',
+    career: [
+      { house: 'comoli', role: 'Founder', roleDetail: 'Founder and designer', start: 2011, end: null, sources: ['https://www.houyhnhnm.jp/fashion/feature/comoli.html', 'https://www.mocmmxw.com/read/interview-keijiro-comoli-2/'] },
+    ],
+    notes: 'Previously designed for select shop É and DRESSTERIOR, then worked freelance. Those labels are not currently represented. His current first-person interview also recalls joining Baycrews after fashion school.',
+  },
+  evBravado: {
+    name: 'Ev Bravado',
+    career: [
+      { house: 'whoDecidesWar', role: 'Founder', roleDetail: 'Co-founder and artistic director', start: 2019, notes: 'Also known as Everard Best. Exact present appointment unconfirmed; the sourced creative role is historical.', sources: ['https://cfda.com/news/your-story-told-your-way-ev-bravado-and-tela-damore/', 'https://pressroom.saks.com/static-files/d030c061-9d2f-41fe-a488-f755744faf7e'] },
+    ],
+    notes: 'Earlier established Lease on Life Society and an Ev Bravado label. Friendship, mentorship and product collaborations with other designers are not recorded as employment.',
+  },
+  telaDAmore: {
+    name: 'Téla D’Amore',
+    career: [
+      { house: 'whoDecidesWar', role: 'Founder', roleDetail: 'Co-founder and creative partner', start: 2019, notes: 'Also styled Tela D’Amore. Exact present appointment unconfirmed; joint design work documented in the CFDA interview.', sources: ['https://cfda.com/news/your-story-told-your-way-ev-bravado-and-tela-damore/', 'https://pressroom.saks.com/static-files/d030c061-9d2f-41fe-a488-f755744faf7e'] },
+    ],
+  },
+  romainKremer: {
+    name: 'Romain Kremer',
+    career: [
+      { house: 'camper', role: 'Creative Director', start: 2014, end: 2019, sources: ['https://hero-magazine.com/article/23111/romain-kremer-appointed-camper-creative-director', 'https://www.carnetsduluxe.com/personnalites-homepage/achilles-ion-gabriel-prend-direction-creative-camperlab/'] },
+      { house: 'mugler', role: 'Menswear Director', roleDetail: 'Menswear design with Nicola Formichetti', start: 2011, end: 2013, sources: ['https://hero-magazine.com/article/23111/romain-kremer-appointed-camper-creative-director'] },
+      { house: 'camperlab', role: 'Creative Director', roleDetail: 'Original CamperLab concept and creative direction', start: 2014, end: 2019, notes: 'Camper appointment and Lab concept date to 2014; the company dates the standalone CAMPERLAB label to 2015. Earlier Camper Together capsules are not separate employment stints.', sources: ['https://hero-magazine.com/article/23111/romain-kremer-appointed-camper-creative-director', 'https://www.carnetsduluxe.com/personnalites-homepage/achilles-ion-gabriel-prend-direction-creative-camperlab/'] },
+    ],
+    notes: 'Also ran an eponymous menswear label, not currently represented.',
+  },
+  achillesIonGabriel: {
+    name: 'Achilles Ion Gabriel',
+    career: [
+      { house: 'camper', role: 'Creative Director', start: 2020, end: 2026, sources: ['https://prtimes.jp/main/html/rd/p/000000209.000031308.html'] },
+      { house: 'marni', role: 'Other', roleDetail: 'Footwear design consultant', sources: ['https://media.pittimmagine.com/image/upload/v1699969832/EPITTI/UOMO/2024_105/PRESS/COMUNICATI%20PER%20CONFERENZE/ENG/7.%20ACHILLES/ENG_ACHILLES_ION_GABRIEL_Debut_Pitti_Uomo_105.pdf'] },
+      { house: 'camperlab', role: 'Creative Director', roleDetail: 'Creative director', start: 2019, end: 2026, notes: 'Appointed June 2019. Departure announced January 2026; final collection credits extend to Spring/Summer 2027, presented December 2026. Collection season is not the departure year.', sources: ['https://media.pittimmagine.com/image/upload/v1699969832/EPITTI/UOMO/2024_105/PRESS/COMUNICATI%20PER%20CONFERENZE/ENG/7.%20ACHILLES/ENG_ACHILLES_ION_GABRIEL_Debut_Pitti_Uomo_105.pdf', 'https://prtimes.jp/main/html/rd/p/000000209.000031308.html'] },
+    ],
+    notes: 'Also consulted for Sunnei and Marimekko, launched a namesake footwear label in 2012, and a broader fashion label in 2024. Led parent Camper from 2020; those separate labels are not currently represented.',
+  },
+  abrahamOrtuno: {
+    name: 'Abraham Ortuño',
+    career: [
+      { house: 'camper', role: 'Creative Director', roleDetail: 'Global creative director, product and brand communication', start: 2026, end: null, sources: ['https://fashionunited.com/news/people/abraham-ortuno-appointed-new-global-creative-director-of-camper/2026030570967'] },
+      { house: 'jacquemus', role: 'Other', roleDetail: 'Freelance footwear and accessories designer', start: 2015, end: 2016, sources: ['https://www.vogue.com/article/spiking-interest-viral-designer-abra-on-his-official-paris-fashion-week-debut'] },
+      { house: 'loewe', role: 'Other', roleDetail: 'Freelance footwear designer', sources: ['https://www.vogue.com/article/spiking-interest-viral-designer-abra-on-his-official-paris-fashion-week-debut'] },
+      { house: 'jwAnderson', role: 'Other', roleDetail: 'Freelance footwear designer', notes: 'Jonathan Anderson first commissioned shoes in 2019; exact line-specific tenure dates unconfirmed.', sources: ['https://www.vogue.com/article/spiking-interest-viral-designer-abra-on-his-official-paris-fashion-week-debut'] },
+      { house: 'camperlab', role: 'Creative Director', roleDetail: 'Global creative director, product and brand communication', start: 2026, end: null, notes: 'Appointed March 2026 alongside responsibility for parent Camper; first collection scheduled for Fall/Winter 2027.', sources: ['https://fashionunited.com/news/people/abraham-ortuno-appointed-new-global-creative-director-of-camper/2026030570967'] },
+    ],
+    notes: 'Also styled Abraham Ortuño Perez. Founded Abra, a separate label not currently represented. Prior freelance employment is distinct from brand-to-brand capsule collaborations.',
+  },
+  carterAltman: {
+    name: 'Carter Altman',
+    career: [
+      { house: 'kith', role: 'Other', roleDetail: 'Sportswear work under Nick Annacone', sources: ['https://www.carteraltman.com/about'] },
+      { house: 'helmutLang', role: 'Other', roleDetail: 'Wholesale-team role', sources: ['https://www.carteraltman.com/about'] },
+      { house: 'alyx', role: 'Other', roleDetail: 'Assistant to Matthew M. Williams', start: 2017, end: 2017, notes: 'Short summer stint in Ferrara confirmed by the designer’s biography and interview.', sources: ['https://www.carteraltman.com/about', 'https://mr-mag.com/ones-to-watch-carter-young/'] },
+      { house: 'carterYoung', role: 'Founder', roleDetail: 'Founder and creative director', start: 2017, end: null, notes: 'Original project began in 2017. Current official brand history uses 2022, followed by its Spring/Summer 2023 relaunch; those stages are distinguished in house notes.', sources: ['https://www.carteraltman.com/about', 'https://www.highsnobiety.com/p/carter-young-designer-interview/'] },
+    ],
+    notes: 'Learned tailoring with Alexander Nash, then spent three years designing menswear at Urban Outfitters in Philadelphia before returning to Carter Young. Those employers are not currently represented.',
+  },
+  reeseCooperDesigner: {
+    name: 'Reese Cooper',
+    career: [
+      { house: 'bape', role: 'Other', roleDetail: 'Retail intern, London store', start: 2013, end: 2014, notes: 'Short retail internship before moving to distributor A Number Of Names; exact year unconfirmed.', sources: ['https://www.mrporter.com/en-gb/journal/fashion/futures-my-start-in-fashion-reese-cooper-1896520'] },
+      { house: 'reeseCooper', role: 'Founder', roleDetail: 'Founder and designer', start: 2016, end: null, sources: ['https://www.mrporter.com/en-gb/journal/fashion/futures-my-start-in-fashion-reese-cooper-1896520', 'https://reese-cooper.com/pages/about'] },
+    ],
+    notes: 'Learned early garment-making with local seamstresses in southwest London. Mentors and product collaborations do not imply employment at their labels.',
+  },
+  mkLee: {
+    name: 'Mikyung “MK” Lee',
+    career: [
+      { house: 'amomento', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2016, end: null, notes: 'Founded Shop Amomento in 2015; the clothing label followed in 2016.', sources: ['https://www.fashionsnap.com/article/amomento-interview/', 'https://www.vogue.com/article/can-amomento-become-koreas-next-big-fashion-export'] },
+    ],
+    notes: 'Also styled Mee-Kung Lee. Studied spatial design and developed her clothing practice through work rather than formal fashion training.',
+  },
+  myeongsooLee: {
+    name: 'Myeongsoo Lee',
+    career: [
+      { house: 'amomento', role: 'Founder', roleDetail: 'Co-founder; business and operations', start: 2016, end: null, sources: ['https://www.fashionsnap.com/article/amomento-interview/', 'https://www.vogue.com/article/can-amomento-become-koreas-next-big-fashion-export'] },
+    ],
+    notes: 'Joined his sister’s shop in 2016 before they launched the clothing label. Has a fashion-merchandising background; no named earlier design employer is verified.',
+  },
+  nikolajNielsen: {
+    name: 'Nikolaj Nielsen',
+    career: [
+      { house: 'diesel', role: 'Other', roleDetail: 'Prior denim-industry employment', notes: 'First-person interview confirms employment; exact title and dates unconfirmed.', sources: ['https://hypebeast.com/2011/7/nikolaj-nielsen-of-won-hundred'] },
+      { house: 'wonHundred', role: 'Founder', roleDetail: 'Founder and creative director', start: 2004, end: null, sources: ['https://wonhundred.com/pages/about', 'https://wonhundred.com/blogs/journal/autumn-winter-2025-runway-show'] },
+    ],
+    notes: 'Also worked for Sixty Group / Miss Sixty before founding Won Hundred; those entities are not currently represented.',
+  },
+  katrineLundHansen: {
+    name: 'Katrine Lund Hansen',
+    career: [
+      { house: 'wonHundred', role: 'Head Designer', roleDetail: 'Head of design', start: 2025, notes: 'Official January 2025 runway report describes her as newly appointed. Current individual status and prior named employers unconfirmed.', sources: ['https://wonhundred.com/blogs/journal/autumn-winter-2025-runway-show'] },
+    ],
+  },
+  shintaroYamamoto: {
+    name: 'Shintaro Yamamoto',
+    career: [
+      { house: 'kidsLoveGaite', role: 'Founder', roleDetail: 'Founder and footwear designer', start: 2008, end: null, sources: ['https://kidslovegaite.com/about/', 'https://www.shipsltd.co.jp/shipsmag/things/2012winter-1245/'] },
+    ],
+    notes: 'Worked as an assistant to Ian Reid and Daita Kimura at The Old Curiosity Shop in London, then trained with Asakusa shoemakers after returning to Japan in 2000. These employers are not represented.',
+  },
+  courtneyOgilvie: {
+    name: 'Courtney Ogilvie',
+    career: [
+      { house: 'fearOfGod', role: 'Other', roleDetail: 'Product development and design services through Fit & Supply', notes: 'Historical agency work across development and production; exact tenure dates unconfirmed. Not a house creative-director appointment.', sources: ['https://lestien.com/pages/story'] },
+      { house: 'golfWang', role: 'Other', roleDetail: 'Product development and design services through Fit & Supply', notes: 'Historical agency work; exact tenure dates unconfirmed.', sources: ['https://lestien.com/pages/story'] },
+      { house: 'lesTien', role: 'Founder', roleDetail: 'Founder and creative director', start: 2018, end: null, sources: ['https://lestien.com/pages/story', 'https://www.complex.com/style/a/lei-takanashi/best-emerging-streetwear-brands-2020'] },
+    ],
+    notes: 'Also styled Courtney Michelle Ogilvie. Founded Fit & Supply, LA Makers and C/CHRST; supplied development services to Frame, Pyrex and other labels not represented here. Agency work is distinct from retail stockists and individual product collaborations.',
+  },
+  kimKardashian: {
+    name: 'Kim Kardashian',
+    career: [
+      { house: 'skims', role: 'Founder', roleDetail: 'Co-founder and chief creative officer', start: 2019, end: null, sources: ['https://am.gs.com/en-gb/advisors/news/press-release/2025/skims', 'https://www.retailtouchpoints.com/news/skims-names-supremes-erin-magee-chief-design-officer-promotes-kim-schraub-to-chief-brand-officer/621152/'] },
+    ],
+    notes: 'Founding and brand-wide creative leadership are distinct from celebrity campaign appearances and collaborations.',
+  },
+  jensGrede: {
+    name: 'Jens Grede',
+    career: [
+      { house: 'skims', role: 'Founder', roleDetail: 'Co-founder and chief executive officer', start: 2019, end: null, sources: ['https://am.gs.com/en-gb/advisors/news/press-release/2025/skims'] },
+    ],
+    notes: 'Also co-founded FRAME with Erik Torstensson in 2012. FRAME is not currently represented as a house.',
+    sources: ['https://frame-store.com/en-be/pages/about'],
+  },
+  erinMagee: {
+    name: 'Erin Magee',
+    career: [
+      { house: 'supreme', role: 'Other', roleDetail: 'Design and product-development team before creative leadership', start: 2004, notes: 'Exact promotion date is unconfirmed; this is an earlier team role, not a chief creative officer appointment from 2004.', sources: ['https://www.rizzoliusa.com/wp-content/uploads/2025/01/RIZZOLI-SPRING-25-CATALOG.pdf'] },
+      { house: 'supreme', role: 'Creative Director', roleDetail: 'Chief creative officer', end: 2026, notes: 'Senior title confirmed before her 2026 move; start year omitted.', sources: ['https://www.retailtouchpoints.com/news/skims-names-supremes-erin-magee-chief-design-officer-promotes-kim-schraub-to-chief-brand-officer/621152/', 'https://www.rizzoliusa.com/wp-content/uploads/2025/01/RIZZOLI-SPRING-25-CATALOG.pdf'] },
+      { house: 'skims', role: 'Head Designer', roleDetail: 'Chief design officer; design and creative product direction', start: 2026, end: null, sources: ['https://www.retailtouchpoints.com/news/skims-names-supremes-erin-magee-chief-design-officer-promotes-kim-schraub-to-chief-brand-officer/621152/'] },
+    ],
+    notes: 'Founded womenswear label MadeMe in 2007, which is not currently represented. Capsule partners of MadeMe and Supreme are not personal employment links.',
+  },
+  kimSchraub: {
+    name: 'Kim Schraub',
+    career: [
+      { house: 'abercrombieFitch', role: 'Other', roleDetail: 'Earlier employment; exact design title unconfirmed', sources: ['https://www.vogue.com/article/the-vogue-business-people-moves-tracker'] },
+      { house: 'yeezy', role: 'Other', roleDetail: 'Earlier employment; exact design title unconfirmed', sources: ['https://www.vogue.com/article/the-vogue-business-people-moves-tracker'] },
+      { house: 'skims', role: 'Other', roleDetail: 'Founding creative team', start: 2019, notes: 'Joined before the brand launched. Exact promotion date to creative director unconfirmed.', sources: ['https://www.retailtouchpoints.com/news/skims-names-supremes-erin-magee-chief-design-officer-promotes-kim-schraub-to-chief-brand-officer/621152/'] },
+      { house: 'skims', role: 'Creative Director', roleDetail: 'Creative director', end: 2026, notes: 'Held this role before promotion to chief brand officer in August 2026; exact start year omitted.', sources: ['https://www.retailtouchpoints.com/news/skims-names-supremes-erin-magee-chief-design-officer-promotes-kim-schraub-to-chief-brand-officer/621152/'] },
+      { house: 'skims', role: 'Other', roleDetail: 'Chief brand officer; creative and commercial brand direction', start: 2026, end: null, sources: ['https://www.retailtouchpoints.com/news/skims-names-supremes-erin-magee-chief-design-officer-promotes-kim-schraub-to-chief-brand-officer/621152/'] },
+    ],
+    notes: 'Previously worked at Victoria’s Secret Pink, which is not currently represented as a house.',
+  },
+  ianConnor: {
+    name: 'Ian Connor',
+    career: [
+      { house: 'yeezy', role: 'Other', roleDetail: 'Creative consultant, clothing and creative team', notes: 'First-person 2016 interview confirms the role; exact start, end and current status unconfirmed.', sources: ['https://hypebeast.com/2016/2/ian-connor-billboard-interview'] },
+      { house: 'revengeStorm', role: 'Founder', roleDetail: 'Co-founder and creative partner', start: 2017, notes: '2017 interview credits the project jointly to Connor and Noah; exact present role unconfirmed.', sources: ['https://pausemag.co.uk/2017/03/exclusive-interview-pause-meets-ian-connor/'] },
+    ],
+    notes: 'The fashion label Revenge x Storm is distinct from his social-media name and the separate Revenge clothing company. Celebrity styling is not recorded as design employment at the clients’ favorite labels.',
+  },
+  noahStutz: {
+    name: 'Noah Stutz',
+    career: [
+      { house: 'revengeStorm', role: 'Founder', roleDetail: 'Co-founder; original footwear design', start: 2017, notes: 'Connor credits Noah with the lightning design. US trademark records identify Noah J. Stutz; exact current role unconfirmed.', sources: ['https://pausemag.co.uk/2017/03/exclusive-interview-pause-meets-ian-connor/', 'https://trademarks.justia.com/872/83/revenge-x-87283253.html'] },
+    ],
+  },
+  michaelJordan: {
+    name: 'Michael Jordan',
+    career: [
+      { house: 'jordanBrand', role: 'Founder', roleDetail: 'Founding athlete and brand partner', start: 1997, notes: 'Standalone brand launch is separate from the 1984 Nike signing and 1985 Air Jordan line. This records brand creation rather than ordinary athlete endorsement.', sources: ['https://boardroom.tv/air-jordan-1-billion-dollar-business/'] },
+    ],
+  },
+  larryMillerJordan: {
+    name: 'Larry Miller',
+    career: [
+      { house: 'jordanBrand', role: 'Founder', roleDetail: 'Co-founder and original business leader', start: 1997, notes: 'Nike’s 2025 company account explicitly identifies Miller as a Jordan Brand co-founder. No separate current executive appointment is inferred.', sources: ['https://about.nike.com/en/newsroom/releases/jordan-brand-world-of-flight-philadelphia', 'https://boardroom.tv/air-jordan-1-billion-dollar-business/'] },
+    ],
+  },
+  howardWhite: {
+    name: 'Howard “H” White',
+    career: [
+      { house: 'nike', role: 'Other', roleDetail: 'Sports marketing and Jordan brand development', start: 1978, sources: ['https://nmp.about.nike.com/originals/about/prod/da19f5aa-7644-4b82-8604-67d7fa260e0c/H_Wings_Air_Jordan_2_Bio.pdf?s=77b13eeecfa785586123938fd45fa6f427941bfb4f831f5d0fd7f4859a53a1f6'] },
+      { house: 'jordanBrand', role: 'Founder', roleDetail: 'Founding brand-development partner', start: 1997, notes: 'Nike describes him as a founding father of the brand. This is separate from his earlier role as Jordan’s Nike sports-marketing representative.', sources: ['https://nmp.about.nike.com/originals/about/prod/da19f5aa-7644-4b82-8604-67d7fa260e0c/H_Wings_Air_Jordan_2_Bio.pdf?s=77b13eeecfa785586123938fd45fa6f427941bfb4f831f5d0fd7f4859a53a1f6', 'https://boardroom.tv/air-jordan-1-billion-dollar-business/'] },
+    ],
+  },
+  peterMoore: {
+    name: 'Peter Moore',
+    career: [
+      { house: 'nike', role: 'Creative Director', roleDetail: 'Global creative director', end: 1987, notes: 'Family biography describes roughly four years in the role; precise appointment year omitted.', sources: ['https://www.dignitymemorial.com/obituaries/portland-or/peter-moore-10732733'] },
+      { house: 'jordanBrand', role: 'Other', roleDetail: 'Original Air Jordan footwear and identity designer', notes: 'Designed the Air Jordan I and Wings identity before the standalone brand existed. Exact line-specific employment boundaries omitted.', sources: ['https://www.dignitymemorial.com/obituaries/portland-or/peter-moore-10732733', 'https://www.footlocker.com/history-of-air-jordan.html'] },
+      { house: 'adidas', role: 'Other', roleDetail: 'Design and creative leadership; Equipment range and Performance identity', end: 1998, notes: 'Followed consulting through Sports Incorporated with a company role; exact employment start year unconfirmed.', sources: ['https://www.dignitymemorial.com/obituaries/portland-or/peter-moore-10732733'] },
+    ],
+    notes: 'After leaving Adidas in 1998, continued consulting through Whatayathink Inc. Exact later consultancy boundaries are unconfirmed.',
+  },
+  bruceKilgore: {
+    name: 'Bruce Kilgore',
+    career: [
+      { house: 'nike', role: 'Other', roleDetail: 'Footwear designer; Air Force 1', notes: 'Historical in-house footwear role; precise employment dates unconfirmed.', sources: ['https://www.footlocker.com/history-of-air-jordan.html'] },
+      { house: 'jordanBrand', role: 'Other', roleDetail: 'Air Jordan II footwear designer', notes: 'Designed the model released in 1986, before standalone Jordan Brand. Release year is not treated as an employment start date.', sources: ['https://www.footlocker.com/history-of-air-jordan.html'] },
+    ],
+  },
+  dwayneEdwards: {
+    name: 'D’Wayne Edwards',
+    career: [
+      { house: 'nike', role: 'Other', roleDetail: 'Senior footwear designer', start: 2000, end: 2001, sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/d-wayne-edwards/'] },
+      { house: 'jordanBrand', role: 'Head Designer', roleDetail: 'Footwear design director', start: 2001, end: 2011, sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/d-wayne-edwards/'] },
+    ],
+    notes: 'Previously designed at LA Gear and Skechers, then founded Pensole and developed Pensole Lewis College. Those businesses are not currently represented as houses. A teenage Reebok competition is not employment.',
+  },
+  martinLotti: {
+    name: 'Martin Lotti',
+    career: [
+      { house: 'nike', role: 'Other', roleDetail: 'Footwear, category and global brand design before Jordan leadership', notes: 'Earlier company design career; exact tenure boundaries omitted.', sources: ['https://ifdesign.com/en/if-design-award-and-jury/jury/profile/martin-lotti/7616', 'https://about.nike.com/en/magazine/what-martin-lotti-is-doing-to-drive-creativity-at-nike'] },
+      { house: 'jordanBrand', role: 'Head Designer', roleDetail: 'Vice president of design; later chief design officer', start: 2019, end: 2023, sources: ['https://ifdesign.com/en/if-design-award-and-jury/jury/profile/martin-lotti/7616', 'https://www.thedrum.com/news/nike-renews-marketing-team-with-raft-new-roles-faces-and-promotions', 'https://www.sneakerfreaker.com/news/jordan-brand-jason-mayden-chief-design-offer'] },
+      { house: 'nike', role: 'Head Designer', roleDetail: 'Chief design officer', start: 2023, end: null, sources: ['https://www.sneakerfreaker.com/news/jordan-brand-jason-mayden-chief-design-offer', 'https://about.nike.com/en/magazine/what-martin-lotti-is-doing-to-drive-creativity-at-nike'] },
+    ],
+  },
+  jasonMayden: {
+    name: 'Jason Mayden',
+    career: [
+      { house: 'jordanBrand', role: 'Other', roleDetail: 'Design intern, then footwear design team', start: 2001, notes: 'Exact promotion year to senior global design director unconfirmed.', sources: ['https://www.sneakerfreaker.com/news/jordan-brand-jason-mayden-chief-design-offer'] },
+      { house: 'jordanBrand', role: 'Head Designer', roleDetail: 'Senior global design director', end: 2014, notes: 'Final leadership role of first stint; appointment year unconfirmed.', sources: ['https://www.sneakerfreaker.com/news/jordan-brand-jason-mayden-chief-design-offer'] },
+      { house: 'fearOfGod', role: 'President', roleDetail: 'President, Fear of God Athletics', start: 2020, end: 2022, notes: 'Sustained in-house leadership of the Athletics business, not a one-off Adidas capsule.', sources: ['https://www.sneakerfreaker.com/news/jordan-brand-jason-mayden-chief-design-offer'] },
+      { house: 'jordanBrand', role: 'Head Designer', roleDetail: 'Chief design officer', start: 2023, end: null, sources: ['https://www.sneakerfreaker.com/news/jordan-brand-jason-mayden-chief-design-offer', 'https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/briefings/sports/exploring-jordan-brands-philosophy-on-the-air-jordan-41/'] },
+    ],
+    notes: 'Also founded Super Heroic and Trillicon Valley in 2017. Those companies are not currently represented.',
+  },
+  giancarloZanatta: {
+    name: 'Giancarlo Zanatta',
+    career: [
+      { house: 'moonBoot', role: 'Founder', roleDetail: 'Founder and original boot designer', start: 1969, notes: 'Brand’s official origin is 1969; exact end of personal creative involvement unconfirmed.', sources: ['https://www.moonboot.com/en/us/ambidextroussince1969.html', 'https://www.tecnicagroup.com/il-diario-del-fare/'] },
+    ],
+    notes: 'Developed the family shoe business into Tecnica in 1960 before creating Moon Boot. The factory’s earlier history is separate from the label’s launch.',
+  },
+  palomaLanna: {
+    name: 'Paloma Lanna',
+    career: [
+      { house: 'palomaWool', role: 'Founder', roleDetail: 'Founder and artistic director', start: 2014, end: null, sources: ['https://www.fhcm.paris/en/house/paloma-wool', 'https://magazine.032c.com/magazine/in-an-age-of-visual-excess-a-mirage-paloma-wool'] },
+    ],
+    notes: 'Started in her parents’ Nice Things business before creating Paloma Wool. Nice Things is not currently represented. No design employment at unrelated fashion houses has been verified.',
+  },
+  henryLeeNorris: {
+    name: 'Henry Lee Norris',
+    career: [
+      { house: 'hunter', role: 'Founder', roleDetail: 'Co-founder of the original rubber-goods business', start: 1856, sources: ['https://hunterboots.com/pages/about-us', 'https://www.mastershoe.co.uk/hunter-history'] },
+    ],
+  },
+  spencerThomasParmelee: {
+    name: 'Spencer Thomas Parmelee',
+    career: [
+      { house: 'hunter', role: 'Founder', roleDetail: 'Co-founder and original business partner', start: 1856, sources: ['https://www.mastershoe.co.uk/hunter-history'] },
+    ],
+  },
+  alasdhairWillis: {
+    name: 'Alasdhair Willis',
+    career: [
+      { house: 'adidas', role: 'Other', roleDetail: 'Concept and development, adidas by Stella McCartney partnership', start: 2005, end: 2022, notes: 'Sustained work on the line from its launch, preceding his permanent chief creative officer appointment.', sources: ['https://news.adidas.com/partnerships/alasdhair-willis-to-shape-future-of-adidas-as-chief-creative-officer/s/2dabba6e-ba8f-4e18-afef-467143fe0786'] },
+      { house: 'hunter', role: 'Creative Director', roleDetail: 'Creative director', start: 2013, end: 2020, sources: ['https://www.vogue.co.uk/article/alasdhair-willis-named-creative-director-of-hunter-wellington-boots-stella-mccartney-husband', 'https://www.theindustry.fashion/hunter-creative-director-alasdhair-willis-exits-business/'] },
+      { house: 'adidas', role: 'Creative Director', roleDetail: 'Chief creative officer; Performance, Originals and Sportswear', start: 2022, end: null, sources: ['https://news.adidas.com/partnerships/alasdhair-willis-to-shape-future-of-adidas-as-chief-creative-officer/s/2dabba6e-ba8f-4e18-afef-467143fe0786', 'https://www.adidas-group.com/en/magazine/innovation/adidas-alasdhair-willis-on-why-innovation-begins-and-ends-with-the-athlete'] },
+    ],
+    notes: 'Also co-founded Wallpaper* and brand consultancies Announcement and The Anonymous Partner. Marriage to Stella McCartney and Hunter capsule partners are not separate design appointments.',
+  },
+  sandraRomboli: {
+    name: 'Sandra Romboli',
+    career: [
+      { house: 'adidas', role: 'Other', roleDetail: 'Footwear design', sources: ['https://www.wwdjapan.com/articles/2093778'] },
+      { house: 'reebok', role: 'Other', roleDetail: 'Footwear design', sources: ['https://www.wwdjapan.com/articles/2093778'] },
+      { house: 'hunter', role: 'Head Designer', roleDetail: 'Global design director; later creative director', start: 2022, notes: 'Joined at the end of 2022. Signed the November 2022 design policy and was interviewed as creative director in 2025; exact promotion date and current status unconfirmed.', sources: ['https://www.wwdjapan.com/articles/2093778', 'https://assets.ctfassets.net/phy6ih1pz23q/7A1hDGH0eNyQvpHspgLurt/8fcd606bef0788fbad93d31d040b2c3e/Hunter_Animal_Derived_Materials__v2__Nov_2022_.pdf'] },
+    ],
+    notes: 'Also worked in footwear design at Anta, which is not currently represented as a house. Her personal chronology is distinct from later brand ownership changes.',
+  },
+  antonioVattev: {
+    name: 'Antonio Vattev',
+    nationality: 'Bulgarian',
+    career: [
+      { house: 'lanvin', role: 'Other', roleDetail: 'Design intern', notes: 'Internship confirmed by the UAL employer profile and the brand’s history; exact dates and collection scope unconfirmed.', sources: ['https://creativeopportunities.arts.ac.uk/employer/81447/av-vattev/', 'https://www.avvattev.com/pages/brand-story'] },
+      { house: 'walesBonner', role: 'Other', roleDetail: 'Design intern', notes: 'Internship confirmed by the UAL employer profile; exact dates unconfirmed.', sources: ['https://creativeopportunities.arts.ac.uk/employer/81447/av-vattev/'] },
+      { house: 'saintLaurent', role: 'Other', roleDetail: 'Junior menswear designer', notes: 'Described a seven-month stint working on three collections in his 2021 Vogue interview. Exact calendar dates are not established; this is a design-team role, not creative direction.', sources: ['https://www.vogue.com/article/av-vattev-introduces-womenswear', 'https://creativeopportunities.arts.ac.uk/employer/81447/av-vattev/'] },
+      { house: 'avVattev', role: 'Founder', roleDetail: 'Founder and designer', start: 2021, end: null, notes: 'Uses the current official founding year; the UAL employer profile instead dates the label to 2020. Current creative work is documented by the British Fashion Council’s 2026 profile.', sources: ['https://www.avvattev.com/pages/brand-story', 'https://londonfashionweek.co.uk/designers/av-vattev', 'https://creativeopportunities.arts.ac.uk/employer/81447/av-vattev/'] },
+    ],
+    notes: 'Graduated from Central Saint Martins and previously worked in retail at Dover Street Market, which is not represented as a house. His 2023–2024 Sarabande residency was at The Lee Alexander McQueen Foundation; it is not employment at Alexander McQueen. Celebrity wearers and product collaborations are not career links.',
+    sources: ['https://www.vogue.com/article/av-vattev-introduces-womenswear', 'https://www.avvattev.com/pages/brand-story'],
+  },
+  scottSeamans: {
+    name: 'Scott Seamans',
+    career: [{ house: 'crocs', role: 'Founder', roleDetail: 'Co-founder; original product development and research', start: 2002, notes: 'Developed the heel-strap adaptation and its attachment method. Exact departure date and present role unconfirmed.', sources: ['https://www.refreshagency.com/cases/crocs/crocs_media.pdf'] }],
+    notes: 'Previously designed photographic and medical equipment and worked on molded products. Later co-founded SoftScience, a footwear business not currently represented.',
+    sources: ['https://www.refreshagency.com/cases/crocs/crocs_media.pdf', 'https://aventure.vc/people/scott-seamans'],
+  },
+  georgeBoedecker: {
+    name: 'George Boedecker Jr.',
+    career: [{ house: 'crocs', role: 'Founder', roleDetail: 'Co-founder and original managing member / CEO', start: 2002, notes: 'Historical founding and business leadership at Western Brands are documented; no current appointment is inferred.', sources: ['https://www.refreshagency.com/cases/crocs/crocs_media.pdf'] }],
+  },
+  lyndonHanson: {
+    name: 'Lyndon “Duke” Hanson',
+    career: [{ house: 'crocs', role: 'Founder', roleDetail: 'Co-founder and original chief operating officer', start: 2002, notes: 'Also identified as Lyndon V. Hanson III in the early company media kit. Exact end of involvement unconfirmed.', sources: ['https://www.refreshagency.com/cases/crocs/crocs_media.pdf'] }],
+  },
+  lucyThornley: {
+    name: 'Lucy Thornley',
+    career: [
+      { house: 'converse', role: 'Other', roleDetail: 'Earlier footwear-industry role', notes: 'Prior employment confirmed by her 2021 interview; exact title and dates unconfirmed.', sources: ['https://www.vogue.com/article/crocs-shoe-designer-fashion-collaborations'] },
+      { house: 'nike', role: 'Other', roleDetail: 'Earlier footwear-industry role', notes: 'Exact title and dates unconfirmed.', sources: ['https://www.vogue.com/article/crocs-shoe-designer-fashion-collaborations'] },
+      { house: 'sperry', role: 'Other', roleDetail: 'Earlier footwear-industry role', notes: 'Exact title and dates unconfirmed.', sources: ['https://www.vogue.com/article/crocs-shoe-designer-fashion-collaborations'] },
+      { house: 'crocs', role: 'Head Designer', roleDetail: 'Global vice president of trend, consumer, design and product', notes: 'Global design leadership documented in 2021 and 2024 interviews; exact appointment date and current individual status unconfirmed.', sources: ['https://www.vogue.com/article/crocs-shoe-designer-fashion-collaborations', 'https://www.vogue.co.uk/article/simone-rocha-crocs-collaboration'] },
+    ],
+    notes: 'Also previously worked at Cole Haan, which is not currently represented. The outside designers whose Crocs collaborations she developed are not automatically Crocs employees.',
+  },
+  stevenSmith: {
+    name: 'Steven Smith',
+    career: [
+      { house: 'newBalance', role: 'Other', roleDetail: 'Footwear designer', start: 1986, notes: 'First company role; exact departure year unconfirmed.', sources: ['https://sneakernews.com/2024/11/19/steven-smith-crocs-head-of-creative-innovation/'] },
+      { house: 'adidas', role: 'Other', roleDetail: 'Footwear designer, earlier stint before Yeezy', sources: ['https://www.soleretriever.com/news/articles/steven-smith-heydudes-crocs-interview'] },
+      { house: 'reebok', role: 'Other', roleDetail: 'Footwear designer; InstaPump Fury', sources: ['https://www.soleretriever.com/news/articles/steven-smith-heydudes-crocs-interview'] },
+      { house: 'fila', role: 'Other', roleDetail: 'Footwear designer; Grant Hill signature range', sources: ['https://www.soleretriever.com/news/articles/steven-smith-heydudes-crocs-interview'] },
+      { house: 'nike', role: 'Other', roleDetail: 'Footwear designer', sources: ['https://www.soleretriever.com/news/articles/steven-smith-heydudes-crocs-interview'] },
+      { house: 'keen', role: 'Other', roleDetail: 'Footwear designer', sources: ['https://sneakernews.com/2024/11/19/steven-smith-crocs-head-of-creative-innovation/'] },
+      { house: 'yeezy', role: 'Head Designer', roleDetail: 'Footwear design leadership', start: 2016, end: 2024, notes: 'Joined in late 2016 and departed in August 2024. Includes work on the 500, 700 and Foam Runner families.', sources: ['https://sneakernews.com/2024/11/19/steven-smith-crocs-head-of-creative-innovation/', 'https://www.soleretriever.com/news/articles/steven-smith-heydudes-crocs-interview'] },
+      { house: 'crocs', role: 'Other', roleDetail: 'Head of creative innovation / innovation design', start: 2024, end: null, notes: 'Company announcement reported a December 2, 2024 start, covering Crocs and HEYDUDE; the careers timeline places his arrival under 2025. The live Crocs Ripple page credits his ongoing product design. Not a house-wide creative-director title.', sources: ['https://www.retaildive.com/news/crocs-taps-legendary-shoe-designer-to-lead-creative-innovation/733577/', 'https://careers.crocs.com/who-we-are', 'https://www.crocs.com/exp/ripple.html', 'https://www.soleretriever.com/news/articles/steven-smith-heydudes-crocs-interview'] },
+    ],
+    notes: 'Also designs for sister brand HEYDUDE, not currently represented as a separate house. Earlier footwear employers are confirmed, but most exact tenure dates remain unverified.',
+  },
+  saleheBembury: {
+    name: 'Salehe Bembury',
+    career: [
+      { house: 'yeezy', role: 'Other', roleDetail: 'Footwear designer; menswear footwear for Seasons 3 and 4', start: 2015, notes: 'Hiring year confirmed by his biography; exact departure date unconfirmed.', sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/salehe-bembury/', 'https://www.monclergroup.com/v3/assets/blt61bda6b71f29a239/bltc691abf6151fa5dd/68e3907235c6236cc17cfa65/MONCLER-GENIUS-X-SALEHE-BEMBURY_PRESS-RELEASE_ENG.pdf'] },
+      { house: 'versace', role: 'Head Designer', roleDetail: 'Head of men’s sneakers; later vice president of sneakers and men’s footwear', start: 2017, end: 2020, sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/salehe-bembury/', 'https://hypebeast.com/2020/12/salehe-bembury-versace-departure-info'] },
+      { house: 'crocs', role: 'Creative Director', roleDetail: 'Crocs x Pollex Pod collection only', start: 2023, end: null, notes: 'Formal continuing collection leadership began in 2023, after the first 2021 collaboration. The initial deal was for two years; 2026 coverage continues to identify him as Pollex creative director. Does not cover the entire Crocs brand.', sources: ['https://investors.crocs.com/news-and-events/press-releases/press-release-details/2023/Crocs-Announces-Extended-Partnership-with-Designer-Salehe-Bembury/default.aspx', 'https://sneakernews.com/tag/crocs/'] },
+      { house: 'puma', role: 'Other', roleDetail: 'Puma Hoops design partner; signature footwear and athlete-program development', start: 2024, notes: 'Official appointment describes a broader basketball design and athlete-recruitment role beyond a single capsule. Exact end and present appointment status unconfirmed.', sources: ['https://about.puma.com/en/newsroom/product-and-brand-news/2024/29-07-2024-puma-hoops-and-salehe-bembury-usher-new-era'] },
+    ],
+    notes: 'Previously designed for Payless and joined Cole Haan’s innovation team in 2011; later developed his independent Spunge business. Those labels are not represented. New Balance, Moncler and other product collaborations are not recorded as employment.',
+    sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/salehe-bembury/'],
+  },
+  karenWalker: {
+    "name": "Karen Walker",
+    "career": [
+      {
+        "house": "karenWalker",
+        "role": "Founder",
+        "roleDetail": "Co-founder and fashion designer",
+        "start": 1988,
+        "end": null,
+        "sources": [
+          "https://www.karenwalker.com/pages/about",
+          "https://www.66magazine.co.nz/read-all-news/2018/february/the-visionary-karen-walker",
+          "https://www.brisbanetimes.com.au/lifestyle/fashion/designer-karen-walker-s-most-creative-partnership-is-with-her-husband-20211027-p593kr.html"
+        ]
+      },
+      {
+        "house": "karenWalker",
+        "role": "Head Designer",
+        "roleDetail": "Fashion design",
+        "end": null,
+        "sources": [
+          "https://www.66magazine.co.nz/read-all-news/2018/february/the-visionary-karen-walker",
+          "https://www.heritage-expeditions.com/blog/Karen-Walker-Celebrate-New-Year%E2%80%99s-Eve-in-the-Subantarctic-Islands-Heritage-Expeditions/"
+        ]
+      }
+    ],
+    "notes": "Her head-designer title is documented separately from Mikhail Gherman’s creative direction. Founding year follows her account of starting the label in 1988; some reporting uses 1989."
+  },
+  mikhailGherman: {
+    "name": "Mikhail Gherman",
+    "career": [
+      {
+        "house": "karenWalker",
+        "role": "Founder",
+        "roleDetail": "Co-founder",
+        "start": 1988,
+        "end": null,
+        "sources": [
+          "https://www.brisbanetimes.com.au/lifestyle/fashion/designer-karen-walker-s-most-creative-partnership-is-with-her-husband-20211027-p593kr.html",
+          "https://www.heritage-expeditions.com/blog/Karen-Walker-Celebrate-New-Year%E2%80%99s-Eve-in-the-Subantarctic-Islands-Heritage-Expeditions/"
+        ]
+      },
+      {
+        "house": "karenWalker",
+        "role": "Creative Director",
+        "roleDetail": "Brand creative direction, imagery and campaigns",
+        "end": null,
+        "sources": [
+          "https://www.66magazine.co.nz/read-all-news/2018/february/the-visionary-karen-walker",
+          "https://www.heritage-expeditions.com/blog/Karen-Walker-Celebrate-New-Year%E2%80%99s-Eve-in-the-Subantarctic-Islands-Heritage-Expeditions/"
+        ]
+      }
+    ],
+    "notes": "Exact start of the creative-director title is unconfirmed; co-founding is distinct from that title."
+  },
+  elisabethFindlay: {
+    "name": "Elisabeth Findlay",
+    "career": [
+      {
+        "house": "zambesi",
+        "role": "Founder",
+        "roleDetail": "Co-founder and womenswear designer",
+        "start": 1979,
+        "end": null,
+        "sources": [
+          "https://www.zambesistore.com/pages/about-zambesi",
+          "https://www.nzfashionmuseum.org.nz/zambesi/"
+        ]
+      }
+    ],
+    "notes": "Known as Liz Findlay. Earlier experience at Derek Batts, Fotheringay and Angus Fabrics, and the couple’s Tart and Cachet boutiques, is documented by the New Zealand Fashion Museum; those businesses are not represented.",
+    "sources": [
+      "https://www.zambesistore.com/pages/about-zambesi",
+      "https://www.nzfashionmuseum.org.nz/zambesi/"
+    ]
+  },
+  nevilleFindlay: {
+    "name": "Neville Findlay",
+    "career": [
+      {
+        "house": "zambesi",
+        "role": "Founder",
+        "roleDetail": "Co-founder; industrial-design background and retail environments",
+        "start": 1979,
+        "sources": [
+          "https://www.zambesistore.com/pages/about-zambesi",
+          "https://www.nzfashionmuseum.org.nz/zambesi/"
+        ]
+      }
+    ],
+    "notes": "The museum documents his role in building the stores and business. This does not establish a fashion creative-director appointment; exact current operational status is unconfirmed."
+  },
+  dayneJohnston: {
+    "name": "Dayne Johnston",
+    "career": [
+      {
+        "house": "zambesi",
+        "role": "Other",
+        "roleDetail": "Finishing and quality control",
+        "start": 2003,
+        "end": 2004,
+        "sources": [
+          "https://www.fashionz.co.nz/the-future-faces-of-fashion-in-aotearoa/",
+          "https://www.nzfashionmuseum.org.nz/zambesi/"
+        ]
+      },
+      {
+        "house": "zambesi",
+        "role": "Menswear Director",
+        "roleDetail": "Full-time menswear designer",
+        "start": 2004,
+        "end": 2023,
+        "sources": [
+          "https://www.nzfashionmuseum.org.nz/zambesi/",
+          "https://www.broadsheet.com.au/new-zealand/fashion/article/five-minutes-dayne-johnston-kowtows-new-head-designer"
+        ]
+      }
+    ],
+    "notes": "Joined Zambesi in 2003 in finishing/quality control; the museum dates his full-time menswear appointment to 2004. Left in June 2023 and became Kowtow head designer that year. Kowtow is not currently represented; its role is preserved here rather than creating an unrequested house.",
+    "sources": [
+      "https://www.broadsheet.com.au/new-zealand/fashion/article/five-minutes-dayne-johnston-kowtows-new-head-designer"
+    ]
+  },
+  maggieHewitt: {
+    "name": "Maggie Hewitt",
+    "career": [
+      {
+        "house": "maggieMarilyn",
+        "role": "Founder",
+        "roleDetail": "Founder and designer",
+        "start": 2016,
+        "end": null,
+        "sources": [
+          "https://maggiemarilyn.com/pages/about-us",
+          "https://www.whitecliffe.ac.nz/alumni/maggie-hewitt/",
+          "https://www.afr.com/life-and-luxury/fashion-and-style/maggie-marilyn-is-building-a-legacy-fashion-business-20260203-p5nz51"
+        ]
+      }
+    ],
+    "notes": "Also credited as Maggie Marilyn Hewitt. Graduated from Whitecliffe in 2015 and launched the label the following year; no earlier fashion-house employment was established. Her 2026 Sydney residence does not by itself establish a relocation of the entire company."
+  },
+  oliveCashmore: {
+    "name": "Olive Cashmore",
+    "career": [
+      {
+        "house": "maggieMarilyn",
+        "role": "Other",
+        "roleDetail": "Design and sampling manager",
+        "notes": "Documented in the 2019 studio interview; exact appointment/departure years and current status unconfirmed.",
+        "sources": [
+          "https://homestyle.co.nz/agreed-values/"
+        ]
+      }
+    ]
+  },
+  kateSylvester: {
+    "name": "Kate Sylvester",
+    "career": [
+      {
+        "house": "kateSylvester",
+        "role": "Founder",
+        "roleDetail": "Co-founder and fashion designer",
+        "start": 1993,
+        "end": 2025,
+        "sources": [
+          "https://www.westlakegirls.school.nz/wp-content/uploads/2025/12/Westlake-Girls-High-School-Alumni-Newsletter-Summer-2025.pdf",
+          "https://katesylvesterau.myshopify.com/blogs/all/to-our-ks-community",
+          "https://sylvesterpg.com/collections/sylvester-launch",
+          "https://fq.co.nz/kate-sylvester-30-years/"
+        ]
+      }
+    ],
+    "notes": "Previously worked for designer Corinne Robson in Paris, which is not currently represented. The main label closed in 2025; the sons’ later Sylvester venture does not extend Kate’s tenure.",
+    "sources": [
+      "https://fq.co.nz/kate-sylvester-30-years/"
+    ]
+  },
+  wayneConway: {
+    "name": "Wayne Conway",
+    "career": [
+      {
+        "house": "kateSylvester",
+        "role": "Founder",
+        "roleDetail": "Co-founder; graphic design, branding and business",
+        "start": 1993,
+        "end": 2025,
+        "sources": [
+          "https://www.westlakegirls.school.nz/wp-content/uploads/2025/12/Westlake-Girls-High-School-Alumni-Newsletter-Summer-2025.pdf",
+          "https://katesylvesterau.myshopify.com/blogs/all/to-our-ks-community",
+          "https://sylvesterpg.com/collections/sylvester-launch",
+          "https://fq.co.nz/kate-sylvester-30-years/"
+        ]
+      }
+    ],
+    "notes": "A graphic designer and creative/business partner, not automatically the clothing line’s creative director."
+  },
+  janCameron: {
+    "name": "Jan Cameron",
+    "career": [
+      {
+        "house": "kathmandu",
+        "role": "Founder",
+        "roleDetail": "Co-founder",
+        "start": 1987,
+        "sources": [
+          "https://www.takeovers.govt.nz/assets/Transactions/5f7c7b8382/Kathmandu-Holdings-Limited-Takeover-offer-by-Briscoe-Group-Limited-Rule-21-Report-6-August-2015.pdf"
+        ]
+      }
+    ],
+    "notes": "One of the three founders named in the independent 2015 takeover report. Exact personal creative responsibilities and tenure bounds are not established here."
+  },
+  johnPawsonKathmandu: {
+    "name": "John Pawson",
+    "career": [
+      {
+        "house": "kathmandu",
+        "role": "Founder",
+        "roleDetail": "Outdoor-brand co-founder",
+        "start": 1987,
+        "sources": [
+          "https://www.takeovers.govt.nz/assets/Transactions/5f7c7b8382/Kathmandu-Holdings-Limited-Takeover-offer-by-Briscoe-Group-Limited-Rule-21-Report-6-August-2015.pdf"
+        ]
+      }
+    ],
+    "notes": "Kathmandu co-founder; this profile does not attribute architecture projects or a fashion-design role to him."
+  },
+  bernardWicht: {
+    "name": "Bernard Wicht",
+    "career": [
+      {
+        "house": "kathmandu",
+        "role": "Founder",
+        "roleDetail": "Co-founder",
+        "start": 1987,
+        "sources": [
+          "https://www.takeovers.govt.nz/assets/Transactions/5f7c7b8382/Kathmandu-Holdings-Limited-Takeover-offer-by-Briscoe-Group-Limited-Rule-21-Report-6-August-2015.pdf"
+        ]
+      }
+    ],
+    "notes": "Included among the three original founders in the independent 2015 takeover report; exact personal tenure dates after founding are unconfirmed."
+  },
+  aprilBurrows: {
+    "name": "April-Joanna Burrows",
+    "career": [
+      {
+        "house": "kathmandu",
+        "role": "Head Designer",
+        "roleDetail": "Head of design",
+        "end": null,
+        "sources": [
+          "https://www.linkedin.com/posts/april-joanna-burrows-3a7b9379_i-am-someone-who-usually-lets-career-milestones-activity-7377493130352386048-9CWN",
+          "https://campaignbrief.com/the-inspired-unemployed-front-kathmandu-campaign-for-self-designed-epiq-puffers/"
+        ]
+      }
+    ],
+    "notes": "Also credited as April Burrows. A first-person post and 2026 campaign reporting confirm design leadership; exact start year and earlier employers remain unverified. Campaign collaborators are not added as employees."
+  },
+  williamBroome: {
+    "name": "William Henry Broome",
+    "career": [
+      {
+        "house": "swanndri",
+        "role": "Founder",
+        "roleDetail": "Founder; tailor and original treated-wool bush-shirt designer",
+        "start": 1913,
+        "end": 1943,
+        "sources": [
+          "https://www.swanndri.co.nz/pages/the-history-of-swanndri",
+          "https://teara.govt.nz/en/biographies/5b43/broome-william-henry/print"
+        ]
+      }
+    ],
+    "notes": "Trademark registered in 1913; died in 1943. His son Brian later inherited the trademark and licensed manufacture. Manufacturing-company sales are not treated as personal design tenures.",
+    "sources": [
+      "https://teara.govt.nz/en/biographies/5b43/broome-william-henry/print"
+    ]
+  },
+  johnMcKendrick: {
+    "name": "John McKendrick",
+    "career": [
+      {
+        "house": "swanndri",
+        "role": "Other",
+        "roleDetail": "Tailor/manufacturer; development of the hooded, long-sleeved bush shirt",
+        "notes": "Official brand history dates the redesign to 1927; the Dictionary of New Zealand Biography places the licensing and redesign after Brian Broome inherited the mark in 1952. Exact personal dates are therefore omitted.",
+        "sources": [
+          "https://www.swanndri.co.nz/pages/the-history-of-swanndri",
+          "https://teara.govt.nz/en/biographies/5b43/broome-william-henry/print"
+        ]
+      }
+    ],
+    "notes": "His John Mack business later acquired the trademark in 1964. A company ownership period does not establish the exact bounds of his individual design work."
+  },
+  darrenBarry: {
+    "name": "Darren Barry",
+    "career": [
+      {
+        "house": "reebok",
+        "role": "Other",
+        "roleDetail": "Design intern",
+        "notes": "Historical employment listed by the professional-directory profile; exact dates not independently verified.",
+        "sources": [
+          "https://www.signalhire.com/profiles/darren-barry%27s-email/146101367"
+        ]
+      },
+      {
+        "house": "umbro",
+        "role": "Other",
+        "roleDetail": "Performance designer, in-line and licensed apparel",
+        "sources": [
+          "https://www.signalhire.com/profiles/darren-barry%27s-email/146101367"
+        ]
+      },
+      {
+        "house": "puma",
+        "role": "Other",
+        "roleDetail": "Apparel design leadership; progressed to creative director of performance apparel",
+        "notes": "Professional recommendations corroborate progression from design to team head and performance-apparel creative director. Scoped to performance apparel, not the whole Puma brand; exact dates unverified.",
+        "sources": [
+          "https://nz.linkedin.com/in/darren-barry-52660519"
+        ]
+      },
+      {
+        "house": "kathmandu",
+        "role": "Head Designer",
+        "roleDetail": "Head of design; apparel, equipment and footwear",
+        "notes": "Named head of design in the company’s 2018 sustainability report. Exact start and departure years remain independently unverified; no longer the current head.",
+        "sources": [
+          "https://www.responsibilityreports.com/HostedData/ResponsibilityReportArchive/K/ASX_KMD_2018.pdf",
+          "https://www.signalhire.com/profiles/darren-barry%27s-email/146101367"
+        ]
+      },
+      {
+        "house": "swanndri",
+        "role": "Head Designer",
+        "roleDetail": "Head of design and development",
+        "end": null,
+        "sources": [
+          "https://www.swanndri.co.nz/pages/meet-the-team",
+          "https://nz.linkedin.com/in/darren-barry-52660519"
+        ]
+      }
+    ],
+    "notes": "The official current Swanndri team page uses his first name; his professional profile corroborates the identity and design team. Earlier roles at Sprayway, Huffer and sister brand Line 7 are outside the represented houses. Historical employment dates from directory aggregators are not treated as independently confirmed.",
+    "sources": [
+      "https://nz.linkedin.com/in/darren-barry-52660519",
+      "https://www.signalhire.com/profiles/darren-barry%27s-email/146101367"
+    ]
+  },
+  hamishAcland: {
+    "name": "Hamish Acland",
+    "career": [
+      {
+        "house": "monsRoyale",
+        "role": "Founder",
+        "roleDetail": "Co-founder; freeride skier and business development",
+        "start": 2009,
+        "end": null,
+        "sources": [
+          "https://monsroyale.com/pages/about-us",
+          "https://www.toitu.co.nz/members/mons-royale-limited/",
+          "https://monsroyale.com/blogs/news/behind-the-design-kim-van-vuuren-s-bold-new-print-collection"
+        ]
+      }
+    ],
+    "notes": "Co-founded the business with designer Hannah Acland; founding alone is not treated as a creative-director appointment."
+  },
+  hannahAcland: {
+    "name": "Hannah Acland",
+    "career": [
+      {
+        "house": "monsRoyale",
+        "role": "Founder",
+        "roleDetail": "Co-founder and designer",
+        "start": 2009,
+        "end": null,
+        "sources": [
+          "https://monsroyale.com/pages/about-us",
+          "https://www.toitu.co.nz/members/mons-royale-limited/",
+          "https://monsroyale.com/blogs/news/behind-the-design-kim-van-vuuren-s-bold-new-print-collection"
+        ]
+      },
+      {
+        "house": "monsRoyale",
+        "role": "Creative Director",
+        "roleDetail": "Creative direction",
+        "end": null,
+        "sources": [
+          "https://monsroyale.com/blogs/news/behind-the-design-kim-van-vuuren-s-bold-new-print-collection"
+        ]
+      }
+    ],
+    "notes": "Also known as Hannah Aubrey. Previously interned and became a senior designer at New York innovation consultancy Fahrenheit 212, leaving in 2008; that employer is not an apparel house in this dataset. Exact start of the creative-director title is unconfirmed.",
+    "sources": [
+      "https://www.linkedin.com/pulse/alumni-month-how-hannah-aubrey-changing-olympic-game-pete-maulik"
+    ]
+  },
+  marcMoore: {
+    "name": "Marc Moore",
+    "career": [
+      {
+        "house": "stolenGirlfriendsClub",
+        "role": "Founder",
+        "roleDetail": "Co-founder and designer",
+        "start": 2005,
+        "end": null,
+        "sources": [
+          "https://stolengirlfriendsclub.com/pages/about",
+          "https://icon.ink/articles/stolen-girlfriends-club-interview/",
+          "https://melchesneau.com/2012/09/07/creative-workspace-dan-gosling/",
+          "https://www.companyhub.nz/companyDetails.cfm?nzbn=9429034279656"
+        ]
+      },
+      {
+        "house": "stolenGirlfriendsClub",
+        "role": "Creative Director",
+        "roleDetail": "Creative direction",
+        "end": null,
+        "sources": [
+          "https://stolengirlfriendsclub.com/pages/about"
+        ]
+      }
+    ],
+    "notes": "The label grew out of his art exhibition. Earlier worked for Dan Gosling’s distribution business; distributing other brands is not design employment at them."
+  },
+  lukeHarwood: {
+    "name": "Luke Harwood",
+    "career": [
+      {
+        "house": "stolenGirlfriendsClub",
+        "role": "Founder",
+        "roleDetail": "Co-founder; branding",
+        "start": 2005,
+        "sources": [
+          "https://stolengirlfriendsclub.com/pages/about",
+          "https://icon.ink/articles/stolen-girlfriends-club-interview/",
+          "https://melchesneau.com/2012/09/07/creative-workspace-dan-gosling/",
+          "https://www.companyhub.nz/companyDetails.cfm?nzbn=9429034279656"
+        ]
+      }
+    ],
+    "notes": "A 2012 interview identifies branding and US expansion as his responsibilities. Exact departure year and present operational role remain unconfirmed."
+  },
+  danGosling: {
+    "name": "Dan Gosling",
+    "career": [
+      {
+        "house": "stolenGirlfriendsClub",
+        "role": "Founder",
+        "roleDetail": "Co-founder; commercial/business responsibilities",
+        "start": 2005,
+        "end": null,
+        "sources": [
+          "https://stolengirlfriendsclub.com/pages/about",
+          "https://icon.ink/articles/stolen-girlfriends-club-interview/",
+          "https://melchesneau.com/2012/09/07/creative-workspace-dan-gosling/",
+          "https://www.companyhub.nz/companyDetails.cfm?nzbn=9429034279656"
+        ]
+      }
+    ],
+    "notes": "Historical interviews distinguish his business responsibilities from Moore’s creative direction. Current company data continues to identify him as a director/shareholder."
+  },
+  zaraMirkin: {
+    "name": "Zara Mirkin",
+    "career": [
+      {
+        "house": "stolenGirlfriendsClub",
+        "role": "Other",
+        "roleDetail": "Womenswear designer",
+        "notes": "Documented designing with Moore in 2008 and described as having left by the 2014 interview. Exact start and departure years unconfirmed; this is a historical role.",
+        "sources": [
+          "https://www.the-spin-off.com/news/stories/STOLEN-GIRLFRIENDS-CLUB-NABS-EXPORT-PRIZE-1323",
+          "https://sachastrebe.wordpress.com/2014/11/13/zara-mirkin-on-stolen-girlfriends-her-zippora-love-and-saying-yes-to-no-magazine/"
+        ]
+      }
+    ],
+    "notes": "Later styling and editorial projects are not automatically apparel-house employment."
+  },
+  parisMitchellTemple: {
+    "name": "Paris Mitchell Temple",
+    "career": [
+      {
+        "house": "parisGeorgia",
+        "role": "Founder",
+        "roleDetail": "Co-founder and designer",
+        "start": 2015,
+        "end": null,
+        "sources": [
+          "https://www.parisgeorgia.com/about",
+          "https://www.broadsheet.com.au/new-zealand/fashion/article/how-paris-georgia-became-go-label-contemporary-power-dressers",
+          "https://makercapital.fund/portfolio/",
+          "https://www.companyhub.nz/companyDetails.cfm?nzbn=9429042184331"
+        ]
+      }
+    ],
+    "notes": "Previously worked at Vogue, according to the official brand biography; magazine work is not a tenure at an apparel house.",
+    "sources": [
+      "https://www.parisgeorgia.com/about"
+    ]
+  },
+  georgiaCherrie: {
+    "name": "Georgia Cherrie",
+    "career": [
+      {
+        "house": "parisGeorgia",
+        "role": "Founder",
+        "roleDetail": "Co-founder and designer",
+        "start": 2015,
+        "end": null,
+        "sources": [
+          "https://www.parisgeorgia.com/about",
+          "https://www.broadsheet.com.au/new-zealand/fashion/article/how-paris-georgia-became-go-label-contemporary-power-dressers",
+          "https://makercapital.fund/portfolio/",
+          "https://www.companyhub.nz/companyDetails.cfm?nzbn=9429042184331"
+        ]
+      }
+    ]
+  },
+  jiyongKim: {
+    name: 'Jiyong Kim',
+    career: [
+      { house: 'maisonMiharaYasuhiro', role: 'Other', roleDetail: 'Design assistant / intern', sources: ['https://magazine.beattitude.kr/en/visual-portfolio/jiyongkim/', 'https://notjustalabel.com/jiyong'] },
+      { house: 'lemaire', role: 'Other', roleDetail: 'Design assistant / intern', sources: ['https://magazine.beattitude.kr/en/visual-portfolio/jiyongkim/', 'https://notjustalabel.com/jiyong'] },
+      { house: 'louisVuitton', role: 'Other', roleDetail: 'Menswear design-assistant internship under Virgil Abloh', notes: 'His graduate profile identifies work on the Spring/Summer and Autumn/Winter 2020 shows. Collection seasons are not converted into employment dates; exact calendar bounds remain unconfirmed.', sources: ['https://notjustalabel.com/jiyong', 'https://www.lvmhprize.com/en/jiyongkim'] },
+      { house: 'jiyongKim', role: 'Founder', roleDetail: 'Founder and designer', start: 2021, end: null, sources: ['https://hypebeast.com/2024/6/jiyongkim-interview-hypebeast-magazine-33', 'https://www.vogue.com/article/jiyong-kim-is-sun-bleaching-his-way-to-success'] },
+      { house: 'jiyongKim', role: 'Creative Director', end: null, notes: 'Creative-director title confirmed by the LVMH Prize profile; exact start of that title is unconfirmed.', sources: ['https://www.lvmhprize.com/en/jiyongkim', 'https://www.vogue.com/article/jiyong-kim-is-sun-bleaching-his-way-to-success'] },
+      { house: 'musinsaStandard', role: 'Creative Director', roleDetail: 'Menswear products and visual creative strategy', start: 2026, end: null, notes: 'Joined October 30, 2026; appointment announced November 2. Covers seasonal menswear design direction, campaigns and content alongside his own label, rather than a one-off collaboration.', sources: ['https://corp.musinsa.com/newsroom/press/detail/1749', 'https://en.sedaily.com/finance/2026/11/02/musinsa-standard-names-designer-kim-ji-yong-as-creative', 'https://www.fashionsnap.com/article/2026-11-06/jiyongkim-musinsa-standard/'] },
+    ],
+    notes: 'Also rendered Kim Jiyong / 김지용. Earlier design-assistant placements are confirmed, but their calendar dates remain unknown. Retailers, exhibitions and product collaborations are not additional career tenures.',
+    sources: ['https://www.sfdf.co.kr/large/winners/winners_2025_01?_f=m'],
+  },
+  toryBurch: {
+    name: 'Tory Burch',
+    career: [
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Public relations, advertising and marketing', sources: ['https://www.gg-magazine.com/en/2010/06/the-glory-of-tory/', 'https://www.toryburchfoundation.org/board-and-staff/'] },
+      { house: 'veraWang', role: 'Other', roleDetail: 'Public relations and advertising leadership', sources: ['https://www.gg-magazine.com/en/2010/06/the-glory-of-tory/', 'https://www.toryburchfoundation.org/board-and-staff/'] },
+      { house: 'loewe', role: 'Other', roleDetail: 'Public relations and marketing during Narciso Rodriguez’s tenure', sources: ['https://www.toryburch.com/on/demandware.static/-/Sites-ToryBurch_US-Library/default/dw33f5f404/images/epk/press/Tory-Burch-Bio-August-2012.pdf', 'https://www.toryburchfoundation.org/board-and-staff/', 'https://www.townandcountrymag.com/style/fashion-trends/a74036796/tory-burch-foundation-interview-2026/'] },
+      { house: 'toryBurch', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2004, end: null, sources: ['https://cfda.com/member/tory-burch/', 'https://www.toryburchfoundation.org/board-and-staff/'] },
+      { house: 'toryBurch', role: 'Creative Director', roleDetail: 'Chief creative officer', end: null, notes: 'Current title confirmed by the official foundation biography. Her move to a predominantly creative remit in 2019 is not assumed to be the first year she held this title.', sources: ['https://www.toryburchfoundation.org/board-and-staff/', 'https://www.vogue.com/article/new-chapter-for-tory-burch'] },
+    ],
+    notes: 'Earlier worked at Zoran and Harper’s Bazaar, neither currently represented. Her pre-label work at Ralph Lauren, Vera Wang and Loewe was in communications rather than fashion design. Exact calendar dates remain unconfirmed. Tory Sport is represented within the main house.',
+    sources: ['https://www.toryburchfoundation.org/board-and-staff/'],
+  },
+  christopherBurch: {
+    name: 'J. Christopher Burch',
+    career: [
+      { house: 'toryBurch', role: 'Founder', roleDetail: 'Business co-founder and founding investor', start: 2004, notes: 'Co-founder status confirmed by the 2013 transaction release. Exact bounds of his operational involvement are unconfirmed; investment ownership is not a creative role.', sources: ['https://www.generalatlantic.com/media-article/bdt-capital-partners-llc-general-atlantic-make-minority-investment-tory-burch-llc/', 'https://www.townandcountrymag.com/style/fashion-trends/a74036796/tory-burch-foundation-interview-2026/'] },
+    ],
+    notes: 'Also known as Chris Burch or Christopher Burch. Burch Creative Capital and other businesses are not treated as employers of Tory’s fashion-design team.',
+  },
+  mercedesCastillo: {
+    name: 'Mercedes Castillo',
+    career: [
+      { house: 'dior', role: 'Other', roleDetail: 'Design work under Gianfranco Ferré', notes: 'Her 2018 first-person interview identifies work with Ferré at Christian Dior; exact role title and years are unconfirmed. Her Milan work in Ferré’s own studio is discussed separately in the 2020 interview.', sources: ['https://www.scmp.com/magazines/post-magazine/fashion/article/2134310/tory-burch-donna-karan-shoe-designer-looks-top-names', 'https://www.vogue.es/moda/articulos/entrevista-mercedes-castillo-disenadora-espanola'] },
+      { house: 'donnaKaran', role: 'Other', roleDetail: 'Footwear and accessories designer, Donna Karan Collection', sources: ['https://www.vogue.es/moda/articulos/entrevista-mercedes-castillo-disenadora-espanola'] },
+      { house: 'dkny', role: 'Other', roleDetail: 'Footwear and accessories design', sources: ['https://www.vogue.es/moda/articulos/entrevista-mercedes-castillo-disenadora-espanola'] },
+      { house: 'toryBurch', role: 'Other', roleDetail: 'Former creative director of accessories; development of the footwear line', notes: 'Her 2020 interview describes founding the shoe range and subsequently leaving before launching her own label in 2017. Exact hiring and departure years are unconfirmed; this is an accessories-scoped role.', sources: ['https://www.vogue.es/moda/articulos/entrevista-mercedes-castillo-disenadora-espanola', 'https://www.lanecrawford.com.hk/brand/3500008/mercedes-castillo/women/catd000053/shoes/boots/'] },
+    ],
+    notes: 'Also credited as Mercedes Perez Castillo. Her own label launched in spring 2017 and is not currently represented; its official website later announced a pause after seven years while retaining the design studio. Earlier work in Gianfranco Ferré’s own Milan studio is distinct from a directorship at Dior. Exact historical tenure dates remain unverified.',
+    sources: ['https://mercedescastillo.com/', 'https://www.vogue.es/moda/articulos/entrevista-mercedes-castillo-disenadora-espanola'],
+  },
+  pookieBurch: {
+    name: 'Pookie Burch',
+    career: [
+      { house: 'toryBurch', role: 'Other', roleDetail: 'Associate creative director', notes: 'Role documented in 2024 and 2025 interviews; exact appointment date and current status beyond that reporting remain unconfirmed.', sources: ['https://www.wallpaper.com/fashion-beauty/tory-burch-interview-aw-2024', 'https://www.vogue.com/article/new-chapter-for-tory-burch'] },
+    ],
+    notes: 'Previously co-founded Trademark with her sister Louisa; that label is not currently represented. Associate creative direction is distinct from Tory Burch’s chief creative officer role.',
+    sources: ['https://www.washingtonpost.com/style/fashion/2023/11/04/tory-burch/'],
+  },
+  izzieBurch: {
+    name: 'Izzie Burch',
+    career: [
+      { house: 'toryBurch', role: 'Other', roleDetail: 'Wovens designer', notes: 'Title documented in a 2010 first-person profile; exact tenure bounds are unconfirmed.', sources: ['https://intothegloss.com/2010/09/izzie-burch-wovens-designer-tory-burch'] },
+      { house: 'toryBurch', role: 'Other', roleDetail: 'Creative direction for digital marketing, including Tory Sport', notes: 'A staff designer’s portfolio credits this scope on 2021–2022 Tory Sport work and the 2024 main-brand Spring Event. These project dates do not establish her full employment dates or a fashion-collection directorship.', sources: ['https://www.corinneritter.com/tory-sport', 'https://www.corinneritter.com/tory-burch-1'] },
+    ],
+  },
+  honorBrodie: {
+    name: 'Honor Brodie',
+    career: [
+      { house: 'toryBurch', role: 'Other', roleDetail: 'Brand editorial and creative direction', start: 2008, end: null, notes: 'Joined in November 2008 according to a colleague’s first-person interview. A 2012 interview documents her creative-director scope as online brand storytelling; the official current newsletter still lists her on the in-house editorial team. Exact dates of individual title changes are unconfirmed.', sources: ['https://jillianeversole.com/sitting-pretty-with-abby-ward-of-tory-burch/', 'https://what2wearwhere.com/honor-brodie-tory-burch/', 'https://toryburch.substack.com/about'] },
+    ],
+    notes: 'Previously an editor at InStyle and Vanity Fair, which are outside this apparel-house dataset. Her editorial/brand creative work is not a replacement for the house’s fashion creative leadership.',
+  },
+  brianMolloy: {
+    name: 'Brian Molloy',
+    career: [
+      { house: 'toryBurch', role: 'Other', roleDetail: 'Sustained collection and runway styling', start: 2020, notes: 'The 2025 profile dates the continuing relationship to 2020 and shows him in collection-development meetings. This is broader than an individual campaign; exact end/current contract status remains unconfirmed.', sources: ['https://www.vogue.com/article/new-chapter-for-tory-burch', 'https://www.wallpaper.com/fashion-beauty/tory-burch-interview-aw-2024'] },
+      { house: 'theRow', role: 'Other', roleDetail: 'Ongoing collection and runway styling', notes: 'Longstanding styling relationship documented alongside his Tory Burch work, with further collection credits in his 2025 biography. Exact tenure dates remain unconfirmed.', sources: ['https://www.wallpaper.com/fashion-beauty/tory-burch-interview-aw-2024', 'https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/brian-molloy/'] },
+    ],
+    notes: 'A stylist rather than an appointed house creative director. Individual campaign/show credits for other houses are not automatically additional employment tenures.',
+  },
+  leeGeonOh: {
+    name: 'Lee Geon-oh',
+    career: [
+      { house: 'musinsaStandard', role: 'Creative Director', roleDetail: 'Founding general creative director; later brand/division leadership', start: 2017, end: 2026, notes: 'A 2021 industry interview dates his general-CD role at Weekly Wear to 2017, overseeing design, production and content. He later led the MUSINSA STANDARD division and departed June 30, 2026. His changing management titles do not establish an additional house-wide design appointment.', sources: ['https://www.xmd.co.kr/_subpage/kor/board/news.php?ca=&idx=102&page=19&sel_search=&txt_search=&viewMode=view', 'https://m.fntimes.com/html/view.php?ud=202607091325318915b5b890e35c_18', 'https://about.musinsa.com/newsroom/2022-0121'] },
+    ],
+    notes: '이건오; also rendered Lee Geon-o or Geon-oh Lee. Joined parent MUSINSA in 2012, before the clothing label existed. Officially described as PB-division head in 2022 and brand general manager in 2024. No earlier employment at another represented clothing house was established; corporate founding remains attributed to MUSINSA.',
+    sources: ['https://about.musinsa.com/newsroom/2022-0121', 'https://about.musinsa.com/newsroom/2024-0709-musinsa-stanard-olympic-games-in-paris'],
+  },
+  etsuzoShitara: {
+    name: 'Etsuzo Shitara',
+    career: [
+      { house: 'beams', role: 'Founder', roleDetail: 'Founder; original business owner', start: 1976, sources: ['https://www.beams.co.jp/company/about/history/', 'https://www.beams.co.jp/company/about/'] },
+    ],
+    notes: '設楽悦三. Established the predecessor packaging company in 1953 and the apparel division in 1975, before the first BEAMS store opened in 1976. Exact personal tenure end is unconfirmed; founding does not imply a fashion-design appointment.',
+  },
+  yoShitara: {
+    name: 'Yo Shitara',
+    career: [
+      { house: 'beams', role: 'Founder', roleDetail: 'Founding participant in the apparel business', start: 1976, end: null, sources: ['https://www.dreamgate.gr.jp/contents/case/interview/36039', 'https://www.tv-tokyo.co.jp/senshi/sp/253.html', 'https://www.beams.co.jp/company/about/'] },
+      { house: 'beams', role: 'CEO', roleDetail: 'Representative director and president', start: 1988, end: null, sources: ['https://www.beams.co.jp/company/about/', 'https://www.tv-tokyo.co.jp/senshi/sp/253.html'] },
+    ],
+    notes: '設楽洋. Son of founder Etsuzo Shitara. Participated in the 1976 launch while still at advertising agency Dentsu, joining the family business full-time in 1983. Founding participation and business leadership are distinct from a fashion creative-director role.',
+  },
+  osamuShigematsu: {
+    name: 'Osamu Shigematsu',
+    career: [
+      { house: 'beams', role: 'Founder', roleDetail: 'Founding store-concept developer, first manager and buyer', start: 1976, end: 1989, sources: ['https://www.japantwo.com/en/business/visionarycompany/unitedarrows/chairman.php'] },
+      { house: 'unitedArrows', role: 'Founder', roleDetail: 'Co-founder; original business and retail direction', start: 1989, sources: ['https://www.japantwo.com/en/business/visionarycompany/unitedarrows/chairman.php', 'https://www.tabaya-holdings.co.jp/en/corporate-profile/history/'] },
+    ],
+    notes: '重松理. Developed the original BEAMS proposal with Etsuzo Shitara, subsequently becoming a managing director before leaving in 1989 to establish UNITED ARROWS with colleagues and backing from World. No fashion creative-director title is inferred from his corporate directorship. Earlier womenswear-company employment is outside the represented houses.',
+  },
+  hirofumiKurino: {
+    name: 'Hirofumi Kurino',
+    career: [
+      { house: 'beams', role: 'Other', roleDetail: 'Fashion retail, buying and brand direction', end: 1989, notes: 'BoF lists 1987–1989, while his first-person recollection places him at BEAMS around 1986 or 1987. Start year omitted because the precise joining date is unresolved.', sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/hirofumi-kurino/', 'https://www.houyhnhnm.jp/en/feature/468739/'] },
+      { house: 'unitedArrows', role: 'Founder', roleDetail: 'Co-founder', start: 1989, end: null, sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/hirofumi-kurino/', 'https://www.fhcm.paris/en/news/a-feel-for-fashion-kurino-hirofumi'] },
+      { house: 'unitedArrows', role: 'Creative Director', roleDetail: 'Former creative director and chief creative officer', notes: 'Historical leadership title confirmed; exact appointment and transition years are unknown. The current advisory title is recorded separately.', sources: ['https://www.united-arrows.co.jp/ir/pdf/annual_report2002.pdf', 'https://tokyoknit.jp/en/supporter'] },
+      { house: 'unitedArrows', role: 'Other', roleDetail: 'Senior advisor for creative direction', end: null, notes: 'The 2026 profile identifies the advisory scope, rather than an uninterrupted formal creative-director appointment since founding.', sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/hirofumi-kurino/', 'https://www.gqjapan.jp/article/260424-my-life-style-hirofumi-kurino'] },
+    ],
+    notes: '栗野宏文. Earlier worked at Suzuya, an employer not represented here. Selecting or distributing Comme des Garçons, New Balance and other labels does not establish employment at those houses.',
+    sources: ['https://media.or-not.com/editorials/hirofumi-kurino-archive-interview/'],
+  },
+  yasutoKamoshita: {
+    name: 'Yasuto Kamoshita',
+    career: [
+      { house: 'beams', role: 'Other', roleDetail: 'Retail, menswear planning and buying', end: 1989, sources: ['https://www.japantwo.com/en/business/visionarycompany/unitedarrows/creativedirector.php'] },
+      { house: 'unitedArrows', role: 'Founder', roleDetail: 'Founding member and menswear buyer', start: 1989, sources: ['https://www.japantwo.com/en/business/visionarycompany/unitedarrows/creativedirector.php'] },
+      { house: 'unitedArrows', role: 'Creative Director', roleDetail: 'Creative and men’s fashion direction', notes: 'Historical leadership title documented in the interview; exact appointment and departure/transition dates unconfirmed. Later profiles call him a creative advisor.', sources: ['https://www.japantwo.com/en/business/visionarycompany/unitedarrows/creativedirector.php'] },
+      { house: 'unitedArrows', role: 'Other', roleDetail: 'Founder and designer of the Camoshita UNITED ARROWS line', start: 2007, notes: 'A continuing original line within UNITED ARROWS, not a one-off capsule; full personal tenure bounds remain unverified.', sources: ['https://www.japantwo.com/en/business/visionarycompany/unitedarrows/creativedirector.php', 'https://www.ujoshop.com/dinner-with-yasuto-kamoshita/'] },
+    ],
+    notes: '鴨志田康人. Joined BEAMS after Tama Art University; an exact joining year was not established. Later work for Paul Stuart’s Japanese collection is documented in a republished 2025 interview; Paul Stuart is not represented. The Camoshita line is currently covered within this parent-house entry.',
+    sources: ['https://www.wardrobetreatment.jp/interview/vol01', 'https://www.ujoshop.com/dinner-with-yasuto-kamoshita/'],
+  },
+  tatsuyaNakamura: {
+    name: 'Tatsuya Nakamura',
+    career: [
+      { house: 'beams', role: 'Other', roleDetail: 'Earlier store management and BEAMS F buying', notes: 'Joined through a student part-time job and subsequently became a store manager and buyer; exact dates of those roles are unknown.', sources: ['https://www.beams.co.jp/special/bjirushi_market/kojin-shoten/4976/'] },
+      { house: 'beams', role: 'Creative Director', roleDetail: 'Executive creative director, dress-clothing division; BEAMS F and Brilla per il gusto', end: null, notes: 'Current dress-clothing leadership confirmed by the brand’s biography and 2026 article. Does not imply direction of every BEAMS label.', sources: ['https://www.beams.co.jp/special/bjirushi_market/kojin-shoten/4976/', 'https://cdn1.beams.co.jp/special/mr_beams/article/7916/'] },
+    ],
+    notes: '中村達也. Exact start of the creative-director title is unconfirmed; fabric suppliers and selected outside brands are not additional employers.',
+  },
+  shuheiNishiguchi: {
+    name: 'Shuhei Nishiguchi',
+    career: [
+      { house: 'beams', role: 'Other', roleDetail: 'Retail and buying before BEAMS F direction', sources: ['https://prtimes.jp/a/?c=12471&f=d12471-222-pdf-0.pdf&r=222'] },
+      { house: 'beamsF', role: 'Creative Director', roleDetail: 'BEAMS F line director', start: 2014, end: null, sources: ['https://prtimes.jp/a/?c=12471&f=d12471-222-pdf-0.pdf&r=222', 'https://www.e-begin.jp/article/435239/'] },
+    ],
+    notes: '西口修平. The company’s 2020 biography dates his BEAMS F directorship to 2014; a 2026 interview continues to identify that role. Previous vintage/designer-shop employers are not named sufficiently to create other career entries.',
+  },
+  kazuyoshiMinamimagoe: {
+    name: 'Kazuyoshi Minamimagoe',
+    career: [
+      { house: 'rayBeams', role: 'Other', roleDetail: 'Ray BEAMS buyer and director', end: 2009, notes: 'Promoted after the 1989 staff departures, with the exact appointment year unconfirmed; left Ray’s direction in 2009.', sources: ['https://www.fashionsnap.com/article/2025-04-10/raybeams/'] },
+      { house: 'beams', role: 'Womenswear Director', roleDetail: 'Womenswear creative direction', start: 2004, end: null, sources: ['https://www.beams.co.jp/special/50th/topics/topic-2044/'] },
+      { house: 'beams', role: 'Other', roleDetail: 'Concurrent International Gallery BEAMS direction', start: 2005, notes: 'Exact end or transition into broader advisory work is unconfirmed.', sources: ['https://www.fashionsnap.com/article/2025-04-10/raybeams/'] },
+    ],
+    notes: '南馬越一義, known as MAGO. The brand’s 2026 retrospective dates his joining to 1984, while a 2025 WWD profile says 1985; no precise joining date is recorded. His stockist relationships with X-girl and MILKFED. are not employment at those labels.',
+    sources: ['https://www.wwdjapan.com/articles/2201702', 'https://www.beams.co.jp/special/50th/topics/topic-2044/'],
+  },
+  risaNagatsuka: {
+    name: 'Risa Nagatsuka',
+    career: [
+      { house: 'beams', role: 'Other', roleDetail: 'Earlier staff role', start: 2009, notes: 'Joined BEAMS in 2009; exact position and promotion dates before line direction are unconfirmed.', sources: ['https://www.beams.co.jp/special/50th/topics/topic-2044/'] },
+      { house: 'rayBeams', role: 'Creative Director', roleDetail: 'Ray BEAMS line director', start: 2018, end: 2026, sources: ['https://www.beams.co.jp/special/50th/topics/topic-2044/'] },
+      { house: 'beams', role: 'Other', roleDetail: 'Womenswear supervising director; overall womenswear branding', start: 2026, end: null, sources: ['https://www.beams.co.jp/special/50th/topics/topic-2044/'] },
+    ],
+    notes: '長塚理紗. The August 2026 official retrospective distinguishes her completed Ray BEAMS line appointment from her new overall womenswear branding responsibility.',
+  },
+  sachikoSato: {
+    name: 'Sachiko Sato',
+    career: [
+      { house: 'beams', role: 'Other', roleDetail: 'Earlier retail and bpr BEAMS buying', start: 1995, sources: ['https://www.beams.co.jp/beamsbusinessproduce/directorsbank/sachiko_sato/'] },
+      { house: 'rayBeams', role: 'Creative Director', roleDetail: 'Former Ray BEAMS line director', start: 2009, notes: 'Succeeded MAGO in 2009. Exact end is uncertain: official biographies differ between 2013 and 2014 for her subsequent Planets appointment.', sources: ['https://www.fashionsnap.com/article/2025-04-10/raybeams/', 'https://www.beams.co.jp/beamsbusinessproduce/regionalprojects/interview/satosachiko/'] },
+      { house: 'beams', role: 'Other', roleDetail: 'BEAMS Planets / CATHRI direction and Directors Bank creative work', end: null, notes: 'Official biographies give different Planets start years, 2013 and 2014; the start is omitted rather than treating either year as settled.', sources: ['https://www.beams.co.jp/beamsbusinessproduce/regionalprojects/interview/satosachiko/', 'https://www.beams.co.jp/beamsbusinessproduce/directorsbank/sachiko_sato/'] },
+    ],
+    notes: '佐藤幸子. The current official profile identifies her ongoing work across BEAMS Planets, CATHRI and Directors Bank; these scopes are retained within the BEAMS entry.',
+  },
+  motofumiKogi: {
+    name: 'Motofumi “Poggy” Kogi',
+    career: [
+      { house: 'unitedArrows', role: 'Other', roleDetail: 'Retail and press; development of Liquor, woman & tears', start: 1997, end: 2018, notes: 'Broad employment period, beginning as part-time staff. Launched the Liquor, woman & tears concept in 2006; exact dates of individual retail and press titles are unconfirmed.', sources: ['https://media.or-not.com/editorials/poggy-and-masushio-via-sitateru-weare/'] },
+      { house: 'unitedArrows', role: 'Other', roleDetail: 'UNITED ARROWS & SONS concept-store director', start: 2010, end: 2018, sources: ['https://store.united-arrows.co.jp/ua_columns/hitomonoutsuwa/en/wp-4666', 'https://media.or-not.com/editorials/poggy-and-masushio-via-sitateru-weare/'] },
+    ],
+    notes: '小木基史, also credited as Motofumi POGGY Kogi. Went independent in 2018; later 2G and other projects are outside the represented houses. Product collaborations and styling appearances are not automatically additional employment tenures.',
+  },
+  johnWrazej: {
+    name: 'John Wrazej',
+    career: [
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Earlier company design work', start: 1988, sources: ['https://corporate.ralphlauren.com/leadership'], notes: 'Joined the company in 1988; this is not the start date of every later line directorship.' },
+      { house: 'poloRalphLauren', role: 'Creative Director', roleDetail: 'Senior brand creative director, menswear', end: null, sources: ['https://corporate.ralphlauren.com/leadership'] },
+      { house: 'rlxRalphLauren', role: 'Creative Director', roleDetail: 'Senior brand creative director, menswear', end: null, sources: ['https://corporate.ralphlauren.com/leadership'] },
+      { house: 'ralphLaurenPurpleLabel', role: 'Creative Director', roleDetail: 'Senior brand creative director, menswear', end: null, sources: ['https://corporate.ralphlauren.com/leadership'] },
+    ],
+    notes: 'Current official biography names Men’s Polo, RLX, Purple Label and Children’s Polo. Dates of the individual appointments and employment before Ralph Lauren are unconfirmed.',
+  },
+  karenBrown: {
+    name: 'Karen Brown',
+    career: [
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Earlier concept and design roles, including Ralph Lauren Home', start: 2006, sources: ['https://corporate.ralphlauren.com/leadership'] },
+      { house: 'poloRalphLauren', role: 'Creative Director', roleDetail: 'Senior brand creative director, womenswear', start: 2024, end: null, sources: ['https://corporate.ralphlauren.com/leadership', 'https://www.fashiondive.com/news/polo-ralph-lauren-creative-director-michael-rider-exits/716313/'] },
+      { house: 'rlxRalphLauren', role: 'Creative Director', roleDetail: 'Senior brand creative director, womenswear', end: null, sources: ['https://corporate.ralphlauren.com/leadership'] },
+    ],
+    notes: 'Joined Ralph Lauren in 2006 and succeeded Michael Rider in Women’s Polo in 2024. The RLX appointment date is not established by the company joining year; earlier outside employers are unconfirmed.',
+  },
+  fredericDechnik: {
+    name: 'Frédéric Dechnik',
+    career: [
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Chief fashion director; also leads fragrance, eyewear, watches and jewellery design', end: null, sources: ['https://corporate.ralphlauren.com/leadership'] },
+      { house: 'ralphLaurenCollection', role: 'Creative Director', roleDetail: 'Chief fashion director, Collection brand', end: null, sources: ['https://corporate.ralphlauren.com/leadership'] },
+      { house: 'laurenRalphLauren', role: 'Creative Director', roleDetail: 'Chief fashion director, Lauren brand', end: null, sources: ['https://corporate.ralphlauren.com/leadership'] },
+    ],
+    notes: 'Joined the company in 2015; the official biography does not date the individual line appointments. Broad company duties are separate from the named Collection and Lauren responsibilities.',
+  },
+  taoKurihara: {
+    name: 'Tao Kurihara',
+    career: [
+      { house: 'commeDesGarcons', role: 'Other', roleDetail: 'Design team before Tricot leadership', start: 1998, end: 2002, sources: ['https://www.vogue.co.jp/article/women-designers-now-tao-interview'] },
+      { house: 'tao', role: 'Head Designer', roleDetail: 'Tricot Comme des Garçons, renamed tao in 2022', start: 2002, end: null, sources: ['https://www.mistore.jp/shopping/brand/women_b/002108.html', 'https://www.vogue.co.jp/article/women-designers-now-tao-interview'] },
+    ],
+    notes: 'The 2026 first-person interview confirms continuing design leadership. The separate original Tao Comme des Garçons project ran from 2005 to 2011; it is distinct from the continuing Tricot line renamed tao in 2022. Earlier outside employment is unconfirmed.',
+  },
+  senKawahara: {
+    name: 'Sen Kawahara',
+    career: [
+      { house: 'pleatsPlease', role: 'Other', roleDetail: 'Earlier design work', sources: ['https://www.fhcm.paris/fr/news/issey-miyake-im-men', 'https://fashionunited.uk/news/fashion/issey-miyake-how-im-men-explores-new-design-methods/2025092984144'] },
+      { house: 'oneThreeTwoFive', role: 'Other', roleDetail: 'Design team', start: 2010, sources: ['https://www.fhcm.paris/fr/news/issey-miyake-im-men', 'https://fashionunited.uk/news/fashion/issey-miyake-how-im-men-explores-new-design-methods/2025092984144'] },
+      { house: 'hommePlisse', role: 'Other', roleDetail: 'Earlier design work', sources: ['https://www.fhcm.paris/fr/news/issey-miyake-im-men', 'https://fashionunited.uk/news/fashion/issey-miyake-how-im-men-explores-new-design-methods/2025092984144'] },
+      { house: 'imMen', role: 'Head Designer', roleDetail: 'Clothing and construction; design leadership team', sources: ['https://www.fhcm.paris/fr/news/issey-miyake-im-men', 'https://fashionunited.uk/news/fashion/issey-miyake-how-im-men-explores-new-design-methods/2025092984144'] },
+    ],
+    notes: 'Selected for IM MEN’s development team in 2019, before the 2021 brand launch. Leadership is documented in 2025; precise appointment dates and present status are unconfirmed. Other house projects are not expanded recursively.',
+  },
+  yukiItakura: {
+    name: 'Yuki Itakura',
+    career: [
+      { house: 'pleatsPlease', role: 'Other', roleDetail: 'Earlier design work', sources: ['https://www.fhcm.paris/fr/news/issey-miyake-im-men', 'https://fashionunited.uk/news/fashion/issey-miyake-how-im-men-explores-new-design-methods/2025092984144'] },
+      { house: 'oneThreeTwoFive', role: 'Other', roleDetail: 'Design team', start: 2010, sources: ['https://www.fhcm.paris/fr/news/issey-miyake-im-men', 'https://fashionunited.uk/news/fashion/issey-miyake-how-im-men-explores-new-design-methods/2025092984144'] },
+      { house: 'imMen', role: 'Head Designer', roleDetail: 'Clothing design; design leadership team', sources: ['https://www.fhcm.paris/fr/news/issey-miyake-im-men', 'https://fashionunited.uk/news/fashion/issey-miyake-how-im-men-explores-new-design-methods/2025092984144'] },
+    ],
+    notes: 'IM MEN leadership and previous Issey Miyake studio work are documented in the 2025 first-person account. The 2019 development-team formation is not assumed to be the date of a formal head-designer appointment.',
+  },
+  nobutakaKobayashi: {
+    name: 'Nobutaka Kobayashi',
+    career: [
+      { house: 'isseyMiyake', role: 'Other', roleDetail: 'Womenswear textile development', sources: ['https://www.fhcm.paris/fr/news/issey-miyake-im-men', 'https://fashionunited.uk/news/fashion/issey-miyake-how-im-men-explores-new-design-methods/2025092984144'] },
+      { house: 'hommePlisse', role: 'Other', roleDetail: 'Textile development', sources: ['https://www.fhcm.paris/fr/news/issey-miyake-im-men', 'https://fashionunited.uk/news/fashion/issey-miyake-how-im-men-explores-new-design-methods/2025092984144'] },
+      { house: 'oneThreeTwoFive', role: 'Other', roleDetail: 'Textile development', start: 2017, sources: ['https://www.fhcm.paris/fr/news/issey-miyake-im-men', 'https://fashionunited.uk/news/fashion/issey-miyake-how-im-men-explores-new-design-methods/2025092984144'] },
+      { house: 'imMen', role: 'Head Designer', roleDetail: 'Textile design; design leadership team', sources: ['https://www.fhcm.paris/fr/news/issey-miyake-im-men', 'https://fashionunited.uk/news/fashion/issey-miyake-how-im-men-explores-new-design-methods/2025092984144'] },
+    ],
+    notes: 'Documented with the IM MEN leadership team in 2025 after more than a decade of womenswear textile work and subsequent studio projects. Exact job transitions and current status remain unconfirmed.',
+  },
+  graziaMalagoli: {
+    name: 'Grazia Malagoli',
+    career: [
+      { house: 'sportmax', role: 'Other', roleDetail: 'Earlier in-house work', start: 1979, sources: ['https://graziamagazine.com/articles/exclusive-interview-grazia-malagoli-sportmax/'] },
+      { house: 'sportmax', role: 'Creative Director', roleDetail: 'Fashion director', end: null, sources: ['https://graziamagazine.com/articles/exclusive-interview-grazia-malagoli-sportmax/', 'https://10magazine.com/sportmax-resort-2026/'] },
+    ],
+    notes: 'Her first-person account dates joining Sportmax to 1979, not the start of the fashion-director title. The interview identifies Milan as the team’s base. Earlier outside employers and the full succession of design-team heads are unconfirmed.',
+  },
+  edwardBuchanan: {
+    name: 'Edward Buchanan',
+    career: [
+      { house: 'offWhite', role: 'Other', roleDetail: 'Knitwear design consultant', sources: ['https://www.fhcm.paris/fr/news/a-feel-for-fashion-edward-buchanan'] },
+      { house: 'emilioPucci', role: 'Other', roleDetail: 'Knitwear design consultant', sources: ['https://www.fhcm.paris/fr/news/a-feel-for-fashion-edward-buchanan'] },
+      { house: 'bottegaVeneta', role: 'Head Designer', roleDetail: 'Design director; first ready-to-wear collections', start: 1996, end: 2000, sources: ['https://www.vogue.com/article/how-edward-buchanan-became-bottega-venetas-first-ever-design-director'], notes: 'Uses his first-person dates; some biographies instead give 1995 or 2001.' },
+      { house: 'maxMara', role: 'Other', roleDetail: 'Knitwear design', sources: ['https://www.accademiacostumeemoda.it/coordinatori/edward-buchanan/'] },
+      { house: 'maxAndCo', role: 'Creative Director', roleDetail: 'Creative director', start: 2026, end: null, sources: ['https://www.becauselondon.com/articles/fashion/2026-summer/maxco-at-40/'] },
+    ],
+    notes: 'Founded Sansovino 6 in 2009, outside the represented houses. His academic biography confirms work at Stefanel, Max Mara, Benetton and Agnona without reliable tenure dates; those gaps remain explicit. Campaign collaborations are not career appointments.',
+  },
+  avaNirui: {
+    name: 'Ava Nirui',
+    career: [
+      { house: 'helmutLang', role: 'Other', roleDetail: 'Digital creative and strategy for the relaunch', start: 2017, sources: ['https://www.artpartner.com/ava-nirui/overview'] },
+      { house: 'marcJacobs', role: 'Other', roleDetail: 'Head of global creative', start: 2019, end: 2026, sources: ['https://www.artpartner.com/ava-nirui/overview', 'https://www.vogue.com/article/a-to-do-list-for-marc-jacobss-new-owner'] },
+      { house: 'heavenMarcJacobs', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2020, end: 2026, sources: ['https://www.artpartner.com/ava-nirui/overview', 'https://www.vogue.com/article/a-to-do-list-for-marc-jacobss-new-owner'] },
+    ],
+    notes: 'Left Heaven in 2026; earlier viral bootlegs and product collaborations with other fashion brands are not employment. Her continuing editorial work is separate from fashion-house creative appointments.',
+  },
+  kenichiKusano: {
+    name: 'Kenichi Kusano',
+    career: [
+      { house: 'beamsPlus', role: 'Other', roleDetail: 'Founding development team', start: 1999, sources: ['https://www.beams.co.jp/special/talk/archive/2016/0415/'] },
+      { house: 'beamsPlus', role: 'Creative Director', roleDetail: 'Second line director', start: 2004, end: 2012, sources: ['https://www.beams.co.jp/special/talk/archive/2016/0415/', 'https://www.beams.co.jp/special/beamsplus/philosophy/vol9/?lang=ja'] },
+      { house: 'baracuta', role: 'Other', roleDetail: 'Designer, Blue Label line', start: 2012, notes: 'First Spring/Summer 2013 collection shown in June 2012; Autumn/Winter 2013 also documented. Exact departure date unconfirmed.' },
+    ],
+    notes: 'An official BEAMS interview identifies the completed 2004–2012 directorship. Subsequently founded Kenneth Field and designed Baracuta’s Blue Label line.',
+  },
+  hidekiMizobata: {
+    name: 'Hideki Mizobata',
+    career: [
+      { house: 'beamsPlus', role: 'Creative Director', roleDetail: 'BEAMS PLUS line director', end: null, sources: ['https://www.beams.co.jp/special/talk/archive/2016/0415/', 'https://www.beams.co.jp/blog_label/beamsplus/'] },
+    ],
+    notes: '溝端秀基, also known as MZO. Named as director in the 2016 official interview and November 2026 company posts. Precise appointment date and earlier outside employers are unconfirmed.',
+  },
+  fukoAsayama: {
+    name: 'Fuko Asayama',
+    career: [
+      { house: 'beams', role: 'Other', roleDetail: 'Earlier company work', start: 2013, sources: ['https://www.beams.co.jp/special/50th/topics/topic-2044/'] },
+      { house: 'beamsBoy', role: 'Creative Director', roleDetail: 'BEAMS BOY line director', start: 2023, end: null, sources: ['https://www.beams.co.jp/special/50th/topics/topic-2044/'] },
+    ],
+    notes: 'The official 2026 retrospective distinguishes her company joining year from her 2023 line appointment. Earlier outside employers are unconfirmed.',
+  },
+  ulrikaBernhardtz: {
+    name: 'Ulrika Bernhardtz',
+    career: [
+      { house: 'cos', role: 'Other', roleDetail: 'Earlier brand-launch development', sources: ['https://www.vogue.co.uk/article/arket-interview-creative-director-ulrika-bernhardtz-managing-director-lars-axelsson'] },
+      { house: 'arket', role: 'Creative Director', start: 2017, notes: 'Launch creative director; departure date unconfirmed.', sources: ['https://hmgroup.com/wp-content/uploads/2021/01/1917186.pdf', 'https://www.vogue.co.uk/article/arket-interview-creative-director-ulrika-bernhardtz-managing-director-lars-axelsson'] },
+    ],
+    notes: 'Earlier brand-launch work also included H&M Home and & Other Stories, which are not separately represented in this dataset. Her brand creative role at ARKET was distinct from Anna Teurnell’s clothing design directorship.',
+  },
+  annaTeurnell: {
+    name: 'Anna Teurnell',
+    career: [
+      { house: 'hm', role: 'Other', roleDetail: 'Earlier design work, including the Trend department', sources: ['https://www.vogue.com/fashion-shows/stockholm-spring-2022/teurn', 'https://scandinavianmind.com/teurn-studios-enters-the-market-based-on-a-reset-on-how-you-do-things-as-a-fashion-brand/'] },
+      { house: 'arket', role: 'Head Designer', roleDetail: 'Design director', start: 2017, notes: 'Historical appointment; exact departure year is unconfirmed.', sources: ['https://www.vogue.com/fashion-shows/stockholm-spring-2022/teurn', 'https://www.theindustry.fashion/hm-veteran-anna-teurnell-appointed-creative-director-of-filippa-k/'] },
+      { house: 'marimekko', role: 'Creative Director', start: 2014, end: 2017 },
+    ],
+    notes: 'Also held creative roles at & Other Stories and Filippa K and founded Teurn Studios; these labels are not currently represented. Her later Filippa K appointment does not establish a precise ARKET departure date.',
+  },
+  ellaSoccorsi: {
+    name: 'Ella Soccorsi',
+    career: [
+      { house: 'hm', role: 'Other', roleDetail: 'Designer in the innovation department', end: 2022, sources: ['https://www.lemonde.fr/m-styles/article/2024/12/15/ella-soccorsi-l-ecole-du-nord_6449498_4497319.html', 'https://www.arket.com/sv-se/editorial/ella-soccorsi-on-inspiration-longevity-and-meaningful-design/'] },
+      { house: 'arket', role: 'Head Designer', roleDetail: 'Head of Design & Creative', start: 2022, end: null, sources: ['https://www.lemonde.fr/m-styles/article/2024/12/15/ella-soccorsi-l-ecole-du-nord_6449498_4497319.html', 'https://hmgroup.com/news/arket-and-massproductions-bring-practicality-and-playfulness-into-the-home/', 'https://www.arket.com/sv-se/editorial/ella-soccorsi-on-inspiration-longevity-and-meaningful-design/'] },
+    ],
+    notes: 'Previously co-founded Nakkna and worked in costume at the Royal Swedish Opera. Neither organization is represented as a house.',
+  },
+  isakAndic: {
+    name: 'Isak Andic',
+    died: 2024,
+    career: [{ house: 'mango', role: 'Other', roleDetail: 'Co-founder and chairman', start: 1984, end: 2024, sources: ['https://knowledge.wharton.upenn.edu/article/mangos-fast-growth-fueled-by-supply-chain-and-focus/', 'https://elpais.com/smoda/moda/2024-12-14/como-isak-andic-cambio-el-rumbo-de-la-moda-el-visionario-que-vistio-a-kate-moss-con-diseno-espanol-y-envolvio-a-la-moda-accesible-con-el-aura-del-lujo.html'] }],
+  },
+  nahmanAndic: {
+    name: 'Nahman Andic',
+    career: [{ house: 'mango', role: 'Other', roleDetail: 'Business co-founder', start: 1984, sources: ['https://knowledge.wharton.upenn.edu/article/mangos-fast-growth-fueled-by-supply-chain-and-focus/'] }],
+  },
+  justiciaRuano: {
+    name: 'Justicia Ruano',
+    career: [
+      { house: 'mango', role: 'Other', roleDetail: 'Designer; later woven-womenswear design director', start: 1994, end: 2006, notes: 'Promotion date is unconfirmed.', sources: ['https://www.modaes.com/back-stage/justicia-ruano-mango-la-toma-de-decisiones-exige-combinar-experiencia-e-intuicion'] },
+      { house: 'mango', role: 'Womenswear Director', roleDetail: 'Creative and product director, Mango Woman', start: 2017, end: null, sources: ['https://www.modaes.com/back-stage/justicia-ruano-mango-la-toma-de-decisiones-exige-combinar-experiencia-e-intuicion', 'https://fashiongear.fibre2fashion.com/fashion-talks/justicia-ruano-interview'] },
+    ],
+    notes: 'Worked at System Action before Mango, then founded 9PM/Justicia Ruano in 2009 between her two Mango stints. Neither earlier employer nor her own label is represented.',
+  },
+  arthurRyan: {
+    name: 'Arthur Ryan',
+    died: 2019,
+    career: [{ house: 'primark', role: 'Other', roleDetail: 'Founder and chairman', start: 1969, end: 2019, sources: ['https://corporate.primark.com/en-us/about/arthur-ryan'] }],
+    notes: 'Business founder, rather than a documented clothing creative director. Previously worked at Dunnes Stores, which is not represented.',
+  },
+  keironBirch: {
+    name: 'Keiron Birch',
+    career: [
+      { house: 'calvinKlein', role: 'Other', roleDetail: 'Earlier fashion design work', sources: ['https://corporate.primark.com/en-gb/a/news/corporate-news/primark-appoints-keiron-birch-as-director-of-womenswear-design'] },
+      { house: 'tommyHilfiger', role: 'Other', roleDetail: 'Earlier fashion design work', sources: ['https://corporate.primark.com/en-gb/a/news/corporate-news/primark-appoints-keiron-birch-as-director-of-womenswear-design'] },
+      { house: 'abercrombieFitch', role: 'Other', roleDetail: 'Earlier fashion design work', sources: ['https://corporate.primark.com/en-gb/a/news/corporate-news/primark-appoints-keiron-birch-as-director-of-womenswear-design'] },
+      { house: 'primark', role: 'Womenswear Director', roleDetail: 'Director of Womenswear Design, including footwear and accessories', start: 2026, end: null, sources: ['https://corporate.primark.com/en-gb/a/news/corporate-news/primark-appoints-keiron-birch-as-director-of-womenswear-design'] },
+    ],
+    notes: 'Primark’s June 2026 announcement confirms the earlier brands but does not establish precise titles, dates or the order of those jobs.',
+  },
+  armandoLasauca: {
+    name: 'Armando Lasauca',
+    career: [{ house: 'massimoDutti', role: 'Other', roleDetail: 'Founder and president', start: 1985, end: 1991, sources: ['https://www.theindustry.fashion/the_directory/massimo-dutti/', 'https://elpais.com/diario/1991/11/15/economia/690159615_850215.html'] }],
+  },
+  nigelAustin: {
+    name: 'Nigel Austin',
+    career: [{ house: 'cottonOn', role: 'Other', roleDetail: 'Business founder', start: 1991, sources: ['https://cottonongroup.com.au/from-australia-to-the-world/'] }],
+    notes: 'Began selling denim jackets at Geelong markets in 1988, before the first Cotton On store opened in 1991.',
+  },
+  orjanAndersson: {
+    name: 'Örjan Andersson',
+    career: [
+      { house: 'weekday', role: 'Other', roleDetail: 'Co-founder', start: 2002, sources: ['https://www.the-spin-off.com/news/stories/WEEKDAY-STRENGTHENS-ITS-RETAIL-BUSINESS-2237'] },
+      { house: 'cheapMonday', role: 'Founder', roleDetail: 'Co-founder and denim designer', start: 2004, end: 2011, sources: ['https://academic.oup.com/jcr/article/49/5/762/6539760', 'https://www.gp.se/livsstil/orjan-lamnar-cheap-monday.2dca818a-7020-4f13-93a4-30df15cf98ea'] },
+    ],
+    notes: 'Later created an eponymous denim label and the Från Ö Till A shop, neither represented. His Cheap Monday departure is separate from the later brand closure and relaunch.',
+  },
+  adamFriberg: {
+    name: 'Adam Friberg',
+    career: [
+      { house: 'weekday', role: 'Other', roleDetail: 'Business co-founder', start: 2002, sources: ['https://www.the-spin-off.com/news/stories/WEEKDAY-STRENGTHENS-ITS-RETAIL-BUSINESS-2237'] },
+      { house: 'cheapMonday', role: 'Other', roleDetail: 'Business co-founder', start: 2004, end: 2011, sources: ['https://cincodias.elpais.com/cincodias/2008/03/07/empresas/1204900788_850215.html', 'https://academic.oup.com/jcr/article/49/5/762/6539760'] },
+    ],
+    notes: 'Also co-founded Monki, which is not represented in this dataset.',
+  },
+  larsKarlsson: {
+    name: 'Lars Karlsson',
+    career: [
+      { house: 'weekday', role: 'Other', roleDetail: 'Business co-founder', start: 2002, sources: ['https://www.the-spin-off.com/news/stories/WEEKDAY-STRENGTHENS-ITS-RETAIL-BUSINESS-2237'] },
+      { house: 'cheapMonday', role: 'Other', roleDetail: 'Business co-founder', start: 2004, end: 2011, sources: ['https://cincodias.elpais.com/cincodias/2008/03/07/empresas/1204900788_850215.html', 'https://academic.oup.com/jcr/article/49/5/762/6539760'] },
+    ],
+    notes: 'Also known as Lasse Karlsson. Co-founded Monki, which is not represented in this dataset.',
+  },
+  lindaFriberg: {
+    name: 'Linda Friberg',
+    career: [
+      { house: 'weekday', role: 'Other', roleDetail: 'Co-founder of the original Weekend store', notes: 'Sold her original stake early; no precise founding-tenure dates established.', sources: ['https://www.gp.se/ekonomi/monki-jobbar-hart-pa-varumarket.d485d295-9717-488e-97c6-13efe8ff2528'] },
+      { house: 'cheapMonday', role: 'Other', roleDetail: 'Production-office work implementing Örjan Andersson’s designs', sources: ['https://www.gp.se/ekonomi/monki-jobbar-hart-pa-varumarket.d485d295-9717-488e-97c6-13efe8ff2528'] },
+    ],
+    notes: 'Previously worked at JC and later co-founded Monki; neither is represented. Founding Fabric Scandinavien does not by itself establish co-founding every label in its portfolio.',
+  },
+  annSofieBack: {
+    name: 'Ann-Sofie Back',
+    career: [
+      { house: 'acneStudios', role: 'Other', roleDetail: 'Earlier design work', sources: ['https://www.vogue.com/article/ann-sofie-backs-exhibition-in-stockholm-is-a-near-death-experience'] },
+      { house: 'cheapMonday', role: 'Creative Director', start: 2009, end: 2017, sources: ['https://www.vogue.com/article/ann-sofie-backs-exhibition-in-stockholm-is-a-near-death-experience', 'https://www.vogue.co.uk/article/cheap-monday-ann-sofie-back-tenth-anniversary'] },
+    ],
+    notes: 'Founded her eponymous label and BACK, later working with Teenage Engineering. Those organizations are not represented as fashion houses here.',
+  },
+  carlMalmgren: {
+    name: 'Carl Malmgren',
+    career: [{ house: 'cheapMonday', role: 'Other', roleDetail: 'Head of denim', notes: 'Documented in a 2014 interview; exact appointment and departure years unconfirmed.', sources: ['https://www.vogue.co.uk/article/cheap-monday-ann-sofie-back-tenth-anniversary'] }],
+  },
+  annaNorling: {
+    name: 'Anna Norling',
+    career: [{ house: 'weekday', role: 'Head Designer', roleDetail: 'Head of design', notes: 'Documented in the Jeans Redesign report; appointment and departure dates unconfirmed.', sources: ['https://content.ellenmacarthurfoundation.org/m/68b1aa5ebfef9d4/original/The-Jeans-Redesign-Insights-from-the-first-two-years.pdf', 'https://beckmans.se/johan-ejdemo-och-bella-rune-nya-ledamoter-i-beckmans-styrelse/'] }],
+  },
+  aliceShulman: {
+    name: 'Alice Shulman',
+    career: [{ house: 'weekday', role: 'Other', roleDetail: 'Design lead, Creative Initiatives & Co-labs', notes: 'An ongoing staff title identified in the 2023 announcement, rather than a guest capsule appointment. Exact tenure dates unconfirmed.', sources: ['https://hmgroup.com/news/weekday-launches-digital-drop-artifact-001-with-the-fabricant/'] }],
+  },
+  yangtianXu: {
+    name: 'Sky Yangtian Xu',
+    career: [{ house: 'shein', role: 'Other', roleDetail: 'Founder and chairman', start: 2012, end: null, sources: ['https://ir.sheingroup.com/management-directors'] }],
+    notes: 'Also known as Chris Xu and Xu Yangtian. Uses the name on the company’s current investor-relations biography; founding year follows SHEIN’s own history rather than earlier trading ventures.',
+  },
+  miaoMiao: {
+    name: 'Molly Miao Miao',
+    career: [{ house: 'shein', role: 'Other', roleDetail: 'Business co-founder and executive director', start: 2012, end: null, sources: ['https://ir.sheingroup.com/management-directors'] }],
+  },
+  xiaoqingGu: {
+    name: 'Maggie Xiaoqing Gu',
+    career: [{ house: 'shein', role: 'Other', roleDetail: 'Co-founder and chief product officer', start: 2012, end: null, notes: 'Chief product officer since 2017; co-founding predates that title.', sources: ['https://ir.sheingroup.com/management-directors'] }],
+  },
+  xiaoqingRen: {
+    name: 'Tony Xiaoqing Ren',
+    career: [{ house: 'shein', role: 'Other', roleDetail: 'Business co-founder and executive director', start: 2012, end: null, sources: ['https://ir.sheingroup.com/management-directors'] }],
+  },
+  nickRobertson: {
+    name: 'Nick Robertson',
+    career: [{ house: 'asos', role: 'Other', roleDetail: 'Co-founder and non-executive director', start: 2000, end: null, sources: ['https://www.asosplc.com/about-us/our-board-of-directors/', 'https://www.the-star.co.ke/news/world/2026-02-20-asos-co-founder-dies-after-thailand-apartment-block-fall'] }],
+  },
+  quentinGriffiths: {
+    name: 'Quentin Griffiths',
+    died: 2026,
+    career: [{ house: 'asos', role: 'Other', roleDetail: 'Business co-founder', start: 2000, end: 2005, sources: ['https://www.the-star.co.ke/news/world/2026-02-20-asos-co-founder-dies-after-thailand-apartment-block-fall'] }],
+  },
+  andrewRegan: {
+    name: 'Andrew Regan',
+    career: [{ house: 'asos', role: 'Other', roleDetail: 'Business co-founder', start: 2000, sources: ['https://www.the-star.co.ke/news/world/2026-02-20-asos-co-founder-dies-after-thailand-apartment-block-fall'] }],
+  },
+  deborahThorpe: {
+    name: 'Deborah Thorpe',
+    career: [{ house: 'asos', role: 'Other', roleDetail: 'Business co-founder', start: 2000, sources: ['https://www.the-star.co.ke/news/world/2026-02-20-asos-co-founder-dies-after-thailand-apartment-block-fall'] }],
+  },
+  vanessaSpence: {
+    name: 'Vanessa Spence',
+    career: [
+      { house: 'asos', role: 'Other', roleDetail: 'Design team; later design director', start: 2007, notes: 'Joining year is documented; promotion dates are not established.', sources: ['https://collectivehub.com/2017/07/20-minutes-with-asoss-fashion-director/', 'https://www.fashionminorityalliance.com/news/meet-the-founders-vanessa-spence/'] },
+      { house: 'asos', role: 'Creative Director', roleDetail: 'Executive Vice President Brand & Creative', end: null, notes: 'Exact appointment date to the current title is unconfirmed.', sources: ['https://www.asosplc.com/about-us/our-management-committee/', 'https://www.fashionminorityalliance.com/news/meet-the-founders-vanessa-spence/'] },
+    ],
+    notes: 'Earlier design work included Pepe Jeans, which is not represented, and Arcadia, a retail group rather than a confirmed role at any one represented label.',
+  },
+  mahmudKamani: {
+    name: 'Mahmud Kamani',
+    career: [{ house: 'boohoo', role: 'Other', roleDetail: 'Business co-founder', start: 2006, sources: ['https://www.boohoo.com/pages/informational/about-us'] }],
+  },
+  carolKane: {
+    name: 'Carol Kane',
+    career: [{ house: 'boohoo', role: 'Other', roleDetail: 'Co-founder; product and brand strategy', start: 2006, sources: ['https://www.boohoo.com/pages/informational/about-us', 'https://www.debenhamsgroup.com/files/results-centre/2025/debenhams-group-annual-report-2025.pdf'] }],
+    notes: 'Trained as a designer and worked as a fashion buyer before co-founding boohoo. Supplying high-street retailers does not establish design employment at those brands.',
+  },
+  wezBryett: {
+    name: 'Wez Bryett',
+    career: [{ house: 'princessPolly', role: 'Other', roleDetail: 'Business co-founder', start: 2010, end: null, sources: ['https://us.princesspolly.com/pages/about-us', 'https://www.aka-brands.com/corporate-governance/management-team'] }],
+    notes: 'Also identified as Wesley Bryett in corporate filings. The date records the online business launch.',
+  },
+  eirinBryett: {
+    name: 'Eirin Bryett',
+    career: [{ house: 'princessPolly', role: 'Other', roleDetail: 'Business co-founder', start: 2010, end: null, sources: ['https://us.princesspolly.com/pages/about-us', 'https://www.aka-brands.com/corporate-governance/management-team'] }],
+    notes: 'The date records the online business launch, distinct from earlier boutique retail.',
+  },
+  amandaCapano: {
+    name: 'Amanda Capano',
+    career: [{ house: 'garage', role: 'Other', roleDetail: 'Senior Director of Creative', notes: 'Self-announced staff appointment; exact dates and garment-design scope are unconfirmed.', sources: ['https://www.linkedin.com/posts/amanda-capano-65b11495_im-happy-to-share-that-im-starting-a-new-activity-7403166801833926657-Yv2j'] }],
+  },
+  richardSaghian: {
+    name: 'Richard Saghian',
+    career: [{ house: 'fashionNova', role: 'Other', roleDetail: 'Business founder', start: 2006, end: null, sources: ['https://labusinessjournal.com/la500-2025/manufacturing-2025/la500-2025-richard-saghian/', 'https://wikirate-production-storage.fra1.cdn.digitaloceanspaces.com/files/20258797/49854166.pdf'] }],
+    notes: 'Business founder rather than a separately verified garment creative director. Celebrity capsules and influencer partnerships do not establish career tenures.',
+  },
+  davidsonManaloto: {
+    name: 'Davidson Manaloto',
+    career: [{
+      house: 'wingsHorns',
+      role: 'Head Designer',
+      notes: 'Documented as head designer in 2012–2013; exact appointment and departure years unconfirmed. Described a completed tenure of almost four years in a later interview.',
+    }],
+    notes: 'Previously interned at Lily+Jae and worked with a tailor and womenswear designer in the Philippines. After wings+horns, designed for Marc Ecko Cut & Sew in New York and later founded Wonders. These labels are not in the dataset.',
+  },
+  tungVo: {
+    name: 'Tung Vo',
+    career: [
+      { house: 'arcteryx', role: 'Other', roleDetail: 'Outerwear designer', notes: 'Earlier employment confirmed in his 2016 interview; dates unconfirmed.' },
+      { house: 'wingsHorns', role: 'Head Designer', start: 2014, notes: 'Joined for the 2014 collections; documented leading design in 2016. Exact departure year unconfirmed.' },
+      { house: 'reigningChamp', role: 'Creative Director', notes: 'Led design alongside wings+horns through CYC Design, documented in 2015. Exact dates unconfirmed.' },
+    ],
+    notes: 'Earlier designed for Divine and Mark’s, and co-founded the military-inspired Hors de Combat label. These labels are not in the dataset.',
+  },
+  sebastienKopp: {
+    name: 'Sébastien Kopp',
+    career: [
+      { house: 'veja', role: 'Founder', roleDetail: 'Co-founder', start: 2004, end: null },
+      { house: 'veja', role: 'Creative Director', notes: 'Creative leadership confirmed in interviews and his 2025 Global Fashion Summit biography; exact appointment date unconfirmed.' },
+    ],
+    notes: 'Previously worked in finance and at fair-trade company Alter Eco. Co-founded the Paris concept store Centre Commercial in 2010.',
+  },
+  francoisGhislainMorillion: {
+    name: 'François-Ghislain Morillion',
+    career: [{ house: 'veja', role: 'Founder', roleDetail: 'Co-founder', start: 2004, end: null }],
+    notes: 'Co-founded Veja with Sébastien Kopp after earlier finance and fair-trade work. His documented responsibilities include sourcing; these do not establish a creative-director appointment. Also co-founded Centre Commercial in 2010.',
+  },
+  kichizoYoshida: {
+    name: 'Kichizo Yoshida',
+    career: [{ house: 'porterYoshida', role: 'Founder', start: 1935, roleDetail: 'Founder and bag craftsman, Yoshida & Co.' }],
+    notes: 'Founded Yoshida Kaban Seisakujyo in Tokyo in 1935. The company introduced its PORTER label in 1962.',
+  },
+  katsuyukiYoshida: {
+    name: 'Katsuyuki Yoshida',
+    career: [{ house: 'porterYoshida', role: 'Other', roleDetail: 'Bag designer; TANKER series', notes: 'Historical design work is documented; exact employment dates unconfirmed.' }],
+    notes: 'Later co-founded the separate Porter Classic company with his son Leo Yoshida in 2007.',
+  },
+  kenichiroMatsubara: {
+    name: 'Kenichiro Matsubara',
+    career: [{ house: 'porterYoshida', role: 'Creative Director', notes: 'Identified as creative director in his September 2025 interview. Exact appointment date and present status unconfirmed.' }],
+  },
+  isaacSpiewak: {
+    name: 'Isaac Spiewak',
+    career: [{ house: 'spiewak', role: 'Founder', start: 1904, roleDetail: 'Founder; original workwear maker' }],
+    notes: 'Warsaw-born founder who moved to New York in 1903 and established the clothing business in Williamsburg.',
+  },
+  iedaPavani: {
+    name: 'Ieda Pavani',
+    career: [{ house: 'havaianas', role: 'Other', roleDetail: 'Global design director', end: null, notes: 'Identified as global design director in June 2026; appointment year unconfirmed.' }],
+  },
+  giuseppeRatti: {
+    name: 'Giuseppe Ratti',
+    career: [{ house: 'persol', role: 'Founder', start: 1917, roleDetail: 'Founder and original protective-eyewear designer' }],
+  },
+  riccardoPozzoli: {
+    name: 'Riccardo Pozzoli',
+    career: [{ house: 'persol', role: 'Creative Director', start: 2021, end: null, notes: 'Described as creative director since 2021 in Esquire Italia’s 2026 profile; Persol’s own 2026 interview also identifies his creative-director title.' }],
+  },
+  armiRatia: {
+    name: 'Armi Ratia',
+    nationality: 'Finnish',
+    died: 1979,
+    career: [{ house: 'marimekko', role: 'Founder', roleDetail: 'Co-founder and creative guiding force', start: 1951, end: 1979 }],
+  },
+  viljoRatia: {
+    name: 'Viljo Ratia',
+    nationality: 'Finnish',
+    career: [{ house: 'marimekko', role: 'Other', roleDetail: 'Business co-founder; owner of predecessor textile printer Printex', start: 1951 }],
+  },
+  maijaIsola: {
+    name: 'Maija Isola',
+    nationality: 'Finnish',
+    died: 2001,
+    career: [{ house: 'marimekko', role: 'Other', roleDetail: 'Print designer', start: 1951, end: 1987, notes: 'Joined predecessor Printex in 1949. Created more than 500 prints, including Unikko in 1964.' }],
+  },
+  vuokkoEskolinNurmesniemi: {
+    name: 'Vuokko Eskolin-Nurmesniemi',
+    nationality: 'Finnish',
+    career: [{ house: 'marimekko', role: 'Other', roleDetail: 'Textile and clothing designer', start: 1953, end: 1960 }],
+    notes: 'Created Piccolo and the Jokapoika shirt. Founded her own Vuokko label in 1964, which is not separately represented.',
+  },
+  annikaRimala: {
+    name: 'Annika Rimala',
+    nationality: 'Finnish',
+    died: 2014,
+    career: [{ house: 'marimekko', role: 'Other', roleDetail: 'Clothing and print designer', start: 1960, end: 1982 }],
+    notes: 'Created the Tasaraita striped jersey collection in 1968.',
+  },
+  katsujiWakisaka: {
+    name: 'Katsuji Wakisaka',
+    nationality: 'Japanese',
+    career: [
+      { house: 'marimekko', role: 'Other', roleDetail: 'Print designer', start: 1968, end: 1976 },
+      { house: 'marimekko', role: 'Other', roleDetail: 'Returning print designer', start: 2001, end: 2001 },
+    ],
+  },
+  fujiwoIshimoto: {
+    name: 'Fujiwo Ishimoto',
+    nationality: 'Japanese',
+    career: [{ house: 'marimekko', role: 'Other', roleDetail: 'Textile designer', start: 1974, end: 2006 }],
+  },
+  minnaKemellKutvonen: {
+    name: 'Minna Kemell-Kutvonen',
+    nationality: 'Finnish',
+    career: [
+      { house: 'marimekko', role: 'Other', roleDetail: 'Design team', start: 1992, end: 2008 },
+      { house: 'marimekko', role: 'Other', roleDetail: 'Creative director, interior decoration line', start: 2008, end: 2010 },
+      { house: 'marimekko', role: 'Creative Director', start: 2010, end: 2014 },
+      { house: 'marimekko', role: 'Other', roleDetail: 'Design director, home and print design', start: 2014, end: null },
+    ],
+  },
+  satuMaaranen: {
+    name: 'Satu Maaranen',
+    nationality: 'Finnish',
+    career: [
+      { house: 'marimekko', role: 'Other', roleDetail: 'Design team', start: 2010, end: 2018 },
+      { house: 'marimekko', role: 'Head Designer', roleDetail: 'Ready-to-wear, bags and accessories; later concept and collaborations', start: 2018, end: null, notes: 'Aalto University identifies her 2026 scope as head designer, concept and collaborations, ready-to-wear, bags and accessories.' },
+    ],
+  },
+  annaLundbackDyhr: {
+    name: 'Anna Lundbäck-Dyhr',
+    career: [{ house: 'marimekko', role: 'Other', roleDetail: 'Design director, ready-to-wear, bags and accessories', end: null, notes: 'Role confirmed by Aalto University in 2026; appointment year unconfirmed.' }],
+  },
+  johnMillerBaracuta: {
+    name: 'John Miller',
+    career: [{ house: 'baracuta', role: 'Founder', roleDetail: 'Co-founder with his brother Isaac', start: 1937 }],
+  },
+  isaacMillerBaracuta: {
+    name: 'Isaac Miller',
+    career: [{ house: 'baracuta', role: 'Founder', roleDetail: 'Co-founder with his brother John', start: 1937 }],
+  },
+  jeffGriffin: {
+    name: 'Jeff Griffin',
+    career: [{ house: 'baracuta', role: 'Other', roleDetail: 'Designer, Blue Label line', start: 2014, notes: 'Appointed for Autumn/Winter 2014–15. Exact departure date unconfirmed; this was a line-specific design role.' }],
+    notes: 'Founded Griffin Laundry in 1994. His namesake label and studio are not separately represented.',
+  },
+  verdy: {
+    name: 'VERDY',
+    nationality: 'Japanese',
+    career: [
+      { house: 'girlsDontCry', role: 'Founder', roleDetail: 'Founder and graphic designer', start: 2017, end: null },
+      { house: 'wastedYouth', role: 'Founder', roleDetail: 'Founder and graphic designer', start: 2017, end: null, notes: 'Human Made’s official biography dates the project launch to 2017.' },
+      { house: 'humanMade', role: 'Other', roleDetail: 'Creative partner', start: 2024, end: null, notes: 'Ongoing creative partnership announced in August 2024 and retained in the current company biography; separate from individual capsule releases.' },
+    ],
+    notes: 'Osaka-born graphic artist based in Tokyo. Worked with VK Design Works before establishing Girls Don’t Cry and Wasted Youth; also created the VICK and VISTY characters.',
+  },
+  reinholdWolff: {
+    name: 'Reinhold Wolff',
+    career: [{ house: 'wolford', role: 'Founder', roleDetail: 'Industrial co-founder; predecessor company established in 1949', start: 1949 }],
+  },
+  walterPalmers: {
+    name: 'Walter Palmers',
+    career: [{ house: 'wolford', role: 'Founder', roleDetail: 'Retail co-founder; predecessor company established in 1949', start: 1949 }],
+  },
+  gritSeymour: {
+    name: 'Grit Seymour',
+    career: [
+      { house: 'maxMara', role: 'Other', roleDetail: 'Designer', start: 1994, end: 1996 },
+      { house: 'maxMara', role: 'Other', roleDetail: 'Design consultant', start: 1996, end: 1999 },
+      { house: 'maxAndCo', role: 'Other', roleDetail: 'Design consultant, classics line', start: 1996, end: 1999 },
+      { house: 'donnaKaran', role: 'Other', roleDetail: 'Senior designer, Signature line', start: 1996, end: 1997, sources: ['https://www.smb.museum/fileadmin/website/Presse/Pressematerial/2009/07/SUBstitut_pdfPM_030709.pdf'] },
+      { house: 'hugoBoss', role: 'Other', roleDetail: 'Womenswear design leadership' },
+      { house: 'wolford', role: 'Creative Director', start: 2014, end: 2017 },
+    ],
+    notes: 'Also consulted for Marella from 1996 to 1999, directed womenswear at Daniel Hechter from 1997 to 1999 and worked on Eres creative direction in 2002; those labels are not separately represented.',
+    sources: ['https://company.wolford.com/wolford-ag-grit-seymour-appointed-creative-director/', 'https://www.smb.museum/fileadmin/website/Presse/Pressematerial/2009/07/SUBstitut_pdfPM_030709.pdf', 'https://fashionunited.com/executive/management/wolford-creative-director-grit-seymore-resigns/2017052315957'],
+  },
+  naoTakekoshi: {
+    name: 'Nao Takekoshi',
+    career: [
+      { house: 'isseyMiyake', role: 'Other', roleDetail: 'Design team' },
+      { house: 'gucci', role: 'Other', roleDetail: 'Design consultant and illustrator under Tom Ford' },
+      { house: 'donnaKaran', role: 'Other', roleDetail: 'Head designer, Donna Karan Collection', start: 1995, sources: ['https://www.naotakekoshi.com/'] },
+      { house: 'maxMara', role: 'Other', roleDetail: 'Freelance design consultant' },
+      { house: 'jilSander', role: 'Other', roleDetail: 'Head designer under Jil Sander', start: 1999 },
+      { house: 'zegna', role: 'Other', roleDetail: 'Creative consultant and liaison for Japanese licensees' },
+      { house: 'burberry', role: 'Other', roleDetail: 'Creative consultant and liaison for Japanese licensees' },
+      { house: 'calvinKlein', role: 'Other', roleDetail: 'Design consultant to Francisco Costa', start: 2012 },
+      { house: 'wolford', role: 'Artistic Director', start: 2023, end: null, notes: 'Public appointment and Japanese biography date the role to 2023; his English biography gives 2022.' },
+    ],
+    notes: 'Also worked at Cerruti, directed Allegri from 2000, and established his own made-to-measure project and re:edition project 165; those labels are not separately represented.',
+    sources: ['https://www.naotakekoshi.com/', 'https://fashionunited.uk/news/people/wolford-names-nao-takekoshi-new-artistic-director/2023022168012'],
+  },
+  chrisEchevarria: {
+    name: 'Chris Echevarria',
+    career: [
+      { house: 'jCrew', role: 'Other', roleDetail: 'Liquor Store sales associate and brand-partnership scouting', sources: ['https://www.3sixteen.com/blogs/news/blackstock-weber'] },
+      { house: 'stoneIsland', role: 'Other', roleDetail: 'US wholesale development through M5 Showroom', sources: ['https://www.3sixteen.com/blogs/news/blackstock-weber'] },
+      { house: 'blackstockWeber', role: 'Founder', roleDetail: 'Founder and creative director', start: 2017, end: null },
+    ],
+    notes: 'Also founded Academy by Chris Echevarria, a ready-to-wear label not separately represented. Earlier J.Crew and Stone Island roles are documented in his first-person 3sixteen interview; exact dates are unconfirmed.',
+    sources: ['https://www.endclothing.com/us/features/blackstock-webers-new-american-tradition', 'https://www.3sixteen.com/blogs/news/blackstock-weber', 'https://www.blackstockandweber.com/pages/press'],
+  },
+  jeanCassegrainFounder: {
+    name: 'Jean Cassegrain',
+    career: [{ house: 'longchamp', role: 'Founder', start: 1948, notes: 'The founder, distinct from his namesake grandson who later became CEO.' }],
+    sources: ['https://www.longchamp.com/fr/fr/l-histoire-de-longchamp/'],
+  },
+  philippeCassegrain: {
+    name: 'Philippe Cassegrain',
+    career: [{ house: 'longchamp', role: 'Other', roleDetail: 'Leather goods designer; creator of Le Pliage', notes: 'Created the first women’s handbag in 1971 and Le Pliage in 1993; exact design-tenure dates unconfirmed.' }],
+    sources: ['https://www.longchamp.com/fr/fr/l-histoire-de-longchamp/'],
+  },
+  sophieDelafontaine: {
+    name: 'Sophie Delafontaine',
+    career: [{ house: 'longchamp', role: 'Creative Director', end: null, notes: 'Joined Longchamp in 1995; exact creative-director appointment date unconfirmed.' }],
+    notes: 'Began at Bonpoint as a sales assistant in 1990 before joining its design studio, then moved to Longchamp in 1995. Bonpoint is not separately represented.',
+    sources: ['https://www.longchamp.com/fr/fr/l-histoire-de-longchamp/', 'https://madame.lefigaro.fr/business/sophie-delafontaine-son-parcours-de-bonpoint-a-maison-longchamp-030816-115689'],
+  },
+  monteGoldman: {
+    name: 'Monte Goldman',
+    career: [{ house: 'eastpak', role: 'Founder', roleDetail: 'Founder of predecessor Eastern Canvas Products', start: 1952 }],
+    sources: ['https://www.boursorama.com/budget/conso/actualites/eastpak-a-plus-d-un-tour-dans-son-sac-f498bd2a2284bc34587b7b7a60751984'],
+  },
+  markGoldman: {
+    name: 'Mark Goldman',
+    career: [{ house: 'eastpak', role: 'Founder', roleDetail: 'Founder of the Eastpak consumer brand', start: 1976, notes: 'Consumer-brand launch is distinct from the predecessor company’s 1952 founding; exact end of operational involvement unconfirmed.' }],
+    sources: ['https://d1io3yog0oux5.cloudfront.net/vfc/files/documents/News/VF_Eastpak_Q4-2015.pdf', 'https://www.linkedin.com/posts/petewinkworth_eastpak-builttoresist-activity-7387874276147765248-cooP'],
+  },
+  domitilleParent: {
+    name: 'Domitille Parent',
+    career: [{ house: 'eastpak', role: 'Other', roleDetail: 'Director of design, development and merchandising', notes: 'Design leadership documented in her January 2020 interview; exact tenure dates unconfirmed. Later identified as brand VP in a 2023 interview.' }],
+    sources: ['https://www.creativeskills.be/articles/design-development-and-merchandising-at-eastpak/?lang=en', 'https://www.boardsportsource.com/eastpak-ss19-backpacks-preview/', 'https://www.boardsportsource.com/eastpak-ss24-lifestyle-backpacks-preview/'],
+  },
+  hideakiYoshihara: {
+    name: 'Hideaki Yoshihara',
+    born: 1969,
+    career: [{ house: 'hyke', role: 'Founder', roleDetail: 'Co-founder and co-designer with Yukiko Ode', start: 2013, end: null }],
+    notes: 'Co-founded green with Yukiko Ode in 1998. After suspending that label in 2009, the pair returned as HYKE in 2013.',
+    sources: ['https://hyke.jp/pages/story'],
+  },
+  yukikoOde: {
+    name: 'Yukiko Ode',
+    born: 1969,
+    career: [{ house: 'hyke', role: 'Founder', roleDetail: 'Co-founder and co-designer with Hideaki Yoshihara', start: 2013, end: null }],
+    notes: 'Co-founded green with Hideaki Yoshihara in 1998. After suspending that label in 2009, the pair returned as HYKE in 2013.',
+    sources: ['https://hyke.jp/pages/story'],
+  },
+  henrikVibskov: {
+    name: 'Henrik Vibskov',
+    career: [{ house: 'henrikVibskov', role: 'Founder', roleDetail: 'Founder and designer', start: 2001, end: null }],
+    notes: 'Multidisciplinary Danish designer and musician. Worked at Bruuns Bazaar before studying at Central Saint Martins; that label is not separately represented.',
+    sources: ['https://henrikvibskovboutique.com/pages/about-us', 'https://lex.dk/Henrik_Vibskov', 'https://www.fashionpress.jp/en/brands/951'],
+  },
+  majaBrix: {
+    name: 'Maja Brix',
+    career: [{ house: 'henrikVibskov', role: 'Womenswear Director', roleDetail: 'Head designer, Femme; co-designer and creative director, Homme and accessories', start: 2003, end: 2012 }],
+    notes: 'Established her own Maja Brix label in 2016; it is not separately represented.',
+    sources: ['https://www.kk.dk/sites/default/files/agenda/2e5d66f0-7139-49da-899e-2843aa430874/9006e0ce-5800-4524-af25-b2bafc4aad64-bilag-1_0.pdf'],
+  },
+  jiyoungKimOpenYy: {
+    name: 'Ji-Young Kim',
+    career: [{ house: 'openYy', role: 'Founder', roleDetail: 'Co-founder and co-creative director with Bo-Young Kim', start: 2020, end: null }],
+    sources: ['https://www.open-yy.com/about', 'https://tomorrowltd.com/brands/open-yy', 'https://www.modemonline.com/img/_upload/newsletter/newsletter-1957-en.html'],
+  },
+  boyoungKimOpenYy: {
+    name: 'Bo-Young Kim',
+    career: [{ house: 'openYy', role: 'Founder', roleDetail: 'Co-founder and co-creative director with Ji-Young Kim', start: 2020, end: null }],
+    sources: ['https://www.open-yy.com/about', 'https://tomorrowltd.com/brands/open-yy', 'https://www.modemonline.com/img/_upload/newsletter/newsletter-1957-en.html'],
+  },
+  antonioCiongoli: {
+    name: 'Antonio Ciongoli',
+    career: [
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Associate designer, cut-and-sew knits for Rugby Ralph Lauren', start: 2008, end: 2010, sources: ['https://www.highsnobiety.com/p/18-east-antonio-ciongoli-under-the-radar/', 'https://www.gearpatrol.com/style/a497680/18-east-antonio-ciongoli/'] },
+      { house: 'gant', role: 'Other', roleDetail: 'Design work on Gant by Michael Bastian', notes: 'Worked on the collection during his Michael Bastian tenure; exact line-specific dates unconfirmed.', sources: ['https://www.highsnobiety.com/p/18-east-antonio-ciongoli-under-the-radar/'] },
+      { house: 'eighteenEast', role: 'Founder', roleDetail: 'Founder and creative director', start: 2018, end: null },
+    ],
+    notes: 'Previously designed at Vineyard Vines from 2007, then worked at Michael Bastian from 2010 to 2013. Co-founded and creatively directed Eidos from 2013 to 2017 before joining RRR Brands. Those labels and the platform are not separately represented.',
+    sources: ['https://mr-mag.com/antonio-ciongoli-unveils-his-new-line-at-nyc-event/', 'https://www.highsnobiety.com/p/18-east-antonio-ciongoli-under-the-radar/', 'https://www.gearpatrol.com/style/a497680/18-east-antonio-ciongoli/'],
+  },
+  aurelienArbet: {
+    name: 'Aurélien Arbet',
+    career: [{ house: 'etudesStudio', role: 'Founder', roleDetail: 'Co-founder and co-artistic director', start: 2012, end: null }],
+    notes: 'Also joined the sustained artistic direction of Aigle with the Études collective in 2020. Aigle is not separately represented; exact end of that role unconfirmed.',
+    sources: ['https://www.etudes-studio.com/pages/about', 'https://www.aigle.com/on/demandware.static/-/Library-Sites-Librarie-shard-aigle/default/dw43943d54/documents/AIGLE_DPEF_2022_ANGL.pdf'],
+  },
+  jeremieEgry: {
+    name: 'Jérémie Egry',
+    career: [{ house: 'etudesStudio', role: 'Founder', roleDetail: 'Co-founder and co-artistic director', start: 2012, end: null }],
+    notes: 'Also joined the sustained artistic direction of Aigle with the Études collective in 2020. Aigle is not separately represented; exact end of that role unconfirmed.',
+    sources: ['https://www.etudes-studio.com/pages/about', 'https://www.aigle.com/on/demandware.static/-/Library-Sites-Librarie-shard-aigle/default/dw43943d54/documents/AIGLE_DPEF_2022_ANGL.pdf'],
+  },
+  joseLamali: {
+    name: 'José Lamali',
+    career: [{ house: 'etudesStudio', role: 'Founder', roleDetail: 'Co-founder and co-creative director', start: 2012, end: 2025 }],
+    notes: 'Also joined the sustained artistic direction of Aigle with the Études collective in 2020. Aigle is not separately represented; exact end of that role unconfirmed.',
+    sources: ['https://www.fhcm.paris/en/news/etudes-breaking-the-waves', 'https://fr.linkedin.com/posts/jose-lamali-b6b49319_une-nouvelle-%C3%A8re-pour-%C3%A9tudes-studio-apr%C3%A8s-activity-7323260379420073984-0E0H', 'https://www.vogue.com/fashion-shows/spring-2026-menswear/etudes', 'https://www.aigle.com/on/demandware.static/-/Library-Sites-Librarie-shard-aigle/default/dw43943d54/documents/AIGLE_DPEF_2022_ANGL.pdf'],
+  },
+  bobHurley: {
+    name: 'Bob Hurley',
+    career: [
+      { house: 'billabong', role: 'President', roleDetail: 'President and US licensee, Billabong USA', start: 1983, end: 1999, sources: ['https://www.hawaiibusiness.com/leadership-conference-2017-information-2/2/'] },
+      { house: 'hurley', role: 'Founder', start: 1999, end: 2019 },
+    ],
+    notes: 'Surfboard shaper who established Hurley Surfboards in 1979 before running Billabong USA and launching the Hurley apparel brand. Departed Hurley in December 2019 following the sale to Bluestar Alliance.',
+    sources: ['https://groupynetwork.com/profile/bob-hurley/', 'https://www.hawaiibusiness.com/leadership-conference-2017-information-2/2/', 'https://shop-eat-surf-outdoor.com/news/hurley-family-no-longer-at-brand-under-bluestar/484356/'],
+  },
+  ryanHurley: {
+    name: 'Ryan Hurley',
+    career: [{ house: 'hurley', role: 'Creative Director', roleDetail: 'Creative director of product', end: 2019 }],
+    notes: 'Led Hurley’s product design and innovation, including performance boardshorts. Exact appointment year unconfirmed. Left with other Hurley family members in December 2019; subsequently became chief creative officer of Florence Marine X, which is not separately represented.',
+    sources: ['https://thehundreds.com/blogs/content/life-as-the-son-of-bob-hurley', 'https://shop-eat-surf-outdoor.com/news/hurley-family-no-longer-at-brand-under-bluestar/484356/', 'https://florencemarinex.com.au/blogs/stories/ivan-florence-joins-florence-strengthening-the-family-owned-brand'],
+  },
+  carrieBirdwellMann: {
+    name: 'Carrie Birdwell Mann',
+    career: [{ house: 'birdwell', role: 'Founder', roleDetail: 'Founder and original boardshort designer', start: 1961 }],
+    notes: 'Seamstress who developed Birdwell’s two-ply nylon surf shorts in her Santa Ana home. Later family generations continued the business; the exact end of her involvement is unconfirmed.',
+    sources: ['https://www.birdwell.com/pages/the-story-of-surfnyl', 'https://www.birdwell.com/blogs/birdwell-blog/wm-brown-magazine'],
+  },
+  natasKaupas: {
+    name: 'Natas Kaupas',
+    career: [
+      { house: 'quiksilver', role: 'Other', roleDetail: 'Freelance T-shirt designer and advertising art director', notes: 'Described his progression from freelance shirts into advertising in a 2004 interview; exact dates unconfirmed.', sources: ['https://www.caughtinthecrossfire.com/skate/features/natas-kaupas-interview/'] },
+      { house: 'quiksilver', role: 'Creative Director', roleDetail: 'Global creative director; also vice president of marketing, Americas, from 2006', notes: 'Global creative leadership confirmed in the 2006 appointment announcement; exact tenure boundaries unconfirmed.', sources: ['https://sgbonline.com/quiksilver-promotes-kaupas-to-vp-marketing/'] },
+      { house: 'element', role: 'Other', roleDetail: 'Art direction and graphic design', sources: ['https://sgbonline.com/quiksilver-promotes-kaupas-to-vp-marketing/'] },
+      { house: 'birdwell', role: 'Creative Director', start: 2014, notes: 'Joined the ownership and creative team after the 2014 acquisition. Current status and departure year unconfirmed.' },
+    ],
+    notes: 'Professional skateboarder turned graphic designer and creative director. Also worked in art direction and graphics for Santa Monica Airlines, Vita and Etnies and founded Designarium; these businesses are not separately represented.',
+    sources: ['https://www.caughtinthecrossfire.com/skate/features/natas-kaupas-interview/', 'https://sgbonline.com/quiksilver-promotes-kaupas-to-vp-marketing/', 'https://www.csun.edu/~vcmgt0j3/SOM306/News/BirdwellBritches.pdf', 'https://www.heddels.com/2019/08/birdwell-beach-britches-brand-profile/', 'https://www.thetidalist.com/the-inside/how-legendary-surf-brand-birdwell-beach-briches-stands-the-test-of-time-and-style'],
+  },
+  michaelPatterson: {
+    name: 'Michael Patterson',
+    career: [
+      { house: 'quiksilver', role: 'Other', roleDetail: 'Menswear designer', start: 2000, end: 2004, sources: ['https://malakye.com/profile/michael-patterson-704199'] },
+      { house: 'vince', role: 'Menswear Director', roleDetail: 'Vice president of men’s design', start: 2007, end: 2013, sources: ['https://malakye.com/profile/michael-patterson-704199'] },
+      { house: 'vince', role: 'Menswear Director', roleDetail: 'Creative director and consultant, menswear', start: 2016, end: 2017, sources: ['https://malakye.com/profile/michael-patterson-704199'] },
+      { house: 'birdwell', role: 'Head Designer', roleDetail: 'Design director', start: 2022, notes: 'Career profile lists June 2022 as the start, but its newer headline describes Birdwell as a previous employer. Exact departure year unconfirmed.' },
+    ],
+    notes: 'Menswear designer and consultant. Previously design director at Ever (2004–2007), vice president of menswear design at M.Nii (2014–2015), and a freelance designer at Perfect Day CMD (2020–2022). These employers are not separately represented.',
+    sources: ['https://malakye.com/profile/michael-patterson-704199'],
+  },
+  silasAdler: {
+    name: 'Silas Adler',
+    born: 1985,
+    nationality: 'Danish',
+    career: [
+      { house: 'soulland', role: 'Founder', roleDetail: 'Founder and creative director', start: 2002, end: 2024 },
+    ],
+    notes: 'Self-taught designer whose background in skateboarding informed Soulland’s graphic tees and later collections. Left all roles at Soulland on 24 June 2024.',
+    sources: ['https://www.interviewmagazine.com/fashion/menswear-monday-soulland', 'https://fashionunited.in/news/people/silas-adler-departs-from-soulland/2024062445523'],
+  },
+  ulrikPedersen: {
+    name: 'Ulrik Pedersen',
+    nationality: 'Danish',
+    career: [
+      { house: 'nn07', role: 'Founder', roleDetail: 'Co-founder', start: 2007, end: 2016 },
+      { house: 'sunflower', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2018, end: null },
+    ],
+    notes: 'Danish menswear entrepreneur and designer. Worked at Bruuns Bazaar before co-founding NN.07; that employer is not separately represented. Left NN.07 in 2016 before establishing Sunflower with Alan Blond.',
+    sources: ['https://lex.dk/NN07', 'https://www.vogue.com/fashion-shows/copenhagen-fall-2023/sunflower', 'https://www.vogue.com/fashion-shows/spring-2027-menswear/sunflower'],
+  },
+  victorLindh: {
+    name: 'Victor Lindh',
+    nationality: 'Swedish',
+    career: [{ house: 'nn07', role: 'Founder', roleDetail: 'Co-founder; also served as creative director', start: 2007, notes: 'Creative directorship documented in 2012. Exact creative-role boundaries and departure year unconfirmed.' }],
+    notes: 'Previously worked at Bruuns Bazaar. Returned to fashion in 2025 as creative director of Cesar Equipment after several years away; those labels are not separately represented.',
+    sources: ['https://lex.dk/NN07', 'https://www.kingmagazine.se/nn07-slapper-overlinje/', 'https://www.habit.se/article/view/1189532/nn07s_grundare_victor_lindh_tillbaka_med_nytt_herrvarumarke'],
+  },
+  andreasVonDerHeide: {
+    name: 'Andreas von der Heide',
+    nationality: 'Danish',
+    career: [{ house: 'lesDeux', role: 'Founder', roleDetail: 'Co-founder and managing partner', start: 2011, end: null }],
+    notes: 'Co-founded Les Deux while studying law. His role concerns brand development and the business rather than the creative-director succession.',
+    sources: ['https://lex.dk/Les_Deux', 'https://lesdeux.com/pages/about-us', 'https://fashionunited.be/nieuws/mensen/tussen-discipline-en-creativiteit-hoe-andreas-von-der-heide-les-deux-vormgeeft/2026050548870'],
+  },
+  virgilNicholas: {
+    name: 'Virgil Nicholas',
+    career: [{ house: 'lesDeux', role: 'Founder', roleDetail: 'Co-founder', start: 2011, notes: 'Exact departure year and subsequent role unconfirmed.' }],
+    notes: 'Creative co-founder of Les Deux alongside Andreas von der Heide. Their contrasting backgrounds informed the label’s combination of preppy clothing and streetwear.',
+    sources: ['https://lex.dk/Les_Deux', 'https://lesdeux.com/pages/about-us'],
+  },
+  kristofferHaapanen: {
+    name: 'Kristoffer Haapanen',
+    career: [{ house: 'lesDeux', role: 'Founder', roleDetail: 'Co-founder; joined a few months after launch', start: 2011, end: null }],
+    notes: 'Joined Andreas von der Heide a few months after Les Deux’s launch as co-founder and CEO, bringing commercial and organisational experience. His role is separate from creative direction.',
+    sources: ['https://fashionunited.be/nieuws/mensen/tussen-discipline-en-creativiteit-hoe-andreas-von-der-heide-les-deux-vormgeeft/2026050548870'],
+  },
+  mathiasHJensen: {
+    name: 'Mathias H. Jensen',
+    career: [{ house: 'lesDeux', role: 'Creative Director', end: null, notes: 'Creative leadership confirmed in 2019 reporting and a September 2026 interview. Exact appointment year unconfirmed.' }],
+    sources: ['https://dontt.dk/les-deux/', 'https://branchebladettoj.dk/udgivelse/les-deux-we-aim-to-create-one-of-the-worlds-largest-fashion-brands/'],
+  },
+  madsNorgaard: {
+    name: 'Mads Nørgaard',
+    born: 1961,
+    nationality: 'Danish',
+    career: [{ house: 'madsNorgaard', role: 'Founder', roleDetail: 'Founder and designer', start: 1986, end: null }],
+    notes: 'Third-generation member of the Nørgaard retail and design family. Established his own label in 1986, distinct from his grandfather’s shop founded in 1944 and his father Jørgen’s earlier clothing designs.',
+    sources: ['https://www.madsnorgaard.com/blogs/about/the-background', 'https://www.madsnorgaard.com/blogs/about/our-brand', 'https://www.madsnorgaard.com/blogs/journal/anniversary'],
+  },
+  astridAndersen: {
+    name: 'Astrid Andersen',
+    nationality: 'Danish',
+    career: [{ house: 'astridAndersen', role: 'Founder', roleDetail: 'Founder and designer', start: 2010, end: 2021 }],
+    notes: 'Royal College of Art graduate who established her own label after graduating in 2010. Based her studio in Copenhagen and showed menswear in London. Paused the label in 2021 and launched the separate womenswear brand STEL with Anders Freund in 2024; STEL is not separately represented.',
+    sources: ['https://fashionista.com/2017/09/astrid-andersen-interview', 'https://www.highsnobiety.com/p/astrid-andersen-stel-interview/'],
+  },
+  alanBlond: {
+    name: 'Alan Blond',
+    career: [
+      { house: 'madsNorgaard', role: 'Other', roleDetail: 'Product development and production', notes: 'Worked at the label before Sunflower; exact tenure dates unconfirmed.' },
+      { house: 'norseProjects', role: 'Other', roleDetail: 'Product development and production', notes: 'Worked at the label before Sunflower; exact tenure dates unconfirmed.' },
+      { house: 'sunflower', role: 'Founder', roleDetail: 'Co-founder', start: 2018, end: null },
+    ],
+    sources: ['https://www.habit.se/article/view/1127410/norskt_danskt_och_svenskt_i_finalen_till_habits_branschpris_arets_denimvarumarke', 'https://www.vogue.com/fashion-shows/spring-2027-menswear/sunflower', 'https://fashionforum.dk/2019/01/24/nyt-dansk-herrebrand-vi-vil-pille-tempoet-ud-af-herremoden/'],
+  },
+  michalaWiesneck: {
+    name: 'Michala Wiesneck',
+    nationality: 'Danish',
+    career: [{ house: 'nn07', role: 'Womenswear Director', roleDetail: 'Creative direction of the former womenswear line', start: 2011, notes: 'The womenswear line later closed; exact tenure boundaries unconfirmed.' }],
+    notes: 'Trained at the Chambre Syndicale school in Paris and worked at Christian Lacroix and Cacharel. Later held senior design and creative roles at InWear, DAY Birger et Mikkelsen and Esprit before establishing her own M·W label. Those employers and her namesake label are not separately represented.',
+    sources: ['https://michalawiesneck.com/pages/about-michala', 'https://lex.dk/NN07'],
+  },
+  anthonyRock: {
+    name: 'Anthony Rock',
+    career: [
+      { house: 'acneStudios', role: 'Other', roleDetail: 'Design team; denim', notes: 'Worked in a senior role before co-founding Self Cinema in 2019; exact tenure dates unconfirmed.' },
+      { house: 'sunflower', role: 'Other', roleDetail: 'Denim design, development and production', notes: 'Denim design documented in 2024; exact tenure dates and current status unconfirmed.' },
+    ],
+    notes: 'British designer based in Stockholm. Co-founded Self Cinema with Samuel Thomas in 2019 after they worked at Acne Studios; also designed denim for Hope. These labels are not separately represented.',
+    sources: ['https://www.habit.se/article/view/1127410/norskt_danskt_och_svenskt_i_finalen_till_habits_branschpris_arets_denimvarumarke', 'https://cdn.website-editor.net/8eeff06db62d4313ab44079db3fa6cf3/files/uploaded/Three%2520to%2520see%252C%2520Scandinavian%2520Traveler%2520Dec%252019%253AJan%252020%2520.pdf'],
+  },
+  bengtThornefors: {
+    name: 'Bengt Thornefors',
+    nationality: 'Swedish',
+    career: [
+      { house: 'acneStudios', role: 'Other', roleDetail: 'Senior designer', start: 2003, end: 2011 },
+      { house: 'saintLaurent', role: 'Other', roleDetail: 'Senior designer and artistic consultant', start: 2012, notes: 'Worked during Hedi Slimane’s creative directorship; exact departure year unconfirmed.' },
+      { house: 'sunflower', role: 'Other', roleDetail: 'Design consultant', notes: 'Part of the early design team; exact tenure boundaries and current status unconfirmed.' },
+    ],
+    notes: 'Co-founded the home-textile label Magniberg with Nina Norgren in 2016 and became creative director of Sahco in January 2022. Also consulted for Hope; these businesses are not separately represented.',
+    sources: ['https://kvadrat.press.camronglobal.com/sahco-a-new-era-for-the-storied-maison-rftqj7', 'https://dr-adams.dk/en-us/collections/sunflower-w', 'https://fashionforum.dk/2019/01/24/nyt-dansk-herrebrand-vi-vil-pille-tempoet-ud-af-herremoden/'],
+  },
+  goldenHarper: {
+    name: 'Golden Harper',
+    career: [{ house: 'altra', role: 'Founder', roleDetail: 'Co-founder; original footwear design and development', start: 2009, notes: 'VF’s current history dates the company to 2009; earlier releases use its 2011 commercial launch. Exact departure year and current role unconfirmed.' }],
+    notes: 'Running-store employee and runner whose experiments removing heel elevation led to Altra’s original Zero Drop shoes and roomy FootShape toe boxes.',
+    sources: ['https://www.vfc.com/about-us/company-history', 'https://d1io3yog0oux5.cloudfront.net/_5abd5b5da664e1a491be32c4849e7435/vfc/news/2018-11-20_VF_Corporation_Appoints_Todd_Dalhausser_as_Altra_1670.pdf'],
+  },
+  brianBeckstead: {
+    name: 'Brian Beckstead',
+    career: [{ house: 'altra', role: 'Founder', roleDetail: 'Co-founder; product development and brand ambassador', start: 2009, end: null }],
+    notes: 'Runner and Altra co-founder. Took responsibility for product and marketing as chief marketing officer in 2018 and continues to represent Altra at running events. The end of the formal marketing title is unconfirmed.',
+    sources: ['https://www.vfc.com/about-us/company-history', 'https://d1io3yog0oux5.cloudfront.net/_5abd5b5da664e1a491be32c4849e7435/vfc/news/2018-11-20_VF_Corporation_Appoints_Todd_Dalhausser_as_Altra_1670.pdf', 'https://www.fleetfeet.com/s/newsmyrnabeach/news/brian-beckstead-co-founder-of-altra-meet-and-greet'],
+  },
+  doubHanshaw: {
+    name: 'Doub Hanshaw',
+    career: [{ house: 'freePeople', role: 'Creative Director', roleDetail: 'Chief creative director', end: null, notes: 'Creative directorship documented by Free People in 2014 and 2016 and in a July 2026 interview; exact appointment year unconfirmed.' }],
+    notes: 'Longstanding Free People designer and creative director whose work spans clothing, graphics, catalogs and campaigns. Previously worked at Betsey Johnson; the exact role and dates are unconfirmed, and that label is not separately represented.',
+    sources: ['https://www.doubhanshaw.com/', 'https://www.prweb.com/releases/falling_in_love_free_people_s_bldg_25_blog_will_tell_the_story/prweb11504582.htm', 'https://www.youtube.com/watch?v=1PnVDehO1HQ', 'https://neverworns.substack.com/p/the-delightful-time-warp-of-vintage'],
+  },
+  barryWestonClark: {
+    name: 'Barry Weston Clark',
+    career: [{ house: 'weston', role: 'Founder', roleDetail: 'Founder and original board designer', start: 2012, end: 2016 }],
+    notes: 'Founded Weston in Minturn, Colorado, experimenting with snowboard shapes and materials including beetle-kill wood. Sold the company to Leo Tsuo in February 2016.',
+    sources: ['https://westonbackcountry.com/en-ca/pages/what-the-faq', 'https://westonbackcountry.com/en-ca/blogs/news/86764228-new-owner-same-backcountry-tradition'],
+  },
+  lenNecefer: {
+    name: 'Len Necefer',
+    nationality: 'Diné / American',
+    career: [{ house: 'nativesOutdoors', role: 'Founder', roleDetail: 'Founder; creative collective and product development', start: 2017, end: null }],
+    notes: 'Diné entrepreneur, engineer, filmmaker and outdoor advocate. Established NativesOutdoors to support Indigenous talent, products and storytelling within the outdoor industry.',
+    sources: ['https://www.natives-outdoors.org/about', 'https://drlennecefer.com/entrepreneurship'],
+  },
+  randyMerrell: {
+    name: 'Randy Merrell',
+    career: [{ house: 'merrell', role: 'Founder', roleDetail: 'Co-founder; original boot designer', start: 1981 }],
+    notes: 'Custom bootmaker whose handmade hiking boots provided the original Merrell product designs.',
+    sources: ['https://www.merrell.com/US/en/content?caid=cat-landing-slotbanner-about-us-20160511'],
+  },
+  clarkMatis: {
+    name: 'Clark Matis',
+    career: [{ house: 'merrell', role: 'Founder', roleDetail: 'Co-founder; production and marketing', start: 1981 }],
+    notes: 'Former Rossignol executive and Olympic skier who co-founded Merrell, contributing production management and marketing experience.',
+    sources: ['https://www.merrell.com/US/en/content?caid=cat-landing-slotbanner-about-us-20160511'],
+  },
+  johnSchweizer: {
+    name: 'John Schweizer',
+    career: [{ house: 'merrell', role: 'Founder', roleDetail: 'Co-founder; business and Italian sourcing', start: 1981 }],
+    notes: 'Former Rossignol executive who co-founded Merrell, contributing business expertise and Italian manufacturing contacts.',
+    sources: ['https://www.merrell.com/US/en/content?caid=cat-landing-slotbanner-about-us-20160511'],
+  },
+  alexanderHo: {
+    name: 'Alexander Ho',
+    career: [{ house: 'merrell', role: 'Other', roleDetail: 'Global creative director — brand campaigns, storytelling and consumer experiences', end: null }],
+    notes: 'Leads Merrell’s global brand creative direction. Previously held agency creative leadership roles at Endeavor, 160over90 and Obsidianworks and worked as digital art director at Time. His brand communication role is distinct from footwear design leadership; appointment year is unconfirmed.',
+    sources: ['https://collab.sundance.org/catalog/Overview-of-the-Merrell-Brand-with-Alex-Ho'],
+  },
+  lorenzoFluxa: {
+    name: 'Lorenzo Fluxà',
+    career: [{ house: 'camper', role: 'Founder', roleDetail: 'Founder; footwear brand development', start: 1975 }],
+    sources: ['https://www.camper.com/it_IT/content/history/origins'],
+  },
+  sergioTacchiniFounder: {
+    name: 'Sergio Tacchini',
+    career: [{ house: 'sergioTacchini', role: 'Founder', roleDetail: 'Founder; tennis sportswear', start: 1966 }],
+    sources: ['https://montecarlotennismasters.com/wp-content/uploads/2024/02/Communique-Sergio-Tacchini-24.pdf'],
+  },
+  walterMartiny: {
+    name: 'Walter Martiny',
+    career: [{ house: 'superga', role: 'Founder', roleDetail: 'Founder; rubber footwear development', start: 1911 }],
+    sources: ['https://www.superga-usa.com/pages/about-us'],
+  },
+  danielBeckerman: {
+    name: 'Daniel Beckerman',
+    career: [{ house: 'retrosuperfuture', role: 'Founder', roleDetail: 'Founder; eyewear concept and design', start: 2007 }],
+    sources: ['https://retrosuperfuture.com/pages/retrosuperfuture'],
+  },
+  seanMichaelBeolchini: {
+    name: 'Sean Michael Beolchini',
+    career: [{ house: 'retrosuperfuture', role: 'Creative Director', notes: 'Documented in a first-person 2019 interview; appointment year, departure and current status are unconfirmed.' }],
+    sources: ['https://www.eyecarebusiness.com/issues/2019/april/the-eb-convo-retrosuperfuture/'],
+  },
+  thebeMagugu: {
+    name: 'Thebe Magugu',
+    nationality: 'South African',
+    career: [{ house: 'thebeMagugu', role: 'Founder', roleDetail: 'Founder and creative director', start: 2016, end: null }],
+    notes: 'Studied fashion design, photography and media in Johannesburg. Previously interned at Woolworths, which is not represented as a clothing label here. One-off projects for other fashion houses are not employment tenures.',
+    sources: ['https://www.ifc.org/en/contact/profile/thebe-magugu', 'https://www.sowetan.co.za/sundayworld/lifestyle/2019-03-06-thebe-magugu-born-for-and-with-fashion/'],
+  },
+  ladumaNgxokolo: {
+    name: 'Laduma Ngxokolo',
+    nationality: 'South African',
+    career: [{ house: 'maxhosaAfrica', role: 'Founder', roleDetail: 'Founder and creative director', start: 2010, end: null }],
+    notes: 'Knitwear designer whose work began with research into clothing for Xhosa initiates. Developed a distinctive geometric knit language from beadwork, local mohair and wool.',
+    sources: ['https://www.fhcm.paris/en/house/maxhosa-africa', 'https://maxhosa.africa/pages/about-us'],
+  },
+  richMnisi: {
+    name: 'Rich Mnisi',
+    nationality: 'South African',
+    career: [{ house: 'richMnisi', role: 'Founder', roleDetail: 'Founder and designer', start: 2015, end: null }],
+    notes: 'Johannesburg designer working across fashion, furniture and visual storytelling, with a practice informed by Tsonga heritage and family memories.',
+    sources: ['https://shop.richmnisi.com/policies/terms-of-service', 'https://zeitzmocaa.museum/artists/rich-mnisi/'],
+  },
+  adebayoOkeLawal: {
+    name: 'Adebayo Oke-Lawal',
+    nationality: 'Nigerian',
+    career: [{ house: 'orangeCulture', role: 'Founder', roleDetail: 'Founder and designer', start: 2011, end: null }],
+    notes: 'Self-taught designer with a finance and international-business background. Describes internships at Zebra Living, Kiki Kamanu, Harvey Nichols and Liberty; these businesses are not separately represented. His label debuted in 2011, while its own website gives 2010/2011 for its origins.',
+    sources: ['https://orangeculture.com.ng/pages/about', 'https://www.bellanaijastyle.com/adebayo-oke-lawal-lvmh-prize-finalist-orange-culture-passion-purpose/'],
+  },
+  kennethIze: {
+    name: 'Kenneth Ize',
+    nationality: 'Nigerian-Austrian',
+    career: [{ house: 'kennethIze', role: 'Founder', roleDetail: 'Founder and designer', start: 2013, end: null }],
+    notes: 'Kenneth Izedonmwen grew up in Austria and trained at the University of Applied Arts Vienna. Interned at Edun in New York before developing a practice centred on Nigerian weaving; Edun is not separately represented. Paused his label while pursuing further study, returning for Spring/Summer 2016.',
+    sources: ['https://lagosfashionweek.ng/designers/kenneth-ize', 'https://www.austrianfashionassociation.at/talent/kenneth-ize/', 'https://www.net-a-porter.com/en-bh/porter/article-7ce42b41816c6fb4/fashion/art-of-style/kenneth-ize'],
+  },
+  iniyeTokyoJames: {
+    name: 'Iniye Tokyo James',
+    nationality: 'British-Nigerian',
+    career: [{ house: 'tokyoJames', role: 'Founder', roleDetail: 'Founder and designer', start: 2015, end: null }],
+    notes: 'Trained in mathematics in London, then worked in styling, publishing and campaign direction. Established Rough UK and later edited MADE in Lagos. Campaign commissions for other fashion brands are not treated as employment.',
+    sources: ['https://www.lvmhprize.com/en/tokyo-james', 'https://lagosfashionweek.ng/designers/tokyo-james'],
+  },
+  adejuThompson: {
+    name: 'Adeju Thompson',
+    nationality: 'Nigerian',
+    career: [{ house: 'lagosSpaceProgramme', role: 'Founder', roleDetail: 'Founder and creative director', start: 2018, end: null }],
+    notes: 'Studied fashion in England and returned to Lagos in 2013. Gained work experience at Maki Oh before founding Lagos Space Programme; Maki Oh is not separately represented. Their practice explores Yoruba heritage, gender and African futures.',
+    sources: ['https://www.lagosspaceprogramme.com/about', 'https://www.lvmhprize.com/en/lagos-space-programme'],
+  },
+  bubuOgisi: {
+    name: 'Bubu Ogisi',
+    nationality: 'Nigerian',
+    career: [{ house: 'iamisigo', role: 'Founder', roleDetail: 'Founder and creative director', start: 2009, end: null }],
+    notes: 'Designer and textile fibre artist working across Lagos, Nairobi and Accra. Researches indigenous textile traditions and works directly with artisans. Started IAMISIGO in 2009 and rebranded it in 2013.',
+    sources: ['https://juno-hamburg.com/en/ideas/interview-bubu-ogisi', 'https://www.elle.com/runway/a65664855/copenhagen-fashion-week-2025-iamisigo-interview/'],
+  },
+  aishaAyensu: {
+    name: 'Aisha Ayensu',
+    nationality: 'Ghanaian',
+    career: [{ house: 'christieBrown', role: 'Founder', roleDetail: 'Founder and creative director', start: 2008, end: null }],
+    notes: 'Also known as Aisha Obuobi. Founded Christie Brown in honour of her grandmother, a Ghanaian dressmaker, translating artisanal techniques into contemporary womenswear.',
+    sources: ['https://christiebrownonline.com/pages/about-us'],
+  },
+  sarahDiouf: {
+    name: 'Sarah Diouf',
+    nationality: 'Senegalese',
+    career: [{ house: 'tongoro', role: 'Founder', roleDetail: 'Founder and designer', start: 2016, end: null }],
+    notes: 'Designer and publisher who launched Ghubar in 2009 and NOIR in 2015 before establishing Tongoro in Dakar in spring 2016. Built the label around locally sourced materials and Senegalese tailoring.',
+    sources: ['https://www.tongoro.com/about-tongoro', 'https://gq.co.za/culture/2021-08-02-gq-chats-with-fashion-designer-sarah-diouf/'],
+  },
+  deanPozniak: {
+    name: 'Dean Pozniak',
+    nationality: 'South African',
+    career: [{ house: 'simonAndMary', role: 'Founder', roleDetail: 'Founder and hat designer', start: 2014 }],
+    notes: 'Fourth-generation milliner who developed Simon and Mary within his family’s Johannesburg hatmaking business. Named the label after his grandparents. Individual current tenure has not been independently confirmed.',
+    sources: ['https://visi.co.za/fresh-talent-simon-mary/', 'https://theinsidersa.co.za/simon-and-mary-keep-their-heritage-alive-with-a-modern-colourful-take-on-iconic-hats/'],
+  },
+  jonathanCoffie: {
+    name: 'Jonathan Coffie',
+    nationality: 'Ghanaian',
+    career: [{ house: 'freeTheYouth', role: 'Founder', roleDetail: 'Co-founder; creative collective', start: 2013 }],
+    notes: 'Known as Joey Lit. Co-founded the Tema creative collective that became Free The Youth. Founding role and participation documented in interviews; exact current individual appointment is unconfirmed.',
+    sources: ['https://www.highsnobiety.com/p/free-the-youth-interview/', 'https://hypebeast.com/2023/6/free-the-youth-creative-collective-interview'],
+  },
+  kellyFoli: {
+    name: 'Kelly Foli',
+    nationality: 'Ghanaian',
+    career: [{ house: 'freeTheYouth', role: 'Founder', roleDetail: 'Co-founder; creative collective', start: 2013 }],
+    notes: 'Also identified as Kelly Sekfafor Foli and Kurlz. Co-founded Free The Youth; exact current individual appointment is unconfirmed.',
+    sources: ['https://www.highsnobiety.com/p/free-the-youth-interview/', 'https://hypebeast.com/2023/6/free-the-youth-creative-collective-interview'],
+  },
+  richardOrmano: {
+    name: 'Richard Ormano',
+    nationality: 'Ghanaian',
+    career: [{ house: 'freeTheYouth', role: 'Founder', roleDetail: 'Co-founder; creative collective', start: 2013 }],
+    notes: 'Known as Kweku Maposh or Maposh Richard Ormano. Co-founded Free The Youth; exact current individual appointment is unconfirmed.',
+    sources: ['https://www.highsnobiety.com/p/free-the-youth-interview/', 'https://hypebeast.com/2023/6/free-the-youth-creative-collective-interview'],
+  },
+  winfredMensah: {
+    name: 'Winfred Mensah',
+    nationality: 'Ghanaian',
+    career: [{ house: 'freeTheYouth', role: 'Founder', roleDetail: 'Co-founder; creative collective', start: 2013, end: 2021 }],
+    notes: 'Known as Shace. Co-founded Free The Youth and died in 2021.',
+    sources: ['https://www.highsnobiety.com/p/free-the-youth-interview/', 'https://hypebeast.com/2023/6/free-the-youth-creative-collective-interview'],
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 

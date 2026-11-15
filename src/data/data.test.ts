@@ -49,6 +49,23 @@ describe('data', () => {
     expect(validateData()).toEqual([]);
   });
 
+  it('rejects invalid closure years and closure before founding', () => {
+    const house = getHouse('christopherKane')!;
+    const original = house.closed;
+    try {
+      for (const year of [0, -2023, 2023.5, NaN, Infinity]) {
+        house.closed = year;
+        expect(validateData()).toContain('christopherKane: closure year must be a positive integer');
+      }
+      house.closed = 2005;
+      expect(validateData()).toContain('christopherKane: closure before founding');
+    } finally {
+      if (original === undefined) delete house.closed;
+      else house.closed = original;
+    }
+    expect(validateData()).toEqual([]);
+  });
+
   it('adds the Authentic portfolio additions and keeps True Religion and Robin’s Jean separate', () => {
     const authentic = ['guess', 'nautica', 'aeropostale', 'sperry', 'volcom', 'juicyCouture',
       'billabong', 'quiksilver', 'luckyBrand', 'vince', 'rvca', 'tapout', 'element'];
@@ -450,6 +467,7 @@ describe('data', () => {
       ['paulHelbers', 2006], // head of menswear under Marc Jacobs
       ['kimJones', 2011],
       ['nicolasGhesquiere', 2013],
+      ['francescaAmfitheatrof', 2018],
       ['virgilAbloh', 2018],
       ['pharrellWilliams', 2023],
     ]);
@@ -481,6 +499,7 @@ describe('data', () => {
       'maximilianDavis',
     ]);
     expect(directorsOf('robertoCavalli').map((t) => t.designerId)).toEqual([
+      'lorenzoSerafini', // Undated womenswear leadership sorts before dated tenures.
       'robertoCavalli',
       'peterDundas',
       'paulSurridge',

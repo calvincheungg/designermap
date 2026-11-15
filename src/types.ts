@@ -4,6 +4,7 @@
  * Source of truth:
  *   - houses.ts    → one entry per fashion house (location, logo, founding info)
  *   - designers.ts → one entry per designer, with their `career` (list of tenures)
+ *   - collaborations.ts → one entry per dated collaboration between brands
  *
  * Everything else (a house's list of creative directors, a designer's "moves"
  * between houses) is derived from those two files in data/index.ts, so each fact
@@ -31,6 +32,8 @@ export interface HouseData {
   /** Editorial filter tags for the house overall, rather than a particular era. */
   tags: HouseTags;
   founded?: number;
+  /** Confirmed shutdown or current-pause year; displayed as Ended. Omit for active brands or an unknown end year. */
+  closed?: number;
   /** Designer profile IDs; names are resolved from designers.ts, never copied. */
   founders?: readonly string[];
   /** Corporate or collective founders, separate from individual designers. */
@@ -60,10 +63,28 @@ export interface HouseData {
   /** Optional brand color used for the initials badge + timeline accents. */
   color?: string;
   parentGroup?: GroupId;
+  /** Brand-family relationship, distinct from legal ownership and founding. */
+  parentHouse?: string;
   /** Regional business relationships; these do not imply global ownership. */
   regionalAffiliations?: readonly RegionalAffiliation[];
   notes?: string;
   sources?: string[];
+}
+
+/** One release or project; repeat partnerships can have separate entries by year. */
+export interface CollaborationData<HouseId extends string = string> {
+  /** Participating house IDs, each listed once. At least two are required. */
+  houses: readonly [HouseId, HouseId, ...HouseId[]];
+  /** Release year, rather than the announcement year. */
+  year: number;
+  /** Optional collection or project title. Brand names remain in houses.ts. */
+  name?: string;
+  notes?: string;
+  sources?: readonly string[];
+}
+
+export interface Collaboration extends CollaborationData {
+  id: string;
 }
 
 export type Role =

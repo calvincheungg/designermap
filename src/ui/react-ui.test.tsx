@@ -8,11 +8,133 @@ import { Filters } from './filters';
 import { SearchBox, matchingItems } from './listbox';
 import { PanelContent, type Selection } from './panel';
 import { ContextMenu } from './context-menu';
-import { GroupId } from '../data';
+import { getHouse, GroupId } from '../data';
 
 afterEach(cleanup);
 
 describe('React interface interactions', () => {
+  it('opens brand sections by default, toggles them independently, and expands a newly selected brand', async () => {
+    const user = userEvent.setup();
+    const view = render(<PanelContent selection={{ kind: 'house', id: 'dior' }} onSelect={() => {}} onTag={() => {}} />);
+    for (const name of ['Description', 'Creative directors', /Collaboration history/, 'Tags']) {
+      const toggle = screen.getByRole('button', { name });
+      const section = toggle.closest('fieldset')!;
+      expect(toggle.getAttribute('aria-expanded')).toBe('true');
+      expect(within(section).queryAllByRole('table').length + within(section).queryAllByRole('paragraph').length + within(section).queryAllByRole('button').length).toBeGreaterThan(1);
+      toggle.focus();
+      await user.keyboard('{Enter}');
+      expect(toggle.getAttribute('aria-expanded')).toBe('false');
+      expect(within(section).queryByRole('table')).toBeNull();
+      expect(within(section).queryByRole('paragraph')).toBeNull();
+      expect(within(section).getAllByRole('button')).toEqual([toggle]);
+      await user.click(toggle);
+      expect(toggle.getAttribute('aria-expanded')).toBe('true');
+      await user.click(toggle);
+    }
+    view.rerender(<PanelContent selection={{ kind: 'house', id: 'chanel' }} onSelect={() => {}} onTag={() => {}} />);
+    for (const name of ['Description', 'Creative directors', /Collaboration history/, 'Tags']) {
+      expect(screen.getByRole('button', { name }).getAttribute('aria-expanded')).toBe('true');
+    }
+  });
+  it('shows a confirmed end or current pause beside the founding year and omits it for active brands', () => {
+    const view = render(<PanelContent selection={{ kind: 'house', id: 'christopherKane' }} onSelect={() => {}} onTag={() => {}} />);
+    const row = screen.getByRole('row', { name: /Founded:\s*2006\s*\|\s*Ended:\s*2023/ });
+    expect(row.textContent).toMatch(/Founded:\s*2006\s*\|\s*Ended:\s*2023/);
+    view.rerender(<PanelContent selection={{ kind: 'house', id: 'astridAndersen' }} onSelect={() => {}} onTag={() => {}} />);
+    expect(screen.getByRole('row', { name: /Founded:\s*2010\s*\|\s*Ended:\s*2021/ })).toBeTruthy();
+    view.rerender(<PanelContent selection={{ kind: 'house', id: 'crocs' }} onSelect={() => {}} onTag={() => {}} />);
+    expect(screen.getByRole('row', { name: 'Founded: 2002' })).toBeTruthy();
+    expect(screen.queryByText('Ended:')).toBeNull();
+  });
+
+  it('shows dated collaboration history and clickable partners without source links', async () => {
+    function Harness() {
+      const [selection, setSelection] = useState<Selection>({ kind: 'house', id: 'fragmentDesign' });
+      return <PanelContent selection={selection} onSelect={setSelection} onTag={() => {}} />;
+    }
+    const user = userEvent.setup();
+    render(<Harness />);
+    const history = screen.getByText('Collaboration history (7)').closest('fieldset')!;
+    expect(within(history).getByRole('cell', { name: '2021' })).toBeTruthy();
+    expect(within(history).queryByRole('link', { name: /Source/ })).toBeNull();
+    expect(within(history).queryByRole('columnheader', { name: 'Collection' })).toBeNull();
+    const nikeRow = within(history).getByRole('link', { name: 'Sacai' }).closest('tr')!;
+    const search = within(nikeRow).getByRole('link', { name: 'Search' });
+    const url = new URL(search.getAttribute('href')!);
+    expect(url.origin).toBe('https://www.google.com');
+    expect(url.searchParams.get('q')).toBe(`${getHouse('fragmentDesign')!.name} x Nike x Sacai 2021`);
+    expect(search.getAttribute('target')).toBe('_blank');
+    expect(within(nikeRow).getByRole('link', { name: 'Nike' })).toBeTruthy();
+    await user.click(within(history).getByRole('link', { name: 'Sacai' }));
+    expect(screen.getByRole('heading', { name: 'Sacai' })).toBeTruthy();
+  });
+
+  it('limits collaboration history to the selected year', () => {
+    const view = render(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2005} onSelect={() => {}} onTag={() => {}} />);
+    expect(screen.getByText('No collaborations recorded through 2005.')).toBeTruthy();
+    view.rerender(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2020} onSelect={() => {}} onTag={() => {}} />);
+    const history = screen.getByText('Collaboration history (3)').closest('fieldset')!;
+    expect(within(history).getByRole('link', { name: 'Visvim' })).toBeTruthy();
+    expect(within(history).getByRole('link', { name: 'Red Wing Shoes' })).toBeTruthy();
+    expect(within(history).getByRole('link', { name: 'Carhartt WIP' })).toBeTruthy();
+    expect(within(history).queryByRole('link', { name: 'Nike' })).toBeNull();
+    view.rerender(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2021} onSelect={() => {}} onTag={() => {}} />);
+    expect(screen.getByText('Collaboration history (4)')).toBeTruthy();
+  });
+
+  it('consolidates repeat partners and searches the chosen release year', async () => {
+    const user = userEvent.setup();
+    render(<PanelContent selection={{ kind: 'house', id: 'humanMade' }} onSelect={() => {}} onTag={() => {}} />);
+    const history = screen.getByRole('group', { name: /Collaboration history/ });
+    expect(within(history).getAllByRole('link', { name: 'Adidas' })).toHaveLength(1);
+    const row = within(history).getByRole('link', { name: 'Adidas' }).closest('tr')!;
+    const years = within(row).getByRole('combobox');
+    expect(years.textContent).toBe('2021');
+    await user.click(years);
+    await user.click(screen.getByRole('option', { name: '2019' }));
+    const search = within(row).getByRole('link', { name: 'Search' });
+    expect(new URL(search.getAttribute('href')!).searchParams.get('q')).toBe('Human Made x Adidas 2019');
+  });
+
+  it('removes future years from consolidated rows and resets an unavailable selected year', async () => {
+    const user = userEvent.setup();
+    const view = render(<PanelContent selection={{ kind: 'house', id: 'humanMade' }} year={2021} onSelect={() => {}} onTag={() => {}} />);
+    const history = screen.getByRole('group', { name: /Collaboration history/ });
+    const row = within(history).getByRole('link', { name: 'Adidas' }).closest('tr')!;
+    await user.click(within(row).getByRole('combobox'));
+    await user.click(screen.getByRole('option', { name: '2021' }));
+    view.rerender(<PanelContent selection={{ kind: 'house', id: 'humanMade' }} year={2020} onSelect={() => {}} onTag={() => {}} />);
+    await user.click(within(row).getByRole('combobox'));
+    expect(screen.queryByRole('option', { name: '2021' })).toBeNull();
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('listbox')).toBeNull();
+    await user.keyboard('{ArrowDown}{Enter}');
+    expect(within(row).getByRole('combobox').textContent).toBe('2019');
+    await user.keyboard('{Home}{Enter}');
+    expect(new URL(within(row).getByRole('link', { name: 'Search' }).getAttribute('href')!).searchParams.get('q')).toBe('Human Made x Adidas 2020');
+  });
+
+  it('navigates from a parent house to its labels and back', async () => {
+    function Harness() {
+      const [selection, setSelection] = useState<Selection>({ kind: 'house', id: 'ralphLauren' });
+      return <PanelContent selection={selection} onSelect={setSelection} onTag={() => {}} />;
+    }
+    const user = userEvent.setup();
+    render(<Harness />);
+    const labels = screen.getByRole('group', { name: 'Labels (6)' });
+    await user.click(within(labels).getByRole('link', { name: 'Polo Ralph Lauren' }));
+    const parent = screen.getByRole('row', { name: 'Label of: Ralph Lauren' });
+    await user.click(within(parent).getByRole('link', { name: 'Ralph Lauren' }));
+    expect(screen.getByRole('group', { name: 'Labels (6)' })).toBeTruthy();
+  });
+
+  it('keeps a filtered label reachable in the directory when its parent is absent', () => {
+    render(<PanelContent selection={null} visibleHouses={[getHouse('ea7')!]} onSelect={() => {}} onTag={() => {}} />);
+    fireEvent.click(screen.getByText(/Italy · Milan/, { selector: 'summary' }));
+    expect(screen.getByRole('link', { name: 'EA7 Emporio Armani' })).toBeTruthy();
+    expect(screen.queryByRole('link', { name: 'Emporio Armani' })).toBeNull();
+  });
+
   it('keeps multiple filter selections, removes individual chips, clears all, and closes menus', async () => {
     const user = userEvent.setup();
     function Harness() {
@@ -27,14 +149,14 @@ describe('React interface interactions', () => {
     expect(within(collections).getByLabelText<HTMLInputElement>('Menswear').checked).toBe(true);
     expect(within(collections).getByLabelText<HTMLInputElement>('Womenswear').checked).toBe(true);
     expect(collections.parentElement?.hasAttribute('open')).toBe(true);
-    await user.click(screen.getByText('Primary Product', { selector: 'summary' }));
+    await user.click(screen.getByText('Product', { selector: 'summary' }));
     expect(collections.parentElement?.hasAttribute('open')).toBe(false);
-    const products = screen.getByRole('group', { name: 'Primary Product' });
+    const products = screen.getByRole('group', { name: 'Product' });
     await user.click(within(products).getByLabelText('Bags'));
     await user.click(screen.getByRole('button', { name: 'Remove Menswear from Collections' }));
     expect(screen.queryByRole('button', { name: 'Remove Menswear from Collections' })).toBeNull();
     expect(screen.getByRole('button', { name: 'Remove Womenswear from Collections' })).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Remove Bags from Primary Product' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Remove Bags from Product' })).toBeTruthy();
     await user.click(screen.getByRole('button', { name: 'Clear All' }));
     expect(screen.getByText('No Filters Selected')).toBeTruthy();
     expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Clear All' }).disabled).toBe(true);
@@ -130,7 +252,7 @@ describe('React interface interactions', () => {
     const business = screen.getByText('Business leadership', { selector: 'legend' }).closest('fieldset')!;
     expect(within(business).getByRole('columnheader', { name: 'Leader' })).toBeTruthy();
     expect(within(business).getByRole('link', { name: 'Mark Parker' })).toBeTruthy();
-    const creative = screen.getByText('Creative directors', { selector: 'legend' }).closest('fieldset')!;
+    const creative = screen.getByRole('button', { name: 'Creative directors' }).closest('fieldset')!;
     expect(within(creative).queryByRole('link', { name: 'Elliott Hill' })).toBeNull();
     await user.click(within(business).getByRole('link', { name: 'Elliott Hill' }));
     expect(screen.getByRole('heading', { name: 'Elliott Hill' })).toBeTruthy();
@@ -148,7 +270,7 @@ describe('React interface interactions', () => {
     expect(within(ownership).getByRole('link', { name: 'Margaret Howell' })).toBeTruthy();
     expect(within(ownership).getByRole('link', { name: 'Sugar Cane' })).toBeTruthy();
     expect(within(ownership).queryByRole('link', { name: 'Alpha Industries' })).toBeNull();
-    const regional = screen.getByText('Regional Relationships (4)').closest('fieldset')!;
+    const regional = screen.getByText('Regional Relationships (5)').closest('fieldset')!;
     await user.click(within(regional).getByRole('link', { name: 'Alpha Industries' }));
     expect(screen.getByRole('heading', { name: 'Alpha Industries' })).toBeTruthy();
     expect(screen.getByText(/Japan · Licensing and distribution/)).toBeTruthy();

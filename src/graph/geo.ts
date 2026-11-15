@@ -5,7 +5,7 @@ import world from 'world-atlas/countries-110m.json';
 import type { FeatureCollection, MultiLineString } from 'geojson';
 import subdivisions from '../data/map/north-america-subdivisions.json';
 import { houses } from '../data';
-import { cities, type CityName } from '../data/cities';
+import { mapLocationCoordinates, mapLocationForHouse } from './locations';
 import type { House, LatLng } from '../types';
 import { PIN_H, PIN_W } from './icons';
 
@@ -75,10 +75,11 @@ const GAP = 24;
 export const pinScale = (zoom: number) => Math.min(PIN_SCALE, PIN_MAX_PX_PER_PIXEL / zoom);
 
 export interface CityLayout {
+  /** Map location ID: an individual city or a display-only regional group. */
   city: string;
-  /** True position of the city on the map. */
+  /** Position of the city, or the representative city for a region. */
   anchor: Point;
-  /** Where the pin's pointer touches the map: exactly on the city. */
+  /** Where the pin's pointer touches the map: exactly on the location anchor. */
   tip: Point;
   houses: readonly House[];
 }
@@ -103,15 +104,15 @@ export interface Box {
 const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 const byName = (a: House, b: House) => collator.compare(a.name, b.name);
 
-let byCityCache: ReadonlyMap<string, readonly House[]> | undefined;
+let byLocationCache: ReadonlyMap<string, readonly House[]> | undefined;
 
 /**
- * Houses grouped by city, each city's list in alphabetical order (the grid order).
+ * Houses grouped by map location (city or region), alphabetically within each grid.
  * The data is static, so this is built once and shared; don't mutate it.
  */
-export const housesByCity = (): ReadonlyMap<string, readonly House[]> =>
-  (byCityCache ??= new Map(
-    [...Map.groupBy(houses, (h) => h.city)].map(([city, hs]) => [city, [...hs].sort(byName)]),
+export const housesByMapLocation = (): ReadonlyMap<string, readonly House[]> =>
+  (byLocationCache ??= new Map(
+    [...Map.groupBy(houses, (h) => mapLocationForHouse(h.id))].map(([city, hs]) => [city, [...hs].sort(byName)]),
   ));
 
 const gridSize = (n: number) => {
@@ -119,9 +120,9 @@ const gridSize = (n: number) => {
   return { cols, rows: Math.ceil(n / cols) };
 };
 
-/** Pin + city name, in model units, sitting exactly on the city at this zoom. */
+/** Pin + location label, in model units, positioned at its geographic anchor. */
 function pinBox(city: string, zoom: number): Box & { pinH: number } {
-  const anchor = project(cities[city as CityName]);
+  const anchor = project(mapLocationCoordinates(city));
   const k = pinScale(zoom);
   const pinH = PIN_H * k;
   const w = Math.max(PIN_W * k, (city.length * LABEL_PX * 0.6) / zoom);
@@ -131,17 +132,36 @@ function pinBox(city: string, zoom: number): Box & { pinH: number } {
   return { city, kind: 'marker', home, center: { ...home }, w, h, pinH };
 }
 
-/**
- * Where each expanded city's houses go: the free spot nearest its pin that
- * doesn't cover any pin or another open city (biggest cities first, so small
- * ones fit around them). Doesn't depend on zoom, so houses stay put.
- */
-export function placeGrids(expanded: ReadonlySet<string>, byCity = housesByCity()): Box[] {
+/** An already visible house that should stay in place while its family opens. */
+export interface HouseAnchor {
+  houseId: string;
+  position: Point;
+}
+
+/** Place open-city grids near their pins, reserving an anchored family first. */
+export function placeGrids(expanded: ReadonlySet<string>, byCity = housesByMapLocation(), anchor?: HouseAnchor): Box[] {
   const placed: Box[] = [...byCity.keys()].map((c) => pinBox(c, GRID_REF_ZOOM));
   const pins = new Map(placed.map((b) => [b.city, b]));
   const grids: Box[] = [];
+  // Reserve the selected family's grid first so other open cities avoid it.
+  if (anchor) {
+    for (const city of expanded) {
+      const hs = byCity.get(city);
+      const index = hs?.findIndex((house) => house.id === anchor.houseId) ?? -1;
+      if (!hs || index < 0) continue;
+      const { cols, rows } = gridSize(hs.length);
+      const center = {
+        x: anchor.position.x - ((index % cols) - (cols - 1) / 2) * CELL_W,
+        y: anchor.position.y - (Math.floor(index / cols) - (rows - 1) / 2) * CELL_H,
+      };
+      const grid: Box = { city, kind: 'grid', home: center, center, w: cols * CELL_W, h: rows * CELL_H };
+      placed.push(grid);
+      grids.push(grid);
+      break;
+    }
+  }
   const toOpen = [...expanded]
-    .filter((c) => byCity.has(c))
+    .filter((c) => byCity.has(c) && !grids.some((grid) => grid.city === c))
     .sort((a, b) => byCity.get(b)!.length - byCity.get(a)!.length || a.localeCompare(b));
 
   for (const city of toOpen) {
@@ -158,7 +178,7 @@ export function placeGrids(expanded: ReadonlySet<string>, byCity = housesByCity(
 
 /** All boxes for a state, for tests: pins (at the grid reference zoom) plus open-city grids. */
 export function mapBoxes(expanded: ReadonlySet<string>): Box[] {
-  return [...[...housesByCity().keys()].map((c) => pinBox(c, GRID_REF_ZOOM)), ...placeGrids(expanded)];
+  return [...[...housesByMapLocation().keys()].map((c) => pinBox(c, GRID_REF_ZOOM)), ...placeGrids(expanded)];
 }
 
 /**
@@ -195,7 +215,7 @@ function placeNear(m: Box, w: number, h: number, placed: Box[]): Point {
 }
 
 /** House positions for the open cities' grids, alphabetical, row by row. */
-export function housePositions(grids: Box[], byCity = housesByCity()): Map<string, Point> {
+export function housePositions(grids: Box[], byCity = housesByMapLocation()): Map<string, Point> {
   const out = new Map<string, Point>();
   for (const g of grids) {
     const hs = byCity.get(g.city)!;
@@ -210,13 +230,13 @@ export function housePositions(grids: Box[], byCity = housesByCity()): Map<strin
   return out;
 }
 
-/** Pins (always exactly on their city) + houses for an expansion state. */
-export function layoutMap(expanded: ReadonlySet<string>, byCity = housesByCity()): MapLayout {
+/** Pins at their city or regional anchor + houses for an expansion state. */
+export function layoutMap(expanded: ReadonlySet<string>, byCity = housesByMapLocation(), anchor?: HouseAnchor): MapLayout {
   const cityLayouts = [...byCity].map(([city, hs]): CityLayout => {
-    const at = project(cities[city as CityName]);
+    const at = project(mapLocationCoordinates(city));
     return { city, anchor: at, tip: at, houses: hs };
   });
-  return { cities: cityLayouts, houses: housePositions(placeGrids(expanded, byCity), byCity) };
+  return { cities: cityLayouts, houses: housePositions(placeGrids(expanded, byCity, anchor), byCity) };
 }
 
 export function boxesOverlap(

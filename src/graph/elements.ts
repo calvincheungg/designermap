@@ -1,11 +1,12 @@
 import type { ElementDefinition } from 'cytoscape';
-import { allMoves, getDesigner, getHouse, houses } from '../data';
+import { allMoves, collaborations, getDesigner, getHouse, houses } from '../data';
 import type { House } from '../types';
 import { layoutMap } from './geo';
+import { mapHousePath, mapLocationForHouse } from './locations';
 import { cityMarkerIcon, houseIcon, initialsIcon } from './icons';
 
 /**
- * World map: a numbered marker per city; expand a city to see its houses;
+ * World map: a numbered marker per city or region; expand a city to see its houses;
  * arrows show moves between whatever is showing.
  */
 
@@ -23,6 +24,7 @@ function houseNode(h: House, parent?: string): ElementDefinition {
       refId: h.id,
       kind: 'house',
       city: h.city,
+      mapLocation: mapLocationForHouse(h.id),
       label: h.name,
       ...(parent && { parent }),
       image: houseIcon(h),
@@ -38,7 +40,7 @@ function houseNode(h: House, parent?: string): ElementDefinition {
 /* ---------- Map view ---------- */
 
 /**
- * Static map elements: a pin per city, an invisible group per city for its
+ * Static map elements: a pin per map location, an invisible group per location for its
  * houses (with a dotted leader back to the pin), and every house. Collapsed
  * cities' houses get hidden by DesignerGraph, which also applies positions.
  */
@@ -54,8 +56,8 @@ export function mapElements(): ElementDefinition[] {
         kind: 'marker',
         city: c.city,
         label: c.city,
-        count: c.houses.length,
-        image: cityMarkerIcon(c.houses.length, false),
+        count: c.houses.filter((h) => !h.parentHouse).length,
+        image: cityMarkerIcon(c.houses.filter((h) => !h.parentHouse).length, false),
         tip: c.tip,
       },
       // A copy: Cytoscape keeps and mutates the position object, and `tip` must
@@ -72,11 +74,11 @@ export function mapElements(): ElementDefinition[] {
     });
     els.push({
       group: 'edges',
-      data: { id: `gl:${c.city}`, kind: 'leader', source: nodeId.city(c.city), target: nodeId.grid(c.city) },
+      data: { id: `gl:${c.city}`, kind: 'leader', city: c.city, source: nodeId.city(c.city), target: nodeId.grid(c.city) },
       selectable: false,
     });
   }
-  for (const h of houses) els.push(houseNode(h, nodeId.grid(h.city)));
+  for (const h of houses) els.push(houseNode(h, nodeId.grid(mapLocationForHouse(h.id))));
   return els;
 }
 
@@ -85,11 +87,8 @@ export function mapElements(): ElementDefinition[] {
  * if its city is expanded, otherwise to the city marker. Moves inside one
  * collapsed city would be a loop on the marker, so they're left out.
  */
-export function moveEdges(expanded: ReadonlySet<string>): ElementDefinition[] {
-  const end = (houseId: string) => {
-    const city = getHouse(houseId)!.city;
-    return expanded.has(city) ? nodeId.house(houseId) : nodeId.city(city);
-  };
+export function moveEdges(expanded: ReadonlySet<string>, visibleHouses?: ReadonlySet<string>): ElementDefinition[] {
+  const end = (houseId: string) => mapEndpoint(houseId, expanded, visibleHouses);
   return allMoves().flatMap((m, i) => {
     const source = end(m.from.house);
     const target = end(m.to.house);
@@ -112,5 +111,48 @@ export function moveEdges(expanded: ReadonlySet<string>): ElementDefinition[] {
         },
       },
     ];
+  });
+}
+
+/** Shared routing for careers and collaborations, including hidden nested labels. */
+function mapEndpoint(houseId: string, expanded: ReadonlySet<string>, visibleHouses?: ReadonlySet<string>): string {
+  const city = mapLocationForHouse(houseId);
+  if (!expanded.has(city)) return nodeId.city(city);
+  const visible = visibleHouses ? mapHousePath(houseId).findLast((id) => visibleHouses.has(id)) : houseId;
+  return visible ? nodeId.house(visible) : nodeId.city(city);
+}
+
+/** One arrow per brand pair, aggregating releases through the selected year. */
+export function collaborationEdges(expanded: ReadonlySet<string>, visibleHouses?: ReadonlySet<string>, selectedHouse?: string, year = Infinity): ElementDefinition[] {
+  const partnerships = new Map<string, { fromHouse: string; toHouse: string; years: Set<number>; collaborationIds: string[] }>();
+  for (const project of collaborations) {
+    if (selectedHouse && !project.houses.includes(selectedHouse)) continue;
+    const pairs = selectedHouse ? project.houses.filter((id) => id !== selectedHouse).map((id) => [selectedHouse, id] as const)
+      : project.houses.flatMap((id, i) => project.houses.slice(i + 1).map((partner) => [id, partner] as const));
+    for (const [fromHouse, toHouse] of pairs) {
+      const key = [fromHouse, toHouse].sort().join(':');
+      let partnership = partnerships.get(key);
+      if (!partnership) {
+        partnership = { fromHouse, toHouse, years: new Set(), collaborationIds: [] };
+        partnerships.set(key, partnership);
+      }
+      partnership.years.add(project.year);
+      partnership.collaborationIds.push(project.id);
+    }
+  }
+  return [...partnerships].flatMap(([key, { fromHouse, toHouse, years, collaborationIds }]) => {
+    const source = mapEndpoint(fromHouse, expanded, visibleHouses);
+    const target = mapEndpoint(toHouse, expanded, visibleHouses);
+    if (source === target) return [];
+    const start = Math.min(...years);
+    const visibleYears = [...years].filter((releaseYear) => releaseYear <= year);
+    const date = visibleYears.length > 1 ? 'Multiple' : visibleYears[0] ?? start;
+    const names = [fromHouse, toHouse].map((id) => getHouse(id)?.name ?? id).join(' × ');
+    return [{ group: 'edges' as const, data: {
+      id: `collab:${key}`,
+      kind: 'collaboration', collaborationIds,
+      source, target, fromHouse, toHouse, start,
+      label: `${names} (${date})`,
+    } }];
   });
 }

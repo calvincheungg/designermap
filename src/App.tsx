@@ -10,6 +10,7 @@ import { PanelContent, panelTitle, type Selection } from './ui/panel';
 const [minYear, maxYear] = yearRange();
 const moveCount = allMoves().length;
 const LINES_KEY = 'designer-map:show-lines';
+const COLLABORATIONS_KEY = 'designer-map:show-collaborations';
 const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 const searchItems: ListItem<NonNullable<Selection>>[] = [
   ...houses.map((h) => ({ label: h.name, aliases: h.aliases, hint: 'house', value: { kind: 'house' as const, id: h.id } })),
@@ -35,6 +36,9 @@ export function App() {
   const [allExpanded, setAllExpanded] = useState(false);
   const [showLines, setShowLines] = useState(() => {
     try { return localStorage.getItem(LINES_KEY) !== 'off'; } catch { return true; }
+  });
+  const [showCollaborations, setShowCollaborations] = useState(() => {
+    try { return localStorage.getItem(COLLABORATIONS_KEY) !== 'off'; } catch { return true; }
   });
   const visibleYear = year >= maxYear ? Infinity : year;
   const matchingHouses = useMemo(() => houses.filter((h) => matchesHouseFilters(h.tags, filters)), [filters]);
@@ -69,6 +73,10 @@ export function App() {
     try { localStorage.setItem(LINES_KEY, showLines ? 'on' : 'off'); } catch { /* storage unavailable */ }
   }, [showLines]);
   useEffect(() => {
+    graph.current?.setShowCollaborations(showCollaborations);
+    try { localStorage.setItem(COLLABORATIONS_KEY, showCollaborations ? 'on' : 'off'); } catch { /* storage unavailable */ }
+  }, [showCollaborations]);
+  useEffect(() => {
     if (playFrom === null) return;
     let next = playFrom;
     const timer = window.setInterval(() => {
@@ -97,6 +105,7 @@ export function App() {
         <button id="play" onClick={() => setPlayFrom((current) => current === null ? year >= maxYear ? minYear : year : null)}>{playFrom === null ? '▶ Play' : '■ Stop'}</button>
       </div>
       <div className="field-row"><input type="checkbox" id="show-lines" checked={showLines} onChange={(event) => setShowLines(event.target.checked)} /><label htmlFor="show-lines">Show move lines</label></div>
+      <div className="field-row"><input type="checkbox" id="show-collaborations" checked={showCollaborations} onChange={(event) => setShowCollaborations(event.target.checked)} /><label htmlFor="show-collaborations">Show collaboration lines</label></div>
       <div className="field-row">
         <button id="expand-all" aria-pressed={allExpanded} onClick={() => graph.current?.setAllExpanded(!graph.current.allExpanded)}>{allExpanded ? 'Collapse all' : 'Expand all'}</button>
         <button id="fit" onClick={() => graph.current?.fit()}>Fit</button>
@@ -107,7 +116,7 @@ export function App() {
       <div className="content">
         <MapView graphRef={graph} onSelect={select} onExpandChange={onExpandChange} />
         <div className="window side-window"><div className="title-bar"><div className="title-bar-text" id="panel-title">{panelTitle(selection)}</div></div>
-          <div className="window-body" id="panel" ref={panel}><PanelContent key={panelKey} selection={selection} visibleHouses={visibleHouses} onSelect={select} onTag={addTag} /></div>
+          <div className="window-body" id="panel" ref={panel}><PanelContent key={panelKey} selection={selection} visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onTag={addTag} /></div>
         </div>
       </div>
     </div>

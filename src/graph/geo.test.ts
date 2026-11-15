@@ -1,18 +1,47 @@
 import { describe, expect, it } from 'vitest';
 import { houses } from '../data';
-import { cities, type CityName } from '../data/cities';
-import { boxesOverlap, housesByCity, layoutMap, mapBoxes, mapSvgMarkup, pinScale, project } from './geo';
+import { cities } from '../data/cities';
+import { boxesOverlap, housesByMapLocation, layoutMap, mapBoxes, mapSvgMarkup, pinScale, project } from './geo';
 import subdivisions from '../data/map/north-america-subdivisions.json';
 import { mapElements, nodeId } from './elements';
+import { mapLocationCoordinates, mapLocationForCity, mapRegions } from './locations';
 
-const allCities = new Set(housesByCity().keys());
+const allCities = new Set(housesByMapLocation().keys());
 
 describe('world map layout', () => {
+  it('consolidates crowded California and Italian cities without changing brand locations', () => {
+    const markers = mapElements().filter((element) => element.data.kind === 'marker');
+    const memberCities = Object.values(mapRegions).flatMap((region) => [...region.cities]);
+    expect(new Set(memberCities).size).toBe(memberCities.length);
+    for (const [region, { anchor, cities: members }] of Object.entries(mapRegions)) {
+      const marker = markers.find((element) => element.data.id === nodeId.city(region));
+      expect(marker?.data.label).toBe(region);
+      expect(marker?.data.tip).toEqual(project(cities[anchor]));
+      expect(marker?.data.count).toBe(houses.filter((h) => !h.parentHouse && (members as readonly string[]).includes(h.city)).length);
+      for (const city of members) expect(markers.some((m) => m.data.id === nodeId.city(city))).toBe(false);
+    }
+    expect(mapLocationForCity('Gardena')).toBe('Southern California');
+    expect(mapLocationForCity('Reggio Emilia')).toBe('Emilia-Romagna');
+    for (const city of ['Los Angeles', 'San Francisco', 'Milan', 'Turin', 'Venice', 'Bologna', 'Florence'] as const) {
+      expect(mapLocationForCity(city)).toBe(city);
+      expect(mapLocationCoordinates(city)).toEqual(cities[city]);
+      const marker = markers.find((element) => element.data.id === nodeId.city(city));
+      expect(marker?.data.label).toBe(city);
+      expect(marker?.data.count).toBe(houses.filter((h) => !h.parentHouse && h.city === city).length);
+    }
+    expect(mapLocationForCity('Albino')).toBe('Lombardy');
+    expect(houses.find((h) => h.id === 'sixEightSix')?.city).toBe('Gardena');
+    expect(houses.find((h) => h.id === 'maxMara')?.city).toBe('Reggio Emilia');
+    const grouped = [...housesByMapLocation().values()].flat();
+    expect(grouped.length).toBe(houses.length);
+    expect(new Set(grouped.map((h) => h.id)).size).toBe(houses.length);
+    expect(markers.length).toBeLessThan(new Set(houses.map((h) => h.city)).size);
+  });
+
   it('keeps map labels concise and preserves city IDs and coordinates', () => {
     const markers = mapElements().filter((element) => element.data.kind === 'marker');
     for (const [city, label] of [
       ['New York', 'New York'],
-      ['Los Angeles', 'Los Angeles'],
       ['Rockford', 'Rockford'],
       ['Toronto', 'Toronto'],
       ['Vancouver', 'Vancouver'],
@@ -48,9 +77,9 @@ describe('world map layout', () => {
     }
   });
 
-  it('puts every pin tip exactly on its city', () => {
+  it('puts every pin tip exactly on its city or regional anchor', () => {
     for (const c of layoutMap(allCities).cities) {
-      const at = project(cities[c.city as CityName]);
+      const at = project(mapLocationCoordinates(c.city));
       expect(c.tip.x).toBeCloseTo(at.x);
       expect(c.tip.y).toBeCloseTo(at.y);
     }
@@ -72,14 +101,14 @@ describe('world map layout', () => {
 
   it('places houses only for expanded cities', () => {
     expect(layoutMap(new Set()).houses.size).toBe(0);
-    expect(layoutMap(new Set(['Paris'])).houses.size).toBe(housesByCity().get('Paris')!.length);
+    expect(layoutMap(new Set(['Paris'])).houses.size).toBe(housesByMapLocation().get('Paris')!.length);
     const all = layoutMap(allCities);
     for (const h of houses) expect(all.houses.has(h.id), h.id).toBe(true);
   });
 
   it('orders every open city\'s houses alphabetically, row by row', () => {
     const positions = layoutMap(allCities).houses;
-    for (const [city, hs] of housesByCity()) {
+    for (const [city, hs] of housesByMapLocation()) {
       const names = hs.map((h) => h.name);
       expect(names, city).toEqual(
         [...names].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base', numeric: true })),
@@ -100,7 +129,7 @@ describe('world map layout', () => {
   });
 
   it('compacts filtered houses and skips cities with no matches', () => {
-    const paris = housesByCity().get('Paris')!.slice(0, 2);
+    const paris = housesByMapLocation().get('Paris')!.slice(0, 2);
     const filtered = new Map([['Paris', paris]]);
     const layout = layoutMap(allCities, filtered);
     expect(layout.cities.map((c) => c.city)).toEqual(['Paris']);

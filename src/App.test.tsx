@@ -8,6 +8,7 @@ import type { GraphCallbacks } from './graph/graph';
 const mocks = vi.hoisted(() => ({ instances: [] as {
   select: ReturnType<typeof vi.fn>; setHouseFilter: ReturnType<typeof vi.fn>;
   setYear: ReturnType<typeof vi.fn>; setShowMoves: ReturnType<typeof vi.fn>;
+  setShowCollaborations: ReturnType<typeof vi.fn>; setConnectionFilter: ReturnType<typeof vi.fn>;
   setAllExpanded: ReturnType<typeof vi.fn>; destroy: ReturnType<typeof vi.fn>;
 }[] }));
 vi.mock('./graph/graph', () => ({
@@ -18,6 +19,8 @@ vi.mock('./graph/graph', () => ({
     setHouseFilter = vi.fn();
     setYear = vi.fn();
     setShowMoves = vi.fn();
+    setShowCollaborations = vi.fn();
+    setConnectionFilter = vi.fn();
     fit = vi.fn();
     refreshStyle = vi.fn();
     destroy = vi.fn();
@@ -39,6 +42,20 @@ afterEach(() => {
 });
 
 describe('React app graph integration', () => {
+  it('persists the collaboration toggle independently from career lines', async () => {
+    localStorage.setItem('designer-map:show-collaborations', 'off');
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    expect(screen.getByRole<HTMLInputElement>('checkbox', { name: 'Show collaboration lines' }).checked).toBe(false);
+    expect(graph.setShowCollaborations).toHaveBeenLastCalledWith(false);
+    await user.click(screen.getByRole('checkbox', { name: 'Show collaboration lines' }));
+    expect(graph.setShowCollaborations).toHaveBeenLastCalledWith(true);
+    expect(localStorage.getItem('designer-map:show-collaborations')).toBe('on');
+    expect(screen.getByRole<HTMLInputElement>('checkbox', { name: 'Show move lines' }).checked).toBe(true);
+    expect(mocks.instances).toHaveLength(1);
+  });
+
   it('finds business leaders and reveals their career houses', async () => {
     const user = userEvent.setup();
     render(<App />);
@@ -89,7 +106,7 @@ describe('React app graph integration', () => {
     expect(screen.getByRole('heading', { name: 'Dior' })).toBeTruthy();
     expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
     await user.click(screen.getByRole('button', { name: 'Bags' }));
-    expect(screen.getByRole('button', { name: 'Remove Bags from Primary Product' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Remove Bags from Product' })).toBeTruthy();
     const ids = graph.setHouseFilter.mock.lastCall?.[0] as Set<string>;
     expect(ids.has('dior')).toBe(true);
     expect(ids.has('rimowa')).toBe(false);
@@ -145,4 +162,17 @@ describe('React app graph integration', () => {
     expect(vi.getTimerCount()).toBe(0);
     expect(mocks.instances.every((graph) => graph.destroy.mock.calls.length === 1)).toBe(true);
   });
+});
+
+
+it('changes the map connection filter without rebuilding the graph', async () => {
+  const user = userEvent.setup();
+  render(<App />);
+  const graph = mocks.instances[0]!;
+  await user.click(screen.getByRole('button', { name: 'Collaborations' }));
+  expect(graph.setConnectionFilter).toHaveBeenLastCalledWith('collaborations');
+  expect(screen.getByRole('button', { name: 'Collaborations' }).getAttribute('aria-pressed')).toBe('true');
+  await user.click(screen.getByRole('button', { name: 'Designers' }));
+  expect(graph.setConnectionFilter).toHaveBeenLastCalledWith('designers');
+  expect(mocks.instances).toHaveLength(1);
 });

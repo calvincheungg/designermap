@@ -1,4 +1,6 @@
-import type { Designer, House, HouseTenure, Move, Tenure } from '../types';
+import type { Collaboration, CollaborationData, Designer, House, HouseTenure, Move, Tenure } from '../types';
+import { collaborations as collaborationRecords } from './collaborations';
+import type { HouseId } from './houses';
 import { designers as designerRecords } from './designers';
 import type { DesignerId } from './designers';
 import { houses as houseRecords } from './houses';
@@ -6,6 +8,8 @@ import { groups as groupRecords, GroupId, type GroupData } from './groups';
 
 export type { HouseId } from './houses';
 export type { DesignerId } from './designers';
+export type { CollaborationId } from './collaborations';
+export type { Collaboration, CollaborationData } from '../types';
 export { MarketPositioning, BrandCategory, Aesthetic, CollectionTag, ProductTag, marketPositionings, brandCategories, aesthetics, collectionTags, productTags, matchesHouseFilters } from './tags';
 export type { HouseTags, HouseFilters } from './tags';
 export { GroupId } from './groups';
@@ -42,6 +46,33 @@ const founderIdsByHouse = new Map<string, readonly DesignerId[]>(Object.entries(
 
 export const getHouse = (id: string) => houseById.get(id);
 export const getDesigner = (id: string) => designerById.get(id);
+
+// The explicit view keeps the queries usable while the literal dataset is empty.
+const collaborationData: Record<string, CollaborationData<HouseId>> = collaborationRecords;
+export const collaborations: Collaboration[] = Object.entries(collaborationData)
+  .map(([id, collaboration]) => ({ id, ...collaboration }))
+  .sort((a, b) => a.year - b.year || a.id.localeCompare(b.id));
+const collaborationById = new Map(collaborations.map((collaboration) => [collaboration.id, collaboration]));
+
+export const getCollaboration = (id: string): Collaboration | undefined => collaborationById.get(id);
+
+/** Projects involving a brand, optionally restricted to a release year. */
+export const collaborationsOf = (houseId: string, year?: number): Collaboration[] => collaborations
+  .filter((collaboration) => collaboration.houses.includes(houseId)
+    && (year === undefined || collaboration.year === year));
+
+export const collaborationsInYear = (year: number): Collaboration[] => collaborations
+  .filter((collaboration) => collaboration.year === year);
+
+/** Direct labels in a house's brand family; ownership remains a separate relationship. */
+export const labelsOf = (houseId: string): House[] => houses
+  .filter((house) => house.parentHouse === houseId)
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+export const parentHouseOf = (houseId: string): House | undefined => {
+  const parentId = getHouse(houseId)?.parentHouse;
+  return parentId ? getHouse(parentId) : undefined;
+};
 
 /** Founders in editorial display order, with names owned by designer profiles. */
 export const foundersOf = (houseId: string): Designer[] => (founderIdsByHouse.get(houseId) ?? [])
@@ -126,6 +157,7 @@ export function yearRange(): [number, number] {
   const years = designers.flatMap((d) =>
     d.career.flatMap((t) => [t.start, t.end === null ? thisYear : (t.end ?? t.start)]),
   ).filter((year): year is number => year !== undefined);
+  years.push(...collaborations.map((project) => project.year));
   return [Math.min(...years), Math.max(...years)];
 }
 
