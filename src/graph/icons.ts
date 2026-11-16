@@ -1,5 +1,6 @@
 import { houses, logoUrl } from '../data';
 import type { House } from '../types';
+import logoAssets from './logo-assets.json';
 
 /** The 16-colour VGA palette. Houses without a `color` get one by city. */
 const VGA = [
@@ -142,6 +143,21 @@ export interface LogoInfo {
 /** Filled in by DesignerGraph as logos load; the Properties window reads it too. */
 export const logoInfo = new Map<string, LogoInfo>();
 
+interface LogoAsset extends LogoInfo { file: string | null }
+const mapLogos: Readonly<Record<string, LogoAsset>> = logoAssets;
+const mapLogoPath = (file: string) => `${import.meta.env.BASE_URL}map-logos/${file}`;
+// Local metadata avoids hundreds of browser Image/canvas probes and restyles.
+for (const [name, info] of Object.entries(mapLogos)) {
+  logoInfo.set(`${import.meta.env.BASE_URL}logos/${name}`, info);
+  if (info.file) logoInfo.set(mapLogoPath(info.file), info);
+}
+
+/** Map thumbnails are separate from the original logos used in Properties. */
+export function mapLogoUrl(h: House): string | undefined {
+  const file = h.logo ? mapLogos[h.logo]?.file : undefined;
+  return file ? mapLogoPath(file) : logoUrl(h);
+}
+
 /** Logo size inside its square (percent of the square), keeping its proportions. */
 export function logoSize(ratio: number, fit: 'contain' | 'fill' = 'contain') {
   const longest = FRAME_INSIDE * 100 * (fit === 'fill' ? 1 : 0.86);
@@ -160,5 +176,5 @@ export function initialsIcon(h: House): string {
 
 /** The house's logo if it has one, otherwise its initials square. */
 export function houseIcon(h: House): string {
-  return logoUrl(h) ?? initialsIcon(h);
+  return mapLogoUrl(h) ?? initialsIcon(h);
 }

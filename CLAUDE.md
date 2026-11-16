@@ -50,11 +50,13 @@ Key rules:
 - **Each fact is written once.** Tenures live only in `designers.ts` (`career`).
   A house's director list and a designer's moves are *derived*, never stored.
   Don't add a `directors` array to houses or a `moves` array to designers.
-- Record a confirmed brand shutdown or current pause in the house's optional
-  `closed` year, using the year operations ended or paused. Properties displays
-  `Founded: 2006 | Ended: 2023` on one row. Omit `closed` when the end year is
-  unconfirmed or the brand is active again; keep earlier pauses and relaunches
-  in the description.
+- **A brand currently on hiatus or paused is inactive and must have an Ended
+  year**, just like a brand that has shut down. Set the house's `closed` field
+  to the verified year operations stopped or paused, even if the hiatus was
+  announced as temporary. Properties displays `Founded: 2006 | Ended: 2023`.
+  Research a missing pause year; if it remains unconfirmed, do not guess it,
+  and report the gap. Remove `closed` if the brand resumes activity, preserving
+  earlier pauses and relaunches in the description.
 - **Ids are object keys** (camelCase). `HouseId` is `keyof typeof houses`, so a
   bad `house:` reference in a career is a compile error. Keep the
   `satisfies Record<string, …>` pattern; don't widen to `string`.
@@ -81,8 +83,11 @@ Key rules:
   - Keep data queries and graph layout independent of React. Use React components
     and event handlers for interface changes rather than HTML strings or DOM mutation.
   - One `marker` node per map location (city or region): a pixel-art Win98 pin
-    (`icons.ts cityMarkerIcon`) whose tip sits exactly on the city or a region's
-    representative anchor city. `graph/locations.ts` consolidates nearby cities
+    (`icons.ts cityMarkerIcon`) anchored to the city or a region's
+    representative anchor city. `graph/markers.ts` spreads colliding pins apart
+    in screen space at each zoom, with dotted SVG tethers back to their exact
+    geographic anchors; isolated pins keep their tips on the city.
+    `graph/locations.ts` consolidates nearby cities
     in California and Italy into stable regional pins, while major cities such as
     Los Angeles, San Francisco and Milan retain distinct pins; house cities, Properties
     and the directory retain their actual locations. Map grouping, expansion,
@@ -90,12 +95,15 @@ Key rules:
     Pins scale
     with the map when zoomed out but cap at ~26px on screen (`sizeMarkers`,
     re-run on every zoom); colliding labels are hidden via `text-opacity`
-    (an empty `label` bypass would *remove* the override). Clicking a pin
+    (an empty `label` bypass would *remove* the override) and appear on hover. Clicking a pin
     toggles the city; `DesignerGraph.expanded` holds open cities. An open city's
     houses sit in an invisible `grid` compound in the nearest spot that covers no
     pin or other open city (`geo.ts placeGrids`), with a dotted leader to the pin.
     `move` edges are rebuilt on every expand/collapse: each end attaches to the
-    house if its city is open, else to the pin. Selecting a brand reveals its
+    house if its city is open, else to the pin. Selecting a brand hides every
+    other location's pin and grid leader, while keeping revealed brand icons
+    and their connections visible. Clearing selection restores eligible pins.
+    Selecting a brand reveals its
     direct move connections: `autoRevealed` restricts automatically opened cities
     to those brands. If the user manually opened the selected brand's city,
     show only its revealed family when it has visible sublabels at that map
@@ -111,7 +119,7 @@ Key rules:
     frames them on the map, without expanding their designer connections or
     outlining individual brands. Group reveals also respect year and tag filters.
     Map min zoom: `MAP_MIN_ZOOM` or map-fills-view.
-  - Designers aren't nodes; selecting one highlights their career houses, with connection lines hidden.
+  - Designers aren't nodes; selecting one highlights their career houses and shows their move lines.
   - "Show move lines" checkbox → `DesignerGraph.setShowMoves`: off hides `move`
     edges via the `lines-off` class, including the selected brand’s lines.
     Remembered in localStorage (`designer-map:show-lines`).
@@ -128,8 +136,9 @@ Key rules:
     Connection labels appear only on hover in a reserved strip above the canvas,
     never over brand icons. The map's All / Designers / Collaborations filter
     controls both lines and automatic partner reveals. Selected brands show only
-    their direct connections. Hide all move and collaboration lines without a
-    brand selection, including when cities are expanded or a designer/group is selected.
+    their direct connections. A selected designer shows only that designer's move lines.
+    Hide collaboration lines without a brand selection, and hide move lines when
+    neither a brand nor a designer is selected, including when cities are expanded or a group is selected.
     A travelling pulse repeats every three seconds on each selected
     line and on hovered connections; designer pulses follow career direction. Respect
     reduced motion and clear pulse resources on relayout and destruction.

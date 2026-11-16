@@ -5,6 +5,7 @@ import { housesByMapLocation, LABEL_PX, layoutMap, MAP_HEIGHT, MAP_MIN_ZOOM, MAP
 import { cityMarkerIcon, frameIcon, logoInfo, logoSize, PIN_H, PIN_W } from './icons';
 import { graphStyle } from './style';
 import { mapHousePath, mapLocationForCity, mapLocationForHouse } from './locations';
+import { placeMarkers } from './markers';
 
 export type ConnectionFilter = 'all' | 'designers' | 'collaborations';
 
@@ -65,9 +66,11 @@ export class DesignerGraph {
   private mapLayer: SVGSVGElement;
   /** Group inside the map SVG that carries the pan/zoom transform. */
   private mapGroup: SVGGElement;
+  private pinLeaders: SVGGElement;
+  private markerTips = new Map<string, { x: number; y: number }>();
+  private markerTimer: ReturnType<typeof setTimeout> | undefined;
   private canvasHost: HTMLElement;
   private resizeObserver: ResizeObserver;
-  private fitTimer: ReturnType<typeof setTimeout> | undefined;
   private pendingImages = new Set<HTMLImageElement>();
   private disposed = false;
 
@@ -81,6 +84,9 @@ export class DesignerGraph {
     // An SVG transform (not a CSS one) so `non-scaling-stroke` keeps borders hairline at any zoom.
     this.mapGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     this.mapGroup.innerHTML = mapSvgMarkup();
+    this.pinLeaders = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    this.pinLeaders.setAttribute('class', 'pin-leaders');
+    this.mapGroup.append(this.pinLeaders);
     this.mapLayer.append(this.mapGroup);
 
     const canvasHost = document.createElement('div');
@@ -117,6 +123,9 @@ export class DesignerGraph {
       canvasHost.style.cursor = 'pointer';
     });
     this.cy.on('mouseout', 'node, edge', () => (canvasHost.style.cursor = ''));
+    this.cy.on('mouseover', 'node[kind = "marker"]', (e) => e.target.style('text-opacity', 1));
+    this.cy.on('mouseout', 'node[kind = "marker"]', (e) =>
+      e.target.style('text-opacity', e.target.data('markerLabelVisible') ? 1 : 0));
     this.cy.on('mouseover', 'edge[kind = "move"], edge[kind = "collaboration"]', (e) => {
       const edge = e.target as EdgeSingular;
       callbacks.onConnectionHover?.(edge.data('label'));
@@ -127,7 +136,12 @@ export class DesignerGraph {
       this.playPulses();
     });
     this.cy.on('viewport', () => this.syncMapLayer());
-    this.cy.on('zoom', () => this.sizeMarkers());
+    this.cy.on('zoom', () => {
+      // Keep sizes responsive while zooming; resolve collisions once the gesture settles.
+      this.sizeMarkers(false);
+      clearTimeout(this.markerTimer);
+      this.markerTimer = setTimeout(() => this.sizeMarkers(), 90);
+    });
 
     // Keep the canvas in sync with its container (window resize, mobile rotation).
     this.resizeObserver = new ResizeObserver(() => {
@@ -281,7 +295,7 @@ export class DesignerGraph {
     }
     if (relayout) {
       // Animate local focus changes; explicit navigation frames its destination immediately.
-      this.relayoutMap(!forceLayout && !reveal);
+      this.relayoutMap(!forceLayout && !reveal, false);
       this.notifyExpand();
     }
     this.applySelection(reveal);
@@ -299,14 +313,13 @@ export class DesignerGraph {
   setAllExpanded(open: boolean) {
     this.autoRevealed.clear();
     this.expanded = new Set(open ? this.allCities : []);
-    this.relayoutMap(true);
+    this.relayoutMap(false);
     this.notifyExpand();
-    // Wait for the move animation, then frame everything.
-    clearTimeout(this.fitTimer);
-    this.fitTimer = setTimeout(() => this.fit(), 280);
+    this.cy.stop(true, false);
+    this.cy.fit(this.cy.elements(':visible'), 30);
   }
 
-  /** Show or hide the selected brand's direct move connections. */
+  /** Show or hide move connections for the selected brand or designer. */
   setShowMoves(on: boolean) {
     if (this.showMoves === on) return;
     this.showMoves = on;
@@ -345,8 +358,8 @@ export class DesignerGraph {
   destroy() {
     if (this.disposed) return;
     this.disposed = true;
-    clearTimeout(this.fitTimer);
     clearTimeout(this.pulseTimer);
+    clearTimeout(this.markerTimer);
     this.resizeObserver.disconnect();
     for (const img of this.pendingImages) {
       img.onload = null;
@@ -365,7 +378,7 @@ export class DesignerGraph {
    * Re-place markers + houses for the current expansion state, show/hide
    * houses, and rebuild the move arrows so they attach to what's visible.
    */
-  private relayoutMap(animate: boolean) {
+  private relayoutMap(animate: boolean, updateSelection = true) {
     this.clearPulses();
     this.callbacks.onConnectionHover?.(null);
     const cy = this.cy;
@@ -433,49 +446,75 @@ export class DesignerGraph {
       cy.edges('[kind = "move"], [kind = "collaboration"]').remove();
       const visible = new Set(layout.houses.keys());
       cy.add(moveEdges(this.expanded, visible));
-      if (this.showCollaborations) cy.add(collaborationEdges(this.expanded, visible,
-        this.selection?.kind === 'house' ? this.selection.id : undefined, this.year));
+      if (this.showCollaborations && this.selection?.kind === 'house') {
+        cy.add(collaborationEdges(this.expanded, visible, this.selection.id, this.year));
+      }
     });
 
-    // (applyYear re-sizes the markers too.)
     this.applyYear();
-    this.applySelection(false);
+    if (updateSelection) this.applySelection(false);
   }
 
   /**
    * Pins scale with the map when zoomed out, but stop growing past a small
-   * on-screen size so you can see the city underneath. Each stays anchored with
-   * its tip on the city, and city names stay a constant size on screen.
-   * Where pins crowd together, the city with more houses draws on top and
-   * labels that would collide with a bigger city's are hidden until you zoom in.
+   * on-screen size. Crowded pins spread apart with tethers to their true city
+   * coordinates. City names stay a constant size on screen; colliding labels
+   * appear on hover or when zooming in leaves enough space.
    */
-  private sizeMarkers() {
+  private sizeMarkers(reposition = true) {
+    if (this.disposed) return;
+    if (reposition) clearTimeout(this.markerTimer);
     const z = this.cy.zoom();
     const k = pinScale(z);
     const w = PIN_W * k;
     const h = PIN_H * k;
     const markers = this.cy
       .nodes('[kind = "marker"]')
-      .not('.hidden')
-      .sort((a, b) => (b.data('shown') ?? b.data('count')) - (a.data('shown') ?? a.data('count')));
+      .not('.hidden, .selection-hidden')
+      .sort((a, b) => (b.data('shown') ?? b.data('count')) - (a.data('shown') ?? a.data('count'))
+        || a.id().localeCompare(b.id()));
 
-    // Label boxes (model units), biggest city first; skip any that would collide.
-    const labelBoxes: { x1: number; x2: number; y1: number; y2: number }[] = [];
+    if (reposition) {
+      const obstacles = this.cy.nodes('[kind = "grid"]').not('.collapsed, .hidden').map((grid) => {
+        const box = grid.boundingBox();
+        return { center: { x: (box.x1 + box.x2) / 2, y: (box.y1 + box.y2) / 2 }, w: box.w, h: box.h };
+      });
+      this.markerTips = placeMarkers(markers.map((m) => ({ id: m.id(), tip: m.data('tip') })), z, obstacles);
+    }
+    const tips = new Map(markers.map((m) => [m.id(), this.markerTips.get(m.id()) ?? m.data('tip')]));
+    const leaders: SVGLineElement[] = [];
+    markers.forEach((m) => {
+      const anchor = m.data('tip') as { x: number; y: number };
+      const tip = tips.get(m.id())!;
+      if (Math.hypot(tip.x - anchor.x, tip.y - anchor.y) < 1 / z) return;
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', String(anchor.x));
+      line.setAttribute('y1', String(anchor.y));
+      line.setAttribute('x2', String(tip.x));
+      line.setAttribute('y2', String(tip.y));
+      leaders.push(line);
+    });
+    this.pinLeaders.replaceChildren(...leaders);
+
+    // Reserve every pin before labels, so a bigger city's label cannot cover a smaller pin.
+    const labelBoxes = markers.map((m) => {
+      const tip = tips.get(m.id())!;
+      return { x1: tip.x - w / 2, x2: tip.x + w / 2, y1: tip.y - h, y2: tip.y };
+    });
     const showLabel = new Set<string>();
     markers.forEach((m) => {
-      const tip = m.data('tip') as { x: number; y: number };
+      const tip = tips.get(m.id())!;
       const lw = (m.data('label').length * LABEL_PX * 0.62) / z;
-      const box = { x1: tip.x - lw / 2, x2: tip.x + lw / 2, y1: tip.y, y2: tip.y + (LABEL_PX * 1.4) / z };
-      const pinBox = { x1: tip.x - w / 2, x2: tip.x + w / 2, y1: tip.y - h, y2: tip.y };
+      const box = { x1: tip.x - lw / 2, x2: tip.x + lw / 2, y1: tip.y + 2 / z, y2: tip.y + (LABEL_PX * 1.4 + 2) / z };
       const hits = (a: typeof box) =>
         labelBoxes.some((b) => a.x1 < b.x2 && a.x2 > b.x1 && a.y1 < b.y2 && a.y2 > b.y1);
       if (!hits(box)) showLabel.add(m.id());
-      labelBoxes.push(pinBox);
       if (showLabel.has(m.id())) labelBoxes.push(box);
     });
 
     this.cy.batch(() => {
       markers.forEach((m, i) => {
+        m.data('markerLabelVisible', showLabel.has(m.id()));
         m.style({
           width: w,
           height: h,
@@ -486,7 +525,7 @@ export class DesignerGraph {
           'text-outline-width': 2 / z,
           'z-index': 100 - i,
         });
-        const tip = m.data('tip') as { x: number; y: number };
+        const tip = tips.get(m.id())!;
         m.position({ x: tip.x, y: tip.y - h / 2 });
       });
     });
@@ -571,7 +610,6 @@ export class DesignerGraph {
       setClass(cy.elements('[kind = "grid"], [kind = "leader"]'), 'hidden', (el) =>
         cy.getElementById(nodeId.city(el.data('city'))).data('shown') === 0);
     });
-    this.sizeMarkers();
   }
 
   private clearPulses() {
@@ -644,9 +682,13 @@ export class DesignerGraph {
   private applySelection(reveal: boolean) {
     const cy = this.cy;
     const sel = this.selection;
+    const selectedLocation = sel?.kind === 'house' ? mapLocationForHouse(sel.id) : undefined;
     let focus: Collection | undefined;
 
     cy.batch(() => {
+      // Keep connected brand grids visible, but remove their pins and orphaned leaders.
+      setClass(cy.elements('[kind = "marker"], [kind = "leader"]'), 'selection-hidden', (el) =>
+        selectedLocation !== undefined && el.data('city') !== selectedLocation);
       // Ignore parts of the selection the year slider or a collapsed city hides.
       const shown = sel ? this.focusFor(sel).not('.hidden, .collapsed') : cy.collection();
       const self = sel?.kind === 'house' ? cy.getElementById(nodeId.house(sel.id)) : cy.collection();
@@ -655,15 +697,15 @@ export class DesignerGraph {
       setClass(all, 'highlight', (el) => shown.has(el) && (sel?.kind === 'designer' || el.isEdge() || self.has(el)));
       setClass(all, 'focus', (el) => shown.nonempty() && self.has(el));
       setClass(all, 'faded', (el) => shown.nonempty() && !shown.has(el) && !scenery.has(el));
-      // Connection lines are exclusive to a selected brand's direct neighborhood.
-      setClass(cy.edges('[kind = "move"]'), 'lines-off', (e) => sel?.kind !== 'house'
+      // Show a brand's direct moves or a selected designer's career moves.
+      setClass(cy.edges('[kind = "move"]'), 'lines-off', (e) => (sel?.kind !== 'house' && sel?.kind !== 'designer')
         || !this.showMoves || this.connectionFilter === 'collaborations' || !shown.has(e));
       setClass(cy.edges('[kind = "collaboration"]'), 'lines-off', (e) => sel?.kind !== 'house'
         || !this.showCollaborations || this.connectionFilter === 'designers' || !shown.has(e));
       focus = shown;
     });
 
-    this.scaleEdges();
+    this.sizeMarkers();
     this.clearPulses();
     this.pulseTimer = setTimeout(() => this.playPulses(), 450);
 

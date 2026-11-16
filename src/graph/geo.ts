@@ -8,6 +8,7 @@ import { houses } from '../data';
 import { mapLocationCoordinates, mapLocationForHouse } from './locations';
 import type { House, LatLng } from '../types';
 import { PIN_H, PIN_W } from './icons';
+import { BoxIndex } from './box-index';
 
 /**
  * World-map geometry, in Cytoscape *model* coordinates: the map SVG and the
@@ -138,9 +139,24 @@ export interface HouseAnchor {
   position: Point;
 }
 
+// Bound the cache: filters and focused families can produce many arrangements.
+const gridCache = new Map<string, Box[]>();
+const copyBoxes = (boxes: readonly Box[]) => boxes.map((box) => ({
+  ...box, home: { ...box.home }, center: { ...box.center },
+}));
+
 /** Place open-city grids near their pins, reserving an anchored family first. */
 export function placeGrids(expanded: ReadonlySet<string>, byCity = housesByMapLocation(), anchor?: HouseAnchor): Box[] {
+  const key = JSON.stringify([
+    [...byCity].map(([city, hs]) => [city, hs.length, expanded.has(city)]),
+    anchor && [anchor.houseId, anchor.position.x, anchor.position.y,
+      [...byCity.values()].flat().findIndex((house) => house.id === anchor.houseId)],
+  ]);
+  const cached = gridCache.get(key);
+  if (cached) return copyBoxes(cached);
   const placed: Box[] = [...byCity.keys()].map((c) => pinBox(c, GRID_REF_ZOOM));
+  const collisionIndex = new BoxIndex();
+  placed.forEach((box) => collisionIndex.add(box));
   const pins = new Map(placed.map((b) => [b.city, b]));
   const grids: Box[] = [];
   // Reserve the selected family's grid first so other open cities avoid it.
@@ -156,6 +172,7 @@ export function placeGrids(expanded: ReadonlySet<string>, byCity = housesByMapLo
       };
       const grid: Box = { city, kind: 'grid', home: center, center, w: cols * CELL_W, h: rows * CELL_H };
       placed.push(grid);
+      collisionIndex.add(grid);
       grids.push(grid);
       break;
     }
@@ -168,11 +185,14 @@ export function placeGrids(expanded: ReadonlySet<string>, byCity = housesByMapLo
     const { cols, rows } = gridSize(byCity.get(city)!.length);
     const w = cols * CELL_W;
     const h = rows * CELL_H;
-    const center = placeNear(pins.get(city)!, w, h, placed);
+    const center = placeNear(pins.get(city)!, w, h, placed, collisionIndex);
     const grid: Box = { city, kind: 'grid', home: center, center, w, h };
     placed.push(grid);
+    collisionIndex.add(grid);
     grids.push(grid);
   }
+  if (gridCache.size >= 32) gridCache.delete(gridCache.keys().next().value!);
+  gridCache.set(key, copyBoxes(grids));
   return grids;
 }
 
@@ -183,10 +203,10 @@ export function mapBoxes(expanded: ReadonlySet<string>): Box[] {
 
 /**
  * Nearest spot to pin `m` where a w×h box overlaps nothing already placed.
- * Tries directly below/right/left/above first, then a lattice around the
- * pin. Opening downward is preferred; upward is the last resort.
+ * Search obstacle boundaries instead of allocating and scanning a 151×151
+ * lattice for every city. Opening downward is preferred; upward costs extra.
  */
-function placeNear(m: Box, w: number, h: number, placed: Box[]): Point {
+function placeNear(m: Box, w: number, h: number, placed: Box[], index: BoxIndex): Point {
   const below = { x: m.center.x, y: m.center.y + m.h / 2 + GAP + h / 2 };
   const candidates: Point[] = [
     below,
@@ -194,24 +214,28 @@ function placeNear(m: Box, w: number, h: number, placed: Box[]): Point {
     { x: m.center.x - m.w / 2 - GAP - w / 2, y: m.center.y },
     { x: m.center.x, y: m.center.y - m.h / 2 - GAP - h / 2 },
   ];
-  const STEP = 24;
-  const R = 1800;
-  for (let dx = -R; dx <= R; dx += STEP) {
-    for (let dy = -R; dy <= R; dy += STEP) candidates.push({ x: below.x + dx, y: below.y + dy });
+  for (const box of placed) {
+    const left = box.center.x - (box.w + w) / 2 - GAP;
+    const right = box.center.x + (box.w + w) / 2 + GAP;
+    const top = box.center.y - (box.h + h) / 2 - GAP;
+    const bottom = box.center.y + (box.h + h) / 2 + GAP;
+    const x = Math.max(left, Math.min(right, m.center.x));
+    const y = Math.max(top, Math.min(bottom, m.center.y));
+    candidates.push(
+      { x: left, y }, { x: right, y }, { x, y: top }, { x, y: bottom },
+      { x: left, y: top }, { x: right, y: top },
+      { x: left, y: bottom }, { x: right, y: bottom },
+    );
   }
 
   const cost = (c: Point) =>
     Math.hypot(c.x - m.center.x, c.y - m.center.y) + (c.y < m.center.y ? 60 : 0);
-  let best: Point | undefined;
-  let bestCost = Infinity;
-  for (const c of candidates) {
-    const k = cost(c);
-    if (k >= bestCost) continue;
-    if (placed.some((p) => boxesOverlap({ center: c, w, h }, p, GAP))) continue;
-    best = c;
-    bestCost = k;
+  const ranked = candidates.map((center) => ({ center, cost: cost(center) })).sort((a, b) => a.cost - b.cost);
+  for (const { center } of ranked) {
+    if (!index.overlaps({ center, w, h }, GAP - 1e-6)) return center;
   }
-  return best ?? below;
+  // The rightmost boundary always has room, even in exceptionally dense datasets.
+  return { x: Math.max(...placed.map((p) => p.center.x + p.w / 2)) + GAP + w / 2, y: below.y };
 }
 
 /** House positions for the open cities' grids, alphabetical, row by row. */

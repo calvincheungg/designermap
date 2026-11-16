@@ -156,6 +156,7 @@ export const cities = {
   Metzingen: [48.5368, 9.2853],
   Lugano: [46.0037, 8.9511],
   Toronto: [43.6532, -79.3832],
+  Ottawa: [45.4215, -75.6972],
   Vancouver: [49.2827, -123.1207],
   Montreal: [45.5019, -73.5674],
   Sydney: [-33.8688, 151.2093],
@@ -265,6 +266,7 @@ export const cityRegions: Partial<Record<CityName, { country: CountryCode; regio
   Victoria: { country: CountryCode.Canada, region: 'British Columbia' },
   'Hermosa Beach': { country: CountryCode.UnitedStates, region: 'California' },
   Toronto: { country: CountryCode.Canada, region: 'Ontario' },
+  Ottawa: { country: CountryCode.Canada, region: 'Ontario' },
   Vancouver: { country: CountryCode.Canada, region: 'British Columbia' },
   Montreal: { country: CountryCode.Canada, region: 'Quebec' },
 };

@@ -18,6 +18,357 @@ import type { HouseId } from './houses';
  * Years refer to release, rather than an earlier announcement or runway show.
  */
 export const collaborations = {
+  vaqueraAmericanApparel2018: {
+    houses: ['vaquera', 'americanApparel'], year: 2018,
+    sources: ['https://www.vogue.com/fashion-shows/fall-2018-ready-to-wear/vaquera'],
+  },
+  vaqueraVans2022: {
+    houses: ['vaquera', 'vans'], year: 2022,
+    sources: ['https://www.vogue.com/fashion-shows/fall-2022-ready-to-wear/vaquera'],
+  },
+  vaqueraMarcJacobs2024: {
+    houses: ['vaquera', 'marcJacobs'], year: 2024,
+    sources: ['https://milled.com/marc-jacobs/the-stam-returns-vaquera-x-marc-jacobs-2myqgtppkcm_6imd'],
+  },
+  vaqueraConverse2025: {
+    houses: ['vaquera', 'converse'], year: 2025,
+    sources: ['https://about.nike.com/en-GB/newsroom/releases/nike-and-converse-begin-vaquera-partnership-with-two-bold-expressions-of-the-chuck-taylor-all-star'],
+  },
+  vaqueraNike2025: {
+    houses: ['vaquera', 'nike'], year: 2025,
+    sources: ['https://about.nike.com/en-GB/newsroom/releases/nike-and-converse-begin-vaquera-partnership-with-two-bold-expressions-of-the-chuck-taylor-all-star', 'https://milled.com/comme-des-garcons/nike-x-vaquera-air-max-dn8-now-available-6aLc0sckw1q_wWtt'],
+  },
+  vaqueraSupreme2026: {
+    houses: ['vaquera', 'supreme'], year: 2026,
+    sources: ['https://hypebeast.com/2026/11/supreme-vaquera-fall-2026-collaboration-collection-release-info'],
+  },
+  raisedByWolvesVans2016: {
+    houses: ['raisedByWolves', 'vans'], year: 2016,
+    sources: ['https://sneakernews.com/2016/02/23/off-the-hook-raised-by-wolves-vans-collaboration/'],
+  },
+  raisedByWolvesReebok2017: {
+    houses: ['raisedByWolves', 'reebok'], year: 2017,
+    sources: ['https://sneakernews.com/2017/12/12/raised-by-wolves-reebok-classic-leather-gore-tex-available-now/'],
+  },
+  raisedByWolvesTimberland2018: {
+    houses: ['raisedByWolves', 'timberland'], year: 2018,
+    sources: ['https://hypebeast.com/2018/4/raised-by-wolves-timberland-lookbook'],
+  },
+  raisedByWolvesNakedAndFamous2018: {
+    houses: ['raisedByWolves', 'nakedAndFamous'], year: 2018,
+    sources: ['https://nakedandfamousdenim.com/blogs/capsule-collections/naked-famous-denim-x-raised-by-wolves', 'https://milled.com/tate-yoko/f-ck-off-capsule-collection-now-available-p7FYNW7r_Qf1WWt2'],
+  },
+  raisedByWolvesSauconyAya2020: {
+    houses: ['raisedByWolves', 'saucony'], year: 2020,
+    sources: ['https://www.finessestore.com/blogs/journal/sneaker-releases-raised-by-wolves-x-saucony-aya-january-25'],
+  },
+  raisedByWolvesSauconyJazz812023: {
+    houses: ['raisedByWolves', 'saucony'], year: 2023,
+    sources: ['https://www.linkedin.com/pulse/raised-wolves-spring-23-saucony-originals-wolf-pack-cal-green', 'https://www.soleretriever.com/news/articles/raised-by-wolves-saucony-jazz-81-release-date-february-2023'],
+  },
+  raisedByWolvesSauconyGridAzura2023: {
+    houses: ['raisedByWolves', 'saucony'], year: 2023,
+    sources: ['https://www.linkedin.com/pulse/raised-wolves-spring-23-saucony-originals-wolf-pack-cal-green', 'https://www.nicekicks.com/raised-by-wolves-saucony-grid-azura-2000-s70737-2-pack-leader/'],
+  },
+  raisedByWolvesNakedAndFamous2023: {
+    houses: ['raisedByWolves', 'nakedAndFamous'], year: 2023,
+    sources: ['https://nakedandfamousdenim.squarespace.com/en/news/2023/10/30/a-midnight-collaboration-naked-amp-famous-denim-x-raised-by-wolves'],
+  },
+  northFaceJunyaWatanabeMan2006: {
+    houses: ['theNorthFace', 'junyaWatanabeMan'], year: 2006,
+    sources: ['https://hypebeast.com/2006/7/eye-junya-watanabe-x-north-face-t-shirt'],
+  },
+  northFaceNanamica2003: {
+    houses: ['theNorthFace', 'nanamica'], year: 2003,
+    sources: ['https://about.goldwin.co.jp/eng/about/history'],
+  },
+  northFaceHykeSpring2018: {
+    houses: ['theNorthFace', 'hyke'], year: 2018,
+    sources: ['https://www.houyhnhnm.jp/en/news/143896/'],
+  },
+  northFaceHykeAutumn2018: {
+    houses: ['theNorthFace', 'hyke'], year: 2018,
+    sources: ['https://www.thenorthface.jp/whatsnew/2981'],
+  },
+  northFaceVans2017: {
+    houses: ['theNorthFace', 'vans'], year: 2017,
+    sources: ['https://www.nicekicks.com/north-face-x-vans-collection-release-date/'],
+  },
+  northFaceBeams2017: {
+    houses: ['theNorthFace', 'beams'], year: 2017,
+    sources: ['https://www.beams.co.jp/news/571/'],
+  },
+  northFaceBrainDead2020: {
+    houses: ['theNorthFace', 'brainDead'], year: 2020,
+    sources: ['https://www.highsnobiety.com/p/the-north-face-brain-dead-fall-2020/'],
+  },
+  northFaceOnlineCeramics2022: {
+    houses: ['theNorthFace', 'onlineCeramics'], year: 2022,
+    sources: ['https://shop-eat-surf-outdoor.com/press-releases/the-north-face-teams-up-with-online-ceramics-for-earth-day-inspired-collection/515198/'],
+  },
+  northFaceCdg2023: {
+    houses: ['theNorthFace', 'cdg'], year: 2023,
+    sources: ['https://milled.com/TheNorthFace/the-north-face-x-cdg-is-live-JeRCpsoYsW75JdLV'],
+  },
+  northFaceUndercover2023: {
+    houses: ['theNorthFace', 'undercover'], year: 2023,
+    sources: ['https://www.highsnobiety.com/p/undercover-the-north-face-soukuu-release-information/'],
+  },
+  northFaceCecilieBahnsen2025: {
+    houses: ['theNorthFace', 'cecilieBahnsen'], year: 2025,
+    sources: ['https://www.vogue.co.uk/article/cecilie-bahnsen-the-north-face-collaboration'],
+  },
+  northFaceSkims2024: {
+    houses: ['theNorthFace', 'skims'], year: 2024,
+    sources: ['https://milled.com/TheNorthFace/the-north-face-x-skims-is-here-Lmj6ZvGAQ798f7yA'],
+  },
+  northFaceAimeLeonDore2025: {
+    houses: ['theNorthFace', 'aimeLeonDore'], year: 2025,
+    sources: ['https://www.aimeleondore.com/blogs/news/aime-leon-dore-the-north-face', 'https://www.youtube.com/watch?v=8o6u5pDgJoI'],
+  },
+  // Verified: The North Face × KAWS (2022). KAWS is an artist, not an existing
+  // house; preserve this research gap until artist collaborations are supported.
+  // https://www.endclothing.com/us/features/the-north-face-xx-kaws-collection
+  momotaroNakedAndFamous2010: {
+    houses: ['momotaro', 'nakedAndFamous'], year: 2010,
+    sources: ['https://dutildenim.com/blogs/jeans/momotaro-x-naked-famous-available-at-dutil'],
+  },
+  togaSuicoke2016: {
+    houses: ['toga', 'suicoke'], year: 2016,
+    sources: ['https://www.fashion-headline.com/en/article/7993', 'https://www.gqjapan.jp/fashion/news/20190521/toga-suicoke-dogs-news'],
+  },
+  togaPorterYoshida2019: {
+    houses: ['toga', 'porterYoshida'], year: 2019,
+    sources: ['https://int.toga.jp/blogs/information/toga-porter-released-on-november-21st'],
+  },
+  togaLee2019: {
+    houses: ['toga', 'lee'], year: 2019,
+    sources: ['https://store.toga.jp/blogs/information/aw2019-20-toga-lee'],
+  },
+  togaVans2020: {
+    houses: ['toga', 'vans'], year: 2020,
+    sources: ['https://store.toga.jp/blogs/information/vans-otc-sales200710'],
+  },
+  togaTabio2020: {
+    houses: ['toga', 'tabio'], year: 2020,
+    sources: ['https://corporate.tabio.com/jp/corporate/news/press/2020/8604/'],
+  },
+  togaUmbro2026: {
+    houses: ['toga', 'umbro'], year: 2026,
+    sources: ['https://www.mensnonno.jp/fashion/new-topics/728571/'],
+  },
+  sasquatchfabrixStussy2014: {
+    houses: ['sasquatchfabrix', 'stussy'], year: 2014,
+    sources: ['https://hypebeast.com/2014/7/sasquatchfabrix-x-stussy-t-shirt-collection', 'https://nimunamu.base.shop/items/109961363'],
+  },
+  sasquatchfabrixNewEra2011: {
+    houses: ['sasquatchfabrix', 'newEra'], year: 2011,
+    sources: ['https://hypebeast.com/2011/11/sasquatchfabrix-x-new-era-rabbit-fur-ninja-fitted-cap'],
+  },
+  sasquatchfabrixSupreme2016: {
+    houses: ['sasquatchfabrix', 'supreme'], year: 2016,
+    sources: ['https://www.xxlmag.com/supreme-x-sasquatchfabrix-collection/'],
+  },
+  sasquatchfabrixBeams2016: {
+    houses: ['sasquatchfabrix', 'beams'], year: 2016,
+    sources: ['https://www.beams.co.jp/special/talk/archive/2016/0422/'],
+  },
+  sasquatchfabrixVansBeams2016: {
+    houses: ['sasquatchfabrix', 'vans', 'beams'], year: 2016,
+    sources: ['https://www.beams.co.jp/special/talk/archive/2016/0422/'],
+  },
+  sasquatchfabrixHaven2016: {
+    houses: ['sasquatchfabrix', 'haven'], year: 2016,
+    sources: ['https://milled.com/haven/visvim-stone-island-adidas-x-white-mountaineering-ganryu-adidas-consortium-ZKQRfC_mfp0z0f6S'],
+  },
+  sasquatchfabrixPumaBeams2024: {
+    houses: ['sasquatchfabrix', 'puma', 'beams'], year: 2024,
+    sources: ['https://www.beams.co.jp/en/news/4041/'],
+  },
+  kateSpadeKeds2017: {
+    houses: ['kateSpade', 'keds'], year: 2017,
+    sources: ['https://www.earnshaws.com/news/twinkle-twinkle-little-shoe/', 'https://www.femalemag.com.sg/gallery/fashion/kate-spade-shoes-keds-sneakers/'],
+  },
+  bedwinDickies2011: {
+    houses: ['bedwinTheHeartbreakers', 'dickies'], year: 2011,
+    sources: ['https://hypebeast.com/2011/4/bedwin-the-heartbreakers-dickies-circus-pants', 'https://www.gq.com/story/stuff-we-like-bedwin-and-the-heartbreakers-at-odin'],
+  },
+  bedwinAdidas2013: {
+    houses: ['bedwinTheHeartbreakers', 'adidas'], year: 2013,
+    sources: ['https://hypebeast.com/2013/6/adidas-originals-by-bedwin-2013-fall-winter-footwear-collection', 'https://www.bkmagazine.com/shop/sports-and-fitness-adidas-originals-concept-store/'],
+  },
+  bedwinAdidas2015: {
+    houses: ['bedwinTheHeartbreakers', 'adidas'], year: 2015,
+    sources: ['https://dlxtokyo.com/en/works/index.html'],
+  },
+  bedwinRvca2021: {
+    houses: ['bedwinTheHeartbreakers', 'rvca'], year: 2021,
+    sources: ['https://openers.jp/en/fashion/fashion_news/M12l7'],
+  },
+  bedwinVans2021: {
+    houses: ['bedwinTheHeartbreakers', 'vans'], year: 2021,
+    sources: ['https://bedwintokyo.com/en/blogs/journal/vault-by-vans-x-bedwin-the-heartbreakers'],
+  },
+  bedwinMaisonMiharaYasuhiro2025: {
+    houses: ['bedwinTheHeartbreakers', 'maisonMiharaYasuhiro'], year: 2025,
+    sources: ['https://en.miharayasuhiro.jp/blog/?cid=4', 'https://www.fashion-press.net/news/138255'],
+  },
+  bedwinTheNorthFace2011: {
+    houses: ['bedwinTheHeartbreakers', 'theNorthFace'], year: 2011,
+    sources: ['https://hypebeast.com/2011/11/bedwin-the-heartbreakers-x-the-north-face-2011-fallwinter-collection', 'https://www.ragtag.jp/closet/buyers_voice/80.html'],
+  },
+  bedwinConverse2011: {
+    houses: ['bedwinTheHeartbreakers', 'converse'], year: 2011,
+    sources: ['https://www.sneakerfiles.com/bedwin-the-heartbreakers-x-converse-chuck-taylor-all-star-hi-%E2%80%98tom%E2%80%99/'],
+  },
+  bedwinEverlast2018: {
+    houses: ['bedwinTheHeartbreakers', 'everlast'], year: 2018,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000002.000038672.html'],
+  },
+  bedwinFila2023: {
+    houses: ['bedwinTheHeartbreakers', 'fila'], year: 2023,
+    sources: ['https://www.fashion-press.net/news/107175'],
+  },
+  mountainHardwearColeHaan2015: {
+    houses: ['mountainHardwear', 'coleHaan'], year: 2015,
+    sources: ['https://www.prnewswire.com/news-releases/cole-haan-debuts-zerogrand-lifestyle-collection-300155004.html'],
+  },
+  mountainHardwearBeams2023: {
+    houses: ['mountainHardwear', 'beams'], year: 2023,
+    sources: ['https://www.beams.co.jp/blog/nmb/125605/', 'https://www.beams.co.jp/blog/js/127180/'],
+  },
+  stussyMountainHardwear2023: {
+    houses: ['stussy', 'mountainHardwear'], year: 2023,
+    sources: ['https://www.stussy.com/blogs/features/stussy-mountain-hardwear'],
+  },
+  stussyMountainHardwear2025: {
+    houses: ['stussy', 'mountainHardwear'], year: 2025,
+    sources: ['https://www.stussy.com/blogs/news/stussy-and-mountain-hardwear'],
+  },
+  stussyMountainHardwear2026: {
+    houses: ['stussy', 'mountainHardwear'], year: 2026,
+    sources: ['https://www.mountainhardwear.com/stussy.html', 'https://www.stussy.com/blogs/news/mountain-hardwear'],
+  },
+  maryQuantKangol1967: {
+    houses: ['maryQuant', 'kangol'], year: 1967,
+    sources: ['https://kangol.jp/shop/t/t1531/', 'https://www.maryquant.co.jp/special/70th/kangol.html'],
+  },
+  soarRunningAltra2025: {
+    houses: ['soarRunning', 'altra'], year: 2025,
+    sources: ['https://www.soarrunning.com/en-us/pages/soar-x-altra', 'https://altrarunning.hk/blogs/news/altra-x-soar-nbsp-%E8%81%AF%E4%B9%98%E8%B6%8A%E9%87%8E%E8%B7%91%E9%9E%8B%E9%A6%96%E5%BA%A6%E4%BA%AE%E7%9B%B8'],
+  },
+  paulSmithRapha2007: {
+    houses: ['paulSmith', 'rapha'], year: 2007,
+    sources: ['https://bikebiz.com/rapha-teams-up-with-paul-smith-for-new-collection/'],
+  },
+  paulSmithBurton2010: {
+    houses: ['paulSmith', 'burton'], year: 2010,
+    sources: ['https://www.snowboarder.com/news/burton-snowboards-and-paul-smith-collab-2011-vapor-snowboard'],
+  },
+  paulSmithJohnLobb2012: {
+    houses: ['paulSmith', 'johnLobb'], year: 2012,
+    sources: ['https://www.thefashionisto.com/paul-smith-collaborates-with-bootmaker-john-lobb/'],
+  },
+  paulSmithBarbour2012: {
+    houses: ['paulSmith', 'barbour'], year: 2012,
+    sources: ['https://www.vogue.co.uk/gallery/barbour-paul-smith-jeans-collaboration-launches'],
+  },
+  paulSmithNewBalance2018: {
+    houses: ['paulSmith', 'newBalance'], year: 2018,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000013.000031226.html'],
+  },
+  paulSmithAhluwalia2022: {
+    houses: ['paulSmith', 'ahluwalia'], year: 2022,
+    sources: ['https://ahluwalia.world/pages/about', 'https://www.crash.fr/paul-smith-x-aluwhalia/'],
+  },
+  paulSmithPorterYoshida2022: {
+    houses: ['paulSmith', 'porterYoshida'], year: 2022,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000081.000031226.html'],
+  },
+  umbroSupreme2022: {
+    houses: ['umbro', 'supreme'], year: 2022,
+    sources: ['https://supreme.com/previews/springsummer2022/jackets/supreme-umbro-track-jacket-5', 'https://www.versus.uk.com/articles/supreme-and-umbro-reunite-for-summer-football-shirt-drop/'],
+  },
+  umbroAries2021: {
+    houses: ['umbro', 'aries'], year: 2021,
+    sources: ['https://www.umbro.com/en/style/collections/aries-arise-x-umbro/'],
+  },
+  umbroAries2023: {
+    houses: ['umbro', 'aries'], year: 2023,
+    sources: ['https://www.umbro.com/en/style/collections/aries-x-umbro-2023/'],
+  },
+  umbroAries2024: {
+    houses: ['umbro', 'aries'], year: 2024,
+    sources: ['https://www.umbro.com/en/style/collections/aries-x-umbro/'],
+  },
+  umbroVetements2017: {
+    houses: ['umbro', 'vetements'], year: 2017,
+    sources: ['https://cream.ac.uk/features/ambika-p3-contains-the-crowds-umbro-100-sportswear-x-fashion/'],
+  },
+  umbroRowingBlazers2021: {
+    houses: ['umbro', 'rowingBlazers'], year: 2021,
+    sources: ['https://rowingblazers.com/blogs/dispatches/rowing-blazers-x-umbro-shop-the-collaboration-now', 'https://www.theindustry.fashion/rowing-blazers-launches-collaboration-collection-with-umbro/'],
+  },
+  umbroNigelCabourn2021: {
+    houses: ['umbro', 'nigelCabourn'], year: 2021,
+    sources: ['https://www.umbro.com/en/style/collections/nigel-cabourn-x-umbro/'],
+  },
+  umbroNigelCabourn2022: {
+    houses: ['umbro', 'nigelCabourn'], year: 2022,
+    sources: ['https://www.umbro.co.uk/blog/umbro-gets-matchday-ready-with-second-round-nigel-cabourn-collab-collection', 'https://www.cabourn.com/en-au/blogs/journal/styling-story-005-umbro-nigel-cabourn'],
+  },
+  umbroNHoolywood2019: {
+    houses: ['umbro', 'nHoolywood'], year: 2019,
+    sources: ['https://hypebeast.com/2019/3/nhoolywood-umbro-spring-summer-2019-collection'],
+  },
+  umbroBikkembergs2005: {
+    houses: ['umbro', 'bikkembergs'], year: 2005,
+    sources: ['https://studycenter.momu.be/archiefdirkbikkembergs/s/en/item/642', 'https://www.standaard.be/media-en-cultuur/focus/43498161.html'],
+  },
+  umbroPaulSmith2002: {
+    houses: ['umbro', 'paulSmith'], year: 2002,
+    sources: ['https://www.umbro.com/en/100-years-of-umbro/always-umbro-since-1924/celebrating-100-years-of-umbro/'],
+  },
+  umbroPalace2012: {
+    houses: ['umbro', 'palace'], year: 2012,
+    sources: ['https://blog.slamcity.com/palace-x-umbro/'],
+  },
+  umbroOffWhite2017: {
+    houses: ['umbro', 'offWhite'], year: 2017,
+    sources: ['https://pausemag.co.uk/2017/02/virgil-ablohs-off-white-x-umbro-collaboration-is-now-available/'],
+  },
+  umbroHiddenNy2025: {
+    houses: ['umbro', 'hiddenNy'], year: 2025,
+    sources: ['https://www.umbro.com/en/style/collections/hidden-x-umbro/'],
+  },
+  umbroRains2025: {
+    houses: ['umbro', 'rains'], year: 2025,
+    sources: ['https://www.umbro.com/en/style/collections/rains-x-umbro/'],
+  },
+  wranglerBillabong2021: {
+    houses: ['wrangler', 'billabong'], year: 2021,
+    sources: ['https://www.kontoorbrands.com/news-media/feature-story/13512/western-meets-west-coast-in-first-ever-billabong-x-wrangler-collaboration'],
+  },
+  wranglerPendleton2022: {
+    houses: ['wrangler', 'pendleton'], year: 2022,
+    sources: ['https://www.kontoorbrands.com/investors/news-events/press-releases/detail/138/wrangler-and-pendleton-woolen-mills-weave-the-spirit-of'],
+  },
+  wranglerGant2022: {
+    houses: ['wrangler', 'gant'], year: 2022,
+    sources: ['https://officemagazine.net/gant-goes-west-wrangler'],
+  },
+  wranglerStaud2023: {
+    houses: ['wrangler', 'staud'], year: 2023,
+    sources: ['https://www.prnewswire.com/news-releases/staud-and-wrangler-blend-california-cool-and-western-heritage-in-new-premium-denim-collaboration-301919324.html'],
+  },
+  wranglerAvirex2026: {
+    houses: ['wrangler', 'avirex'], year: 2026,
+    sources: ['https://www.kontoorbrands.com/investors/news-events/press-releases/detail/223/icons-collide-wrangler-and-avirex-launch-limited-edition'],
+  },
+  wranglerRoa2026: {
+    houses: ['wrangler', 'roa'], year: 2026,
+    sources: ['https://www.wrangler.com/shop/collections-wrangler-x-roa'],
+  },
   ovoJordanBrand2015: {
     houses: ['ovo', 'jordanBrand'], year: 2015,
     sources: ["https://www.gq.com/story/drake-jordan-x-ovo-release-date"],
@@ -2756,6 +3107,7 @@ export const collaborations = {
   vetementsUmbro2018: {
     houses: ['vetements', 'umbro'],
     year: 2018,
+    sources: ['https://hypebeast.com/2018/4/km20-vetements-umbro-spring-summer-2018-editorial'],
   },
   vetementsOakley2019: {
     houses: ['vetements', 'oakley'],
@@ -2853,7 +3205,10 @@ export const collaborations = {
   junyaWatanabeManFilson2012: { houses: ['junyaWatanabeMan', 'filson'], year: 2012 },
   filsonNigelCabourn2014: { houses: ['filson', 'nigelCabourn'], year: 2014 },
   filsonBirkenstock2024: { houses: ['filson', 'birkenstock'], year: 2024 },
-  filsonWrangler2025: { houses: ['filson', 'wrangler'], year: 2025 },
+  filsonWrangler2025: {
+    houses: ['filson', 'wrangler'], year: 2025,
+    sources: ['https://www.kontoorbrands.com/investors/news-events/press-releases/detail/220/filson-x-wrangler-two-icons-of-american-craftsmanship'],
+  },
   filsonStetson2025: { houses: ['filson', 'stetson'], year: 2025 },
   uniqloMarimekko2024: { houses: ['uniqlo', 'marimekko'], year: 2024 },
   humanMadeLevis2022: { houses: ['humanMade', 'levis'], year: 2022 },
@@ -2935,7 +3290,10 @@ export const collaborations = {
   stussyDenimTears2022: { houses: ['stussy', 'denimTears'], year: 2022 },
   stussyDenimTears2025: { houses: ['stussy', 'denimTears'], year: 2025 },
   stussyPatta2024: { houses: ['stussy', 'patta'], year: 2024 },
-  stussyMountainHardwear2024: { houses: ['stussy', 'mountainHardwear'], year: 2024 },
+  stussyMountainHardwear2024: {
+    houses: ['stussy', 'mountainHardwear'], year: 2024,
+    sources: ['https://www.stussy.com/blogs/features/stussy-mountain-hardwear-1', 'https://www.youtube.com/watch?v=z_S0mtKLy5o'],
+  },
   stussyCdg2021: { houses: ['stussy', 'cdg'], year: 2021 },
   stussyJunyaWatanabeMan2024: { houses: ['stussy', 'junyaWatanabeMan'], year: 2024 },
   stussySuicoke2017: { houses: ['stussy', 'suicoke'], year: 2017 },

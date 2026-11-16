@@ -85,6 +85,54 @@ afterEach(() => {
 });
 
 describe('brand selection on the map', () => {
+  const visiblePins = () => graph.cy.nodes('[kind = "marker"]').filter((node) => node.visible())
+    .map((node) => node.data('city')).sort();
+
+  it('shows only the selected brand city pin while keeping connected brands visible', () => {
+    graph.setYear(2020);
+    const originalPins = visiblePins();
+    graph.toggleCity('Tokyo');
+    graph.select({ kind: 'house', id: 'selected' });
+    expect(visiblePins()).toEqual(['London']);
+    expect(openHouses()).toEqual(['connected', 'manual', 'selected']);
+    expect(graph.cy.getElementById('gl:Paris').visible()).toBe(false);
+    expect(graph.cy.getElementById('gl:Tokyo').visible()).toBe(false);
+    graph.cy.zoom(2);
+    graph.setYear(2021);
+    expect(visiblePins()).toEqual(['London']);
+    graph.select({ kind: 'house', id: 'connected' });
+    expect(visiblePins()).toEqual(['Paris']);
+    graph.select(null);
+    expect(visiblePins()).toEqual(originalPins);
+    expect(graph.cy.getElementById('gl:Tokyo').visible()).toBe(true);
+    expect(openHouses()).toEqual(['manual']);
+  });
+
+  it('restores only filter-eligible pins and restores pins for designer and group views', () => {
+    graph.setYear(2020);
+    graph.setHouseFilter(new Set(['selected', 'connected']));
+    graph.select({ kind: 'house', id: 'selected' });
+    expect(visiblePins()).toEqual(['London']);
+    graph.select({ kind: 'designer', id: 'one' });
+    expect(visiblePins()).toEqual(['London', 'Paris']);
+    graph.select({ kind: 'house', id: 'selected' });
+    graph.select({ kind: 'group', id: GroupId.WHPGlobal });
+    expect(visiblePins()).toEqual(['London', 'Paris']);
+    graph.select({ kind: 'house', id: 'selected' });
+    graph.setHouseFilter(new Set(['connected']));
+    expect(visiblePins()).toEqual([]);
+    graph.select(null);
+    expect(visiblePins()).toEqual(['Paris']);
+  });
+
+  it.each([
+    ['regionalOne', 'Southern California'],
+    ['label', 'Berlin'],
+  ])('keeps the mapped location pin for %s', (id, location) => {
+    graph.select({ kind: 'house', id });
+    expect(visiblePins()).toEqual([location]);
+  });
+
   it('reveals every collaboration partner and points red arrows out from the selected brand', () => {
     graph.setYear(2020);
     collaborations.push({ id: 'threeBrands', houses: ['selected', 'connected', 'manual'], year: 2015, name: 'Test project' });
@@ -153,8 +201,7 @@ describe('brand selection on the map', () => {
 
     graph.select(null);
     graph.setAllExpanded(true);
-    expect(arrows().length).toBe(3);
-    expect(arrows().filter((edge) => edge.data('label').endsWith('(Multiple)')).length).toBe(1);
+    expect(arrows().length).toBe(0); // Don't construct invisible collaboration edges.
   });
 
   it('reveals same-city partners and nested collaborator labels without opening unrelated brands', () => {
@@ -513,6 +560,35 @@ describe('brand selection on the map', () => {
 });
 
 
+describe('crowded marker presentation', () => {
+  it('separates pins, tethers them to unchanged anchors and updates after filtering', () => {
+    graph.destroy();
+    const host = document.createElement('div');
+    graph = new DesignerGraph(host, { onSelect });
+    const london = graph.cy.getElementById(nodeId.city('London'));
+    const paris = graph.cy.getElementById(nodeId.city('Paris'));
+    london.data('tip', { x: 100, y: 100 });
+    paris.data('tip', { x: 100, y: 100 });
+    graph.cy.zoom(1);
+    graph.setYear(2020);
+    const a = london.boundingBox({ includeLabels: false });
+    const b = paris.boundingBox({ includeLabels: false });
+    expect(a.x2 <= b.x1 || b.x2 <= a.x1 || a.y2 <= b.y1 || b.y2 <= a.y1).toBe(true);
+    expect(london.data('tip')).toEqual({ x: 100, y: 100 });
+    expect(paris.data('tip')).toEqual({ x: 100, y: 100 });
+    expect(host.querySelector('.pin-leaders line[x1="100"][y1="100"]')).not.toBeNull();
+    london.emit('mouseover');
+    expect(london.style('text-opacity')).toBe('1');
+    london.emit('mouseout');
+    expect(london.style('text-opacity')).toBe(london.data('markerLabelVisible') ? '1' : '0');
+    graph.setHouseFilter(new Set(['selected']));
+    expect(host.querySelector('.pin-leaders line')).toBeNull();
+    expect(london.position()).toEqual({ x: 100, y: 100 - london.height() / 2 });
+    london.emit('tap');
+    expect(openHouses()).toEqual(['selected']);
+  });
+});
+
 describe('connection presentation', () => {
   it('filters partner reveals and lines, then restores both connection types', () => {
     collaborations.push({ id: 'partner', houses: ['selected', 'manual'], year: 2015 });
@@ -573,7 +649,8 @@ describe('connection presentation', () => {
 });
 
 
-it('shows connection lines only for a selected brand, even with every city expanded', () => {
+it('shows connections for a selected brand or designer, even with every city expanded', () => {
+  vi.stubGlobal('matchMedia', () => ({ matches: true }));
   collaborations.push({ id: 'pair', houses: ['selected', 'manual'], year: 2015 });
   const lines = () => graph.cy.edges('[kind = "move"], [kind = "collaboration"]');
   const allHidden = () => lines().map((edge) => edge.hasClass('lines-off')).every(Boolean);
@@ -587,7 +664,40 @@ it('shows connection lines only for a selected brand, even with every city expan
   graph.select(null);
   expect(allHidden()).toBe(true);
   graph.select({ kind: 'designer', id: 'one' });
-  expect(allHidden()).toBe(true);
+  const visible = lines().filter((edge) => !edge.hasClass('lines-off'));
+  expect(visible.length).toBe(1);
+  expect(visible[0]!.data('designerId')).toBe('one');
+  expect(visible[0]!.style('display')).toBe('element');
   graph.select({ kind: 'group', id: 'whpGlobal' as GroupId });
   expect(allHidden()).toBe(true);
+});
+
+it('keeps designer move lines in sync with the line switch, connection filter, year and house filters', () => {
+  vi.stubGlobal('matchMedia', () => ({ matches: true }));
+  const visibleMoves = () => graph.cy.edges('[kind = "move"]').filter((edge) => edge.style('display') === 'element');
+  graph.setYear(2020);
+  graph.select({ kind: 'designer', id: 'one' });
+  expect(visibleMoves().map((edge) => edge.data('designerId'))).toEqual(['one']);
+  graph.setShowMoves(false);
+  expect(visibleMoves().length).toBe(0);
+  graph.setShowMoves(true);
+  expect(visibleMoves().length).toBe(1);
+  graph.setConnectionFilter('collaborations');
+  expect(visibleMoves().length).toBe(0);
+  graph.setConnectionFilter('designers');
+  expect(visibleMoves().length).toBe(1);
+  graph.setConnectionFilter('all');
+  expect(visibleMoves().length).toBe(1);
+  graph.setYear(1999);
+  expect(visibleMoves().length).toBe(0);
+  graph.setYear(2020);
+  expect(visibleMoves().length).toBe(1);
+  graph.setHouseFilter(new Set(['selected']));
+  expect(visibleMoves().length).toBe(0);
+  graph.setHouseFilter(undefined);
+  expect(visibleMoves().length).toBe(1);
+  graph.select({ kind: 'designer', id: 'two' });
+  expect(visibleMoves().map((edge) => edge.data('designerId'))).toEqual(['two']);
+  graph.select(null);
+  expect(visibleMoves().length).toBe(0);
 });

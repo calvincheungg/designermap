@@ -480,6 +480,7 @@ describe('data', () => {
 
   it('lists Calvin Klein’s directors in order', () => {
     expect(directorsOf('calvinKlein').map((t) => [t.designerId, t.start, t.end])).toEqual([
+      ['paulOverfield', undefined, undefined], // accessories design director; dates unknown
       ['calvinKlein', 1968, 2003],
       ['louiseTrotter', 2001, 2003], // director of ready-to-wear (head of womenswear), ~2001–2003
       ['franciscoCosta', 2003, 2016],

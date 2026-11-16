@@ -45,12 +45,15 @@ details; report unresolved questions in the research summary instead.
 
 Separate retail founding, label launch, incorporation, independence and relaunch
 dates. Explain material differences in notes instead of silently choosing a date.
-For a confirmed brand shutdown or current pause, record its year in `closed`;
-Properties shows it as "Ended" beside `founded`. Verify the year operations ended
-or paused rather than using an announcement year or final runway presentation
-by default. A brand that remains paused counts as ended even if the pause was
-announced as temporary. Omit `closed` when the end year is unconfirmed or the
-brand has since resumed trading; preserve earlier pauses and relaunches in notes.
+**Treat a brand currently on hiatus or paused as inactive: add its Ended year,
+even when the hiatus was announced as temporary.** Record the verified year
+operations stopped or paused in `closed`, just as for a shutdown; Properties
+shows it as "Ended" beside `founded`. Check activity status for every brand
+addition or correction. Verify the operational pause year rather than using an
+announcement year or final runway presentation by default. Research a missing
+pause year; if it remains unconfirmed, omit `closed` and report the gap rather
+than inventing a date. If the brand has resumed activity, remove `closed` and
+preserve its earlier pauses and relaunches in notes.
 Judge market tier across core products and comparable existing brands, not one
 expensive item, a collaboration or the owner's other labels. Treat tags as
 editorial judgments rather than externally certified facts.

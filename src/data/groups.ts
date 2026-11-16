@@ -1,5 +1,9 @@
 /** Stable identifiers; display names can change without changing house references. */
 export enum GroupId {
+  Tabio = 'tabio',
+  DesignerBrands = 'designerBrands',
+  Apax = 'apax',
+  FinlaysonCo = 'finlaysonCo',
   FnF = 'fnf',
   RedCircle = 'redCircle',
   URBN = 'urbn',
@@ -167,6 +171,30 @@ export interface GroupData {
 }
 
 export const groups = {
+  [GroupId.Tabio]: {
+    name: 'Tabio Corporation',
+    website: 'https://corporate.tabio.com',
+    description: 'Japanese sock developer and manufacturer operating Tabio, Tabio MEN and Kutsushitaya.',
+    notes: 'Founded as Dan in 1968 by Naomasa Ochi, incorporated in 1977 and renamed Tabio Corporation in 2006. The Tabio label was introduced in London in 2002. Official history and company profile: https://corporate.tabio.com/jp/corporate/company/about/history.html and https://corporate.tabio.com/jp/corporate/company/about/profile.html .',
+  },
+  [GroupId.DesignerBrands]: {
+    name: 'Designer Brands',
+    website: 'https://www.designerbrands.com',
+    description: 'American footwear company operating DSW and owning brands including Keds and Vince Camuto.',
+    notes: 'Keds acquisition: https://investors.designerbrands.com/2023-02-08-Designer-Brands-Inc-Furthers-Owned-Brand-Strategy,-Leveraging-its-Unique-Business-Model . Current affiliation: https://www.linkedin.com/company/keds1916 .',
+  },
+  [GroupId.Apax]: {
+    name: 'Apax Partners',
+    description: 'Private equity firm whose funds own Cole Haan.',
+    website: 'https://www.apax.com',
+    notes: 'Cole Haan is listed as a current investment: https://www.apax.com/partnerships/cole-haan/ . Acquisition completed in February 2013, following the 2012 agreement.',
+  },
+  [GroupId.FinlaysonCo]: {
+    name: 'Finlayson & Co',
+    description: 'Finnish textile and clothing group whose brands include Finlayson, Makia, Vallila and Reino & Aino.',
+    website: 'https://www.finlaysonco.fi',
+    notes: 'Current portfolio: https://www.finlaysonco.fi/ . Established in 2025 after the bankruptcy of Manna & Co.',
+  },
   [GroupId.URBN]: {
     name: 'URBN',
     description: 'Philadelphia-based Urban Outfitters, Inc., whose consumer brands include Free People and FP Movement.',
