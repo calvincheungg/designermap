@@ -1,12 +1,10 @@
-import { cities, type CityName } from '../data/cities';
+import { cities, cityRegions, type CityName } from '../data/cities';
 import { getHouse } from '../data';
 import type { LatLng } from '../types';
 
 /**
- * Display groups only: a house's actual city remains in the source data,
- * directory and Properties window. Anchor each regional pin to a member city.
- * Keep these groups stable when filters change so pins don't jump around.
- * Major cities retain individual pins; group only the smaller nearby cities.
+ * Geographic names for nearby-city clusters. These are label hints only:
+ * every city keeps its own pin and grid, revealed as the map zooms in.
  */
 export const mapRegions = {
   'Bay Area': {
@@ -43,11 +41,35 @@ export const mapRegions = {
   },
 } as const satisfies Record<string, { anchor: CityName; cities: readonly CityName[] }>;
 
-const regionsByCity = new Map<string, string>(Object.entries(mapRegions)
-  .flatMap(([region, { cities }]) => cities.map((city) => [city, region] as const)));
+/** Always independent, even when the dataset contains fewer than five brands. */
+export const majorCities = [
+  'Paris', 'London', 'Milan', 'Rome', 'Florence', 'Turin', 'Venice', 'Bologna',
+  'New York', 'Los Angeles', 'San Francisco',
+  'Tokyo', 'Osaka', 'Kyoto', 'Seoul', 'Shanghai', 'Hong Kong', 'Taipei',
+  'Toronto', 'Montreal', 'Vancouver', 'Copenhagen', 'Stockholm',
+  'Berlin', 'Munich', 'Amsterdam', 'Antwerp', 'Barcelona', 'Madrid',
+  'Sydney', 'Melbourne', 'Singapore',
+] as const satisfies readonly CityName[];
+const majorCitySet: ReadonlySet<string> = new Set(majorCities);
 
-/** Unlisted cities keep their own pin. Region names are already location IDs. */
-export const mapLocationForCity = (city: string): string => regionsByCity.get(city) ?? city;
+/** Count main brands across all years/filters, so a major city never flickers into a cluster. */
+export const isMajorCity = (city: string, brandCount: number): boolean =>
+  brandCount >= 5 || majorCitySet.has(city);
+
+export const mapLocationForCity = (city: string): string => city;
+
+/** Prefer familiar region names; otherwise name the area after its largest member city. */
+export function clusterLabel(members: readonly string[], representative: string): string {
+  for (const [name, region] of Object.entries(mapRegions)) {
+    if (members.every(city => (region.cities as readonly string[]).includes(city))) return name;
+  }
+  const regions = members.map(city => cityRegions[city as CityName]);
+  const first = regions[0];
+  if (first && regions.every(region => region?.country === first.country && region.region === first.region)) {
+    return first.region;
+  }
+  return `${representative} area`;
+}
 
 /** Labels share their top-level house's map location; their actual city is retained. */
 export function mapHousePath(id: string): string[] {
@@ -64,6 +86,5 @@ export const mapHouseRoot = (id: string): string => mapHousePath(id)[0] ?? id;
 export const mapLocationForHouse = (id: string): string => mapLocationForCity(getHouse(mapHouseRoot(id))!.city);
 
 export function mapLocationCoordinates(location: string): LatLng {
-  const region = Object.hasOwn(mapRegions, location) ? mapRegions[location as keyof typeof mapRegions] : undefined;
-  return cities[region?.anchor ?? (location as CityName)];
+  return cities[location as CityName];
 }

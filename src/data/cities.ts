@@ -7,6 +7,10 @@ import { CountryCode } from './countries';
  * house is somewhere new.
  */
 export const cities = {
+  'Saint-Sever': [43.7575, -0.5731],
+  Ravarino: [44.72, 11.1],
+  Bozeman: [45.677, -111.0429],
+  Edinburgh: [55.9533, -3.1883],
   Jetzendorf: [48.4333, 11.4167],
   Johannesburg: [-26.2041, 28.0473],
   Lagos: [6.5244, 3.3792],
@@ -205,6 +209,7 @@ export type CityName = keyof typeof cities;
 
 /** State/province metadata is separate from stable map keys and coordinates. */
 export const cityRegions: Partial<Record<CityName, { country: CountryCode; region: string }>> = {
+  Bozeman: { country: CountryCode.UnitedStates, region: 'Montana' },
   Lakewood: { country: CountryCode.UnitedStates, region: 'Colorado' },
   Tucson: { country: CountryCode.UnitedStates, region: 'Arizona' },
   Miami: { country: CountryCode.UnitedStates, region: 'Florida' },

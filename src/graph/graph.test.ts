@@ -84,6 +84,80 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
+describe('regional cluster interaction', () => {
+  const clusters = () => graph.cy.nodes('[kind = "marker"][?isCluster]');
+  const settleZoom = (zoom: number) => {
+    graph.cy.zoom(zoom);
+    vi.advanceTimersByTime(100);
+  };
+
+  it('consolidates small cities, preserves major pins, and restores individual cities on zoom in', () => {
+    vi.useFakeTimers();
+    settleZoom(0.3);
+    expect(clusters().length).toBe(1);
+    expect(clusters()[0]!.data('shown')).toBe(4);
+    expect(clusters()[0]!.data('members').sort()).toEqual(['Gardena', 'Irvine', 'Santa Cruz', 'Seal Beach']);
+    for (const city of ['London', 'Paris', 'Milan', 'Tokyo', 'Berlin', 'Madrid']) {
+      expect(graph.cy.getElementById(nodeId.city(city)).hasClass('clustered')).toBe(false);
+    }
+    const clusterId = clusters()[0]!.id();
+    settleZoom(8);
+    expect(clusters().length).toBe(0);
+    expect(graph.cy.nodes('.clustered').length).toBe(0);
+    settleZoom(0.3);
+    expect(clusters()[0]!.id()).toBe(clusterId);
+  });
+
+  it('restores individual pins when years or filters leave fewer than four eligible cities', () => {
+    vi.useFakeTimers();
+    settleZoom(0.3);
+    expect(clusters()[0]!.data('shown')).toBe(4);
+    graph.setYear(2020);
+    expect(clusters().length).toBe(0);
+    for (const city of ['Gardena', 'Irvine', 'Santa Cruz']) {
+      expect(graph.cy.getElementById(nodeId.city(city)).visible()).toBe(true);
+    }
+    graph.setYear(2040);
+    expect(clusters()[0]!.data('shown')).toBe(4);
+    graph.setHouseFilter(new Set(['regionalOne', 'regionalTwo']));
+    expect(clusters().length).toBe(0);
+    expect(graph.cy.getElementById(nodeId.city('Gardena')).visible()).toBe(true);
+    expect(graph.cy.getElementById(nodeId.city('Irvine')).visible()).toBe(true);
+    graph.setHouseFilter(new Set(['regionalTwo']));
+    expect(clusters().length).toBe(0);
+    expect(graph.cy.getElementById(nodeId.city('Irvine')).visible()).toBe(true);
+    graph.setHouseFilter(new Set());
+    expect(graph.cy.nodes('[kind = "marker"]').filter(node => node.visible()).length).toBe(0);
+  });
+
+  it('zooms into a cluster on click without opening brand grids', () => {
+    vi.useFakeTimers();
+    settleZoom(0.3);
+    const animate = vi.spyOn(graph.cy, 'animate').mockReturnValue(graph.cy);
+    clusters()[0]!.emit('tap');
+    expect(animate).toHaveBeenCalledWith(expect.objectContaining({ zoom: expect.any(Number), pan: expect.any(Object) }), { duration: 300 });
+    expect(animate.mock.calls[0]![0]!.zoom).toBeGreaterThan(0.3);
+    expect(openHouses()).toEqual([]);
+  });
+
+  it('keeps an opened city out of its cluster and restores clustering when it closes', () => {
+    vi.useFakeTimers();
+    settleZoom(0.3);
+    graph.toggleCity('Gardena');
+    expect(openHouses()).toEqual(['regionalOne']);
+    expect(graph.cy.getElementById(nodeId.city('Gardena')).visible()).toBe(true);
+    expect(clusters().every(cluster => !cluster.data('members').includes('Gardena'))).toBe(true);
+    graph.toggleCity('Gardena');
+    expect(clusters().some(cluster => cluster.data('members').includes('Gardena'))).toBe(true);
+    graph.select({ kind: 'house', id: 'regionalOne' });
+    expect(clusters().length).toBe(0);
+    expect(graph.cy.getElementById(nodeId.city('Gardena')).visible()).toBe(true);
+    expect(openHouses()).toEqual(['regionalOne', 'regionalTwo']);
+    graph.select(null);
+    expect(clusters().length).toBeGreaterThan(0);
+  });
+});
+
 describe('brand selection on the map', () => {
   const visiblePins = () => graph.cy.nodes('[kind = "marker"]').filter((node) => node.visible())
     .map((node) => node.data('city')).sort();
@@ -126,7 +200,7 @@ describe('brand selection on the map', () => {
   });
 
   it.each([
-    ['regionalOne', 'Southern California'],
+    ['regionalOne', 'Gardena'],
     ['label', 'Berlin'],
   ])('keeps the mapped location pin for %s', (id, location) => {
     graph.select({ kind: 'house', id });
@@ -379,33 +453,32 @@ describe('brand selection on the map', () => {
     expect(graph.cy.edges('[designerId = "labelDesigner"]')[0]!.source().id()).toBe(nodeId.house('family'));
   });
 
-  it('opens a regional pin across cities while preserving the actual house locations', () => {
-    const pin = graph.cy.getElementById(nodeId.city('Southern California'));
-    expect(pin.data('count')).toBe(3);
-    expect(graph.cy.getElementById(nodeId.city('Gardena')).empty()).toBe(true);
+  it('opens an individual city without expanding neighbouring cities', () => {
+    const pin = graph.cy.getElementById(nodeId.city('Irvine'));
+    expect(pin.data('count')).toBe(1);
     expect(houseNode('regionalOne').data('city')).toBe('Gardena');
-    expect(houseNode('regionalTwo').parent()[0]!.id()).toBe(nodeId.grid('Southern California'));
+    expect(houseNode('regionalTwo').parent()[0]!.id()).toBe(nodeId.grid('Irvine'));
     graph.setYear(2020);
-    expect(pin.data('shown')).toBe(2);
+    expect(pin.data('shown')).toBe(1);
     pin.emit('tap');
-    expect(openHouses()).toEqual(['regionalOne', 'regionalTwo']);
-    expect(graph.cy.getElementById('gl:Southern California').hasClass('collapsed')).toBe(false);
+    expect(openHouses()).toEqual(['regionalTwo']);
+    expect(graph.cy.getElementById('gl:Irvine').hasClass('collapsed')).toBe(false);
     graph.setYear(2040);
-    expect(pin.data('shown')).toBe(3);
-    expect(openHouses()).toEqual(['regionalFuture', 'regionalOne', 'regionalTwo']);
+    expect(pin.data('shown')).toBe(1);
+    expect(openHouses()).toEqual(['regionalTwo']);
     graph.setHouseFilter(new Set(['regionalTwo']));
     expect(pin.data('shown')).toBe(1);
     expect(openHouses()).toEqual(['regionalTwo']);
     graph.setHouseFilter(new Set());
     expect(pin.hasClass('hidden')).toBe(true);
-    expect(graph.cy.getElementById('gl:Southern California').hasClass('hidden')).toBe(true);
+    expect(graph.cy.getElementById('gl:Irvine').hasClass('hidden')).toBe(true);
   });
 
-  it('routes collapsed moves through regional pins and reveals internal moves on expansion', () => {
+  it('routes moves through city pins and reveals direct connected brands on selection', () => {
     let moves = graph.cy.edges('[designerId = "regional"]');
-    expect(moves.length).toBe(1); // No self-loop for a move inside the collapsed region.
-    expect(moves[0]!.source().id()).toBe(nodeId.city('Southern California'));
-    expect(moves[0]!.target().id()).toBe(nodeId.city('Paris'));
+    expect(moves.length).toBe(2);
+    expect(moves[0]!.source().id()).toBe(nodeId.city('Gardena'));
+    expect(moves[0]!.target().id()).toBe(nodeId.city('Irvine'));
     graph.select({ kind: 'house', id: 'regionalOne' });
     expect(openHouses()).toEqual(['regionalOne', 'regionalTwo']);
     moves = graph.cy.edges('[designerId = "regional"]');
@@ -416,10 +489,10 @@ describe('brand selection on the map', () => {
     expect(internal.hasClass('highlight')).toBe(true);
     graph.select(null);
     expect(openHouses()).toEqual([]);
-    graph.toggleCity('Gardena'); // Existing city-based calls resolve to the regional pin.
+    graph.toggleCity('Gardena');
     graph.select({ kind: 'house', id: 'standalone' });
     graph.select(null);
-    expect(openHouses()).toEqual(['regionalFuture', 'regionalOne', 'regionalTwo']);
+    expect(openHouses()).toEqual(['regionalOne']);
   });
 
   it('reveals a designer across regional and city pins without opening unrelated regional brands', () => {

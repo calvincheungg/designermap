@@ -18,6 +18,704 @@ import type { HouseId } from './houses';
  * Years refer to release, rather than an earlier announcement or runway show.
  */
 export const collaborations = {
+  pleasuresConverse2019: {
+    houses: ['pleasures', 'converse'], year: 2019,
+    sources: ['https://hypebae.com/2019/11/converse-pleasures-collaboration-pro-leather-sneakers-punk-graphics-black-white-release-date'],
+  },
+  pleasuresAdidas2019: {
+    houses: ['pleasures', 'adidas'], year: 2019,
+    sources: ['https://www.sneakerfreaker.com/releases/adidas-x-pleasures-samba-already-sold-out'],
+  },
+  pleasuresAdidas2021: {
+    houses: ['pleasures', 'adidas'], year: 2021,
+    sources: ['https://www.endclothing.com/us/features/adidas-consortium-x-pleasures-superstar-register-now-on-end-launches'],
+  },
+  pleasuresReebok2019: {
+    houses: ['pleasures', 'reebok'], year: 2019,
+    sources: ['https://www.sneakerfreaker.com/releases/official-pics-pleasures-x-reebok-capsule'],
+  },
+  // The camouflage pattern is credited to Mossy Oak.
+  pleasuresCrocs2020: {
+    houses: ['pleasures', 'crocs'], year: 2020,
+    sources: ['https://www.endclothing.com/row/features/pleasures-x-crocs-dylan-clog-register-now-on-end-launches'],
+  },
+  pleasuresTaikan2019: {
+    houses: ['pleasures', 'taikan'], year: 2019,
+    sources: ['https://www.fajomagazine.com/spotlight/taikan-x-pleasures/'],
+  },
+  pleasuresTaikan2020: {
+    houses: ['pleasures', 'taikan'], year: 2020,
+    sources: ['https://www.goat.com/en-ca/apparel/pleasures-x-taikan-sacoche-bag-black-p20f033-blac'],
+  },
+  // Also credited to The Loop, an Austin running retailer/community hub.
+  // On’s April 2025 press release has a May 2024 typo; contemporaneous coverage confirms May 2025.
+  pleasuresOn2025: {
+    houses: ['pleasures', 'onRunning'], year: 2025,
+    sources: ['https://www.si.com/fannation/sneakers/off-court/on-pleasures-the-loop-drop-streetwear-running-collection'],
+  },
+  pleasuresAsics2020: {
+    houses: ['pleasures', 'asics'], year: 2020,
+    sources: ['https://www.sneakerfreaker.com/releases/pleasures-put-their-touch-on-the-asics-gel-nandi-og'],
+  },
+  pleasuresDrMartens2022: {
+    houses: ['pleasures', 'drMartens'], year: 2022,
+    sources: ['https://www.nssmag.com/en/fashion/30143/pleasures-dr-martens'],
+  },
+  pleasuresFredPerry2023: {
+    houses: ['pleasures', 'fredPerry'], year: 2023,
+    sources: ['https://milled.com/pleasuresnow.com/fred-perry-x-pleasures-CSSzX3q3r3TZLzjr'],
+  },
+  pleasuresMooseKnuckles2024: {
+    houses: ['pleasures', 'mooseKnuckles'], year: 2024,
+    sources: ['https://moose-knuckles.prezly.com/moose-knuckles--lifestyle-brand-pleasures-collaborate-on-limited-edition-capsule-collection'],
+  },
+  pleasuresJuicyCouture2025: {
+    houses: ['pleasures', 'juicyCouture'], year: 2025,
+    sources: ['https://milled.com/feature.com/pleasures-x-juicy-couture-Jamm7zccXsYHsMix'],
+  },
+  pleasuresAltra2026: {
+    houses: ['pleasures', 'altra'], year: 2026,
+    sources: ['https://shop-eat-surf-outdoor.com/press-releases/altra-and-pleasures-unveil-limited-edition-satellite-running-shoe/618576/'],
+  },
+  pleasuresTopologie2026: {
+    houses: ['pleasures', 'topologie'], year: 2026,
+    sources: ['https://topologie.com/pages/collab'],
+  },
+  pleasuresUmbro2026: {
+    houses: ['pleasures', 'umbro'], year: 2026,
+    sources: ['https://iconixbrand.com/pleasures-releases-exclusive-umbro-capsule-collection/'],
+  },
+  // Kotn × Padmore & Barnes is confirmed, but the official March 3 launch
+  // pages omit the year. Keep pending rather than inventing a dated release:
+  // https://kotn.com/kotn-x-padmore-barnes-sign-up
+  // https://kotn.com/kotnxpadmoreandbarnes
+  padmoreBarnesSupreme2001: {
+    houses: ['padmoreBarnes', 'supreme'], year: 2001,
+    sources: ['https://supreme.com/random/shoes'],
+  },
+  padmoreBarnesCdgHommeDeux2020: {
+    houses: ['padmoreBarnes', 'cdgHommeDeux'], year: 2020,
+    sources: ['https://www.padmore-barnes.com/japan-strength-continues/'],
+  },
+  padmoreBarnesPleasures2021: {
+    houses: ['padmoreBarnes', 'pleasures'], year: 2021,
+    sources: ['https://hypebeast.com/2021/2/pleasures-padmore-barnes-p204-floral-olive-details'],
+  },
+  padmoreBarnesJjjjound2021: {
+    houses: ['padmoreBarnes', 'jjjjound'], year: 2021,
+    sources: ['https://hypebeast.com/2022/2/best-jjjjound-collaborations-new-balance-reebok-bape-990-992-feature'],
+  },
+  padmoreBarnesEighteenEast2024: {
+    houses: ['padmoreBarnes', 'eighteenEast'], year: 2024,
+    sources: ['https://www.eyecmag.com/news/2024/5/16/18-east-padmore-and-barnes'],
+  },
+  padmoreBarnesHuf2026: {
+    houses: ['padmoreBarnes', 'huf'], year: 2026,
+    sources: ['https://hufworldwide.com/blogs/news/huf-x-j-dilla-x-padmore-barnes'],
+  },
+  padmoreBarnesStussy2014: {
+    houses: ['padmoreBarnes', 'stussy'], year: 2014,
+    sources: ['https://hypebeast.com/2014/10/stussy-x-padmore-barnes-2014-fall-winter-p405-original-boot'],
+  },
+  padmoreBarnesFredPerry2020: {
+    houses: ['padmoreBarnes', 'fredPerry'], year: 2020,
+    sources: ['https://hypebeast.com/2020/5/fred-perry-padmore-barnes-willow-collaboration'],
+  },
+  padmoreBarnesTedBaker2022: {
+    houses: ['padmoreBarnes', 'tedBaker'], year: 2022,
+    sources: ['https://pausemag.co.uk/2022/03/ted-baker-x-padmore-barnes-unveil-new-footwear-collaboration/'],
+  },
+  padmoreBarnesUnitedArrows2022: {
+    houses: ['padmoreBarnes', 'unitedArrows'], year: 2022,
+    sources: ['https://store.united-arrows.co.jp/brand/ua/news/2022/09/padmore-barnes-for-united-arrows.html'],
+  },
+  padmoreBarnesBeamsLights2023: {
+    houses: ['padmoreBarnes', 'beamsLights'], year: 2023,
+    sources: ['https://www.houyhnhnm.jp/en/news/714607/'],
+  },
+  uggJimmyChoo2010: {
+    houses: ['ugg', 'jimmyChoo'], year: 2010,
+    sources: ['https://www.ugg.com/ca/fr/collaborations/'],
+  },
+  uggPendleton2014: {
+    houses: ['ugg', 'pendleton'], year: 2014,
+    sources: ['https://www.ugg.com/ca/fr/collaborations/'],
+  },
+  uggLibertyLondon2016: {
+    houses: ['ugg', 'libertyLondon'], year: 2016,
+    sources: ['https://www.ugg.com/ca/fr/collaborations/'],
+  },
+  uggWhiteMountaineering2016: {
+    houses: ['ugg', 'whiteMountaineering'], year: 2016,
+    sources: ['https://www.ugg.com/ca/fr/collaborations/'],
+  },
+  uggTeva2016: {
+    houses: ['ugg', 'teva'], year: 2016,
+    sources: ['https://www.ugg.com/ca/fr/collaborations/'],
+  },
+  uggPreen2017: {
+    houses: ['ugg', 'preen'], year: 2017,
+    sources: ['https://www.ugg.com/ca/fr/collaborations/'],
+  },
+  uggJeremyScottLabel2017: {
+    houses: ['ugg', 'jeremyScottLabel'], year: 2017,
+    sources: ['https://www.ugg.com/ca/fr/collaborations/'],
+  },
+  uggPhillipLim2017: {
+    houses: ['ugg', 'phillipLim'], year: 2017,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggYProject2018: {
+    houses: ['ugg', 'yProject'], year: 2018,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggMastermindWorld2018: {
+    houses: ['ugg', 'mastermindWorld'], year: 2018,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000240.000003434.html'],
+  },
+  uggHeronPreston2019: {
+    houses: ['ugg', 'heronPreston'], year: 2019,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggEckhausLatta2019: {
+    houses: ['ugg', 'eckhausLatta'], year: 2019,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000300.000003434.html'],
+  },
+  uggOvadia2020: {
+    houses: ['ugg', 'ovadia'], year: 2020,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggStampd2020: {
+    houses: ['ugg', 'stampd'], year: 2020,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggTelfar2021: {
+    houses: ['ugg', 'telfar'], year: 2021,
+    sources: ['https://www.essence.com/fashion/telfar-ugg-collaboration/'],
+  },
+  uggMollyGoddard2021: {
+    houses: ['ugg', 'mollyGoddard'], year: 2021,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggDenimTears2022: {
+    houses: ['ugg', 'denimTears'], year: 2022,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggChildrenOfTheDiscordance2022: {
+    houses: ['ugg', 'childrenOfTheDiscordance'], year: 2022,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggMadhappy2023: {
+    houses: ['ugg', 'madhappy'], year: 2023,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggTheElderStatesman2023: {
+    houses: ['ugg', 'theElderStatesman'], year: 2023,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggPalace2023: {
+    houses: ['ugg', 'palace'], year: 2023,
+    sources: ['https://hungermag.com/editorial/heres-how-to-cop-the-new-palace-x-ugg-collab-kicks'],
+  },
+  uggCollinaStrada2024: {
+    houses: ['ugg', 'collinaStrada'], year: 2024,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggGalleryDept2024: {
+    houses: ['ugg', 'galleryDept'], year: 2024,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggAmbush2025: {
+    houses: ['ugg', 'ambush'], year: 2025,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggReeseCooper2025: {
+    houses: ['ugg', 'reeseCooper'], year: 2025,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggAimeLeonDore2026: {
+    houses: ['ugg', 'aimeLeonDore'], year: 2026,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000792.000003434.html'],
+  },
+  uggWillyChavarria2026: {
+    houses: ['ugg', 'willyChavarria'], year: 2026,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  uggJwAnderson2026: {
+    houses: ['ugg', 'jwAnderson'], year: 2026,
+    sources: ['https://www.theindustry.fashion/ugg-and-jw-anderson-launch-first-footwear-collaboration/'],
+  },
+  uggHiddenNy2026: {
+    houses: ['ugg', 'hiddenNy'], year: 2026,
+    sources: ['https://www.ugg.com/collaborations/'],
+  },
+  bagjackAcronym2002: {
+    houses: ['bagjack', 'acronym'], year: 2002,
+    sources: ['https://cdn.acrnm.com/J1L-GT_SS20', 'https://www.peggsandson.com/blogs/features/bagjack-interview-factory-visit'],
+  },
+  bagjackHeadPorter2006: {
+    houses: ['bagjack', 'headPorter'], year: 2006,
+    sources: ['https://hypebeast.com/2006/11/head-porter-x-bagjack-messenger-bag'],
+  },
+  bagjackStoneIslandShadowProject2009: {
+    houses: ['bagjack', 'stoneIslandShadowProject'], year: 2009,
+    sources: ['https://hypebeast.com/2009/3/stone-island-shadow-x-bagjack-transformable-messenger-bag'],
+  },
+  // Bottle-sleeve project for DISARONNO; the beverage company is not a fashion-house participant.
+  bagjackMaharishi2012: {
+    houses: ['bagjack', 'maharishi'], year: 2012,
+    sources: ['https://hypebeast.com/2012/12/maharishi-x-bagjack-bonsai-forest-bottle-sleeve-for-disaronno', 'https://jfk.nl/news/maharishi-and-bagjack-for-disaronno/'],
+  },
+  bagjackStussy2016: {
+    houses: ['bagjack', 'stussy'], year: 2016,
+    sources: ['https://hypebeast.com/2016/9/stussy-livin-general-store-bagjack-backpack', 'https://thehundreds.com/blogs/content/9-27-16-palace-benny-gold-stussy'],
+  },
+  bagjackJunyaWatanabeMan2025: {
+    houses: ['bagjack', 'junyaWatanabeMan'], year: 2025,
+    sources: ['https://www.imn.jp/post/108057207396?page=1'],
+  },
+  palmesDiadora2025: {
+    houses: ['palmes', 'diadora'], year: 2025,
+    sources: ['https://milled.com/diadora-it/introducing-the-palmes-x-diadora-collection-ykXmi-pqt0ZZFZy4'],
+  },
+  nangaEyeJunyaWatanabeMan2023: {
+    houses: ['nanga', 'eyeJunyaWatanabeMan'], year: 2023,
+    sources: ['https://web.goout.jp/fashion/324428/'],
+  },
+  nangaKamiya2023: {
+    houses: ['nanga', 'kamiya'], year: 2023,
+    sources: ['https://qui.tokyo/news/2311-nenga-kamiya-collboration-jacket'],
+  },
+  nangaWackoMariaSpring2023: {
+    houses: ['nanga', 'wackoMaria'], year: 2023,
+    sources: ['https://www.fashion-press.net/news/100853'],
+  },
+  nangaWackoMariaAutumn2023: {
+    houses: ['nanga', 'wackoMaria'], year: 2023,
+    sources: ['https://www.fashion-press.net/news/111996'],
+  },
+  nangaEngineeredGarments2023: {
+    houses: ['nanga', 'engineeredGarments'], year: 2023,
+    sources: ['https://www.engineeredgarments.com/stories/engineered-garments-x-nanga'],
+  },
+  nangaEngineeredGarments2024: {
+    houses: ['nanga', 'engineeredGarments'], year: 2024,
+    sources: ['https://www.engineeredgarments.com/stories/engineered-garments-x-nanga-special-down-collection-fw24'],
+  },
+  nangaBeautifulPeople2024: {
+    houses: ['nanga', 'beautifulPeople'], year: 2024,
+    sources: ['https://beautiful-people.jp/blogs/news/beautiful-people-x-nanga'],
+  },
+  nangaDenham2024: {
+    houses: ['nanga', 'denham'], year: 2024,
+    sources: ['https://dainagoyabuilding.com/article/event/9347/'],
+  },
+  nangaDenham2025: {
+    houses: ['nanga', 'denham'], year: 2025,
+    sources: ['https://www.denhamjapan.com/collaboration/i/251011_nanga.html'],
+  },
+  nangaAquascutum2024: {
+    houses: ['nanga', 'aquascutum'], year: 2024,
+    sources: ['https://www.fashion-press.net/news/123594'],
+  },
+  nangaNeighborhood2024: {
+    houses: ['nanga', 'neighborhood'], year: 2024,
+    sources: ['https://time-after-time.jp/blogs/tat/article-24'],
+  },
+  nangaBape2024: {
+    houses: ['nanga', 'bape'], year: 2024,
+    sources: ['https://jp.bape.com/blogs/news/nanga'],
+  },
+  nangaFragmentDesign2024: {
+    houses: ['nanga', 'fragmentDesign'], year: 2024,
+    sources: ['https://nanga.jp/feature/content/nangaxfrgmt/'],
+  },
+  nangaSchott2025: {
+    houses: ['nanga', 'schott'], year: 2025,
+    sources: ['https://prtimes.jp/main/html/rd/p/000001247.000009786.html'],
+  },
+  nangaDrakes2026: {
+    houses: ['nanga', 'drakes'], year: 2026,
+    sources: ['https://www.drakes.com/blogs/news/drake-s-by-nanga'],
+  },
+  nangaMaisonKitsune2026: {
+    houses: ['nanga', 'maisonKitsune'], year: 2026,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000154.000069244.html'],
+  },
+  nangaNigelCabourn2026: {
+    houses: ['nanga', 'nigelCabourn'], year: 2026,
+    sources: ['https://www.outerlimits.co.jp/pages/nigel-cabourn'],
+  },
+  // The release also credits retailer FREAK’S STORE, which is not a fashion-house participant here.
+  nangaAlphaIndustries2026: {
+    houses: ['nanga', 'alphaIndustries'], year: 2026,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000973.000002246.html'],
+  },
+  nangaBeamsJapan2022: {
+    houses: ['nanga', 'beamsJapan'], year: 2022,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000518.000012471.html'],
+  },
+  nangaUrbanResearch2023: {
+    houses: ['nanga', 'urbanResearch'], year: 2023,
+    sources: ['https://media.urban-research.jp/news/568135/'],
+  },
+  nangaUrbanResearch2024: {
+    houses: ['nanga', 'urbanResearch'], year: 2024,
+    sources: ['https://www.jrhakatacity.com/shopblog/detail/?cd=002223&scd=000097'],
+  },
+  nangaWindAndSea2024: {
+    houses: ['nanga', 'windAndSea'], year: 2024,
+    sources: ['https://snkrdunk.com/articles/23430/'],
+  },
+  kangolFragmentDesign2008: {
+    houses: ['kangol', 'fragmentDesign'], year: 2008,
+    sources: ['https://hypebeast.com/2008/4/fragment-design-x-kangol-504-traditional-pack'],
+  },
+  kangolMarcByMarcJacobs2013: {
+    houses: ['kangol', 'marcByMarcJacobs'], year: 2013,
+    sources: ['https://bollmanhats.com/kangol-x-marc-by-marc-jacobs/'],
+  },
+  kangolStussy2014: {
+    houses: ['kangol', 'stussy'], year: 2014,
+    sources: ['https://tokyofrontline.com/archives/27387'],
+  },
+  kangolStussy2015: {
+    houses: ['kangol', 'stussy'], year: 2015,
+    sources: ['https://www.xxlmag.com/kangol-and-stussy-team-up-on-second-bermuda-collab-for-fall-2015/'],
+  },
+  kangolHoodByAir2016: {
+    houses: ['kangol', 'hoodByAir'], year: 2016,
+    sources: ['https://www.xxlmag.com/hood-by-air-teams-up-with-kangol-for-fallwinter-2016-collaboration/'],
+  },
+  kangolSupreme2020: {
+    houses: ['kangol', 'supreme'], year: 2020,
+    sources: ['https://stockx.com/supreme-kangol-bermuda-casual-hat-black'],
+  },
+  kangolHm2020: {
+    houses: ['kangol', 'hm'], year: 2020,
+    sources: ['https://www.prnewswire.com/news-releases/kangol-x-hm-feat-mabel-a-fresh-new-streetwear-collaboration-for-the-self-made-generation-301132241.html'],
+  },
+  kangolClot2020: {
+    houses: ['kangol', 'clot'], year: 2020,
+    sources: ['https://juicestore.com/blogs/editorial/clot-kangol-silk-royale-collaboration'],
+  },
+  kangolClot2021: {
+    houses: ['kangol', 'clot'], year: 2021,
+    sources: ['https://juicestore.com/blogs/editorial/clot-kangol-2021-collection'],
+  },
+  kangolMastermindWorld2024: {
+    houses: ['kangol', 'mastermindWorld'], year: 2024,
+    sources: ['https://kangol.jp/shop/t/t1408/'],
+  },
+  kangolJLindeberg2025: {
+    houses: ['kangol', 'jLindeberg'], year: 2025,
+    sources: ['https://jlindeberg.b-cdn.net/Kangol%202025%20Press/J.Lindeberg%20x%20Kangol%20pressrelease%20.pdf'],
+  },
+  kangolJunyaWatanabeMan2007: {
+    houses: ['kangol', 'junyaWatanabeMan'], year: 2007,
+    sources: ['https://hypebeast.com/2007/4/kangol-x-comme-des-garcons-hat'],
+  },
+  kangolAlife2007: {
+    houses: ['kangol', 'alife'], year: 2007,
+    sources: ['https://hypebeast.com/2007/4/alife-x-kangol-ventair'],
+  },
+  kangolSsur2008: {
+    houses: ['kangol', 'ssur'], year: 2008,
+    sources: ['https://hypebeast.com/2008/3/ssur-x-kangol-beanies'],
+  },
+  kangolUniformExperiment2011: {
+    houses: ['kangol', 'uniformExperiment'], year: 2011,
+    sources: ['https://hypebeast.com/2011/4/uniform-experiment-x-kangol-mau-cap'],
+  },
+  kangolClotUndefeated2013: {
+    houses: ['kangol', 'clot', 'undefeated'], year: 2013,
+    sources: ['https://juicestore.com/blogs/editorial/clot-kangol-silk-royale-collaboration'],
+  },
+  mysteryRanchDior2023: {
+    houses: ['mysteryRanch', 'dior'], year: 2023,
+    sources: ['https://milled.com/Dior/new-dior-by-mystery-ranch-jXSSVgt3Ts7g6sg7'],
+  },
+  valextraMoncler2019: {
+    houses: ['valextra', 'moncler'], year: 2019,
+    sources: ['https://hypebeast.com/2019/8/august-2019-week-4-drops-palace-off-white-sterling-ruby-saint-laurent-cav-empt-2-moncler-doublet'],
+  },
+  staudNewBalance2020: {
+    houses: ['staud', 'newBalance'], year: 2020,
+    sources: ['https://www.nylon.com/fashion/staud-new-balance-activewear-sneaker-collaboration'],
+  },
+  onlineCeramicsDenimTears2019: {
+    houses: ['onlineCeramics', 'denimTears'], year: 2019,
+    sources: ['https://hypebeast.com/2019/8/denim-tears-online-ceramics-tie-dye-t-shirt-collaboration-release'],
+  },
+  onlineCeramicsCdg2020: {
+    houses: ['onlineCeramics', 'cdg'], year: 2020,
+    sources: ['https://hypebeast.com/2020/9/comme-des-garcons-cdg-online-ceramics-collaboration-t-shirt-halloween'],
+  },
+  // Other credited contributors, including ADISH, are not represented as houses.
+  gazaFundraiser2021: {
+    houses: ['onlineCeramics', 'brainDead', 'patta', 'cactusPlantFleaMarket', 'denimTears'], year: 2021,
+    sources: ['https://patta.nl/blogs/news/fundraiser-t-shirt-for-gaza', 'https://hypebeast.com/2021/5/brain-dead-adish-online-ceramics-patta-cactus-plant-flea-market-more-fundraiser-t-shirt-for-gaza-release-info'],
+  },
+  onlineCeramicsHeaven2022: {
+    houses: ['onlineCeramics', 'heavenMarcJacobs'], year: 2022,
+    sources: ['https://hypebeast.com/2022/11/heaven-by-marc-jacobs-online-ceramics-collaboration-collection-release-information-unisex', 'https://prtimes.jp/main/html/rd/p/000000368.000002922.html'],
+  },
+  onlineCeramicsBornXRaised2024: {
+    houses: ['onlineCeramics', 'bornXRaised'], year: 2024,
+    sources: ['https://hypebeast.com/2024/7/born-x-raised-online-ceramics-collaboration-collection-release-info'],
+  },
+  bapeCdgPlay2012: {
+    houses: ['bape', 'cdgPlay'], year: 2012,
+    sources: ['https://fashionunited.uk/v1/video/bathing-ape-x-comme-des-garcons/201203158739'],
+  },
+  aapeReebok2013: {
+    houses: ['aape', 'reebok'], year: 2013,
+    sources: ['https://hypebeast.com/2013/8/aape-by-a-bathing-ape-x-reebok-pump-fury-camo'],
+  },
+  aapeNewBalance2021: {
+    houses: ['aape', 'newBalance'], year: 2021,
+    sources: ['https://modernnotoriety.com/aape-by-a-bathing-ape-new-balance-703-release-date/'],
+  },
+  aapeDrMartens2022: {
+    houses: ['aape', 'drMartens'], year: 2022,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000024.000088489.html'],
+  },
+  aapeTommyJeans2020: {
+    houses: ['aape', 'tommyJeans'], year: 2020,
+    sources: ['https://www.houyhnhnm.jp/en/news/362617/'],
+  },
+  aapeTommyJeans2022: {
+    houses: ['aape', 'tommyJeans'], year: 2022,
+    sources: ['https://www.pvh.com/news/tommy-aape-drop'],
+  },
+  bapeSupreme2002: {
+    houses: ['bape', 'supreme'], year: 2002,
+    sources: ['https://designmuseum.org/asset/download?id=b6aa4fac-9799-4ded-90a4-c99ba2737790'],
+  },
+  bapeChromeHearts2009: {
+    houses: ['bape', 'chromeHearts'], year: 2009,
+    sources: ['https://hypebeast.com/2009/9/bathing-ape-chrome-hearts-tshirt-release'],
+  },
+  bapeChampion2010: {
+    houses: ['bape', 'champion'], year: 2010,
+    sources: ['https://hypebeast.com/2010/11/a-bathing-ape-x-champion-sweatshirt'],
+  },
+  bapeChampion2013: {
+    houses: ['bape', 'champion'], year: 2013,
+    sources: ['https://hypebeast.com/2013/11/a-bathing-ape-2013-fallwinter-bape-champion-collection'],
+  },
+  bapeWtapsAmbush2011: {
+    houses: ['bape', 'wtaps', 'ambush'], year: 2011,
+    sources: ['https://hypebeast.com/2011/8/wtaps-x-ambush-x-a-bathing-ape-creepsta'],
+  },
+  bapeWtaps2017: {
+    houses: ['bape', 'wtaps'], year: 2017,
+    sources: ['https://www.eyecmag.com/news/2017/11/10/wtaps-x-bape-reveals-its-full-collaborative-collection'],
+  },
+  bapeUndefeated2012: {
+    houses: ['bape', 'undefeated'], year: 2012,
+    sources: ['https://hypebeast.com/2012/9/a-bathing-ape-x-undefeated-2012-fall-winter-collection'],
+  },
+  bapeReadymade2017: {
+    houses: ['bape', 'readymade'], year: 2017,
+    sources: ['https://jp.bape.com/apps/special/readymade/'],
+  },
+  bapeReadymade2021: {
+    houses: ['bape', 'readymade'], year: 2021,
+    sources: ['https://us.bape.com/blogs/news/a-bathing-ape-x-readymade'],
+  },
+  bapeSuicoke2018: {
+    houses: ['bape', 'suicoke'], year: 2018,
+    sources: ['https://en.jp.bape.com/blogs/news/1136'],
+  },
+  bapePorter2018: {
+    houses: ['bape', 'porterYoshida'], year: 2018,
+    sources: ['https://jp.bape.com/apps/special/porterstand/'],
+  },
+  bapeMastermindJapan2018: {
+    houses: ['bape', 'mastermindJapan'], year: 2018,
+    sources: ['https://hypebeast.com/2018/2/bape-a-bathing-ape-mastermind-japan-la-collection'],
+  },
+  bapeCoach2020: {
+    houses: ['bape', 'coach'], year: 2020,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000099.000008762.html'],
+  },
+  bapeCoach2021: {
+    houses: ['bape', 'coach'], year: 2021,
+    sources: ['https://en.jp.bape.com/pages/bape-x-coach'],
+  },
+  bapeReebok2020: {
+    houses: ['bape', 'reebok'], year: 2020,
+    sources: ['https://us.bape.com/blogs/news/a-bathing-ape-x-reebok'],
+  },
+  bapeReebok2022: {
+    houses: ['bape', 'reebok'], year: 2022,
+    sources: ['https://www.highsnobiety.com/p/bape-reebok-2022-collaboration-info/'],
+  },
+  bapeCommeDesGarcons2020: {
+    houses: ['bape', 'commeDesGarcons'], year: 2020,
+    sources: ['https://en.jp.bape.com/blogs/news/a-bathing-ape%C2%AE-comme-des-garcons'],
+  },
+  bapeCommeDesGarcons2023: {
+    houses: ['bape', 'commeDesGarcons'], year: 2023,
+    sources: ['https://en.jp.bape.com/blogs/news/cdgosaka-23aw'],
+  },
+  bapeVans2021: {
+    houses: ['bape', 'vans'], year: 2021,
+    sources: ['https://en.otokomaeken.com/news/217698'],
+  },
+  bapeVans2022: {
+    houses: ['bape', 'vans'], year: 2022,
+    sources: ['https://us.bape.com/blogs/news/a-bathing-ape-x-vans'],
+  },
+  bapeVans2024: {
+    houses: ['bape', 'vans'], year: 2024,
+    sources: ['https://www.vans.com/en-gb/vans-stories/vans-bape'],
+  },
+  bapeKidSuper2025: {
+    houses: ['bape', 'kidSuper'], year: 2025,
+    sources: ['https://us.bape.com/blogs/news/a-bathing-ape-x-kidsuper'],
+  },
+  bapeHiddenNy2026: {
+    houses: ['bape', 'hiddenNy'], year: 2026,
+    sources: ['https://us.bape.com/blogs/news/bape-x-hidden'],
+  },
+  bapeStussy2010: {
+    houses: ['bape', 'stussy'], year: 2010,
+    sources: ['https://designmuseum.org/asset/download?id=b6aa4fac-9799-4ded-90a4-c99ba2737790'],
+  },
+  bapeStussyApril2013: {
+    houses: ['bape', 'stussy'], year: 2013,
+    sources: ['https://us.bapepirate.com/blogs/news/7750145-bape-x-stussy-ill-collaboration'],
+  },
+  bapeStussySeptember2013: {
+    houses: ['bape', 'stussy'], year: 2013,
+    sources: ['https://milled.com/Stussy/st-ssy-x-bape-ill-collaboration-qR868mRakHU5A54I'],
+  },
+  bapeUndercover2009: {
+    houses: ['bape', 'undercover'], year: 2009,
+    sources: ['https://www.grailed.com/drycleanonly/best-bape-collaborations'],
+  },
+  bapeUndercover2010: {
+    houses: ['bape', 'undercover'], year: 2010,
+    sources: ['https://www.grailed.com/drycleanonly/best-bape-collaborations'],
+  },
+  bapeCarhartt2006: {
+    houses: ['bape', 'carhartt'], year: 2006,
+    sources: ['https://hypebeast.com/2006/10/bape-x-carhartt-jackets-milo-x-new-era-cap'],
+  },
+  bapeNewEra2006: {
+    houses: ['bape', 'newEra'], year: 2006,
+    sources: ['https://hypebeast.com/2006/10/bape-x-carhartt-jackets-milo-x-new-era-cap'],
+  },
+  bapeCarharttWip2021: {
+    houses: ['bape', 'carharttWip'], year: 2021,
+    sources: ['https://www.slnofficial.com/post/bape-x-carhartt-wip-capsule-releasing-saturday'],
+  },
+  bapeRimowa2008: {
+    houses: ['bape', 'rimowa'], year: 2008,
+    sources: ['https://hypebeast.com/2008/4/bape-x-rimowa'],
+  },
+  bapeRimowa2010: {
+    houses: ['bape', 'rimowa'], year: 2010,
+    sources: ['https://hypebeast.com/2010/2/rimowa-bape-cabin-trolley-2'],
+  },
+  bapeFendi2006: {
+    houses: ['bape', 'fendi'], year: 2006,
+    sources: ['https://nitrolicious.com/2006/12/04/fendi-bmix/'],
+  },
+  bapeAsics2015: {
+    houses: ['bape', 'asics'], year: 2015,
+    sources: ['https://jp.bape.com/apps/special/asicstiger2015/'],
+  },
+  bapePuma2015: {
+    houses: ['bape', 'puma'], year: 2015,
+    sources: ['https://frixshun.com/puma-x-bape/'],
+  },
+  bapeUgg2019: {
+    houses: ['bape', 'ugg'], year: 2019,
+    sources: ['https://en.jp.bape.com/blogs/news/1532'],
+  },
+  bapeNewBalance2021: {
+    houses: ['bape', 'newBalance'], year: 2021,
+    sources: ['https://prtimes.jp/main/html/rd/p/000000229.000008762.html', 'https://us.bape.com/blogs/news/a-bathing-ape-x-new-balance'],
+  },
+  bapeClarks2020: {
+    houses: ['bape', 'clarks'], year: 2020,
+    sources: ['https://jp.bape.com/blogs/news/a-bathing-ape-clarksoriginals'],
+  },
+  bapeLevis2019: {
+    houses: ['bape', 'levis'], year: 2019,
+    sources: ['https://us.bape.com/blogs/news/levis-x-bape'],
+  },
+  bapeLevis2020: {
+    houses: ['bape', 'levis'], year: 2020,
+    sources: ['https://us.bape.com/blogs/news/levis-x-bape'],
+  },
+  bapeLevis2021: {
+    houses: ['bape', 'levis'], year: 2021,
+    sources: ['https://us.bape.com/blogs/news/levis-x-bape'],
+  },
+  bapeFredPerry2021: {
+    houses: ['bape', 'fredPerry'], year: 2021,
+    sources: ['https://us.bape.com/blogs/news/bape-x-fred-perry'],
+  },
+  bapeBarbour2021: {
+    houses: ['bape', 'barbour'], year: 2021,
+    sources: ['https://us.bape.com/blogs/news/bape-x-barbour'],
+  },
+  bapeTimberland2021: {
+    houses: ['bape', 'timberland'], year: 2021,
+    sources: ['https://jp.bape.com/pages/timberland'],
+  },
+  bapeDrMartens2018: {
+    houses: ['bape', 'drMartens'], year: 2018,
+    sources: ['https://www.xxlmag.com/bape-and-dr-martens-unveil-new-collection/'],
+  },
+  bapeDrMartens2020: {
+    houses: ['bape', 'drMartens'], year: 2020,
+    sources: ['https://en.jp.bape.com/blogs/news/1770'],
+  },
+  bapeSaintMichaelApril2023: {
+    houses: ['bape', 'saintMichael'], year: 2023,
+    sources: ['https://jp.bape.com/pages/saintmxxxxxx'],
+  },
+  bapeSaintMichaelNovember2023: {
+    houses: ['bape', 'saintMichael'], year: 2023,
+    sources: ['https://snkrdunk.com/en/magazine/2023/11/02/saint-mxxxxxx-x-a-bathing-ape/'],
+  },
+  bapeSaintMichaelAugust2026: {
+    houses: ['bape', 'saintMichael'], year: 2026,
+    sources: ['https://uk.bape.com/blogs/news/a-bathing-ape%C2%AE-and-%C2%A9saint-mxxxxxx'],
+  },
+  bapeSaintMichaelSeptember2026: {
+    houses: ['bape', 'saintMichael'], year: 2026,
+    sources: ['https://en.jp.bape.com/blogs/news/saintmxxxxxx-26fw-2'],
+  },
+  bapeJjjjound2022: {
+    houses: ['bape', 'jjjjound'], year: 2022,
+    sources: ['https://jp.bape.com/pages/jjjjound'],
+  },
+  bapeJjjjound2023: {
+    houses: ['bape', 'jjjjound'], year: 2023,
+    sources: ['https://www.soleretriever.com/news/articles/jjjjound-a-bathing-ape-bape-sta-black-white-release-date-spring-summer-2023'],
+  },
+  bapeBountyHunter2017: {
+    houses: ['bape', 'bountyHunter'], year: 2017,
+    sources: ['https://en.jp.bape.com/blogs/news/bountyhunter'],
+  },
+  bapeBountyHunter2024: {
+    houses: ['bape', 'bountyHunter'], year: 2024,
+    sources: ['https://en.jp.bape.com/blogs/news/bountyhunter'],
+  },
+  bapeAdidas2023: {
+    houses: ['bape', 'adidas'], year: 2023,
+    sources: ['https://news.adidas.com/originals/adidas-originals-and-bape--celebrate-20-years-of-collaboration/s/dac59ef4-41b2-44fc-9d75-3813e27b4514'],
+  },
+  bapeAdidas2024: {
+    houses: ['bape', 'adidas'], year: 2024,
+    sources: ['https://news.adidas.com/originals/adidas-and-bape--come-together-to-launch-new-collaborative-silhouette--the-adidas-n-x-bape--sneaker/s/9a66f5c8-185e-4f98-9ede-7b52b54f06ac'],
+  },
   vaqueraAmericanApparel2018: {
     houses: ['vaquera', 'americanApparel'], year: 2018,
     sources: ['https://www.vogue.com/fashion-shows/fall-2018-ready-to-wear/vaquera'],
@@ -3119,7 +3817,7 @@ export const collaborations = {
   },
   sacaiAcronym2022: { houses: ['sacai', 'acronym'], year: 2022 },
   sacaiThomasMason2024: { houses: ['sacai', 'thomasMason'], year: 2024 },
-  sacaiUgg2018: { houses: ['sacai', 'ugg'], year: 2018 },
+  sacaiUgg2018: { houses: ['sacai', 'ugg'], year: 2018, sources: ['https://www.ugg.com/collaborations/'] },
   sacaiBirkenstock2027: { houses: ['sacai', 'birkenstock'], year: 2027 },
   sacaiNorthFace2017: { houses: ['sacai', 'theNorthFace'], year: 2017 },
   sacaiMoncler2023: { houses: ['sacai', 'moncler'], year: 2023 },
@@ -3417,7 +4115,7 @@ export const collaborations = {
   neighborhoodDrMartens2018: { houses: ['neighborhood', 'drMartens'], year: 2018 },
   neighborhoodClarks2024: { houses: ['neighborhood', 'clarks'], year: 2024 },
   neighborhoodTeva2017: { houses: ['neighborhood', 'teva'], year: 2017 },
-  neighborhoodUgg2019: { houses: ['neighborhood', 'ugg'], year: 2019 },
+  neighborhoodUgg2019: { houses: ['neighborhood', 'ugg'], year: 2019, sources: ['https://prtimes.jp/main/html/rd/p/000000324.000003434.html'] },
   neighborhoodDanner2020: { houses: ['neighborhood', 'danner'], year: 2020 },
   neighborhoodDanner2023: { houses: ['neighborhood', 'danner'], year: 2023 },
   neighborhoodPorter2010: { houses: ['neighborhood', 'porterYoshida'], year: 2010 },
@@ -3995,6 +4693,79 @@ export const collaborations = {
     houses: ['tilak', 'sophnet'], year: 2009,
     sources: ['https://hypebeast.com/2008/12/soph-10th-anniversary-tilak-x-sophnet-attack-jacket'],
   },
+  mcmPuma2018: {
+    houses: ['mcm', 'puma'], year: 2018,
+    sources: ['https://mcmworldwide.sa/pages/our-history'],
+  },
+  mcmBape2019: {
+    houses: ['mcm', 'bape'], year: 2019,
+    sources: ['https://jp.bape.com/apps/special/mcm/'],
+  },
+  mcmLuar2026: {
+    houses: ['mcm', 'luar'], year: 2026,
+    sources: ['https://us.mcmworldwide.com/en_US/luar-edit', 'https://luxferity.com/brand/mcm-worldwide/news/mcm-x-luar-anima-drawstring-spring-summer-2027'],
+  },
+  kenzoVans2012: {
+    houses: ['kenzo', 'vans'], year: 2012,
+    sources: ['https://www.vogue.co.uk/gallery/kenzo-launches-vans-shoes-collection'],
+  },
+  kenzoNewEra2013: {
+    houses: ['kenzo', 'newEra'], year: 2013,
+    sources: ['https://www.fashionsnap.com/article/2013-11-07/kenzo-eye-newera/'],
+  },
+  kenzoLevis2023: {
+    houses: ['kenzo', 'levis'], year: 2023,
+    sources: ['https://www.gq.com/story/kenzo-levis-nigo-collaboration'],
+  },
+  kenzoHunter2023: {
+    houses: ['kenzo', 'hunter'], year: 2023,
+    sources: ['https://milled.com/kenzo-fr/kenzo-x-hunter-collaboration-ucg80K6Wqu5tebBi'],
+  },
+  kenzoAsics2024: {
+    houses: ['kenzo', 'asics'], year: 2024,
+    sources: ['https://www.tag-walk.com/en/news/kenzo-x-asics'],
+  },
+  kenzoConverse2025: {
+    houses: ['kenzo', 'converse'], year: 2025,
+    sources: ['https://www.youtube.com/watch?v=DQv-f3UaPYM', 'https://www.converse.com.au/stories/best-converse-collabs-2025'],
+  },
+  pigalleNike2014: { houses: ['pigalleParis', 'nike'], year: 2014 },
+  pigalleMissoni2017: { houses: ['pigalleParis', 'missoni'], year: 2017 },
+  pigalleConverse2018: { houses: ['pigalleParis', 'converse'], year: 2018 },
+  casablancaNewBalance2020: { houses: ['casablanca', 'newBalance'], year: 2020 },
+  casablancaBulgari2022: { houses: ['casablanca', 'bulgari'], year: 2022 },
+  casablancaGlobeTrotter2022: { houses: ['casablanca', 'globeTrotter'], year: 2022 },
+  casablancaJeffHamilton2024: { houses: ['casablanca', 'jeffHamilton'], year: 2024 },
+  baracutaEngineeredGarments2018: { houses: ['baracuta', 'engineeredGarments'], year: 2018 },
+  baracutaEngineeredGarments2019: { houses: ['baracuta', 'engineeredGarments'], year: 2019 },
+  baracutaM19922019: { houses: ['baracuta', 'm1992'], year: 2019 },
+  baracutaSebago2020: { houses: ['baracuta', 'sebago'], year: 2020 },
+  baracutaVans2020: { houses: ['baracuta', 'vans'], year: 2020 },
+  baracutaEngineeredGarments2021: { houses: ['baracuta', 'engineeredGarments'], year: 2021 },
+  baracutaByborre2021: { houses: ['baracuta', 'byborre'], year: 2021 },
+  baracutaWackoMaria2021: { houses: ['baracuta', 'wackoMaria'], year: 2021 },
+  baracutaNoah2022: { houses: ['baracuta', 'noah'], year: 2022 },
+  baracutaEngineeredGarments2022: { houses: ['baracuta', 'engineeredGarments'], year: 2022 },
+  baracutaBarbour2023: { houses: ['baracuta', 'barbour'], year: 2023 },
+  baracutaPalace2023: { houses: ['baracuta', 'palace'], year: 2023 },
+  baracutaBarbour2024: { houses: ['baracuta', 'barbour'], year: 2024 },
+  baracutaKartikResearch2024: { houses: ['baracuta', 'kartikResearch'], year: 2024 },
+  baracutaWackoMariaMarch2025: { houses: ['baracuta', 'wackoMaria'], year: 2025 },
+  baracutaWackoMariaOctober2025: { houses: ['baracuta', 'wackoMaria'], year: 2025 },
+  baracutaBarbour2025: { houses: ['baracuta', 'barbour'], year: 2025 },
+  baracutaUndercover2026: { houses: ['baracuta', 'undercover'], year: 2026 },
+  baracutaFilson2026: { houses: ['baracuta', 'filson'], year: 2026 },
+  baracutaBeautifulPeopleAugust2026: { houses: ['baracuta', 'beautifulPeople'], year: 2026 },
+  baracutaBeautifulPeopleNovember2026: { houses: ['baracuta', 'beautifulPeople'], year: 2026 },
+  jeanPaulGaultierLevis2010: { houses: ['jeanPaulGaultier', 'levis'], year: 2010 },
+  jeanPaulGaultierSupreme2019: { houses: ['jeanPaulGaultier', 'supreme'], year: 2019 },
+  jeanPaulGaultierSacai2021: { houses: ['jeanPaulGaultier', 'sacai'], year: 2021 },
+  jeanPaulGaultierSacaiNike2021: { houses: ['jeanPaulGaultier', 'sacai', 'nike'], year: 2021 },
+  jeanPaulGaultierYProject2022: { houses: ['jeanPaulGaultier', 'yProject'], year: 2022 },
+  jeanPaulGaultierYProject2023: { houses: ['jeanPaulGaultier', 'yProject'], year: 2023 },
+  jeanPaulGaultierKnwls2023: { houses: ['jeanPaulGaultier', 'knwls'], year: 2023 },
+  jeanPaulGaultierJimmyChoo2023: { houses: ['jeanPaulGaultier', 'jimmyChoo'], year: 2023 },
+  jeanPaulGaultierSacaiNike2023: { houses: ['jeanPaulGaultier', 'sacai', 'nike'], year: 2023 },
 } satisfies Record<string, CollaborationData<HouseId>>;
 
 export type CollaborationId = keyof typeof collaborations;

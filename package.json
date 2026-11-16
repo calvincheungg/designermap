@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "logos:prepare": "node scripts/prepare-map-logos.mjs",
+    "logos:optimize": "node scripts/prepare-map-logos.mjs --optimize-originals",
     "benchmark:map": "node scripts/benchmark-map.mjs",
     "predev": "npm run logos:prepare",
     "prebuild": "npm run logos:prepare",

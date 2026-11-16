@@ -37,9 +37,10 @@ describe('group navigation and tag display', () => {
     expect(house.html).toContain(`data-select="group:${GroupId.Moncler}"`);
     const group = renderPanel({ kind: 'group', id: GroupId.Moncler }, []);
     expect(group.title).toBe('Moncler Group Properties');
-    expect(group.html).toContain('Current Brands in This Map (2)');
+    expect(group.html).toContain('Current Brands in This Map (3)');
     expect(group.html).toContain('data-select="house:moncler"');
     expect(group.html).toContain('data-select="house:stoneIsland"');
+    expect(group.html).toContain('data-select="house:stoneIslandShadowProject"');
     expect(group.html).not.toContain('data-select="house:prada"');
   });
 

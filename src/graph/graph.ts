@@ -4,8 +4,9 @@ import { collaborationEdges, mapElements, moveEdges, nodeId } from './elements';
 import { housesByMapLocation, LABEL_PX, layoutMap, MAP_HEIGHT, MAP_MIN_ZOOM, MAP_WIDTH, mapSvgMarkup, pinScale } from './geo';
 import { cityMarkerIcon, frameIcon, logoInfo, logoSize, PIN_H, PIN_W } from './icons';
 import { graphStyle } from './style';
-import { mapHousePath, mapLocationForCity, mapLocationForHouse } from './locations';
+import { clusterLabel, mapHousePath, mapLocationForCity, mapLocationForHouse } from './locations';
 import { placeMarkers } from './markers';
+import { buildClusterLevels, clusterLevel, CLUSTER_ZOOMS, MIN_CLUSTER_CITIES, type PinCluster } from './clusters';
 
 export type ConnectionFilter = 'all' | 'designers' | 'collaborations';
 
@@ -69,6 +70,8 @@ export class DesignerGraph {
   private pinLeaders: SVGGElement;
   private markerTips = new Map<string, { x: number; y: number }>();
   private markerTimer: ReturnType<typeof setTimeout> | undefined;
+  private clusterLevels: readonly (readonly PinCluster[])[] = [];
+  private clusterLabels = new Map<string, string>();
   private canvasHost: HTMLElement;
   private resizeObserver: ResizeObserver;
   private pendingImages = new Set<HTMLImageElement>();
@@ -107,7 +110,11 @@ export class DesignerGraph {
       autoungrabify: true,
     });
 
-    this.cy.on('tap', 'node[kind = "marker"]', (e) => this.toggleCity(e.target.data('city')));
+    this.cy.on('tap', 'node[kind = "marker"]', (e) => {
+      const marker = e.target as NodeSingular;
+      if (marker.data('isCluster')) this.zoomToCluster(marker);
+      else this.toggleCity(marker.data('city'));
+    });
     this.cy.on('tap', 'node[kind = "house"]', (e) => {
       const id = (e.target as NodeSingular).data('refId');
       callbacks.onSelect(this.selection?.kind === 'house' && this.selection.id === id
@@ -155,6 +162,17 @@ export class DesignerGraph {
     pane.classList.add('is-map');
     this.applyZoomLimit();
     this.cy.add(mapElements());
+    const clusterCities = this.cy.nodes('[kind = "marker"]').map(marker => ({
+      city: marker.data('city') as string, tip: marker.data('tip'), count: marker.data('count') as number,
+      major: !!marker.data('major'),
+    }));
+    this.clusterLevels = buildClusterLevels(clusterCities);
+    const counts = new Map(clusterCities.map(city => [city.city, city.count]));
+    for (const level of this.clusterLevels) for (const cluster of level) {
+      if (cluster.members.length < MIN_CLUSTER_CITIES || this.clusterLabels.has(cluster.id)) continue;
+      const representative = [...cluster.members].sort((a, b) => counts.get(b)! - counts.get(a)! || a.localeCompare(b))[0]!;
+      this.clusterLabels.set(cluster.id, clusterLabel(cluster.members, representative));
+    }
     this.relayoutMap(false);
     this.checkLogos();
     this.cy.fit(this.cy.elements(':visible'), 30);
@@ -412,7 +430,7 @@ export class DesignerGraph {
     const layout = layoutMap(this.expanded, byCity, anchor);
 
     cy.batch(() => {
-      cy.nodes('[kind = "marker"]').forEach((marker) => {
+      cy.nodes('[kind = "marker"][!isCluster]').forEach((marker) => {
         const open = this.expanded.has(marker.data('city'));
         if (open === !!marker.data('expanded')) return;
         marker.data({
@@ -455,23 +473,74 @@ export class DesignerGraph {
     if (updateSelection) this.applySelection(false);
   }
 
+  /** Only display membership/counts change with filters; the geographic hierarchy is cached. */
+  private updateClusters() {
+    const cy = this.cy;
+    const available = new Map(cy.nodes('[kind = "marker"][!isCluster]')
+      .not('.hidden, .selection-hidden').filter(marker => !this.expanded.has(marker.data('city')))
+      .map(marker => [marker.data('city') as string, marker] as const));
+    const clustered = new Set<string>();
+    const active = new Set<string>();
+    cy.batch(() => {
+      for (const cluster of this.clusterLevels[clusterLevel(cy.zoom())] ?? []) {
+        const members = cluster.members.filter(city => available.has(city));
+        if (members.length < MIN_CLUSTER_CITIES) continue;
+        members.forEach(city => clustered.add(city));
+        const count = members.reduce((total, city) => total + available.get(city)!.data('shown'), 0);
+        active.add(cluster.id);
+        const existing = cy.getElementById(cluster.id);
+        if (existing.empty()) {
+          cy.add({ group: 'nodes', data: {
+            id: cluster.id, kind: 'marker', isCluster: true,
+            members, tip: cluster.tip, label: this.clusterLabels.get(cluster.id),
+            count, shown: count, image: cityMarkerIcon(count, false, true),
+          }, position: { ...cluster.tip }, selectable: false });
+        } else {
+          existing.data('members', members);
+          if (existing.data('shown') !== count) {
+            existing.data({ count, shown: count, image: cityMarkerIcon(count, false, true) });
+          }
+        }
+      }
+      cy.nodes('[kind = "marker"][?isCluster]').filter(marker => !active.has(marker.id())).remove();
+      setClass(cy.nodes('[kind = "marker"][!isCluster]'), 'clustered', marker => clustered.has(marker.data('city')));
+    });
+  }
+
+  private zoomToCluster(marker: NodeSingular) {
+    const cy = this.cy;
+    const points = (marker.data('members') as string[]).map(city => cy.getElementById(nodeId.city(city)).data('tip'));
+    const xs = points.map(point => point.x), ys = points.map(point => point.y);
+    const x1 = Math.min(...xs), x2 = Math.max(...xs), y1 = Math.min(...ys), y2 = Math.max(...ys);
+    const next = CLUSTER_ZOOMS[clusterLevel(cy.zoom())] ?? cy.maxZoom();
+    const fit = Math.min(Math.max(1, cy.width() - 120) / Math.max(32, x2 - x1),
+      Math.max(1, cy.height() - 120) / Math.max(32, y2 - y1));
+    const zoom = Math.min(cy.maxZoom(), Math.max(next + 0.01, Math.min(fit, cy.zoom() * 2.5)));
+    const pan = { x: cy.width() / 2 - (x1 + x2) / 2 * zoom, y: cy.height() / 2 - (y1 + y2) / 2 * zoom };
+    cy.stop(true, false);
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) cy.viewport({ zoom, pan });
+    else cy.animate({ zoom, pan }, { duration: 300 });
+  }
+
   /**
    * Pins scale with the map when zoomed out, but stop growing past a small
-   * on-screen size. Crowded pins spread apart with tethers to their true city
-   * coordinates. City names stay a constant size on screen; colliding labels
-   * appear on hover or when zooming in leaves enough space.
+   * on-screen size. Minor cities cluster at wide zooms; remaining crowded pins
+   * spread apart with tethers, reserving major cities first. City names stay a
+   * constant size on screen; colliding labels appear on hover or with more space.
    */
   private sizeMarkers(reposition = true) {
     if (this.disposed) return;
     if (reposition) clearTimeout(this.markerTimer);
+    if (reposition) this.updateClusters();
     const z = this.cy.zoom();
     const k = pinScale(z);
     const w = PIN_W * k;
     const h = PIN_H * k;
     const markers = this.cy
       .nodes('[kind = "marker"]')
-      .not('.hidden, .selection-hidden')
-      .sort((a, b) => (b.data('shown') ?? b.data('count')) - (a.data('shown') ?? a.data('count'))
+      .not('.hidden, .selection-hidden, .clustered')
+      .sort((a, b) => Number(!!b.data('major')) - Number(!!a.data('major'))
+        || (b.data('shown') ?? b.data('count')) - (a.data('shown') ?? a.data('count'))
         || a.id().localeCompare(b.id()));
 
     if (reposition) {
@@ -597,7 +666,7 @@ export class DesignerGraph {
           && (!this.mapContext.has(el.data('fromHouse')) || !this.mapContext.has(el.data('toHouse'))
             || !this.matchesHouse(el.data('fromHouse')) || !this.matchesHouse(el.data('toHouse')))));
       // Map markers count only the houses that existed by then.
-      const markers = cy.nodes('[kind = "marker"]');
+      const markers = cy.nodes('[kind = "marker"][!isCluster]');
       markers.forEach((m) => {
         const count = housesByMapLocation()
           .get(m.data('city'))!

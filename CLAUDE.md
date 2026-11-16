@@ -13,6 +13,7 @@ npm run dev      # dev server on :5173
 npm run check    # tsc --noEmit
 npm test         # vitest: data validation + derived-query tests
 npm run build    # check + production build to dist/
+npm run logos:optimize # shrink oversized raster originals to <=512px when smaller; rebuild map assets
 ```
 
 Run `npm run check && npm test` before committing.
@@ -82,16 +83,28 @@ Key rules:
     Cytoscape, ResizeObserver, pending image callbacks and delayed fit timers.
   - Keep data queries and graph layout independent of React. Use React components
     and event handlers for interface changes rather than HTML strings or DOM mutation.
-  - One `marker` node per map location (city or region): a pixel-art Win98 pin
+  - One `marker` node per city, plus display-only regional cluster markers: a pixel-art Win98 pin
     (`icons.ts cityMarkerIcon`) anchored to the city or a region's
     representative anchor city. `graph/markers.ts` spreads colliding pins apart
     in screen space at each zoom, with dotted SVG tethers back to their exact
     geographic anchors; isolated pins keep their tips on the city.
-    `graph/locations.ts` consolidates nearby cities
-    in California and Italy into stable regional pins, while major cities such as
-    Los Angeles, San Francisco and Milan retain distinct pins; house cities, Properties
-    and the directory retain their actual locations. Map grouping, expansion,
-    counts and move endpoints use `mapLocationForCity` / `housesByMapLocation`.
+    `graph/clusters.ts` precomputes nested proximity clusters once; smaller cities
+    consolidate when zoomed out and split at zoom 0.6, 1.2, 2.4 and 4.8.
+    **Major cities always retain their own pins:** five or more main brands
+    (excluding sublabels), counted across the full dataset, OR inclusion in the
+    explicit `majorCities` list in `graph/locations.ts`. Year/tag filters never
+    change major-city status. Open cities also stay out of clusters. Teal cluster
+    pins show the sum of eligible main brands and clicking zooms into their area;
+    individual city pins open brand grids. Geographic cluster membership stays
+    stable across filters. **Only cluster four or more eligible city pins**
+    (`MIN_CLUSTER_CITIES`), counting cities rather than brands. Groups of one,
+    two or three retain individual pins, including when year/tag filters or open
+    grids reduce an existing cluster below four cities. Beirut and Tel Aviv alone
+    must never become a cluster.
+    House cities, Properties and the directory retain their actual locations.
+    City grids, expansion and move endpoints use `mapLocationForCity` /
+    `housesByMapLocation`; clustering only affects the marker display. Selection
+    reveals individual city grids, so connections never terminate at hidden clusters.
     Pins scale
     with the map when zoomed out but cap at ~26px on screen (`sizeMarkers`,
     re-run on every zoom); colliding labels are hidden via `text-opacity`

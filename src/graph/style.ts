@@ -164,5 +164,5 @@ export const graphStyle: StylesheetJson = [
     },
   },
   { selector: 'edge.faded', style: { opacity: 0.15, 'text-opacity': 0.3 } },
-  { selector: '.hidden, .collapsed, .lines-off, .selection-hidden', style: { display: 'none' } },
+  { selector: '.hidden, .collapsed, .lines-off, .selection-hidden, .clustered', style: { display: 'none' } },
 ];

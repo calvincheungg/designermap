@@ -54,7 +54,7 @@ describe('React interface interactions', () => {
     }
     const user = userEvent.setup();
     render(<Harness />);
-    const history = screen.getByText('Collaboration history (7)').closest('fieldset')!;
+    const history = screen.getByText('Collaboration history (9)').closest('fieldset')!;
     expect(within(history).getByRole('cell', { name: '2021' })).toBeTruthy();
     expect(within(history).queryByRole('link', { name: /Source/ })).toBeNull();
     expect(within(history).queryByRole('columnheader', { name: 'Collection' })).toBeNull();
@@ -73,13 +73,14 @@ describe('React interface interactions', () => {
     const view = render(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2005} onSelect={() => {}} onTag={() => {}} />);
     expect(screen.getByText('No collaborations recorded through 2005.')).toBeTruthy();
     view.rerender(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2020} onSelect={() => {}} onTag={() => {}} />);
-    const history = screen.getByText('Collaboration history (3)').closest('fieldset')!;
+    const history = screen.getByText('Collaboration history (4)').closest('fieldset')!;
     expect(within(history).getByRole('link', { name: 'Visvim' })).toBeTruthy();
     expect(within(history).getByRole('link', { name: 'Red Wing Shoes' })).toBeTruthy();
     expect(within(history).getByRole('link', { name: 'Carhartt WIP' })).toBeTruthy();
+    expect(within(history).getByRole('link', { name: 'Kangol' })).toBeTruthy();
     expect(within(history).queryByRole('link', { name: 'Nike' })).toBeNull();
     view.rerender(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2021} onSelect={() => {}} onTag={() => {}} />);
-    expect(screen.getByText('Collaboration history (4)')).toBeTruthy();
+    expect(screen.getByText('Collaboration history (5)')).toBeTruthy();
   });
 
   it('consolidates repeat partners and searches the chosen release year', async () => {

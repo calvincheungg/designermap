@@ -1,5 +1,11 @@
 /** Stable identifiers; display names can change without changing house references. */
 export enum GroupId {
+  Franky = 'franky',
+  TrendyInternational = 'trendyInternational',
+  Yeti = 'yeti',
+  Exemplis = 'exemplis',
+  NeoInvestmentPartners = 'neoInvestmentPartners',
+  BapeGroup = 'bapeGroup',
   Tabio = 'tabio',
   DesignerBrands = 'designerBrands',
   Apax = 'apax',
@@ -171,6 +177,37 @@ export interface GroupData {
 }
 
 export const groups = {
+  [GroupId.Franky]: {
+    name: 'franky',
+    description: 'Japanese lifestyle company operating fashion and consumer brands, including WIND AND SEA, transferred to the company in 2018.',
+    website: 'https://franky.inc/en/',
+  },
+  [GroupId.TrendyInternational]: {
+    name: 'Trendy International Group',
+    description: 'Chinese fashion group that acquired control of DENHAM from Amlon in 2019.',
+    website: 'https://www.trendy-global.com/',
+  },
+  [GroupId.Yeti]: {
+    name: 'YETI Holdings',
+    description: 'American outdoor-products company whose businesses include Mystery Ranch, acquired in February 2024.',
+    website: 'https://www.yeti.com',
+  },
+  [GroupId.Exemplis]: {
+    name: 'Exemplis',
+    description: 'American furniture and consumer-products company whose brands include Timbuk2.',
+    website: 'https://www.exemplis.com',
+  },
+  [GroupId.NeoInvestmentPartners]: {
+    name: 'NEO Investment Partners',
+    description: 'Investment firm backing consumer and luxury businesses, including Italian leather-goods house Valextra.',
+    website: 'https://www.neoinvestmentpartners.com',
+  },
+  [GroupId.BapeGroup]: {
+    name: 'BAPE Group',
+    description: 'Streetwear and lifestyle business behind A Bathing Ape and its related labels, including AAPE and Baby Milo.',
+    website: 'https://bape.com',
+    notes: 'BAPE became independent of I.T Limited in 2021. CVC acquired co-control alongside I.T’s founding shareholders.',
+  },
   [GroupId.Tabio]: {
     name: 'Tabio Corporation',
     website: 'https://corporate.tabio.com',
