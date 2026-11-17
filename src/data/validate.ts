@@ -1,6 +1,6 @@
 import { collaborations, collectionTags, designers, getDesigner, getGroup, getHouse, houses, marketPositionings } from './index';
-import type { Collaboration } from '../types';
-import { cityRegions, type CityName } from './cities';
+import type { Collaboration, House } from '../types';
+import { cities, cityRegions, type CityName } from './cities';
 import { CountryCode } from './countries';
 
 /**
@@ -34,6 +34,38 @@ export function validateData(): string[] {
     if (h.country === CountryCode.UnitedStates || h.country === CountryCode.Canada) {
       const location = cityRegions[h.city as CityName];
       if (!location?.region || location.country !== h.country) problems.push(`${h.id}: city needs a matching state or province`);
+    }
+    const placeProblem = (city: string, country: CountryCode, what: string) => {
+      if (!Object.hasOwn(cities, city)) problems.push(`${h.id}: ${what} city ${city} is not in cities.ts`);
+      if (country === CountryCode.UnitedStates || country === CountryCode.Canada) {
+        const location = cityRegions[city as CityName];
+        if (!location?.region || location.country !== country) problems.push(`${h.id}: ${what} city needs a matching state or province`);
+      }
+    };
+    if (h.origin) {
+      if (h.origin.city === h.city) problems.push(`${h.id}: origin city matches current base`);
+      placeProblem(h.origin.city, h.origin.country, 'origin');
+    }
+    const history = h.history ?? [];
+    const moves = history.filter((event) => event.type === 'moved');
+    if (h.origin && moves.at(-1)?.city !== h.city) problems.push(`${h.id}: history needs a final move to its current base ${h.city}`);
+    if (!h.origin && moves.length) problems.push(`${h.id}: moves need an origin city`);
+    let previousYear = -Infinity;
+    for (const event of history) {
+      if (event.year !== undefined) {
+        if (!Number.isInteger(event.year) || event.year > thisYear) problems.push(`${h.id}: invalid ${event.type} year ${event.year}`);
+        if (h.founded !== undefined && event.year < h.founded) problems.push(`${h.id}: ${event.type} ${event.year} before founding`);
+        if (event.year < previousYear) problems.push(`${h.id}: history is not in date order at ${event.year}`);
+        previousYear = event.year;
+      }
+      if (event.type === 'moved') placeProblem(event.city, event.country, 'moved-to');
+      if (event.type === 'closed' && event.year === h.closed) problems.push(`${h.id}: current closure ${h.closed} belongs in \`closed\`, not history`);
+      if ((event.type === 'acquired' || event.type === 'spunOff') && event.group && !getGroup(event.group)) problems.push(`${h.id}: unknown history group ${event.group}`);
+      if (event.type === 'acquired' && !event.group && !event.buyer) problems.push(`${h.id}: acquisition needs a group or buyer`);
+    }
+    const owner = history.findLast((event) => event.type === 'acquired' || event.type === 'spunOff');
+    if (owner && 'group' in owner && owner.group && h.parentGroup && owner.group !== h.parentGroup) {
+      problems.push(`${h.id}: latest ownership change (${owner.group}) does not match parentGroup ${h.parentGroup}`);
     }
     for (const affiliation of h.regionalAffiliations ?? []) {
       if (!getGroup(affiliation.group)) problems.push(`${h.id}: unknown regional group ${affiliation.group}`);
@@ -73,6 +105,9 @@ export function validateData(): string[] {
       if (!Array.isArray(tags)) continue;
       if (new Set(tags).size !== tags.length) problems.push(`${h.id}: duplicate ${group} tags`);
     }
+    if (typeof h.website !== 'string' || typeof h.instagram !== 'string') {
+      problems.push(`${h.id}: set website and instagram, using '' when the brand has none`);
+    }
     if (h.website && !/^https?:\/\/[^\s/]+\.[^\s]+$/.test(h.website)) {
       problems.push(`${h.id}: website should be a full URL like https://www.example.com`);
     }
@@ -105,7 +140,28 @@ export function validateCollaborations(records: readonly Collaboration[] = colla
 
 /** Houses with nobody linked yet: not an error, just research still to do. */
 export function researchTodos(): string[] {
-  return houses
+  const unlinked = houses
     .filter((h) => !designers.some((d) => d.career.some((t) => t.house === h.id)))
     .map((h) => `${h.name}: no founder or creative director recorded yet`);
+  return [...unlinked, ...missingOrigins()];
+}
+
+const FOUNDING_PLACE = /\b(?:founded|established|started|began|originated)\b[^.]{0,60}?\bin ([A-Z][\p{L}'’-]+(?:[ -](?:[A-Z][\p{L}'’-]+|sur|de|di|la|le))*)/gu;
+
+/**
+ * Houses whose description says they were founded in a known city or US/Canadian
+ * state other than their base, with no `origin` recorded: likely relocations
+ * still to research. A heuristic, so it lists candidates instead of failing tests.
+ */
+export function missingOrigins(list: readonly House[] = houses): string[] {
+  const places = new Set([...Object.keys(cities), ...Object.values(cityRegions).map((r) => r.region)]);
+  return list.flatMap((h) => {
+    if (h.origin || !h.notes) return [];
+    const place = [...h.notes.matchAll(FOUNDING_PLACE)]
+      // "after training in London" / "began showing in Paris" name other places.
+      .filter((match) => !/\b(?:after|training|trained|studying|working|showing|selling|stocked)\b/.test(match[0]))
+      .map((match) => match[1])
+      .find((name): name is string => !!name && name !== h.city && places.has(name) && cityRegions[h.city as CityName]?.region !== name);
+    return place ? [`${h.name}: notes say founded in ${place}, but no origin is recorded (base ${h.city})`] : [];
+  });
 }

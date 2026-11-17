@@ -11,7 +11,7 @@ the existing graph engine owns the SVG and canvas inside its map host.
 ```bash
 npm run dev      # dev server on :5173
 npm run check    # tsc --noEmit
-npm test         # vitest: data validation + derived-query tests
+npm test         # logos:prepare, then vitest: data validation + derived-query tests
 npm run build    # check + production build to dist/
 npm run logos:optimize # shrink oversized raster originals to <=512px when smaller; rebuild map assets
 ```
@@ -42,6 +42,7 @@ src/ui/panel.tsx      React Properties components for house / designer / group /
 src/ui/listbox.tsx    React Win98 Find combobox (replaces <datalist>)
 src/ui/filters.tsx    React multi-select filters and selected chips
 src/ui/map-view.tsx   React lifecycle boundary for DesignerGraph and its context menu
+src/ui/start-menu.tsx Win98 taskbar Start menu: base/origin, line toggles, map commands
 src/App.tsx           interface state and synchronization with the graph API
 src/main.tsx          React root and startup data validation
 ```
@@ -71,10 +72,11 @@ Key rules:
   = a design-team or earlier role. It never counts as the house's creative-director succession:
   the Properties window lists it under "Design team & other roles", and tests use `directorsOf`.
   Use the director roles only for real house/line leadership. Separate stints = separate entries.
-- Houses can have `website` (full URL; validate.ts checks the format), shown as a link,
+- Houses have `website` (full URL; validate.ts checks the format; `''` when none), shown as a link,
   `instagram` (handle only, no @ or URL; shown as an @handle link under the website;
   every house has the field, `''` when unknown, like `logo`),
   and `logo` (file in public/logos/ or full URL; falls back to the initials square).
+  When researching any brand, look up both its official website and Instagram.
 - A house with nobody linked yet is fine: `researchTodos()` lists it in the browser
   console instead of failing tests. Don't invent founders to fill it.
 - One view, the world map (the old network view was removed):
@@ -112,7 +114,9 @@ Key rules:
     toggles the city; `DesignerGraph.expanded` holds open cities. An open city's
     houses sit in an invisible `grid` compound in the nearest spot that covers no
     pin or other open city (`geo.ts placeGrids`), with a dotted leader to the pin.
-    `move` edges are rebuilt on every expand/collapse: each end attaches to the
+    `move` edges are rebuilt on every expand/collapse and selection change, and
+    only for the selected brand (its direct lines) or designer (their career);
+    none exist without a selection. Each end attaches to the
     house if its city is open, else to the pin. Selecting a brand hides every
     other location's pin and grid leader, while keeping revealed brand icons
     and their connections visible. Clearing selection restores eligible pins.
@@ -190,6 +194,10 @@ Key rules:
 - **For every brand research, addition or correction, follow
   [the brand research workflow](docs/brand-research.md).** Read it when starting
   that task, including research of the associated designers and career links.
+  For requests that only ask for a brand's collaborations, use its short
+  "Collaboration-only lookups" section instead of the full workflow. Every
+  collaboration search is comprehensive by default: crawl the brand's whole
+  Hypebeast archive to its last page, as that section describes.
   Prioritize founders and creative roles. CEO and other business-leadership
   research is optional unless the user specifically requests it; preserve
   existing sourced leadership entries.
@@ -200,6 +208,20 @@ Key rules:
   A parent-company CEO is not automatically the CEO of each portfolio brand.
   Keep separate dated CEO stints for founders who leave or return, and verify
   current appointments rather than assuming an old announcement remains current.
+- A brand founded in a different city from its current base records
+  `origin: { city, country }`; `city` stays the current base. Dated changes
+  live in `history` (oldest first, `HouseEvent` in types.ts): `moved` (year
+  optional when unsourced; the last move must be to `city`), `acquired`
+  (`group` links a profile, `buyer` names it), `spunOff`, `renamed`,
+  `relaunched`, `other`. `approximate: true` = inferred year, e.g. the year a
+  parent in the new city bought the brand. Validation requires date order and
+  that the latest acquisition/spin-off group equals `parentGroup`. Brand
+  Properties shows a collapsible History table (Founded → events → Ended).
+  The Start menu's "Show brands at: Current base / Origin" radios call
+  `setLocationMode` in `graph/locations.ts` and remount `MapView` (keyed by
+  mode), so `mapLocationForHouse`/`housesByMapLocation` place each root brand
+  at its origin; labels follow their root. Properties shows an Origin row;
+  the directory keeps current bases. Remembered as `designer-map:location-mode`.
 - US and Canadian cities need state/province metadata in `cityRegions` in
   `cities.ts`. Use `formatCity` only in the right-hand directory's city menus.
   Keep map labels and house location fields concise, without state/province.
@@ -248,6 +270,9 @@ Key rules:
 - Starter data was written from memory. Verify additions rather than guessing;
   mark uncertain years `approximate`. Source URLs are optional internal research
   metadata; preserve existing metadata, but no need to provide new source links.
+  Production builds strip `sources` arrays from houses/designers/collaborations
+  (`scripts/strip-sources.mjs`), so keep them plain string-literal arrays and
+  never read them at runtime. Browser data validation runs in dev only.
 - `parentGroup` is the *current* owner, not historical.
   `parentHouse` links a distinct label to its parent fashion house, independently
   of ownership, licences or founding. Each label keeps its own tags, city and
@@ -266,6 +291,15 @@ Key rules:
 
 ## Styling
 
+- Map options live in the taskbar Start menu (`StartMenu`), styled after
+  `public/assets/start_menu.gif`: navy side banner, 32px pixel icons
+  (`ui/start-icons.tsx`), etched separators, navy highlight rows and black
+  submenu arrows. "Show brands at" and "Connection lines" are cascading
+  submenus (CSS hover/focus-within) with menu bullets/check marks; Expand all,
+  Fit map and Directory are commands that close the menu. Escape and outside
+  clicks close it. The Start button's flag is cropped from
+  `public/assets/start_logo.jpg`. Find and the year slider stay in the toolbar.
+
 - Use 98.css classes (`window`, `title-bar`, `field-row`, `sunken-panel`,
   `tree-view`, `status-bar`) before writing custom CSS. Custom CSS is in
   `src/style.css`; graph styling is in `src/graph/style.ts` (canvas, not CSS).
@@ -278,6 +312,9 @@ Key rules:
 ## Gotchas
 
 - TypeScript 7 and Vite 8; `lib` is ES2024 (for `Map.groupBy`).
+- Logo files must really be the format their extension says (JPEG XL saved as
+  `.png` has slipped in before). `logos.test.ts` fails when a logo is missing or
+  undecodable. Logo URLs are `encodeURIComponent`-encoded, so names like `99%is.jpg` work.
 - Canvas text doesn't reflow on font load: `graph.refreshStyle()` after `document.fonts.ready`.
 - In dev, `window.cy` / `window.graph` are exposed for console debugging.
 - Performance (Cytoscape restyles are the expensive part):

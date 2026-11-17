@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getHouse, labelsOf, parentHouseOf } from './index';
-import { validateData } from './validate';
+import { missingOrigins, validateData } from './validate';
 
 describe('brand families', () => {
   it('resolves direct labels and their parents without flattening nested families or ownership', () => {
@@ -29,5 +29,19 @@ describe('brand families', () => {
       else parent.parentHouse = original;
     }
     expect(validateData()).toEqual([]);
+  });
+});
+
+describe('missing origin research hints', () => {
+  const thomasMason = getHouse('thomasMason')!;
+  it('flags notes that name a different founding place when origin is absent', () => {
+    const { origin: _origin, history: _history, ...withoutOrigin } = thomasMason;
+    expect(missingOrigins([withoutOrigin])).toEqual([
+      'Thomas Mason: notes say founded in Lancashire, but no origin is recorded (base Albino)',
+    ]);
+  });
+  it('accepts recorded origins and ignores places named for other reasons', () => {
+    expect(missingOrigins([thomasMason])).toEqual([]);
+    expect(missingOrigins([{ ...thomasMason, origin: undefined, notes: 'Tokyo label founded by a designer after training in London.' }])).toEqual([]);
   });
 });

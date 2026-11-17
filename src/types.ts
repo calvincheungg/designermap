@@ -25,6 +25,33 @@ export interface RegionalAffiliation {
   sources: readonly string[];
 }
 
+/** Founding city, when the brand's current base is a different city. */
+export interface HouseOrigin {
+  /** Must be a key in data/cities.ts. */
+  city: string;
+  country: CountryCode;
+}
+
+/**
+ * One dated change in a brand's history, listed oldest first. Founding and
+ * the Ended year come from `founded`/`closed`; current ownership stays in
+ * `parentGroup`, which must match the latest acquisition or spin-off.
+ * `approximate` marks an inferred or unconfirmed year.
+ */
+export type HouseEvent =
+  /** Moved its base to `city` (a cities.ts key). Omit `year` when no source dates the move. */
+  | { type: 'moved'; year?: number; city: string; country: CountryCode; approximate?: boolean }
+  /** Bought by a company: `group` links its profile; `buyer` names it when it differs or has no profile. */
+  | { type: 'acquired'; year: number; group?: GroupId; buyer?: string; stake?: string; approximate?: boolean }
+  /** Separated from its owner into `group`/`buyer`, or became independent when neither is given. */
+  | { type: 'spunOff'; year: number; group?: GroupId; buyer?: string; approximate?: boolean }
+  | { type: 'renamed'; year: number; name: string; approximate?: boolean }
+  /** A past closure, bankruptcy or dormant period; the current `closed` year is shown as Ended instead. */
+  | { type: 'closed'; year: number; label?: string; approximate?: boolean }
+  /** Reopened or relaunched after a closure or dormancy. */
+  | { type: 'relaunched'; year: number; label?: string; approximate?: boolean }
+  | { type: 'other'; year: number; label: string; approximate?: boolean };
+
 export interface HouseData {
   name: string;
   /** Alternate or historical names accepted by Find. */
@@ -43,6 +70,10 @@ export interface HouseData {
   /** Places the house on the world map; must be a key in data/cities.ts. */
   city: string;
   country: CountryCode;
+  /** Founding city when it differs from `city`; the map can show brands here instead. */
+  origin?: HouseOrigin;
+  /** Moves, acquisitions and other dated changes, oldest first. A brand with an `origin` lists its move to `city`. */
+  history?: readonly HouseEvent[];
   /** The brand's official site, full URL, e.g. "https://www.loewe.com". */
   website?: string;
   /** Instagram handle without the "@", e.g. "loewe". Shown as a link under the website. */

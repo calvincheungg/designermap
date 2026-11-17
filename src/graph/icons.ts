@@ -148,7 +148,8 @@ const mapLogos: Readonly<Record<string, LogoAsset>> = logoAssets;
 const mapLogoPath = (file: string) => `${import.meta.env.BASE_URL}map-logos/${file}`;
 // Local metadata avoids hundreds of browser Image/canvas probes and restyles.
 for (const [name, info] of Object.entries(mapLogos)) {
-  logoInfo.set(`${import.meta.env.BASE_URL}logos/${name}`, info);
+  // Same key as logoUrl() produces for the house.
+  logoInfo.set(`${import.meta.env.BASE_URL}logos/${encodeURIComponent(name)}`, info);
   if (info.file) logoInfo.set(mapLogoPath(info.file), info);
 }
 

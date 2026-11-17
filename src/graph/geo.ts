@@ -5,7 +5,7 @@ import world from 'world-atlas/countries-110m.json';
 import type { FeatureCollection, MultiLineString } from 'geojson';
 import subdivisions from '../data/map/north-america-subdivisions.json';
 import { houses } from '../data';
-import { mapLocationCoordinates, mapLocationForHouse } from './locations';
+import { getLocationMode, mapLocationCoordinates, mapLocationForHouse, type LocationMode } from './locations';
 import type { House, LatLng } from '../types';
 import { PIN_H, PIN_W } from './icons';
 import { BoxIndex } from './box-index';
@@ -105,16 +105,21 @@ export interface Box {
 const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 const byName = (a: House, b: House) => collator.compare(a.name, b.name);
 
-let byLocationCache: ReadonlyMap<string, readonly House[]> | undefined;
+const byLocationCache = new Map<LocationMode, ReadonlyMap<string, readonly House[]>>();
 
 /**
  * Houses grouped by map location (city or region), alphabetically within each grid.
  * The data is static, so this is built once and shared; don't mutate it.
  */
-export const housesByMapLocation = (): ReadonlyMap<string, readonly House[]> =>
-  (byLocationCache ??= new Map(
-    [...Map.groupBy(houses, (h) => mapLocationForHouse(h.id))].map(([city, hs]) => [city, [...hs].sort(byName)]),
-  ));
+export function housesByMapLocation(): ReadonlyMap<string, readonly House[]> {
+  const mode = getLocationMode();
+  let grouped = byLocationCache.get(mode);
+  if (!grouped) {
+    grouped = new Map([...Map.groupBy(houses, (h) => mapLocationForHouse(h.id))].map(([city, hs]) => [city, [...hs].sort(byName)]));
+    byLocationCache.set(mode, grouped);
+  }
+  return grouped;
+}
 
 const gridSize = (n: number) => {
   const cols = Math.ceil(Math.sqrt(n));

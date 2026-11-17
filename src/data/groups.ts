@@ -11,6 +11,8 @@ export enum GroupId {
   Apax = 'apax',
   FinlaysonCo = 'finlaysonCo',
   FnF = 'fnf',
+  Xtep = 'xtep',
+  KPGlobal = 'kpGlobal',
   RedCircle = 'redCircle',
   URBN = 'urbn',
   Litorina = 'litorina',
@@ -177,6 +179,12 @@ export interface GroupData {
 }
 
 export const groups = {
+  [GroupId.KPGlobal]: {
+    name: 'KP Global',
+    description: 'Private owner of K-Swiss and Palladium, controlled by the Ding family through Ding Shun Investment. Separated from listed Xtep International on November 30, 2024.',
+    website: 'https://www1.hkexnews.hk/listedco/listconews/sehk/2025/0630/2025063004119.pdf',
+    notes: 'No standalone corporate website confirmed; official link is Xtep’s filing. Completed disposal and ownership confirmed by Xtep’s June 30, 2025 filing: https://www1.hkexnews.hk/listedco/listconews/sehk/2025/0630/2025063004119.pdf.',
+  },
   [GroupId.Franky]: {
     name: 'franky',
     description: 'Japanese lifestyle company operating fashion and consumer brands, including WIND AND SEA, transferred to the company in 2018.',
@@ -1076,5 +1084,11 @@ export const groups = {
     website: 'https://media.masi.it/media/media/1kfphjk3/cs_congiunto_masi_agricola_2024_03_15.pdf',
     description: 'Renzo Rosso’s private investment company, which acquired a controlling stake in RETROSUPERFUTURE. Separate from OTB.',
     notes: 'Official link is a joint company press release; no standalone corporate website is confirmed. Acquired 51% of RETROSUPERFUTURE in October 2019: https://www.industriavicentina.it/imprese/la-societa-dinvestimenti-renzo-rosso-acquisisce-la-maggioranza-retrosuperfuture-IV10346.',
+  },
+  [GroupId.Xtep]: {
+    name: 'Xtep International',
+    description: 'Chinese sportswear company that acquired K-Swiss and Palladium in 2019 and sold their parent KP Global to the Ding family in November 2024.',
+    website: 'https://www.xtep.com.hk/en/ir/overview.php',
+    notes: 'Acquisition: https://www.sgieurope.com/xtep-will-buy-the-parent-of-k-swiss-and-palladium/67444.article.',
   },
 } satisfies Record<GroupId, GroupData>;

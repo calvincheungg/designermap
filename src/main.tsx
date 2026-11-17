@@ -5,10 +5,14 @@ import { createRoot } from 'react-dom/client';
 import { App } from './App';
 import { researchTodos, validateData } from './data/validate';
 
-const problems = validateData();
-if (problems.length) console.warn(`Data warnings (${problems.length}):\n  ${problems.join('\n  ')}`);
-const todos = researchTodos();
-if (todos.length) console.info(`Research to-do (${todos.length}):\n  ${todos.join('\n  ')}`);
+// Editing aids: tests enforce the same checks, and production builds strip the
+// `sources` metadata that validation reads.
+if (import.meta.env.DEV) {
+  const problems = validateData();
+  if (problems.length) console.warn(`Data warnings (${problems.length}):\n  ${problems.join('\n  ')}`);
+  const todos = researchTodos();
+  if (todos.length) console.info(`Research to-do (${todos.length}):\n  ${todos.join('\n  ')}`);
+}
 
 const root = createRoot(document.getElementById('root')!);
 root.render(<StrictMode><App /></StrictMode>);

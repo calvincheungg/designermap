@@ -174,5 +174,6 @@ export function formatTenureYears(t: Tenure): string {
 export const logoUrl = (h: House): string | undefined => {
   if (!h.logo) return undefined;
   if (/^https?:\/\//.test(h.logo)) return h.logo;
-  return `${import.meta.env.BASE_URL}logos/${h.logo}`;
+  // Encoded so names like "99%is.jpg" or ones with spaces load correctly.
+  return `${import.meta.env.BASE_URL}logos/${encodeURIComponent(h.logo)}`;
 };

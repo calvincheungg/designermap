@@ -28,9 +28,30 @@ Research these fields:
 | Identity | Canonical display name, useful aliases, official website |
 | Origins | Launch/founding year, individual founders or founding organization |
 | Location | Current creative/operating base and country; distinguish the founding city, factory and holding-company address |
+| Origin & history | If founded in a different city: `origin: { city, country }` plus `history` events, oldest first: each `moved` (ending at the current base; omit `year` when unsourced), each `acquired` by an owner (link `group`, or `buyer` text), spin-offs and renames. Mark inferred years `approximate: true`; the latest owner must match `parentGroup` |
 | Ownership | Current global owner, acquisition completion, and any relevant regional licence/operator |
 | Creative identity | Design approach, signature materials/products, collection coverage |
 | Classification | Existing market tier, categories, 1–3 aesthetics and up to 4 primary product specialties |
+
+**Origin check (do this for every history task, before searching):**
+
+- Compare the founding place in *all* evidence against `city`/`country`. That
+  includes the house's own `notes`, any user-supplied table, and each source.
+  "British-origin", "founded in Lancashire" or a foreign founding country in the
+  notes counts as evidence.
+- If the founding place differs, `origin` is required. Use the most specific
+  place sources support (town, else county/region, e.g. `Lancashire`) and add it
+  to `cities.ts`. Never drop an origin because no exact town is given.
+- A founding country that differs from `country` always means a relocation.
+  So does an acquisition by an owner in another country, which often moves the
+  brand to the buyer's base. Add a `moved` event (year omitted if unsourced) and
+  report it; never conclude "no moves" from sources that simply don't mention one.
+- When delegating research, give the agent the house's current notes and base,
+  and ask it to report the founding place at the most specific level found,
+  flagging any conflict with the existing notes.
+- The dev console's research to-do list (`missingOrigins` in `validate.ts`)
+  flags notes that say a brand was founded in a known city or US/Canadian state
+  other than its base when no `origin` is recorded. Clear those after edits.
 
 Write brand descriptions (`notes` in `houses.ts`) around what the brand is and
 what it makes: clothing and accessory ranges, style, silhouettes, signature
@@ -100,6 +121,64 @@ descriptions in the interface. Record participants and year; exact collection
 names are not needed. The history links to a Google search for the brands and year.
 An ongoing partnership requires evidence of a sustained creative role.
 
+## Collaboration-only lookups
+
+When asked only to find a brand's missing collaborations, skip sections 1–3 and
+work in this order to keep searches cheap:
+
+1. In one shell call, list the brand's existing records with
+   `grep -n -A1 "'<houseId>'" src/data/collaborations.ts` and keep them as the
+   "already recorded" list. Entries can span several lines (houses on one line,
+   year on the next), so never match only one-line `houses … year` entries.
+2. Find candidates from several angles. A single search favours recent,
+   high-profile releases and misses a brand's early years.
+   - **Full archive crawl (default, always do this first):** read every page
+     of the brand's Hypebeast archive, `https://hypebeast.com/brands/<slug>`
+     then `/page/2`, `/page/3`… until a page returns 404. Do not stop at a
+     fixed page count; established brands run to 50–90 pages, back to ~2007.
+     Split the page range across two or three parallel `web-fetch` agents
+     (for example 1–25, 26–60, 61+), and have each report the last page that
+     existed and its oldest article date, so you can confirm the crawl reached
+     the end. If an agent stops early, resume it with SendMessage or start
+     another one for the remaining pages. Ask each agent for one line per
+     collaboration, `partner(s) | year | title snippet`, with
+     retailer/store exclusives flagged.
+   - Run archive-crawl `web-fetch` agents with `model: "haiku"`; use
+     `model: "sonnet"` for history and career fact-checks.
+   - **Second list source:** for Japanese brands, also read the Fashion Press
+     collab list, `https://www.fashion-press.net/news/brand/<id>/collab` with
+     every `?page=N`. Otherwise use the brand's own collab/news page or its
+     Wikipedia page.
+   - **Neutral search:** `"<Brand> x" collaboration` and `"x <Brand>"`. Do not
+     put guessed partner names in this query; they steer results toward those
+     partners.
+   - **Early years:** one search such as `<Brand> collaboration <founding
+     year>–<founding year + 5>`.
+   - **Dataset reverse lookup:** list houses in the brand's city or scene
+     (`grep -n "city: '<City>'" src/data/houses.ts`) and search
+     `<Brand> <partner A> <partner B> …` for those likely partners. Local
+     streetwear peers (for example Los Angeles labels) are the most often missed.
+   Batch searches for several brands in the same turn. Use `extended` only when
+   `standard` returns little.
+3. Check every candidate partner against `houses.ts` in one shell loop before
+   researching it further. Drop partners that aren't houses (artists,
+   celebrities, retailers, non-fashion companies, sports clubs) and list them
+   once in the summary. Do not add houses unless asked.
+4. A collaboration's release year from search results or reputable coverage is
+   enough. Open a page only when sources conflict or the year is missing.
+   Never infer a year from an announcement or runway date alone.
+5. Add one-line entries, `idPartnerYear: { houses: [...], year },`, before the
+   closing `satisfies` line. Give repeat releases in one year distinct IDs (for
+   example `Spring2026` and `Fall2026`). No names, notes or sources are needed.
+   For archive bulk adds, record one entry per partner per year, plus separate
+   entries for three-or-more-brand projects. Insert with a script that skips
+   any (house set, year) already recorded, parsing whole multi-line entries.
+6. Run `npm run check && npm test` once after all brands are added.
+7. In the summary, say which angles were searched and how far the archive
+   crawl reached (last page, oldest year), so gaps are visible. List partners
+   that aren't houses once, so the user can ask for them to be added. Never
+   describe the list as complete: archive crawls read titles only.
+
 ## 4. Resolve evidence and uncertainty
 
 - Batch independent searches. Open the relevant pages and read the supporting
@@ -132,8 +211,12 @@ source counts or exhaustive executive biographies. Summarize remaining unknowns.
 3. Add a sourced current owner in `groups.ts` only when necessary. Add missing
    city coordinates in `cities.ts` and state/province metadata for US/Canadian
    cities. Regional names belong only in the expanded right-hand city menus.
-4. Use verified official social handles. Set `instagram` and `logo` to `''`
-   when unknown; do not invent asset paths or overwrite user-provided logos.
+4. Look up the brand's official website and Instagram for every brand you
+   research. Record the website as a full URL and Instagram as the bare handle,
+   only once verified as the brand's own (not a retailer, fan or reseller page).
+   Every house keeps both fields: set `website` and `instagram` to `''` when the
+   brand has none or it can't be verified. Set `logo` to `''` when unknown; do
+   not invent asset paths or overwrite user-provided logos.
 5. Review the resulting diff for duplicate people, unsupported dates, accidental
    collaboration links and unrelated changes. Run `npm run check && npm test`.
    Update any affected existing membership expectations. For data-only edits,

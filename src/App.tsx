@@ -2,15 +2,20 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { allMoves, designers, getDesigner, getGroup, getHouse, groups, houses, isBusinessLeadership, yearRange } from './data';
 import { matchesHouseFilters, type HouseFilters } from './data/tags';
 import type { DesignerGraph } from './graph/graph';
+import { setLocationMode, type LocationMode } from './graph/locations';
 import { Filters, setFilterValue, type FilterGroup } from './ui/filters';
 import { SearchBox, type ListItem } from './ui/listbox';
 import { MapView } from './ui/map-view';
+import { StartIcon } from './ui/start-icons';
+import { StartMenu } from './ui/start-menu';
 import { PanelContent, panelTitle, type Selection } from './ui/panel';
 
 const [minYear, maxYear] = yearRange();
 const moveCount = allMoves().length;
 const LINES_KEY = 'designer-map:show-lines';
 const COLLABORATIONS_KEY = 'designer-map:show-collaborations';
+const LOCATION_KEY = 'designer-map:location-mode';
+const movedCount = houses.filter((h) => h.origin).length;
 const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 const searchItems: ListItem<NonNullable<Selection>>[] = [
   ...houses.map((h) => ({ label: h.name, aliases: h.aliases, hint: 'house', value: { kind: 'house' as const, id: h.id } })),
@@ -40,6 +45,18 @@ export function App() {
   const [showCollaborations, setShowCollaborations] = useState(() => {
     try { return localStorage.getItem(COLLABORATIONS_KEY) !== 'off'; } catch { return true; }
   });
+  const [locationMode, setMode] = useState<LocationMode>(() => {
+    let mode: LocationMode = 'current';
+    try { if (localStorage.getItem(LOCATION_KEY) === 'origin') mode = 'origin'; } catch { /* storage unavailable */ }
+    setLocationMode(mode);
+    return mode;
+  });
+  const changeLocationMode = useCallback((mode: LocationMode) => {
+    // The graph is rebuilt for the new layout (MapView is keyed by mode), so set this first.
+    setLocationMode(mode);
+    setMode(mode);
+    try { localStorage.setItem(LOCATION_KEY, mode); } catch { /* storage unavailable */ }
+  }, []);
   const visibleYear = year >= maxYear ? Infinity : year;
   const matchingHouses = useMemo(() => houses.filter((h) => matchesHouseFilters(h.tags, filters)), [filters]);
   const matchingIds = useMemo(() => Object.values(filters).some((values) => values?.length)
@@ -61,21 +78,22 @@ export function App() {
   }, []);
 
   // Synchronize the existing graph API; none of its rendering/layout is moved into React.
-  useLayoutEffect(() => { graph.current?.setHouseFilter(matchingIds); }, [matchingIds]);
-  useLayoutEffect(() => { graph.current?.setYear(visibleYear); }, [visibleYear]);
+  // locationMode rebuilds the graph, so each sync also reruns for the new instance.
+  useLayoutEffect(() => { graph.current?.setHouseFilter(matchingIds); }, [matchingIds, locationMode]);
+  useLayoutEffect(() => { graph.current?.setYear(visibleYear); }, [visibleYear, locationMode]);
   useLayoutEffect(() => {
     graph.current?.select(selection, request.reveal);
-  }, [selection, request]);
+  }, [selection, request, locationMode]);
   useLayoutEffect(() => { if (panel.current) panel.current.scrollTop = 0; }, [request, visibleHouses]);
   useEffect(() => { if (!keepSelection) select(null); }, [keepSelection, select]);
   useEffect(() => {
     graph.current?.setShowMoves(showLines);
     try { localStorage.setItem(LINES_KEY, showLines ? 'on' : 'off'); } catch { /* storage unavailable */ }
-  }, [showLines]);
+  }, [showLines, locationMode]);
   useEffect(() => {
     graph.current?.setShowCollaborations(showCollaborations);
     try { localStorage.setItem(COLLABORATIONS_KEY, showCollaborations ? 'on' : 'off'); } catch { /* storage unavailable */ }
-  }, [showCollaborations]);
+  }, [showCollaborations, locationMode]);
   useEffect(() => {
     if (playFrom === null) return;
     let next = playFrom;
@@ -104,17 +122,10 @@ export function App() {
         <output id="year-label" htmlFor="year">{year >= maxYear ? 'All' : year}</output>
         <button id="play" onClick={() => setPlayFrom((current) => current === null ? year >= maxYear ? minYear : year : null)}>{playFrom === null ? '▶ Play' : '■ Stop'}</button>
       </div>
-      <div className="field-row"><input type="checkbox" id="show-lines" checked={showLines} onChange={(event) => setShowLines(event.target.checked)} /><label htmlFor="show-lines">Show move lines</label></div>
-      <div className="field-row"><input type="checkbox" id="show-collaborations" checked={showCollaborations} onChange={(event) => setShowCollaborations(event.target.checked)} /><label htmlFor="show-collaborations">Show collaboration lines</label></div>
-      <div className="field-row">
-        <button id="expand-all" aria-pressed={allExpanded} onClick={() => graph.current?.setAllExpanded(!graph.current.allExpanded)}>{allExpanded ? 'Collapse all' : 'Expand all'}</button>
-        <button id="fit" onClick={() => graph.current?.fit()}>Fit</button>
-        <button id="home" onClick={() => { select(null); graph.current?.fit(); }}>Directory</button>
-      </div>
     </div>
       <Filters value={filters} onChange={changeFilters} count={visibleHouses.length} total={houses.length} />
       <div className="content">
-        <MapView graphRef={graph} onSelect={select} onExpandChange={onExpandChange} />
+        <MapView key={locationMode} graphRef={graph} onSelect={select} onExpandChange={onExpandChange} />
         <div className="window side-window"><div className="title-bar"><div className="title-bar-text" id="panel-title">{panelTitle(selection)}</div></div>
           <div className="window-body" id="panel" ref={panel}><PanelContent key={panelKey} selection={selection} visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onTag={addTag} /></div>
         </div>
@@ -124,7 +135,31 @@ export function App() {
       <p className="status-bar-field" id="status-selection">{name ? `Selected: ${name}` : 'Nothing selected'}</p>
       <p className="status-bar-field" id="status-year">{year >= maxYear ? 'Showing all years' : `Up to ${year}`}</p>
     </div>
-  </div><div className="taskbar"><button className="start-button"><span className="start-logo" aria-hidden="true" /><b>Start</b></button>
+  </div><div className="taskbar"><StartMenu>{(close) => <>
+      <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
+        <StartIcon name="globe" /><span className="start-label">Show brands at</span><span className="start-arrow" aria-hidden="true" />
+        <fieldset className="window start-submenu" title={`${movedCount} brands have a different origin city`}>
+          <legend className="visually-hidden">Show brands at</legend>
+          {([['current', 'Current base'], ['origin', 'Origin']] as const).map(([mode, label]) => <div className="field-row start-subitem" key={mode}>
+            <input type="radio" id={`location-${mode}`} name="location-mode" checked={locationMode === mode} onChange={() => changeLocationMode(mode)} />
+            <label htmlFor={`location-${mode}`}>{label}</label>
+          </div>)}
+        </fieldset>
+      </div>
+      <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
+        <StartIcon name="lines" /><span className="start-label">Connection lines</span><span className="start-arrow" aria-hidden="true" />
+        <fieldset className="window start-submenu">
+          <legend className="visually-hidden">Connection lines</legend>
+          <div className="field-row start-subitem"><input type="checkbox" id="show-lines" checked={showLines} onChange={(event) => setShowLines(event.target.checked)} /><label htmlFor="show-lines">Show move lines</label></div>
+          <div className="field-row start-subitem"><input type="checkbox" id="show-collaborations" checked={showCollaborations} onChange={(event) => setShowCollaborations(event.target.checked)} /><label htmlFor="show-collaborations">Show collaboration lines</label></div>
+        </fieldset>
+      </div>
+      <hr className="start-separator" />
+      <button className="start-item start-command" id="expand-all" aria-pressed={allExpanded} onClick={() => { close(); graph.current?.setAllExpanded(!graph.current.allExpanded); }}><StartIcon name={allExpanded ? 'collapse' : 'expand'} /><span className="start-label">{allExpanded ? 'Collapse all' : 'Expand all'}</span></button>
+      <button className="start-item start-command" id="fit" onClick={() => { close(); graph.current?.fit(); }}><StartIcon name="fit" /><span className="start-label">Fit map</span></button>
+      <hr className="start-separator" />
+      <button className="start-item start-command" id="home" onClick={() => { close(); select(null); graph.current?.fit(); }}><StartIcon name="folder" /><span className="start-label">Directory</span></button>
+    </>}</StartMenu>
     <button className="task active">Designer Map</button><div className="tray"><Clock /></div>
   </div></div>;
 }

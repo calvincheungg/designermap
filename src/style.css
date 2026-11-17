@@ -59,6 +59,7 @@ html, body {
 .toolbar select { height: 26px; background-position: right 2px center; }
 .toolbar button { min-height: 26px; }
 
+
 .filters { padding: 4px 6px; }
 .filters summary { cursor: pointer; font-size: 14px; }
 .filters summary span { color: #404040; margin-left: 6px; }
@@ -347,15 +348,126 @@ table.fields .field-separator { margin: 0 8px; }
   padding: 0 6px;
 }
 .start-logo {
-  width: 14px;
-  height: 12px;
-  background:
-    linear-gradient(#f00, #f00) 0 0 / 50% 50% no-repeat,
-    linear-gradient(#0a0, #0a0) 100% 0 / 50% 50% no-repeat,
-    linear-gradient(#00f, #00f) 0 100% / 50% 50% no-repeat,
-    linear-gradient(#ff0, #ff0) 100% 100% / 50% 50% no-repeat;
-  transform: skewY(-6deg);
+  /* The flag cropped from public/assets/start_logo.jpg (x 72–223, y 118–248 of 584×375), scaled to 20px. */
+  width: 20px;
+  height: 17px;
+  background: url('/assets/start_logo.jpg') -9.5px -15.5px / 76.8px 49.3px no-repeat;
 }
+.start-button[aria-expanded='true'] {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+}
+
+/* ---------- Start menu (reference: public/assets/start_menu.gif) ---------- */
+.start-menu {
+  position: fixed;
+  left: 2px;
+  bottom: calc(var(--taskbar-h) - 3px);
+  z-index: 2000;
+  display: flex;
+  min-width: 230px;
+  padding: 3px;
+  font-size: 14px;
+}
+/* Navy side banner with a "Windows98"-style wordmark read bottom-to-top. */
+.start-banner {
+  flex: 0 0 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+  background: var(--navy);
+}
+.start-banner span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: #c0c0c0;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  white-space: nowrap;
+}
+.start-banner b { color: #fff; font-weight: 900; }
+.start-items { flex: 1; display: flex; flex-direction: column; padding-left: 1px; }
+.start-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  margin: 0;
+  padding: 0 6px 0 4px;
+  color: #000;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: default;
+}
+.start-icon { flex: none; image-rendering: pixelated; }
+.start-label { flex: 1; }
+/* Win98 submenu arrow: small black triangle on the right. */
+.start-arrow {
+  width: 0;
+  height: 0;
+  margin-left: 18px;
+  border-block: 4px solid transparent;
+  border-left: 4px solid currentColor;
+}
+/* Highlighted row: navy bar, white text. */
+.start-item:hover,
+.start-parent:focus-within,
+.start-command:focus-visible { background: var(--navy); color: #fff; outline: none; }
+.start-command {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  text-align: left;
+}
+.start-command:active { box-shadow: none; padding: 0 6px 0 4px; }
+.start-command:focus { outline: none; }
+/* Cascading submenus open beside their row on hover or keyboard focus. */
+.start-submenu {
+  position: absolute;
+  top: -3px;
+  left: calc(100% - 2px);
+  display: none;
+  min-width: 210px;
+  margin: 0;
+  padding: 2px;
+  color: #000;
+}
+.start-parent:hover > .start-submenu,
+.start-parent:focus-within > .start-submenu { display: block; }
+.start-subitem { height: 26px; margin: 0; padding: 0 12px 0 26px; }
+.start-subitem:hover, .start-subitem:focus-within { background: var(--navy); }
+.start-subitem:hover label, .start-subitem:focus-within label { color: #fff; }
+.start-subitem label { flex: 1; font-size: 14px; line-height: 26px; }
+/* Menu check marks and bullets replace 98.css's boxes and circles. */
+.start-subitem input + label::before { display: none; }
+.start-subitem input:focus + label { outline: none; }
+.start-subitem input:checked + label::after { top: 50%; transform: translateY(-50%); }
+.start-subitem:hover input:checked + label::after,
+.start-subitem:focus-within input:checked + label::after { filter: invert(1); }
+.start-separator {
+  width: calc(100% - 4px);
+  margin: 2px;
+  border: 0;
+  border-top: 1px solid #808080;
+  border-bottom: 1px solid #fff;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  /* No room to cascade on phones: submenus open over the menu instead. */
+  .start-submenu { left: 30px; top: 100%; z-index: 1; }
+}
+
 .task {
   width: 160px;
   text-align: left;

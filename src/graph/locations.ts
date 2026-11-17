@@ -1,6 +1,6 @@
 import { cities, cityRegions, type CityName } from '../data/cities';
 import { getHouse } from '../data';
-import type { LatLng } from '../types';
+import type { House, LatLng } from '../types';
 
 /**
  * Geographic names for nearby-city clusters. These are label hints only:
@@ -58,6 +58,14 @@ export const isMajorCity = (city: string, brandCount: number): boolean =>
 
 export const mapLocationForCity = (city: string): string => city;
 
+/** Which city places brands on the map: their current base or their founding city. */
+export type LocationMode = 'current' | 'origin';
+let locationMode: LocationMode = 'current';
+export const getLocationMode = (): LocationMode => locationMode;
+/** Set before creating a DesignerGraph; an existing graph keeps the layout it was built with. */
+export function setLocationMode(mode: LocationMode) { locationMode = mode; }
+const mapCityOf = (house: House): string => locationMode === 'origin' && house.origin ? house.origin.city : house.city;
+
 /** Prefer familiar region names; otherwise name the area after its largest member city. */
 export function clusterLabel(members: readonly string[], representative: string): string {
   for (const [name, region] of Object.entries(mapRegions)) {
@@ -83,7 +91,7 @@ export function mapHousePath(id: string): string[] {
 }
 
 export const mapHouseRoot = (id: string): string => mapHousePath(id)[0] ?? id;
-export const mapLocationForHouse = (id: string): string => mapLocationForCity(getHouse(mapHouseRoot(id))!.city);
+export const mapLocationForHouse = (id: string): string => mapLocationForCity(mapCityOf(getHouse(mapHouseRoot(id))!));
 
 export function mapLocationCoordinates(location: string): LatLng {
   return cities[location as CityName];

@@ -4,7 +4,7 @@ import {
   getHouse, groups, houses, housesInGroup, isBusinessLeadership, labelsOf, logoUrl, movesOf, parentHouseOf, regionalHousesInGroup, tenuresAt,
 } from '../data';
 import type { Selection as GraphSelection } from '../graph/graph';
-import type { Collaboration, House, HouseTenure, Tenure } from '../types';
+import type { Collaboration, House, HouseEvent, HouseTenure, Tenure } from '../types';
 import { frameIcon, initialsIcon, logoInfo } from '../graph/icons';
 import { tagLabel } from './labels';
 import type { HouseFilters } from '../data/tags';
@@ -117,6 +117,34 @@ function TenureTable({ list, supporting, business, onSelect }: { list: HouseTenu
   </tbody></table></div>;
 }
 
+/** Founding, moves, ownership changes and the Ended year, oldest first. */
+function HistoryTable({ house, onSelect }: { house: House; onSelect: Actions['onSelect'] }) {
+  const year = (value: number | undefined, approximate?: boolean) => value === undefined ? '?' : `${approximate ? '~' : ''}${value}`;
+  const owner = (event: { group?: string; buyer?: string }) => event.group
+    ? <EntityLink kind="group" id={event.group} onSelect={onSelect}>{event.buyer ?? getGroup(event.group)?.name ?? event.group}</EntityLink>
+    : event.buyer;
+  const describe = (event: HouseEvent): ReactNode => {
+    switch (event.type) {
+      case 'moved': return `Moved to ${event.city}, ${countryNames[event.country]}`;
+      case 'acquired': return <>Acquired by {owner(event)}{event.stake && ` (${event.stake})`}</>;
+      case 'spunOff': return event.group || event.buyer ? <>Spun off into {owner(event)}</> : 'Became independent';
+      case 'renamed': return `Renamed ${event.name}`;
+      case 'closed': return event.label ? `Closed: ${event.label}` : 'Closed';
+      case 'relaunched': return event.label ? `Relaunched: ${event.label}` : 'Relaunched';
+      case 'other': return event.label;
+    }
+  };
+  const start = house.origin ?? house;
+  const rows: [string, ReactNode][] = [
+    [year(house.founded), `Founded in ${start.city}, ${countryNames[start.country]}`],
+    ...(house.history ?? []).map((event): [string, ReactNode] => [year(event.year, event.approximate), describe(event)]),
+    ...(house.closed !== undefined ? [[String(house.closed), 'Ended'] as [string, ReactNode]] : []),
+  ];
+  return <div className="sunken-panel"><table className="interactive history-table"><thead><tr><th>Year</th><th>Event</th></tr></thead><tbody>
+    {rows.map(([when, what], index) => <tr key={index}><td className="nowrap">{when}</td><td>{what}</td></tr>)}
+  </tbody></table></div>;
+}
+
 function CollaborationRow({ house, projects, onSelect }: {
   house: House; projects: Collaboration[]; onSelect: Actions['onSelect'];
 }) {
@@ -164,6 +192,7 @@ function HouseProfile({ house, year, onSelect, onTag }: { house: House; year: nu
       ['Closed', house.founded === undefined ? house.closed : undefined],
       ['Founder', founderLinks.length ? <>{founderLinks.map((link, index) => <Fragment key={index}>{index > 0 && ', '}{link}</Fragment>)}</> : undefined],
       ['Based in', `${house.city}, ${countryNames[house.country]}`],
+      ['Origin', house.origin && `${house.origin.city}, ${countryNames[house.origin.country]}`],
       ['Label of', parent && <EntityLink kind="house" id={parent.id} onSelect={onSelect}>{parent.name}</EntityLink>],
       ['Group', house.parentGroup && <EntityLink kind="group" id={house.parentGroup} onSelect={onSelect}>{getGroup(house.parentGroup)?.name ?? house.parentGroup}</EntityLink>],
       ['Website', house.website && <Website url={house.website} />],
@@ -176,6 +205,7 @@ function HouseProfile({ house, year, onSelect, onTag }: { house: House; year: nu
         {` · ${affiliation.territory} · ${affiliation.relationship}`}
       </li>)}
     </ul></fieldset>}
+    {(house.origin || !!house.history?.length) && <ProfileSection title="History"><HistoryTable house={house} onSelect={onSelect} /></ProfileSection>}
     <ProfileSection title="Creative directors">{directors.length ? <TenureTable list={directors} onSelect={onSelect} /> : <p className="hint">No creative directors recorded.</p>}</ProfileSection>
     {!!business.length && <fieldset><legend>Business leadership</legend><TenureTable list={business} business onSelect={onSelect} /></fieldset>}
     {!!team.length && <fieldset><legend>Design team &amp; other roles</legend><TenureTable list={team} supporting onSelect={onSelect} /></fieldset>}

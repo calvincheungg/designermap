@@ -88,13 +88,24 @@ export function mapElements(): ElementDefinition[] {
  * Move arrows for the current expansion state: each end attaches to the house
  * if its city is expanded, otherwise to the city marker. Moves inside one
  * collapsed city would be a loop on the marker, so they're left out.
+ *
+ * Move lines only show for a selection, so pass `focus` to build just the
+ * selected brand's direct lines or the selected designer's career; adding and
+ * styling every move on each relayout is the expensive part.
  */
-export function moveEdges(expanded: ReadonlySet<string>, visibleHouses?: ReadonlySet<string>): ElementDefinition[] {
+export function moveEdges(
+  expanded: ReadonlySet<string>,
+  visibleHouses?: ReadonlySet<string>,
+  focus?: { kind: 'house' | 'designer'; id: string },
+): ElementDefinition[] {
   const end = (houseId: string) => mapEndpoint(houseId, expanded, visibleHouses);
+  const focusNode = focus?.kind === 'house' ? nodeId.house(focus.id) : undefined;
   return allMoves().flatMap((m, i) => {
+    if (focus?.kind === 'designer' && m.designerId !== focus.id) return [];
     const source = end(m.from.house);
     const target = end(m.to.house);
     if (source === target) return [];
+    if (focusNode && source !== focusNode && target !== focusNode) return [];
     const name = getDesigner(m.designerId)?.name ?? m.designerId;
     return [
       {

@@ -55,6 +55,8 @@ export class DesignerGraph {
   private pulseGroup: SVGGElement;
   private pulseTimer: ReturnType<typeof setTimeout> | undefined;
   private selection: Selection = null;
+  /** The selection the current move and collaboration lines were built for. */
+  private connectionsFor = selectionKey(null);
   private expanded = new Set<string>();
   /** Houses revealed by a selection in cities the user has not opened. */
   private autoRevealed = new Map<string, Set<string>>();
@@ -311,6 +313,8 @@ export class DesignerGraph {
       }
       if (this.revealedLabels.size) relayout = true;
     }
+    // Connection lines are built for one selection, so a new selection needs its own.
+    if (this.connectionsFor !== selectionKey(sel)) relayout = true;
     if (relayout) {
       // Animate local focus changes; explicit navigation frames its destination immediately.
       this.relayoutMap(!forceLayout && !reveal, false);
@@ -463,7 +467,10 @@ export class DesignerGraph {
 
       cy.edges('[kind = "move"], [kind = "collaboration"]').remove();
       const visible = new Set(layout.houses.keys());
-      cy.add(moveEdges(this.expanded, visible));
+      const sel = this.selection;
+      // Move lines show only for a selected brand or designer, so build just those.
+      if (sel && sel.kind !== 'group') cy.add(moveEdges(this.expanded, visible, sel));
+      this.connectionsFor = selectionKey(sel);
       if (this.showCollaborations && this.selection?.kind === 'house') {
         cy.add(collaborationEdges(this.expanded, visible, this.selection.id, this.year));
       }
@@ -611,6 +618,10 @@ export class DesignerGraph {
     this.cy.batch(() => {
       this.cy.edges().forEach((e) => {
         const base = e.hasClass('highlight') ? 2 : e.data('kind') === 'leader' ? 1.5 : 1;
+        // Restyling is the expensive part, and below zoom 1 the result never changes.
+        const key = `${base}:${k}`;
+        if (e.scratch('_edgeScale') === key) return;
+        e.scratch('_edgeScale', key);
         e.style({ width: base * k, 'arrow-scale': 0.9 * k });
       });
     });
@@ -695,10 +706,9 @@ export class DesignerGraph {
     const ns = 'http://www.w3.org/2000/svg';
     for (const edge of selected) {
       if (!edge.visible() || edge.removed()) continue;
-      const start = edge.sourceEndpoint();
-      const end = edge.targetEndpoint();
-      if (!start || !end) continue;
-      const controls = edge.controlPoints() ?? [];
+      const route = renderedRoute(edge);
+      if (!route) continue;
+      const { start, end, controls } = route;
       const points = [start, ...controls, end];
       if (points.some((point) => !Number.isFinite(point.x) || !Number.isFinite(point.y))) continue;
       let path = `M ${start.x} ${start.y}`;
@@ -781,6 +791,19 @@ export class DesignerGraph {
     if (reveal && focus && focus.nonempty()) {
       cy.animate({ fit: { eles: focus, padding: 80 } }, { duration: 400 });
     }
+  }
+}
+
+const selectionKey = (sel: Selection) => (sel ? `${sel.kind}:${sel.id}` : '');
+
+/** An edge's drawn route, or undefined before the renderer has laid it out. */
+function renderedRoute(edge: EdgeSingular) {
+  try {
+    const start = edge.sourceEndpoint();
+    const end = edge.targetEndpoint();
+    return start && end ? { start, end, controls: edge.controlPoints() ?? [] } : undefined;
+  } catch {
+    return undefined;
   }
 }
 

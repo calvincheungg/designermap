@@ -13,6 +13,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "check": "tsc --noEmit",
+    "pretest": "npm run logos:prepare",
     "test": "vitest run"
   },
   "devDependencies": {

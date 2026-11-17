@@ -34,6 +34,8 @@ vi.mock('./graph/graph', () => ({
 import { App } from './App';
 import { GroupId } from './data/groups';
 
+const openStart = (user: ReturnType<typeof userEvent.setup>) => user.click(screen.getByRole('button', { name: 'Start' }));
+
 afterEach(() => {
   cleanup();
   localStorage.clear();
@@ -47,6 +49,7 @@ describe('React app graph integration', () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
+    await openStart(user);
     expect(screen.getByRole<HTMLInputElement>('checkbox', { name: 'Show collaboration lines' }).checked).toBe(false);
     expect(graph.setShowCollaborations).toHaveBeenLastCalledWith(false);
     await user.click(screen.getByRole('checkbox', { name: 'Show collaboration lines' }));
@@ -127,6 +130,7 @@ describe('React app graph integration', () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
+    await openStart(user);
     expect(screen.getByRole<HTMLInputElement>('checkbox', { name: 'Show move lines' }).checked).toBe(false);
     expect(graph.setShowMoves).toHaveBeenLastCalledWith(false);
     await user.click(screen.getByRole('checkbox', { name: 'Show move lines' }));
@@ -134,7 +138,12 @@ describe('React app graph integration', () => {
     expect(localStorage.getItem('designer-map:show-lines')).toBe('on');
     await user.click(screen.getByRole('button', { name: 'Expand all' }));
     expect(graph.setAllExpanded).toHaveBeenLastCalledWith(true);
+    expect(screen.queryByRole('dialog', { name: 'Start menu' })).toBeNull();
+    await openStart(user);
     expect(screen.getByRole('button', { name: 'Collapse all' }).getAttribute('aria-pressed')).toBe('true');
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog', { name: 'Start menu' })).toBeNull();
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Start' }));
     fireEvent.contextMenu(document.getElementById('graph')!, { clientX: 100, clientY: 100 });
     await user.click(screen.getByRole('menuitem', { name: 'Collapse All' }));
     expect(graph.setAllExpanded).toHaveBeenLastCalledWith(false);

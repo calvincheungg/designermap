@@ -54,33 +54,56 @@ describe('React interface interactions', () => {
     }
     const user = userEvent.setup();
     render(<Harness />);
-    const history = screen.getByText('Collaboration history (9)').closest('fieldset')!;
-    expect(within(history).getByRole('cell', { name: '2021' })).toBeTruthy();
+    const history = screen.getByText(/^Collaboration history \(\d+\)$/).closest('fieldset')!;
     expect(within(history).queryByRole('link', { name: /Source/ })).toBeNull();
     expect(within(history).queryByRole('columnheader', { name: 'Collection' })).toBeNull();
-    const nikeRow = within(history).getByRole('link', { name: 'Sacai' }).closest('tr')!;
+    const nikeRow = within(history).getAllByRole('row').find((row) =>
+      within(row).queryByRole('link', { name: 'Sacai' }) && within(row).queryByRole('link', { name: 'Nike' }) && within(row).getAllByRole('link').length === 3)!;
+    expect(within(nikeRow).getByRole('cell', { name: '2021' })).toBeTruthy();
     const search = within(nikeRow).getByRole('link', { name: 'Search' });
     const url = new URL(search.getAttribute('href')!);
     expect(url.origin).toBe('https://www.google.com');
     expect(url.searchParams.get('q')).toBe(`${getHouse('fragmentDesign')!.name} x Nike x Sacai 2021`);
     expect(search.getAttribute('target')).toBe('_blank');
     expect(within(nikeRow).getByRole('link', { name: 'Nike' })).toBeTruthy();
-    await user.click(within(history).getByRole('link', { name: 'Sacai' }));
+    await user.click(within(nikeRow).getByRole('link', { name: 'Sacai' }));
     expect(screen.getByRole('heading', { name: 'Sacai' })).toBeTruthy();
+  });
+
+  it('shows a dated history of moves and ownership changes', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn();
+    render(<PanelContent selection={{ kind: 'house', id: 'reebok' }} onSelect={onSelect} onTag={() => {}} />);
+    const history = screen.getByRole('group', { name: /History/ });
+    const rows = within(history).getAllByRole('row').slice(1).map((row) => row.textContent);
+    expect(rows[0]).toBe('1958Founded in Bolton, UK');
+    expect(rows).toContain('2016Moved to Boston, USA');
+    expect(rows.indexOf('2016Moved to Boston, USA')).toBeLessThan(rows.findIndex((row) => row?.includes('2022')));
+    expect(screen.getByRole('row', { name: 'Origin: Bolton, UK' })).toBeTruthy();
+    await user.click(within(history).getByRole('link', { name: /Authentic/ }));
+    expect(onSelect).toHaveBeenLastCalledWith({ kind: 'group', id: 'authenticBrands' }, true);
   });
 
   it('limits collaboration history to the selected year', () => {
     const view = render(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2005} onSelect={() => {}} onTag={() => {}} />);
     expect(screen.getByText('No collaborations recorded through 2005.')).toBeTruthy();
     view.rerender(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2020} onSelect={() => {}} onTag={() => {}} />);
-    const history = screen.getByText('Collaboration history (4)').closest('fieldset')!;
+    const heading2020 = screen.getByText(/^Collaboration history \(\d+\)$/);
+    const count2020 = Number(heading2020.textContent!.match(/\d+/)![0]);
+    const history = heading2020.closest('fieldset')!;
     expect(within(history).getByRole('link', { name: 'Visvim' })).toBeTruthy();
     expect(within(history).getByRole('link', { name: 'Red Wing Shoes' })).toBeTruthy();
     expect(within(history).getByRole('link', { name: 'Carhartt WIP' })).toBeTruthy();
     expect(within(history).getByRole('link', { name: 'Kangol' })).toBeTruthy();
-    expect(within(history).queryByRole('link', { name: 'Nike' })).toBeNull();
+    expect(within(history).getByRole('link', { name: 'Off-White' })).toBeTruthy();
+    // The 2021 sacai × Nike release stays hidden until its year.
+    const sacaiNikeRow = (scope: HTMLElement) => within(scope).queryAllByRole('row').find((row) =>
+      within(row).queryByRole('link', { name: 'Sacai' }) && within(row).queryAllByRole('link').length === 3);
+    expect(sacaiNikeRow(history)).toBeUndefined();
     view.rerender(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2021} onSelect={() => {}} onTag={() => {}} />);
-    expect(screen.getByText('Collaboration history (5)')).toBeTruthy();
+    const heading2021 = screen.getByText(/^Collaboration history \(\d+\)$/);
+    expect(Number(heading2021.textContent!.match(/\d+/)![0])).toBeGreaterThan(count2020);
+    expect(sacaiNikeRow(document.body)).toBeTruthy();
   });
 
   it('consolidates repeat partners and searches the chosen release year', async () => {

@@ -59,7 +59,7 @@ vi.mock('../data', () => {
 });
 
 import { DesignerGraph, type GraphCallbacks } from './graph';
-import { nodeId } from './elements';
+import { moveEdges, nodeId } from './elements';
 import { GroupId } from '../data/groups';
 import { collaborations } from '../data';
 
@@ -67,6 +67,12 @@ let graph: DesignerGraph;
 let onSelect: ReturnType<typeof vi.fn<GraphCallbacks['onSelect']>>;
 const houseNode = (id: string) => graph.cy.getElementById(nodeId.house(id));
 const openHouses = () => graph.cy.nodes('[kind = "house"]').not('.hidden, .collapsed').map((n) => n.data('refId')).sort();
+/** Every career route for the map's current state; the graph only draws the selected ones. */
+const routes = (designerId: string) => {
+  const expanded = new Set(graph.cy.nodes('[kind = "marker"][?expanded]').map((n) => n.data('city') as string));
+  const visible = new Set(graph.cy.nodes('[kind = "house"]').not('.collapsed').map((n) => n.data('refId') as string));
+  return moveEdges(expanded, visible).map((edge) => edge.data).filter((data) => data.designerId === designerId);
+};
 
 beforeEach(() => {
   vi.stubGlobal('ResizeObserver', class {
@@ -432,13 +438,11 @@ describe('brand selection on the map', () => {
 
   it('routes hidden-label careers through the parent, then through the revealed label', () => {
     graph.toggleCity('Berlin');
-    let edge = graph.cy.edges('[designerId = "labelDesigner"]');
-    expect(edge[0]!.source().id()).toBe(nodeId.house('family'));
+    expect(routes('labelDesigner')[0]!.source).toBe(nodeId.house('family'));
     graph.select({ kind: 'house', id: 'family' });
-    edge = graph.cy.edges('[designerId = "labelDesigner"]');
-    expect(edge[0]!.source().id()).toBe(nodeId.house('label'));
+    expect(routes('labelDesigner')[0]!.source).toBe(nodeId.house('label'));
     graph.select(null);
-    expect(graph.cy.edges('[designerId = "labelDesigner"]')[0]!.source().id()).toBe(nodeId.house('family'));
+    expect(routes('labelDesigner')[0]!.source).toBe(nodeId.house('family'));
   });
 
   it('reveals nested-label context and connected parents when their main brand is filtered out', () => {
@@ -450,7 +454,7 @@ describe('brand selection on the map', () => {
     graph.setHouseFilter(new Set(['label', 'manual']));
     graph.select({ kind: 'house', id: 'manual' });
     expect(openHouses()).toEqual(['family', 'manual']);
-    expect(graph.cy.edges('[designerId = "labelDesigner"]')[0]!.source().id()).toBe(nodeId.house('family'));
+    expect(routes('labelDesigner')[0]!.source).toBe(nodeId.house('family'));
   });
 
   it('opens an individual city without expanding neighbouring cities', () => {
@@ -475,14 +479,16 @@ describe('brand selection on the map', () => {
   });
 
   it('routes moves through city pins and reveals direct connected brands on selection', () => {
-    let moves = graph.cy.edges('[designerId = "regional"]');
-    expect(moves.length).toBe(2);
-    expect(moves[0]!.source().id()).toBe(nodeId.city('Gardena'));
-    expect(moves[0]!.target().id()).toBe(nodeId.city('Irvine'));
+    expect(graph.cy.edges('[kind = "move"]').length).toBe(0);
+    const unselected = routes('regional');
+    expect(unselected.length).toBe(2);
+    expect(unselected[0]!.source).toBe(nodeId.city('Gardena'));
+    expect(unselected[0]!.target).toBe(nodeId.city('Irvine'));
     graph.select({ kind: 'house', id: 'regionalOne' });
     expect(openHouses()).toEqual(['regionalOne', 'regionalTwo']);
-    moves = graph.cy.edges('[designerId = "regional"]');
-    expect(moves.length).toBe(2);
+    // Only the selected brand's direct lines are built.
+    const moves = graph.cy.edges('[designerId = "regional"]');
+    expect(moves.length).toBe(1);
     const internal = moves.filter((e) => e.data('fromHouse') === 'regionalOne');
     expect(internal.source().id()).toBe(nodeId.house('regionalOne'));
     expect(internal.target().id()).toBe(nodeId.house('regionalTwo'));
@@ -520,7 +526,7 @@ describe('brand selection on the map', () => {
     expect(graph.cy.edges('[kind = "move"]').filter((e) => e.data('designerId') === 'one').hasClass('highlight')).toBe(true);
     graph.setShowMoves(false);
     expect(graph.cy.edges('[kind = "move"]').filter((e) => e.data('designerId') === 'one').hasClass('lines-off')).toBe(true);
-    expect(graph.cy.edges('[kind = "move"]').filter((e) => e.data('designerId') === 'two').hasClass('lines-off')).toBe(true);
+    expect(graph.cy.edges('[kind = "move"][designerId = "two"]').length).toBe(0);
   });
 
   it('updates automatic reveals when the selected brand or year changes', () => {
@@ -676,7 +682,7 @@ describe('connection presentation', () => {
     graph.setConnectionFilter('all');
     expect(openHouses()).toContain('manual');
     expect(openHouses()).toContain('connected');
-    expect(graph.cy.edges('[designerId = "two"]')[0]!.hasClass('lines-off')).toBe(true);
+    expect(graph.cy.edges('[designerId = "two"]').length).toBe(0);
   });
 
   it('keeps selected edge labels off the canvas and sends hover details to the reserved strip', () => {
@@ -728,8 +734,7 @@ it('shows connections for a selected brand or designer, even with every city exp
   const lines = () => graph.cy.edges('[kind = "move"], [kind = "collaboration"]');
   const allHidden = () => lines().map((edge) => edge.hasClass('lines-off')).every(Boolean);
   graph.setAllExpanded(true);
-  expect(lines().length).toBeGreaterThan(0);
-  expect(allHidden()).toBe(true);
+  expect(lines().length).toBe(0);
   graph.select({ kind: 'house', id: 'selected' });
   expect(allHidden()).toBe(false);
   expect(lines().filter((edge) => !edge.hasClass('lines-off')).every((edge) =>
