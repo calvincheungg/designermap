@@ -18,7 +18,7 @@ interface Row {
 export const STATS_VISIBLE_ROWS = 25;
 
 /** Row counts the collaboration tables can show. */
-export const COLLAB_LIMITS = [STATS_TOP, 25, 50, 100] as const;
+const COLLAB_LIMITS = [STATS_TOP, 25, 50, 100] as const;
 
 /** A statistics section with a "Show" picker for how many rows its table lists. */
 function LimitedSection({ title, children }: { title: string; children: (limit: number) => ReactNode }) {
