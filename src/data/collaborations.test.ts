@@ -37,7 +37,7 @@ describe('brand collaborations', () => {
   it('validates the dataset without turning projects into designer careers', () => {
     expect(validateData()).toEqual([]);
     expect(validateCollaborations([])).toEqual([]);
-    expect(movesOf('alexJamesPleasures')).toEqual([]);
+    expect(movesOf('alexJamesPleasures').map((m) => m.to.house)).not.toContain('puma');
     for (const project of collaborations) {
       expect(movesOf(project.id)).toEqual([]);
     }

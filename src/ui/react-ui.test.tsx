@@ -95,10 +95,10 @@ describe('React interface interactions', () => {
     expect(within(history).getByRole('link', { name: 'Red Wing Shoes' })).toBeTruthy();
     expect(within(history).getByRole('link', { name: 'Carhartt WIP' })).toBeTruthy();
     expect(within(history).getByRole('link', { name: 'Kangol' })).toBeTruthy();
-    expect(within(history).getByRole('link', { name: 'Off-White' })).toBeTruthy();
+    expect(within(history).getAllByRole('link', { name: 'Off-White' }).length).toBeGreaterThan(0);
     // The 2021 sacai × Nike release stays hidden until its year.
     const sacaiNikeRow = (scope: HTMLElement) => within(scope).queryAllByRole('row').find((row) =>
-      within(row).queryByRole('link', { name: 'Sacai' }) && within(row).queryAllByRole('link').length === 3);
+      within(row).queryByRole('link', { name: 'Sacai' }) && within(row).queryByRole('link', { name: 'Nike' }) && within(row).queryAllByRole('link').length === 3);
     expect(sacaiNikeRow(history)).toBeUndefined();
     view.rerender(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2021} onSelect={() => {}} onTag={() => {}} />);
     const heading2021 = screen.getByText(/^Collaboration history \(\d+\)$/);

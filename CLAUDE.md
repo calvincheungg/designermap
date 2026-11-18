@@ -32,6 +32,7 @@ src/types.ts          data model
 src/data/houses.ts    SOURCE OF TRUTH: houses (key = house id)
 src/data/designers.ts SOURCE OF TRUTH: designers + career tenures
 src/data/collaborations.ts SOURCE OF TRUTH: dated brand collaborations (2+ houses)
+src/data/research-log.ts research bookkeeping: brands with a full collaboration search (never read at runtime)
 src/data/cities.ts    city → [lat, lng]; every house city must be listed here
 src/data/index.ts     derived queries: tenuresAt, movesOf, allMoves, yearRange…
 src/data/validate.ts  sanity checks (also run in tests + logged in browser)

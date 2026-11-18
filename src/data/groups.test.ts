@@ -24,7 +24,7 @@ describe('group profiles', () => {
   });
 
   it('derives brand membership from each house rather than storing a second list', () => {
-    expect(housesInGroup(GroupId.Moncler).map((h) => h.id)).toEqual(['moncler', 'stoneIsland', 'stoneIslandShadowProject']);
+    expect(housesInGroup(GroupId.Moncler).map((h) => h.id)).toEqual(['moncler', 'stoneIsland', 'stoneIslandMarina', 'stoneIslandShadowProject']);
     expect(housesInGroup(GroupId.Prada).map((h) => h.id).sort()).toEqual(['churchs', 'miuMiu', 'prada', 'versace', 'versaceJeansCouture']);
     for (const group of groups) {
       expect(housesInGroup(group.id).map((h) => h.id).sort()).toEqual(

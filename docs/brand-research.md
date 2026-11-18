@@ -130,6 +130,14 @@ work in this order to keep searches cheap:
    `grep -n -A1 "'<houseId>'" src/data/collaborations.ts` and keep them as the
    "already recorded" list. Entries can span several lines (houses on one line,
    year on the next), so never match only one-line `houses … year` entries.
+   In the same call, check `src/data/research-log.ts` for a `collabSearches`
+   entry. If one exists with `complete: true`, the crawl in step 2 is
+   **incremental**: read pages from page 1 only until you reach articles older
+   than its `date` (usually 1–3 pages, so no parallel agents are needed). Tell
+   the user it was searched before, and do a full crawl only if they ask for a
+   refresh. If the entry has `complete: false`, resume from its `lastPage`.
+   With `noArchive: true`, first check whether a Hypebeast tag exists now;
+   if not, repeat only the web searches.
 2. Find candidates from several angles. A single search favours recent,
    high-profile releases and misses a brand's early years.
    - **Full archive crawl (default, always do this first):** read every page
@@ -173,7 +181,12 @@ work in this order to keep searches cheap:
    For archive bulk adds, record one entry per partner per year, plus separate
    entries for three-or-more-brand projects. Insert with a script that skips
    any (house set, year) already recorded, parsing whole multi-line entries.
-6. Run `npm run check && npm test` once after all brands are added.
+6. Add or update the brand's entry in `collabSearches` in
+   `src/data/research-log.ts` (keys in alphabetical order): today's `date`,
+   `complete` (whether the crawl reached the archive's last page), and the
+   `lastPage` and `oldestYear` the crawl reported. After an incremental crawl,
+   update only `date`, keeping the earlier `lastPage` and `oldestYear`.
+   Then run `npm run check && npm test` once after all brands are added.
 7. In the summary, say which angles were searched and how far the archive
    crawl reached (last page, oldest year), so gaps are visible. List partners
    that aren't houses once, so the user can ask for them to be added. Never

@@ -1,8 +1,9 @@
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { allMoves, collaborations, countryNames, designers, getDesigner, getHouse, groups, isBusinessLeadership, marketPositionings, tenuresAt, type CountryCode } from '../data';
 import type { House } from '../types';
 import { mapLocationForCity } from '../graph/locations';
 import { EntityLink, Fields, PlaceLink, ProfileSection, type Actions } from './panel';
+import { SelectBox } from './listbox';
 
 /** Rows shown in each "top" table. */
 export const STATS_TOP = 10;
@@ -11,6 +12,21 @@ interface Row {
   key: string; label: ReactNode; count: number;
   /** Extra columns after the label, one per `columns` heading. */
   cells?: ReactNode[];
+}
+
+/** Row counts the collaboration tables can show. */
+export const COLLAB_LIMITS = [STATS_TOP, 25, 50] as const;
+
+/** A statistics section with a "Show" picker for how many rows its table lists. */
+function LimitedSection({ title, children }: { title: string; children: (limit: number) => ReactNode }) {
+  const [limit, setLimit] = useState<number>(STATS_TOP);
+  return <ProfileSection title={title}>
+    <div className="field-row stats-limit">
+      <span>Show</span>
+      <SelectBox label={`Rows shown in ${title}`} values={COLLAB_LIMITS} value={limit} onChange={setLimit} />
+    </div>
+    {children(limit)}
+  </ProfileSection>;
 }
 
 const top = <T,>(entries: Iterable<readonly [T, number]>, limit = STATS_TOP) =>
@@ -138,20 +154,20 @@ export function StatisticsContent({ visibleHouses, year, filtered, onSelect, onO
       <BarTable heading="Brand" label="Brands by number of creative directors" rows={top(stats.directors.filter(([, count]) => count > 0))
         .map(([brand, count]) => ({ key: brand.id, count, label: house(brand.id) }))} />
     </ProfileSection>
-    <ProfileSection title="Most collaborations">
-      <BarTable heading="Brand" label="Brands by number of collaborations" rows={top(stats.collaborative)
-        .map(([id, count]) => ({ key: id, count, label: house(id) }))} />
-    </ProfileSection>
-    <ProfileSection title="Most frequent pairings">
+    <LimitedSection title="Most collaborations">{(limit) =>
+      <BarTable heading="Brand" label="Brands by number of collaborations" rows={top(stats.collaborative, limit)
+        .map(([id, count]) => ({ key: id, count, label: house(id) }))} />}
+    </LimitedSection>
+    <LimitedSection title="Most unique collaborators">{(limit) =>
+      <BarTable heading="Brand" label="Brands by number of distinct partner brands" rows={top(stats.uniquePartners, limit)
+        .map(([id, count]) => ({ key: id, count, label: house(id) }))} />}
+    </LimitedSection>
+    <LimitedSection title="Most frequent pairings">{(limit) =>
       <BarTable heading="Brands" countHeading="Releases" label="Brand pairs with the most collaborations"
-        rows={top(stats.pairs).map(([pair, count]) => {
+        rows={top(stats.pairs, limit).map(([pair, count]) => {
           const [a, b] = pair.split('|') as [string, string];
           return { key: pair, count, label: <>{house(a)} × {house(b)}</> };
-        })} />
-    </ProfileSection>
-    <ProfileSection title="Most unique collaborators">
-      <BarTable heading="Brand" label="Brands by number of distinct partner brands" rows={top(stats.uniquePartners)
-        .map(([id, count]) => ({ key: id, count, label: house(id) }))} />
-    </ProfileSection>
+        })} />}
+    </LimitedSection>
   </>;
 }

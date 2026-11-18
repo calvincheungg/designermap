@@ -220,9 +220,9 @@ describe('data', () => {
     expect(directorsOf('puma').map((t) => t.designerId)).not.toContain('alexJamesPleasures');
     expect(directorsOf('nike').map((t) => t.designerId)).not.toContain('alex2ToneErdmann');
     expect(careerOf('alex2ToneErdmann').map((t) => t.house)).toEqual(['bornXRaised']);
-    expect(careerOf('alexJamesPleasures').map((t) => t.house)).toEqual(['pleasures']);
+    expect(careerOf('alexJamesPleasures').map((t) => t.house)).toEqual(['publishBrand', 'pleasures']);
     expect(movesOf('alex2ToneErdmann')).toEqual([]);
-    expect(movesOf('alexJamesPleasures')).toEqual([]);
+    expect(movesOf('alexJamesPleasures').map((m) => [m.from?.house, m.to.house])).toEqual([['publishBrand', 'pleasures']]);
     expect(careerOf('chrisSpantoPrintup')[0]?.end).toBe(2023);
   });
 
