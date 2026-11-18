@@ -1,10 +1,12 @@
-import { Fragment, useId, useState, type ReactNode } from 'react';
+import { Fragment, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import {
   careerOf, collaborationsOf, countryNames, designers, formatTenureYears, foundersOf, getDesigner, getGroup,
   getHouse, groups, houses, housesInGroup, isBusinessLeadership, labelsOf, logoUrl, movesOf, parentHouseOf, regionalHousesInGroup, tenuresAt,
 } from '../data';
 import type { Selection as GraphSelection } from '../graph/graph';
 import type { Collaboration, House, HouseEvent, HouseTenure, Tenure } from '../types';
+import type { CountryCode } from '../data/countries';
+import { mapLocationForCity } from '../graph/locations';
 import { frameIcon, initialsIcon, logoInfo } from '../graph/icons';
 import { tagLabel } from './labels';
 import type { HouseFilters } from '../data/tags';
@@ -12,13 +14,23 @@ import { formatCity } from '../data/cities';
 import { SelectBox } from './listbox';
 
 export type Selection = GraphSelection;
-interface Actions {
+/** A place window: a map location's brands, or a country's. */
+export type Place = { kind: 'city'; id: string } | { kind: 'country'; id: CountryCode };
+export interface Actions {
   onSelect: (selection: Selection, reveal?: boolean) => void;
   onTag: (group: keyof HouseFilters, value: string) => void;
+  /** Open a city or country window; places show as plain text without it. */
+  onOpenPlace?: (place: Place) => void;
+}
+
+/** A city or country name that opens its window of brands. */
+export function PlaceLink({ place, children, onOpenPlace }: { place: Place; children: ReactNode; onOpenPlace?: Actions['onOpenPlace'] }) {
+  if (!onOpenPlace) return <>{children}</>;
+  return <a href="#" title={`Show brands in ${children}`} onClick={(event) => { event.preventDefault(); onOpenPlace(place); }}>{children}</a>;
 }
 type EntityKind = 'house' | 'designer' | 'group';
 
-function EntityLink({ kind, id, children, onSelect }: {
+export function EntityLink({ kind, id, children, onSelect }: {
   kind: EntityKind; id: string; children: ReactNode; onSelect: Actions['onSelect'];
 }) {
   return <a href="#" data-select={`${kind}:${id}`} onClick={(event) => {
@@ -30,14 +42,15 @@ function EntityLink({ kind, id, children, onSelect }: {
   }}>{children}</a>;
 }
 
-function Fields({ rows }: { rows: [string, ReactNode][] }) {
+export function Fields({ rows }: { rows: [string, ReactNode][] }) {
   return <table className="fields"><tbody>{rows.filter(([, value]) => value !== undefined && value !== null && value !== '' && value !== false)
     .map(([label, value]) => <tr key={label}><th>{label}:</th><td>{value}</td></tr>)}</tbody></table>;
 }
-function ProfileSection({ title, className, defaultOpen = true, children }: { title: string; className?: string; defaultOpen?: boolean; children: ReactNode }) {
+/** `fold`: a fitted Properties window opens only down to this section's heading; its contents need a scroll. */
+export function ProfileSection({ title, className, defaultOpen = true, fold = false, children }: { title: string; className?: string; defaultOpen?: boolean; fold?: boolean; children: ReactNode }) {
   const [open, setOpen] = useState(defaultOpen);
   const contentId = useId();
-  return <fieldset className={className}>
+  return <fieldset className={className} data-fold={fold || undefined}>
     <legend><button className="section-toggle" aria-expanded={open} aria-controls={contentId}
       type="button" onClick={() => setOpen((value) => !value)}>
       <span aria-hidden="true">{open ? '▾' : '▸'}</span> {title}
@@ -145,6 +158,31 @@ function HistoryTable({ house, onSelect }: { house: House; onSelect: Actions['on
   </tbody></table></div>;
 }
 
+/** Collaboration rows visible before the table scrolls (wheel/touch; the scrollbar is hidden). */
+export const COLLABORATION_ROWS = 8;
+/** A sunken table panel that shows at most `rows` body rows; the rest scroll without a scrollbar. */
+function RowLimitedPanel({ rows, children }: { rows: number; children: ReactNode }) {
+  const panel = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const element = panel.current;
+    if (!element) return;
+    const fit = () => {
+      const body = element.querySelectorAll('tbody > tr');
+      const last = body.length > rows ? body[rows - 1] : null;
+      if (!last) { element.style.maxHeight = ''; return; }
+      const bottom = last.getBoundingClientRect().bottom - element.getBoundingClientRect().top + element.scrollTop;
+      element.style.maxHeight = bottom > 0 ? `${Math.ceil(bottom + element.clientTop)}px` : '';
+    };
+    fit();
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(fit);
+    const table = element.querySelector('table');
+    if (table) observer.observe(table);
+    return () => observer.disconnect();
+  }, [rows, children]);
+  return <div ref={panel} className="sunken-panel row-limited">{children}</div>;
+}
+
 function CollaborationRow({ house, projects, onSelect }: {
   house: House; projects: Collaboration[]; onSelect: Actions['onSelect'];
 }) {
@@ -163,7 +201,7 @@ function CollaborationRow({ house, projects, onSelect }: {
   </tr>;
 }
 
-function HouseProfile({ house, year, onSelect, onTag }: { house: House; year: number } & Actions) {
+function HouseProfile({ house, year, onSelect, onTag, onOpenPlace }: { house: House; year: number } & Actions) {
   const collaborations = collaborationsOf(house.id).filter((project) => project.year <= year).toReversed();
   const partnerships = Map.groupBy(collaborations, (project) => project.houses.filter((id) => id !== house.id).toSorted().join('|'));
   const parent = parentHouseOf(house.id);
@@ -191,8 +229,8 @@ function HouseProfile({ house, year, onSelect, onTag }: { house: House; year: nu
       ['Founded', house.founded !== undefined ? <>{house.founded}{house.closed !== undefined && <><span className="field-separator"> | </span><strong>Ended:</strong> {house.closed}</>}</> : undefined],
       ['Closed', house.founded === undefined ? house.closed : undefined],
       ['Founder', founderLinks.length ? <>{founderLinks.map((link, index) => <Fragment key={index}>{index > 0 && ', '}{link}</Fragment>)}</> : undefined],
-      ['Based in', `${house.city}, ${countryNames[house.country]}`],
-      ['Origin', house.origin && `${house.origin.city}, ${countryNames[house.origin.country]}`],
+      ['Based in', <><PlaceLink place={{ kind: 'city', id: mapLocationForCity(house.city) }} onOpenPlace={onOpenPlace}>{house.city}</PlaceLink>, <PlaceLink place={{ kind: 'country', id: house.country }} onOpenPlace={onOpenPlace}>{countryNames[house.country]}</PlaceLink></>],
+      ['Origin', house.origin && <><PlaceLink place={{ kind: 'city', id: mapLocationForCity(house.origin.city) }} onOpenPlace={onOpenPlace}>{house.origin.city}</PlaceLink>, <PlaceLink place={{ kind: 'country', id: house.origin.country }} onOpenPlace={onOpenPlace}>{countryNames[house.origin.country]}</PlaceLink></>],
       ['Label of', parent && <EntityLink kind="house" id={parent.id} onSelect={onSelect}>{parent.name}</EntityLink>],
       ['Group', house.parentGroup && <EntityLink kind="group" id={house.parentGroup} onSelect={onSelect}>{getGroup(house.parentGroup)?.name ?? house.parentGroup}</EntityLink>],
       ['Website', house.website && <Website url={house.website} />],
@@ -206,18 +244,18 @@ function HouseProfile({ house, year, onSelect, onTag }: { house: House; year: nu
       </li>)}
     </ul></fieldset>}
     {(house.origin || !!house.history?.length) && <ProfileSection title="History"><HistoryTable house={house} onSelect={onSelect} /></ProfileSection>}
-    <ProfileSection title="Creative directors">{directors.length ? <TenureTable list={directors} onSelect={onSelect} /> : <p className="hint">No creative directors recorded.</p>}</ProfileSection>
+    <ProfileSection title={`Creative directors (${directors.length})`}>{directors.length ? <TenureTable list={directors} onSelect={onSelect} /> : <p className="hint">No creative directors recorded.</p>}</ProfileSection>
     {!!business.length && <fieldset><legend>Business leadership</legend><TenureTable list={business} business onSelect={onSelect} /></fieldset>}
-    {!!team.length && <fieldset><legend>Design team &amp; other roles</legend><TenureTable list={team} supporting onSelect={onSelect} /></fieldset>}
+    {!!team.length && <ProfileSection title={`Other roles (${team.length})`} defaultOpen={false}><TenureTable list={team} supporting onSelect={onSelect} /></ProfileSection>}
     <ProfileSection title={`Collaboration history (${partnerships.size})`}>
       {collaborations.length ? <>
-        <div className="sunken-panel"><table className="interactive">
+        <RowLimitedPanel rows={COLLABORATION_ROWS}><table className="interactive">
         <thead><tr><th>Year</th><th>With</th><th></th></tr></thead>
         <tbody>{[...partnerships].map(([partners, projects]) => <CollaborationRow key={`${house.id}:${partners}`} house={house} projects={projects} onSelect={onSelect} />)}</tbody>
-      </table></div></> : <p className="hint">No collaborations recorded{Number.isFinite(year) ? ` through ${year}` : ''}.</p>}
+      </table></RowLimitedPanel></> : <p className="hint">No collaborations recorded{Number.isFinite(year) ? ` through ${year}` : ''}.</p>}
     </ProfileSection>
     <Description text={house.notes} defaultOpen />
-    <ProfileSection title="Tags" className="house-tags">{tagGroups.map(([group, label, values]) =>
+    <ProfileSection title="Tags" className="house-tags" fold>{tagGroups.map(([group, label, values]) =>
       <div className="tag-group" key={group}><p>{label}</p><div className="tag-list">{values.map((value) =>
         <button key={value} className="tag" data-tag-kind={group} data-tag-value={value} title={`Filter by ${tagLabel(value)}`} onClick={() => onTag(group, value)}>{tagLabel(value)}</button>
       )}</div></div>)}</ProfileSection>
@@ -265,15 +303,15 @@ function DesignerProfile({ id, onSelect }: { id: string; onSelect: Actions['onSe
 export function panelTitle(selection: Selection): string {
   if (!selection) return 'Directory';
   const name = selection.kind === 'house' ? getHouse(selection.id)?.name : selection.kind === 'designer' ? getDesigner(selection.id)?.name : getGroup(selection.id)?.name;
-  return name ? `${name} Properties` : 'Not found';
+  return name ?? 'Not found';
 }
 
-export function PanelContent({ selection, visibleHouses = houses, year = Infinity, onSelect, onTag }: {
+export function PanelContent({ selection, visibleHouses = houses, year = Infinity, onSelect, onTag, onOpenPlace }: {
   selection: Selection; visibleHouses?: readonly House[]; year?: number;
 } & Actions) {
   if (selection?.kind === 'house') {
     const house = getHouse(selection.id);
-    return house ? <HouseProfile key={house.id} house={house} year={year} onSelect={onSelect} onTag={onTag} /> : <p>No house with id “{selection.id}”.</p>;
+    return house ? <HouseProfile key={house.id} house={house} year={year} onSelect={onSelect} onTag={onTag} onOpenPlace={onOpenPlace} /> : <p>No house with id “{selection.id}”.</p>;
   }
   if (selection?.kind === 'designer') return <DesignerProfile id={selection.id} onSelect={onSelect} />;
   if (selection?.kind === 'group') return <GroupProfile id={selection.id} onSelect={onSelect} />;

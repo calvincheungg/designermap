@@ -58,7 +58,8 @@ vi.mock('../data', () => {
   };
 });
 
-import { DesignerGraph, type GraphCallbacks } from './graph';
+import { DesignerGraph, minesweeperColour, PULSE_SPEED, pulseDuration, type GraphCallbacks } from './graph';
+import { RING_RADIUS } from './geo';
 import { moveEdges, nodeId } from './elements';
 import { GroupId } from '../data/groups';
 import { collaborations } from '../data';
@@ -711,19 +712,112 @@ describe('connection presentation', () => {
     vi.spyOn(edge, 'controlPoints').mockReturnValue([{ x: 50, y: 20 }]);
     edge.emit('mouseover');
     expect(host.querySelector('animateMotion')?.getAttribute('path')).toBe('M 0 0 Q 50 20 100 0');
-    expect(host.querySelector('animateMotion')?.getAttribute('dur')).toBe('3s');
+    // Constant on-screen speed: duration follows the line's length (~110 model units here).
+    const seconds = parseFloat(host.querySelector('animateMotion')!.getAttribute('dur')!);
+    expect(seconds).toBeCloseTo(Math.max(1.2, 110.4 * graph.cy.zoom() / PULSE_SPEED), 1);
     expect(host.querySelector('animateMotion')?.getAttribute('repeatCount')).toBe('indefinite');
-    vi.advanceTimersByTime(3100);
-    expect(host.querySelectorAll('circle')).toHaveLength(1);
-    edge.emit('mouseout');
-    expect(host.querySelectorAll('circle')).toHaveLength(1);
-    graph.select(null);
+    // The line is redrawn beneath the blocks; the canvas copy turns transparent.
+    expect(host.querySelector('.pulse-traces path')?.getAttribute('d')).toBe('M 0 0 Q 50 20 100 0');
+    expect(host.querySelector('.pulse-traces .pulse-arrow')).toBeTruthy();
+    expect(host.querySelector('.pulse-traces')!.compareDocumentPosition(host.querySelector('.pulse')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(edge.hasClass('traced')).toBe(true);
+    expect(edge.style('line-opacity')).toBe('0');
+    // A Win98 bevelled block rather than a circle.
     expect(host.querySelector('circle')).toBeNull();
+    expect(host.querySelectorAll('.pulse rect')).toHaveLength(4);
+    vi.advanceTimersByTime(3100);
+    const pulse = host.querySelector('.pulse');
+    expect(host.querySelectorAll('.pulse')).toHaveLength(1);
+    // Hovering a line that is already pulsing must not restart its animation.
+    edge.emit('mouseout');
+    edge.emit('mouseover');
+    expect(host.querySelector('.pulse')).toBe(pulse);
+    edge.emit('mouseout');
+    expect(host.querySelector('.pulse')).toBe(pulse);
+    graph.select(null);
+    expect(host.querySelector('.pulse')).toBeNull();
+    expect(host.querySelector('.pulse-trace')).toBeNull();
     vi.stubGlobal('matchMedia', () => ({ matches: true }));
     edge.emit('mouseover');
-    expect(host.querySelector('circle')).toBeNull();
+    expect(host.querySelector('.pulse')).toBeNull();
     graph.destroy();
     vi.useRealTimers();
+  });
+
+  it('hands city pin clicks to onOpenCity instead of expanding the city on the map', () => {
+    const onOpenCity = vi.fn();
+    graph.destroy();
+    graph = new DesignerGraph(document.createElement('div'), { onSelect, onOpenCity });
+    const marker = graph.cy.nodes('[kind = "marker"][!isCluster]').filter((node) => node.data('city') === 'Paris')[0]!;
+    marker.emit('tap');
+    expect(onOpenCity).toHaveBeenCalledWith('Paris');
+    expect(graph.allExpanded).toBe(false);
+    expect(houseNode('connected').hasClass('collapsed')).toBe(true);
+  });
+
+  it('draws pulses beneath the brand icons', () => {
+    const host = document.createElement('div');
+    graph.destroy();
+    graph = new DesignerGraph(host, { onSelect });
+    const layers = [...host.querySelectorAll('.map-layer, .pulse-layer, .cy-layer')].map((el) => el.classList[0]);
+    expect(layers).toEqual(['map-layer', 'pulse-layer', 'cy-layer']);
+  });
+
+  it('colours collaboration counts like Minesweeper, with more than seven in bright orange', () => {
+    expect(minesweeperColour(1)).toBe('#0000ff');
+    expect(minesweeperColour(7)).toBe('#000000');
+    expect(minesweeperColour(8)).toBe('#ff8c00');
+    expect(minesweeperColour(25)).toBe('#ff8c00');
+  });
+
+  it('times pulses by on-screen length so every line moves at the same speed', () => {
+    expect(pulseDuration(PULSE_SPEED)).toBe(1.2);
+    expect(pulseDuration(PULSE_SPEED * 10)).toBe(10);
+    expect(pulseDuration(PULSE_SPEED * 20)).toBe(2 * pulseDuration(PULSE_SPEED * 10));
+  });
+
+  it('rings a selected brand\'s same-city partners around it, restoring the grid afterwards', () => {
+    vi.stubGlobal('matchMedia', () => ({ matches: true }));
+    collaborations.push(
+      { id: 'local', houses: ['connected', 'unrelated'], year: 2015 },
+      { id: 'abroad', houses: ['connected', 'selected'], year: 2016 },
+    );
+    graph.destroy();
+    graph = new DesignerGraph(document.createElement('div'), { onSelect });
+    graph.select({ kind: 'house', id: 'connected' });
+    const centre = houseNode('connected').position();
+    const partner = houseNode('unrelated').position();
+    expect(Math.hypot(partner.x - centre.x, partner.y - centre.y)).toBeCloseTo(RING_RADIUS, 5);
+    // The London partner stays in its own city.
+    expect(houseNode('selected').data('mapLocation')).toBe('London');
+    graph.select(null);
+    graph.setAllExpanded(true);
+    const gridCentre = houseNode('connected').position();
+    const gridPartner = houseNode('unrelated').position();
+    expect(Math.hypot(gridPartner.x - gridCentre.x, gridPartner.y - gridCentre.y)).toBeLessThan(RING_RADIUS);
+  });
+
+  it('carries the release count on collaboration pulses as a Minesweeper cell', () => {
+    collaborations.push(
+      { id: 'first', houses: ['selected', 'manual'], year: 2015 },
+      { id: 'second', houses: ['selected', 'manual'], year: 2018 },
+    );
+    graph.destroy();
+    const host = document.createElement('div');
+    graph = new DesignerGraph(host, { onSelect });
+    graph.select({ kind: 'house', id: 'selected' });
+    const edge = graph.cy.edges('[kind = "collaboration"]')[0]!;
+    expect(edge.data('count')).toBe(2);
+    vi.spyOn(edge, 'visible').mockReturnValue(true);
+    vi.spyOn(edge, 'sourceEndpoint').mockReturnValue({ x: 0, y: 0 });
+    vi.spyOn(edge, 'targetEndpoint').mockReturnValue({ x: 100, y: 0 });
+    vi.spyOn(edge, 'controlPoints').mockReturnValue([]);
+    edge.emit('mouseover');
+    const label = host.querySelector('.pulse-tile text');
+    expect(label?.textContent).toBe('2');
+    expect(label?.getAttribute('fill')).toBe('#008000');
+    graph.setYear(2016);
+    expect(graph.cy.edges('[kind = "collaboration"]')[0]!.data('count')).toBe(1);
   });
 });
 

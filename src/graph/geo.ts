@@ -278,3 +278,61 @@ export function boxesOverlap(
     Math.abs(a.center.y - b.center.y) < (a.h + b.h) / 2 + gap
   );
 }
+
+/* ---------- selection ring ---------- */
+
+/** Model units (≈ screen px at zoom 1) from the selected brand to its ring of same-city partners. */
+export const RING_RADIUS = 120;
+/** Arc length per partner, roomy enough for an icon and its name. */
+const RING_SPACING = 88;
+/** Above this many partners, use two rings rather than one very large one. */
+export const RING_CAPACITY = 12;
+const RING_GAP = 96;
+
+const angleBetween = (a: number, b: number) => {
+  const d = Math.abs(a - b) % (2 * Math.PI);
+  return Math.min(d, 2 * Math.PI - d);
+};
+
+/** Rotation for evenly spaced slots that keeps them furthest from the `avoid` directions. */
+function bestRotation(count: number, step: number, avoid: readonly number[]): number {
+  if (!avoid.length) return 0;
+  let best = 0;
+  let bestScore = -1;
+  for (let k = 0; k < 24; k++) {
+    const rotation = (step * k) / 24;
+    let score = Infinity;
+    for (let i = 0; i < count; i++) {
+      const slot = rotation + i * step - Math.PI / 2;
+      for (const angle of avoid) score = Math.min(score, angleBetween(slot, angle));
+    }
+    if (score > bestScore + 1e-9) { best = rotation; bestScore = score; }
+  }
+  return best;
+}
+
+/**
+ * Place a selected brand's same-city partners evenly on a ring around it,
+ * starting at the top and running clockwise in the given order. Slots are
+ * rotated away from `avoid` (angles, in radians, of the brand's lines to other
+ * cities) so spokes don't run along them. More than RING_CAPACITY partners
+ * split across an inner and an outer ring.
+ */
+export function ringLayout(center: Point, ids: readonly string[], avoid: readonly number[] = []): Map<string, Point> {
+  const positions = new Map<string, Point>();
+  if (!ids.length) return positions;
+  const split = ids.length > RING_CAPACITY ? Math.ceil(ids.length * 0.45) : ids.length;
+  const rings = [ids.slice(0, split), ids.slice(split)].filter((ring) => ring.length);
+  let radius = 0;
+  rings.forEach((ring, index) => {
+    radius = Math.max(index === 0 ? RING_RADIUS : radius + RING_GAP, (ring.length * RING_SPACING) / (2 * Math.PI));
+    const step = (2 * Math.PI) / ring.length;
+    // Stagger the outer ring so its icons sit between the inner ones.
+    const rotation = bestRotation(ring.length, step, avoid) + (index ? step / 2 : 0);
+    ring.forEach((id, i) => {
+      const angle = rotation + i * step - Math.PI / 2;
+      positions.set(id, { x: center.x + radius * Math.cos(angle), y: center.y + radius * Math.sin(angle) });
+    });
+  });
+  return positions;
+}

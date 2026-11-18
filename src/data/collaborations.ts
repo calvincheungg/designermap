@@ -6840,6 +6840,11 @@ export const collaborations = {
   beenTrillDiamondSupplyCoTheHundreds2014: { houses: ['beenTrill', 'diamondSupplyCo', 'theHundreds'], year: 2014 },
   beenTrillLindaFarrow2015: { houses: ['beenTrill', 'lindaFarrow'], year: 2015 },
   beenTrillMartineRose2015: { houses: ['beenTrill', 'martineRose'], year: 2015 },
+  duveticaJunyaWatanabeMan2011: { houses: ['duvetica', 'junyaWatanabeMan'], year: 2011 },
+  duveticaJunyaWatanabeMan2012: { houses: ['duvetica', 'junyaWatanabeMan'], year: 2012 },
+  duveticaJunyaWatanabeMan2013: { houses: ['duvetica', 'junyaWatanabeMan'], year: 2013 },
+  duveticaJunyaWatanabeMan2014: { houses: ['duvetica', 'junyaWatanabeMan'], year: 2014 },
+  duveticaJunyaWatanabeMan2015: { houses: ['duvetica', 'junyaWatanabeMan'], year: 2015 },
 } satisfies Record<string, CollaborationData<HouseId>>;
 
 export type CollaborationId = keyof typeof collaborations;

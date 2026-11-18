@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { HouseFilters } from '../data/tags';
-import { Filters } from './filters';
+import { ActiveFilters, FilterMenu } from './filters';
 import { SearchBox, matchingItems } from './listbox';
 import { PanelContent, type Selection } from './panel';
 import { ContextMenu } from './context-menu';
@@ -16,7 +16,7 @@ describe('React interface interactions', () => {
   it('opens brand sections by default, toggles them independently, and expands a newly selected brand', async () => {
     const user = userEvent.setup();
     const view = render(<PanelContent selection={{ kind: 'house', id: 'dior' }} onSelect={() => {}} onTag={() => {}} />);
-    for (const name of ['Description', 'Creative directors', /Collaboration history/, 'Tags']) {
+    for (const name of ['Description', /^Creative directors \(\d+\)$/, /Collaboration history/, 'Tags']) {
       const toggle = screen.getByRole('button', { name });
       const section = toggle.closest('fieldset')!;
       expect(toggle.getAttribute('aria-expanded')).toBe('true');
@@ -32,7 +32,7 @@ describe('React interface interactions', () => {
       await user.click(toggle);
     }
     view.rerender(<PanelContent selection={{ kind: 'house', id: 'chanel' }} onSelect={() => {}} onTag={() => {}} />);
-    for (const name of ['Description', 'Creative directors', /Collaboration history/, 'Tags']) {
+    for (const name of ['Description', /^Creative directors \(\d+\)$/, /Collaboration history/, 'Tags']) {
       expect(screen.getByRole('button', { name }).getAttribute('aria-expanded')).toBe('true');
     }
   });
@@ -159,34 +159,31 @@ describe('React interface interactions', () => {
     expect(screen.queryByRole('link', { name: 'Emporio Armani' })).toBeNull();
   });
 
-  it('keeps multiple filter selections, removes individual chips, clears all, and closes menus', async () => {
+  it('keeps multiple filter selections from the menu, removes individual chips and clears all', async () => {
     const user = userEvent.setup();
     function Harness() {
       const [value, setValue] = useState<HouseFilters>({});
-      return <Filters value={value} onChange={setValue} count={10} total={327} />;
+      return <><FilterMenu value={value} onChange={setValue} /><ActiveFilters value={value} onChange={setValue} count={10} total={327} /></>;
     }
     render(<Harness />);
-    await user.click(screen.getByText('Collections', { selector: 'summary' }));
+    expect(screen.queryByRole('group', { name: 'Selected Filters' })).toBeNull();
     const collections = screen.getByRole('group', { name: 'Collections' });
     await user.click(within(collections).getByLabelText('Menswear'));
     await user.click(within(collections).getByLabelText('Womenswear'));
     expect(within(collections).getByLabelText<HTMLInputElement>('Menswear').checked).toBe(true);
     expect(within(collections).getByLabelText<HTMLInputElement>('Womenswear').checked).toBe(true);
-    expect(collections.parentElement?.hasAttribute('open')).toBe(true);
-    await user.click(screen.getByText('Product', { selector: 'summary' }));
-    expect(collections.parentElement?.hasAttribute('open')).toBe(false);
-    const products = screen.getByRole('group', { name: 'Product' });
-    await user.click(within(products).getByLabelText('Bags'));
+    expect(screen.getByText('Collections (2)')).toBeTruthy();
+    expect(screen.getByText('Filter brands (2)')).toBeTruthy();
+    await user.click(within(screen.getByRole('group', { name: 'Product' })).getByLabelText('Bags'));
+    expect(screen.getByText('10 of 327 brands')).toBeTruthy();
     await user.click(screen.getByRole('button', { name: 'Remove Menswear from Collections' }));
     expect(screen.queryByRole('button', { name: 'Remove Menswear from Collections' })).toBeNull();
+    expect(within(collections).getByLabelText<HTMLInputElement>('Menswear').checked).toBe(false);
     expect(screen.getByRole('button', { name: 'Remove Womenswear from Collections' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Remove Bags from Product' })).toBeTruthy();
     await user.click(screen.getByRole('button', { name: 'Clear All' }));
-    expect(screen.getByText('No Filters Selected')).toBeTruthy();
-    expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Clear All' }).disabled).toBe(true);
-    await user.click(screen.getByText('Aesthetic', { selector: 'summary' }));
-    await user.keyboard('{Escape}');
-    expect(screen.getByText('Aesthetic', { selector: 'summary' }).parentElement?.hasAttribute('open')).toBe(false);
+    expect(screen.queryByRole('group', { name: 'Selected Filters' })).toBeNull();
+    expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Clear all filters' }).disabled).toBe(true);
   });
 
   it('preserves accent-insensitive search ordering and keyboard selection', async () => {
@@ -276,7 +273,7 @@ describe('React interface interactions', () => {
     const business = screen.getByText('Business leadership', { selector: 'legend' }).closest('fieldset')!;
     expect(within(business).getByRole('columnheader', { name: 'Leader' })).toBeTruthy();
     expect(within(business).getByRole('link', { name: 'Mark Parker' })).toBeTruthy();
-    const creative = screen.getByRole('button', { name: 'Creative directors' }).closest('fieldset')!;
+    const creative = screen.getByRole('button', { name: /^Creative directors \(\d+\)$/ }).closest('fieldset')!;
     expect(within(creative).queryByRole('link', { name: 'Elliott Hill' })).toBeNull();
     await user.click(within(business).getByRole('link', { name: 'Elliott Hill' }));
     expect(screen.getByRole('heading', { name: 'Elliott Hill' })).toBeTruthy();

@@ -154,6 +154,11 @@ const FOUNDING_PLACE = /\b(?:founded|established|started|began|originated)\b[^.]
  * still to research. A heuristic, so it lists candidates instead of failing tests.
  */
 export function missingOrigins(list: readonly House[] = houses): string[] {
+  return missingOriginCandidates(list).map(({ house: h, place }) => `${h.name}: notes say founded in ${place}, but no origin is recorded (base ${h.city})`);
+}
+
+/** The houses behind `missingOrigins`, with the founding place their notes name (for the What's Missing report). */
+export function missingOriginCandidates(list: readonly House[] = houses): { house: House; place: string }[] {
   const places = new Set([...Object.keys(cities), ...Object.values(cityRegions).map((r) => r.region)]);
   return list.flatMap((h) => {
     if (h.origin || !h.notes) return [];
@@ -162,6 +167,6 @@ export function missingOrigins(list: readonly House[] = houses): string[] {
       .filter((match) => !/\b(?:after|training|trained|studying|working|showing|selling|stocked)\b/.test(match[0]))
       .map((match) => match[1])
       .find((name): name is string => !!name && name !== h.city && places.has(name) && cityRegions[h.city as CityName]?.region !== name);
-    return place ? [`${h.name}: notes say founded in ${place}, but no origin is recorded (base ${h.city})`] : [];
+    return place ? [{ house: h, place }] : [];
   });
 }

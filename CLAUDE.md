@@ -40,9 +40,16 @@ src/graph/locations.ts display-only regional pin groups and their anchor cities
 src/graph/            Cytoscape: elements.ts (per view), style.ts, icons.ts, graph.ts
 src/ui/panel.tsx      React Properties components for house / designer / group / directory
 src/ui/listbox.tsx    React Win98 Find combobox (replaces <datalist>)
-src/ui/filters.tsx    React multi-select filters and selected chips
+src/ui/filters.tsx    Start menu "Filter brands" cascade + toolbar chips for active filters
+src/ui/side-panel.tsx floating Properties window: move, resize, minimize, close
+src/ui/desktop.ts     window manager: Directory + up to 3 Properties + up to 3 city/country windows
+src/ui/tool-windows.tsx Recycle Bin (ended brands) and dev-only What's Missing report windows
+src/ui/desktop-icon.tsx draggable Win98 desktop icon (Recycle Bin, public/assets/bin.webp)
+src/ui/share-link.ts  shareable view in the URL hash: #brand=…&year=…&<filter>=a,b
+src/ui/statistics.tsx  Statistics window (Start menu): filtered totals, tiers, countries, cities, top lists
+src/ui/city-window.tsx place windows: scrollable Large Icons grid of a city's or country's main brands
 src/ui/map-view.tsx   React lifecycle boundary for DesignerGraph and its context menu
-src/ui/start-menu.tsx Win98 taskbar Start menu: base/origin, line toggles, map commands
+src/ui/start-menu.tsx Win98 taskbar Start menu: base/origin, lines + connection filter, brand filters, map commands
 src/App.tsx           interface state and synchronization with the graph API
 src/main.tsx          React root and startup data validation
 ```
@@ -70,7 +77,7 @@ Key rules:
   `approximate: true` = unverified years.
 - Role `Other` (with a `roleDetail` like "Senior designer", "Design assistant", "Head of knitwear")
   = a design-team or earlier role. It never counts as the house's creative-director succession:
-  the Properties window lists it under "Design team & other roles", and tests use `directorsOf`.
+  the Properties window lists it under the collapsible "Other roles (N)" section, and tests use `directorsOf`.
   Use the director roles only for real house/line leadership. Separate stints = separate entries.
 - Houses have `website` (full URL; validate.ts checks the format; `''` when none), shown as a link,
   `instagram` (handle only, no @ or URL; shown as an @handle link under the website;
@@ -110,8 +117,10 @@ Key rules:
     Pins scale
     with the map when zoomed out but cap at ~26px on screen (`sizeMarkers`,
     re-run on every zoom); colliding labels are hidden via `text-opacity`
-    (an empty `label` bypass would *remove* the override) and appear on hover. Clicking a pin
-    toggles the city; `DesignerGraph.expanded` holds open cities. An open city's
+    (an empty `label` bypass would *remove* the override) and appear on hover. Clicking a pin opens a
+    city window (toolbar "Open cities: In windows", the default) or, with "On map"
+    (`designer-map:city-view`, read via a ref so the graph is never rebuilt),
+    toggles the city on the map; `DesignerGraph.expanded` holds open cities. An open city's
     houses sit in an invisible `grid` compound in the nearest spot that covers no
     pin or other open city (`geo.ts placeGrids`), with a dotted leader to the pin.
     `move` edges are rebuilt on every expand/collapse and selection change, and
@@ -151,13 +160,24 @@ Key rules:
     shared multi-brand projects. Its hover details show the release year, or `(Multiple)`
     when releases through the selected year span more than one distinct year.
     Connection labels appear only on hover in a reserved strip above the canvas,
-    never over brand icons. The map's All / Designers / Collaborations filter
+    never over brand icons. The Start menu's All / Designers / Collaborations connection filter
     controls both lines and automatic partner reveals. Selected brands show only
     their direct connections. A selected designer shows only that designer's move lines.
     Hide collaboration lines without a brand selection, and hide move lines when
     neither a brand nor a designer is selected, including when cities are expanded or a group is selected.
-    A travelling pulse repeats every three seconds on each selected
-    line and on hovered connections; designer pulses follow career direction. Respect
+    A travelling pulse moves at a constant on-screen speed (`PULSE_SPEED`) and repeats on each selected
+    line and on hovered connections; designer pulses follow career direction.
+    Designer-move pulses are a bevelled navy Win98 block; collaboration pulses are a
+    revealed Minesweeper cell showing the number of releases with that partner
+    through the selected year (edge `count`), in the classic number colours for
+    1–7 and bright orange (`#ff8c00`) above seven.
+    Pulses draw in an SVG layer between the map and the Cytoscape canvas, so brand
+    icons and labels sit on top of them. Stacking is map → line → block → brands:
+    each pulsing line is redrawn (colour, dash, arrowhead, capped width) in the
+    layer's trace group under its block, and the canvas edge gets `traced`
+    (`line-opacity: 0`) so it still handles hover. Pulses are never circles; they grow with the map when
+    zooming in (never below its zoom-1 size when zoomed out), and
+    hovering only adds or removes that line's own pulse, never restarting running ones. Respect
     reduced motion and clear pulse resources on relayout and destruction.
     Brand Properties lists the recorded collaboration history through the
     selected year, newest partnership first, with Year, Partner brands and Search
@@ -166,8 +186,8 @@ Key rules:
     Keep individual release years in the data and group only in the interface.
     Search opens Google in a new tab for the selected brand × all partner brands
     plus the release year. Do not display collection names or source links.
-- Brand profile descriptions, creative directors, collaboration history and tags
-  use matching fieldset headings with clickable expand/collapse buttons. All open
+- Brand profile descriptions, creative directors, other roles, collaboration history and tags
+  use matching fieldset headings (counts shown as "Creative directors (N)", "Other roles (N)") with clickable expand/collapse buttons. Other roles starts collapsed; the rest open
   by default; descriptions show their text in a separate inset box.
   Each newly selected brand starts with these sections expanded. Collaboration descriptions are
   not displayed at all; do not generate descriptions for new collaborations.
@@ -217,6 +237,8 @@ Key rules:
   parent in the new city bought the brand. Validation requires date order and
   that the latest acquisition/spin-off group equals `parentGroup`. Brand
   Properties shows a collapsible History table (Founded → events → Ended).
+  `origin.city` and `moved` event cities are typed as `CityName` (the `satisfies`
+  type at the end of houses.ts), so a city missing from cities.ts fails `npm run check`.
   The Start menu's "Show brands at: Current base / Origin" radios call
   `setLocationMode` in `graph/locations.ts` and remount `MapView` (keyed by
   mode), so `mapLocationForHouse`/`housesByMapLocation` place each root brand
@@ -298,7 +320,83 @@ Key rules:
   submenus (CSS hover/focus-within) with menu bullets/check marks; Expand all,
   Fit map and Directory are commands that close the menu. Escape and outside
   clicks close it. The Start button's flag is cropped from
-  `public/assets/start_logo.jpg`. Find and the year slider stay in the toolbar.
+  `public/assets/start_logo.jpg`. Find sits in the taskbar beside Start
+  (`.taskbar-search`, placeholder "Search"): its suggestions open upward and
+  appear only once the user types (`SearchBox previewAll={false} dropUp`); city
+  windows' Find still lists every brand. The year slider and Play live in the
+  clock's pop-up (`ui/year-tray.tsx YearTray`); a set year shows beside the
+  time. The toolbar keeps the "Open cities: In windows / On map" toggle and
+  removable chips for active filters (shown only while filtering).
+- City windows (`CityWindowContent`) list a pin's main brands (no sublabels)
+  within the year/tag filters as Win98 desktop icons in the map's grey frame;
+  clicking one opens its Properties. A Find box (the shared `SearchBox`, with
+  `limit={Infinity}` so its dropdown lists every brand) narrows the grid as you type.
+  A city window is always `CITY_GRID_COLUMNS` (3) icons wide and just tall
+  enough for its brands, up to `CITY_GRID_ROWS` (4) rows (`cityWindowSize`);
+  larger places scroll inside an always-reserved scrollbar gutter (`scrollbar-gutter: stable`), so rows of three never wrap. Tiles sit
+  close together with a scrollbar's width (16px) of padding to the grid border.
+  Place windows pass `minSize={cityWindowSize(1)}` instead of the Properties minimum. They don't change the map selection, cascade from the left edge,
+  and up to `MAX_LOCATION_WINDOWS` stay open, the least recently used reused.
+  Country windows (`Place` kind `country`) list a country's main brands the same
+  way. In brand Properties, "Based in" city and country and the Origin city and
+  country are links (`onOpenPlace`) that open these windows; cities open their map
+  location (`mapLocationForCity`). Place windows also list main brands founded
+  there but based elsewhere now (`placeOrigins`), under a "Founded here, now based
+  elsewhere" divider, so an origin link never opens an empty window. Brands with
+  no `origin` were founded in their `city`: don't copy the base into `origin`. Place windows are never closed by filters.
+  "Filter brands" (group ▸ checkboxes) and the connection filter live in the Start menu.
+- The map always fills the window. Properties windows float over it
+  (`PropertiesWindow`): drag the title bar to move, the corner grip to resize,
+  double-click the title bar to reset; they stay inside the map area. Every
+  window has Minimize and Close (X). The taskbar (`ui/taskbar.tsx TaskGroup`)
+  has one button per window type (Directory, Brands, Designers, Locations): a lone window
+  gets a plain button (restore / minimize-if-active / focus, as in Win98); two
+  or more collapse into one counted button whose pop-up menu lists them, and
+  picking one restores and focuses it; each row has an X that closes that window.
+  Right-clicking a button (or a row in the group list) opens a Win98 window menu
+  (`ContextMenu`): Restore, Minimize, Show on Map (brands/designers/groups),
+  Close Other Windows (same type), Close; a grouped button offers Restore All,
+  Minimize All and Close All (`desktop.ts restoreWindows/minimizeWindows/closeWindows`).
+  - One Directory window (position and minimized state remembered:
+    `designer-map:properties-window`, `designer-map:panel-minimized`); closing it
+    is undone by the Start menu's Directory command.
+  - Up to `MAX_PROPERTY_WINDOWS` brand/group windows and, as a separate
+    window type (`desktop.ts windowType`), up to `MAX_DESIGNER_WINDOWS`
+    designer windows, cascaded from the Directory (designers continue the cascade
+    after the brand slots). Each type reuses only its own windows. Brand, designer and group
+    windows pass `fitHeight`, opening just tall enough for their content (capped
+    by the map area) and following it until the user moves or resizes them. Brand
+    windows stop at the Tags heading (`ProfileSection fold` → `[data-fold]`), so
+    tags need a scroll, unless that would be shorter than the minimum height. Selecting an item focuses its open window, else opens one;
+    a fourth item of a type reuses that type's least recently used window. Clicking a window
+    brings it forward and highlights its item on the map; closing the active
+    one moves the map selection to the next window (or clears it). Windows
+    whose item the year/tag filters hide are closed.
+  - Tool windows (`desktop.ts ToolItem`, one each, each its own window type and
+    taskbar button): Statistics, the Recycle Bin and What's Missing. The Recycle
+    Bin desktop icon (`DesktopIcon`) starts top-right of the map, left of the
+    Directory's default spot; dragging it is remembered as
+    `designer-map:recycle-bin-position`, and a click (not a drag) opens the window
+    of brands with an Ended year, within the filters, newest first. What's Missing
+    (Start menu, `import.meta.env.DEV` only) lists research gaps across all brands:
+    nobody linked, likely missing origins (`missingOriginCandidates`), and no
+    founding year, logo, website or Instagram.
+  - Share links: the URL hash holds the selection, year and tag filters
+    (`share-link.ts`); it's read at startup and on `hashchange`, rewritten with
+    `history.replaceState` as the view changes (not during Play), and the Start
+    menu's Copy Link copies it, confirming in the status bar.
+  - The map can't be panned or dragged past its edges (`graph.ts clampPan`, run
+    on every viewport change).
+  - One Statistics window (`desktop.ts STATISTICS`, window type `stats`), opened
+    from the Start menu. It follows the year/tag filters, isn't a map selection
+    (`isSelectionItem` excludes it with place windows), and its names open the
+    matching brand, designer, city or country window.
+  - On phones only the active window shows, stacked under the map.
+  Right-clicking a brand offers "Show More", which opens (or restores) its window.
+- Selecting a brand rings its same-city move/collaboration partners around it
+  (`ringLayout` in geo.ts: RING_RADIUS model units, rotated away from its lines
+  to other cities, two rings above RING_CAPACITY) so short lines stay readable;
+  the grid is restored when the selection changes.
 
 - Use 98.css classes (`window`, `title-bar`, `field-row`, `sunken-panel`,
   `tree-view`, `status-bar`) before writing custom CSS. Custom CSS is in

@@ -17520,6 +17520,18 @@ export const designers = {
     career: [{ house: 'beenTrill', role: 'Founder', roleDetail: 'Co-founding collective member and DJ (Flo)', start: 2012, end: 2015, notes: 'Original collective period; no separate apparel creative-director title established.' }],
     sources: ['https://www.vogue.com/article/matthew-williams-givenchy', 'https://www.gq.com/story/virgil-abloh-cover-story-spring-2019', 'https://stockx.com/news/en-us/been-trill-virgil-abloh-matthew-williams-heron-preston/'],
   },
+  giampieroVagliano: {
+    name: 'Giampiero Vagliano',
+    nationality: 'Italian',
+    career: [{ house: 'duvetica', role: 'Founder', roleDetail: 'Co-founder', start: 2004 }],
+    sources: ['https://www.ssense.com/en-ch/women/designers/duvetica', 'https://fashionunited.com/companies/duvetica'],
+  },
+  stefanoRovoletto: {
+    name: 'Stefano Rovoletto',
+    nationality: 'Italian',
+    career: [{ house: 'duvetica', role: 'Founder', roleDetail: 'Co-founder', start: 2004 }],
+    sources: ['https://www.ssense.com/en-ch/women/designers/duvetica', 'https://fashionunited.com/companies/duvetica'],
+  },
 
 } satisfies Record<string, DesignerData<HouseId>>;
 

@@ -137,7 +137,7 @@ function mapEndpoint(houseId: string, expanded: ReadonlySet<string>, visibleHous
 
 /** One arrow per brand pair, aggregating releases through the selected year. */
 export function collaborationEdges(expanded: ReadonlySet<string>, visibleHouses?: ReadonlySet<string>, selectedHouse?: string, year = Infinity): ElementDefinition[] {
-  const partnerships = new Map<string, { fromHouse: string; toHouse: string; years: Set<number>; collaborationIds: string[] }>();
+  const partnerships = new Map<string, { fromHouse: string; toHouse: string; years: Set<number>; releaseYears: number[]; collaborationIds: string[] }>();
   for (const project of collaborations) {
     if (selectedHouse && !project.houses.includes(selectedHouse)) continue;
     const pairs = selectedHouse ? project.houses.filter((id) => id !== selectedHouse).map((id) => [selectedHouse, id] as const)
@@ -146,14 +146,15 @@ export function collaborationEdges(expanded: ReadonlySet<string>, visibleHouses?
       const key = [fromHouse, toHouse].sort().join(':');
       let partnership = partnerships.get(key);
       if (!partnership) {
-        partnership = { fromHouse, toHouse, years: new Set(), collaborationIds: [] };
+        partnership = { fromHouse, toHouse, years: new Set(), releaseYears: [], collaborationIds: [] };
         partnerships.set(key, partnership);
       }
       partnership.years.add(project.year);
+      partnership.releaseYears.push(project.year);
       partnership.collaborationIds.push(project.id);
     }
   }
-  return [...partnerships].flatMap(([key, { fromHouse, toHouse, years, collaborationIds }]) => {
+  return [...partnerships].flatMap(([key, { fromHouse, toHouse, years, releaseYears, collaborationIds }]) => {
     const source = mapEndpoint(fromHouse, expanded, visibleHouses);
     const target = mapEndpoint(toHouse, expanded, visibleHouses);
     if (source === target) return [];
@@ -164,6 +165,8 @@ export function collaborationEdges(expanded: ReadonlySet<string>, visibleHouses?
     return [{ group: 'edges' as const, data: {
       id: `collab:${key}`,
       kind: 'collaboration', collaborationIds,
+      // Releases between the pair up to the selected year, shown on the travelling pulse.
+      count: releaseYears.filter((releaseYear) => releaseYear <= year).length,
       source, target, fromHouse, toHouse, start,
       label: `${names} (${date})`,
     } }];

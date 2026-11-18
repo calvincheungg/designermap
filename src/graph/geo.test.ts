@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { houses } from '../data';
 import { cities } from '../data/cities';
-import { boxesOverlap, housesByMapLocation, layoutMap, mapBoxes, mapSvgMarkup, pinScale, project } from './geo';
+import { boxesOverlap, housesByMapLocation, layoutMap, mapBoxes, mapSvgMarkup, pinScale, project, ringLayout, RING_RADIUS } from './geo';
 import subdivisions from '../data/map/north-america-subdivisions.json';
 import { mapElements, nodeId } from './elements';
 import { isMajorCity, mapLocationCoordinates, mapLocationForCity } from './locations';
@@ -135,5 +135,29 @@ describe('world map layout', () => {
     const x = (c: string) => layoutMap(new Set()).cities.find((b) => b.city === c)!.tip.x;
     expect(x('New York')).toBeLessThan(x('Paris'));
     expect(x('Paris')).toBeLessThan(x('Tokyo'));
+  });
+});
+
+describe('selection ring', () => {
+  it('spaces partners evenly from the top, at least RING_RADIUS away', () => {
+    const ring = ringLayout({ x: 0, y: 0 }, ['a', 'b', 'c', 'd']);
+    const a = ring.get('a')!;
+    expect(a.x).toBeCloseTo(0);
+    expect(a.y).toBeCloseTo(-RING_RADIUS);
+    for (const point of ring.values()) expect(Math.hypot(point.x, point.y)).toBeCloseTo(RING_RADIUS);
+    expect(ring.get('b')!.x).toBeCloseTo(RING_RADIUS);
+  });
+
+  it('rotates slots away from lines to other cities', () => {
+    // One partner would sit at the top; a line straight up pushes it aside.
+    const point = ringLayout({ x: 0, y: 0 }, ['a'], [-Math.PI / 2]).get('a')!;
+    expect(Math.atan2(point.y, point.x)).not.toBeCloseTo(-Math.PI / 2);
+  });
+
+  it('splits large groups into two rings with room for every icon', () => {
+    const ids = Array.from({ length: 20 }, (_, i) => `h${i}`);
+    const radii = [...ringLayout({ x: 0, y: 0 }, ids).values()].map((p) => Math.round(Math.hypot(p.x, p.y)));
+    expect(new Set(radii).size).toBe(2);
+    expect(Math.min(...radii)).toBeGreaterThanOrEqual(RING_RADIUS);
   });
 });

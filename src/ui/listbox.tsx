@@ -81,15 +81,24 @@ export function matchingItems<T>(items: readonly ListItem<T>[], query: string, l
   return [...starts, ...contains].slice(0, limit).map(({ item }) => item);
 }
 
-export function SearchBox<T>({ items, value, onChange, onPick }: {
+export function SearchBox<T>({ items, value, onChange, onPick, label = 'Find:', inputId = 'search', placeholder = 'House, person or group', limit = 60,
+  previewAll = true, dropUp = false }: {
   items: readonly ListItem<T>[]; value: string; onChange: (value: string) => void; onPick: (item: ListItem<T>) => void;
+  label?: string; inputId?: string; placeholder?: string;
+  /** List every item while the box is empty; false shows suggestions only once the user types. */
+  previewAll?: boolean;
+  /** Open the suggestions above the box (for the taskbar). */
+  dropUp?: boolean;
+  /** Most options listed; Infinity lists them all (e.g. every brand in a city). */
+  limit?: number;
 }) {
-  const [open, setOpen] = useState(false);
+  const [focused, setOpen] = useState(false);
+  const open = focused && (previewAll || !!value.trim());
   const [active, setActive] = useState(0);
   const input = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLUListElement>(null);
   const id = useId();
-  const matches = useMemo(() => matchingItems(items, value), [items, value]);
+  const matches = useMemo(() => matchingItems(items, value, limit), [items, value, limit]);
   const activeIndex = matches.length ? Math.min(active, matches.length - 1) : -1;
   useEffect(() => { setActive(0); }, [items, value]);
   useLayoutEffect(() => {
@@ -98,8 +107,8 @@ export function SearchBox<T>({ items, value, onChange, onPick }: {
   function pick(item: ListItem<T>) {
     onChange(item.label); setOpen(false); onPick(item); input.current?.blur();
   }
-  return <div className="field-row"><label htmlFor="search">Find:</label><div className="w98-combo">
-    <input id="search" ref={input} type="text" placeholder="House, person or group" role="combobox" autoComplete="off"
+  return <div className="field-row"><label htmlFor={inputId}>{label}</label><div className="w98-combo">
+    <input id={inputId} ref={input} type="text" placeholder={placeholder} role="combobox" autoComplete="off"
       aria-autocomplete="list" aria-controls={id} aria-expanded={open} aria-activedescendant={open && activeIndex >= 0 ? `${id}-${activeIndex}` : undefined}
       value={value} onChange={(event) => { onChange(event.target.value); setActive(0); setOpen(true); }}
       onFocus={(event) => { event.target.select(); setActive(0); setOpen(true); }} onBlur={() => setOpen(false)}
@@ -112,7 +121,7 @@ export function SearchBox<T>({ items, value, onChange, onPick }: {
           event.preventDefault(); pick(matches[activeIndex]);
         } else if (event.key === 'Escape') setOpen(false);
       }} />
-    <ul id={id} ref={list} className="w98-listbox" role="listbox" hidden={!open} style={{ minWidth: input.current?.offsetWidth }}>
+    <ul id={id} ref={list} className={`w98-listbox${dropUp ? ' drop-up' : ''}`} role="listbox" hidden={!open} style={{ minWidth: input.current?.offsetWidth }}>
       {matches.length ? matches.map((item, index) => <li key={`${item.hint}:${item.label}`} id={`${id}-${index}`} role="option" aria-selected={index === activeIndex}
         className={index === activeIndex ? 'active' : undefined} onMouseDown={(event) => { event.preventDefault(); pick(item); }} onMouseMove={() => setActive(index)}>
         {item.label}{item.hint && <> <span className="hint">{item.hint}</span></>}

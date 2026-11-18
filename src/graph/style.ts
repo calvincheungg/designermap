@@ -164,5 +164,7 @@ export const graphStyle: StylesheetJson = [
     },
   },
   { selector: 'edge.faded', style: { opacity: 0.15, 'text-opacity': 0.3 } },
+  // A pulsing line is redrawn under its block in the pulse layer; keep the canvas copy for hover only.
+  { selector: 'edge.traced', style: { 'line-opacity': 0 } },
   { selector: '.hidden, .collapsed, .lines-off, .selection-hidden, .clustered', style: { display: 'none' } },
 ];

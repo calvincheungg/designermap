@@ -221,6 +221,7 @@ export const cities = {
   'Entzheim': [48.5369, 7.6361],
   'Limoges': [45.8336, 1.2611],
   'Lesa': [45.8227, 8.5636],
+  'Mogliano Veneto': [45.5617, 12.2365],
   'Herning': [56.1393, 8.9738],
   'Red Wing': [44.5661, -92.5369],
   'Scappoose': [45.7543, -122.8776],

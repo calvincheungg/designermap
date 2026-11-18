@@ -1,6 +1,7 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { aesthetics, brandCategories, collectionTags, marketPositionings, productTags, type HouseFilters } from '../data/tags';
 import { tagLabel } from './labels';
+import { StartIcon } from './start-icons';
 
 export type FilterGroup = keyof HouseFilters;
 export const filterFields = [
@@ -21,65 +22,56 @@ export function setFilterValue(filters: HouseFilters, group: FilterGroup, value:
   return { ...filters, [group]: next };
 }
 
-export function Filters({ value, onChange, count, total }: {
-  value: HouseFilters; onChange: (filters: HouseFilters) => void; count: number; total: number;
-}) {
-  const [open, setOpen] = useState<FilterGroup | null>(null);
-  const root = useRef<HTMLDetailsElement>(null);
-  const selections = useRef<HTMLDivElement>(null);
-  const summaries = useRef(new Map<FilterGroup, HTMLElement>());
-  const restoreFocus = useRef<FilterGroup | null>(null);
-  const selectedCount = Object.values(value).reduce((sum, values) => sum + (values?.length ?? 0), 0);
+const selectedCount = (value: HouseFilters) => Object.values(value).reduce((sum, values) => sum + (values?.length ?? 0), 0);
 
-  useEffect(() => {
-    const closeOutside = (event: MouseEvent) => {
-      if (!(event.target instanceof Node)) return;
-      const inMenu = event.target instanceof Element && event.target.closest('.filter-menu');
-      if (!inMenu || !root.current?.contains(event.target)) setOpen(null);
-    };
-    document.addEventListener('click', closeOutside);
-    return () => document.removeEventListener('click', closeOutside);
-  }, []);
-  useLayoutEffect(() => {
-    if (!restoreFocus.current) return;
-    (selections.current?.querySelector<HTMLButtonElement>('button') ?? summaries.current.get(restoreFocus.current))?.focus();
-    restoreFocus.current = null;
-  }, [value]);
-
-  return <details className="filters" ref={root} open onKeyDown={(event) => {
-    if (event.key === 'Escape' && open) {
-      summaries.current.get(open)?.focus();
-      setOpen(null);
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  }}>
-    <summary>Filter houses <span id="filter-count" role="status" aria-live="polite">({count} of {total})</span></summary>
-    <div className="filter-layout"><div><div className="filter-controls">
-      {filterFields.map(([group, label, options]) => <details className="filter-menu" key={group} open={open === group}>
-        <summary ref={(element) => { if (element) summaries.current.set(group, element); else summaries.current.delete(group); }} onClick={(event) => {
-          event.preventDefault(); setOpen((current) => current === group ? null : group);
-        }}>{label}{value[group]?.length ? ` (${value[group]!.length})` : ''}</summary>
-        <div className="filter-options sunken-panel" role="group" aria-label={label}>
-          {options.map((option, index) => <div className="field-row" key={option}>
+/**
+ * Start menu entry: "Filter brands" ▸ group ▸ checkboxes, cascading like Win98
+ * submenus. Checking options leaves the menu open so several can be picked.
+ */
+export function FilterMenu({ value, onChange }: { value: HouseFilters; onChange: (filters: HouseFilters) => void }) {
+  const count = selectedCount(value);
+  return <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
+    <StartIcon name="filter" /><span className="start-label">Filter brands{count ? ` (${count})` : ''}</span><span className="start-arrow" aria-hidden="true" />
+    <div className="window start-submenu filter-submenu" role="group" aria-label="Filter brands">
+      {filterFields.map(([group, label, options]) => <div className="start-subitem start-subparent" key={group} tabIndex={0} aria-haspopup="true">
+        <span className="start-label">{label}{value[group]?.length ? ` (${value[group]!.length})` : ''}</span><span className="start-arrow" aria-hidden="true" />
+        <fieldset className="window start-submenu filter-options">
+          <legend className="visually-hidden">{label}</legend>
+          {options.map((option, index) => <div className="field-row start-subitem" key={option}>
             <input type="checkbox" id={`filter-${group}-${index}`} value={option} checked={value[group]?.some((item) => item === option) ?? false}
               onChange={(event) => onChange(setFilterValue(value, group, option, event.target.checked))} />
             <label htmlFor={`filter-${group}-${index}`}>{tagLabel(option)}</label>
           </div>)}
-        </div>
-      </details>)}
-    </div><p className="hint">Match Any Within Each Group, All Across Groups. The Year Also Applies.</p></div>
-      <div className="selected-filter-panel"><div className="selected-filter-heading">
-        <span>Selected Filters <span id="selected-filter-count">({selectedCount})</span></span>
-        <button id="clear-filters" disabled={!selectedCount} onClick={() => onChange({})}>Clear All</button>
-      </div><div id="selected-filters" className="selected-filter-list" aria-label="Selected Filters" ref={selections}>
-        {!selectedCount && <p className="hint">No Filters Selected</p>}
-        {filterFields.flatMap(([group, label, options]) => options.filter((option) => value[group]?.some((item) => item === option)).map((option) =>
-          <button type="button" key={`${group}:${option}`} className="filter-chip" aria-label={`Remove ${tagLabel(option)} from ${label}`} onClick={() => {
-            restoreFocus.current = group;
-            onChange(setFilterValue(value, group, option, false));
-          }}>{label}: {tagLabel(option)} ×</button>))}
-      </div></div>
+        </fieldset>
+      </div>)}
+      <hr className="start-separator" />
+      <button type="button" className="start-subitem start-subcommand" disabled={!count} onClick={() => onChange({})}>Clear all filters</button>
     </div>
-  </details>;
+  </div>;
+}
+
+/** Toolbar strip listing active filters as removable chips; hidden when none are set. */
+export function ActiveFilters({ value, onChange, count, total }: {
+  value: HouseFilters; onChange: (filters: HouseFilters) => void; count: number; total: number;
+}) {
+  const list = useRef<HTMLDivElement>(null);
+  const restoreFocus = useRef(false);
+  const selected = selectedCount(value);
+  useLayoutEffect(() => {
+    if (!restoreFocus.current) return;
+    restoreFocus.current = false;
+    (list.current?.querySelector<HTMLButtonElement>('button') ?? document.getElementById('graph'))?.focus();
+  }, [value]);
+  if (!selected) return null;
+  return <div className="active-filters" role="group" aria-label="Selected Filters">
+    <span id="filter-count" role="status" aria-live="polite">{count} of {total} brands</span>
+    <div id="selected-filters" className="selected-filter-list" ref={list}>
+      {filterFields.flatMap(([group, label, options]) => options.filter((option) => value[group]?.some((item) => item === option)).map((option) =>
+        <button type="button" key={`${group}:${option}`} className="filter-chip" aria-label={`Remove ${tagLabel(option)} from ${label}`} onClick={() => {
+          restoreFocus.current = true;
+          onChange(setFilterValue(value, group, option, false));
+        }}>{tagLabel(option)} ×</button>))}
+    </div>
+    <button type="button" id="clear-filters" onClick={() => onChange({})}>Clear All</button>
+  </div>;
 }

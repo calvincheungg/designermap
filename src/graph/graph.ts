@@ -1,7 +1,7 @@
 import cytoscape, { type Collection, type Core, type EdgeSingular, type NodeSingular, type SingularElementArgument } from 'cytoscape';
 import { allMoves, collaborationsOf, careerOf, getHouse, houses, housesInGroup, type GroupId } from '../data';
 import { collaborationEdges, mapElements, moveEdges, nodeId } from './elements';
-import { housesByMapLocation, LABEL_PX, layoutMap, MAP_HEIGHT, MAP_MIN_ZOOM, MAP_WIDTH, mapSvgMarkup, pinScale } from './geo';
+import { housesByMapLocation, LABEL_PX, layoutMap, MAP_HEIGHT, MAP_MIN_ZOOM, MAP_WIDTH, mapSvgMarkup, pinScale, ringLayout, type Point } from './geo';
 import { cityMarkerIcon, frameIcon, logoInfo, logoSize, PIN_H, PIN_W } from './icons';
 import { graphStyle } from './style';
 import { clusterLabel, mapHousePath, mapLocationForCity, mapLocationForHouse } from './locations';
@@ -36,6 +36,8 @@ export interface GraphCallbacks {
   onConnectionHover?: (label: string | null) => void;
   /** Fired when cities expand/collapse, so the toolbar can update its toggle. */
   onExpandChange?: (expandedCount: number, totalCities: number) => void;
+  /** Clicking a city pin: the app shows the city's brands in a window. Without it, the pin expands on the map. */
+  onOpenCity?: (city: string) => void;
 }
 
 /**
@@ -54,12 +56,19 @@ export class DesignerGraph {
   private pulseLayer: SVGSVGElement;
   private pulseGroup: SVGGElement;
   private pulseTimer: ReturnType<typeof setTimeout> | undefined;
+  /** Running pulses by edge id; `hover` marks ones added only while a line is hovered. */
+  private pulses = new Map<string, Pulse>();
+  /** Copies of pulsing lines, drawn beneath their blocks (the canvas lines are made transparent). */
+  private traceGroup: SVGGElement;
+  private blockGroup: SVGGElement;
   private selection: Selection = null;
   /** The selection the current move and collaboration lines were built for. */
   private connectionsFor = selectionKey(null);
   private expanded = new Set<string>();
   /** Houses revealed by a selection in cities the user has not opened. */
   private autoRevealed = new Map<string, Set<string>>();
+  /** The selected brand's move and collaboration partners, for the same-city ring. */
+  private connectionPartners = new Set<string>();
   /** Labels are revealed only within the selected house's family. */
   private revealedLabels = new Set<string>();
   /** Keep returning brands at their last position instead of restarting at the pin. */
@@ -101,8 +110,13 @@ export class DesignerGraph {
     this.pulseLayer.classList.add('pulse-layer');
     this.pulseLayer.setAttribute('aria-hidden', 'true');
     this.pulseGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    this.traceGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    this.traceGroup.classList.add('pulse-traces');
+    this.blockGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    this.pulseGroup.append(this.traceGroup, this.blockGroup);
     this.pulseLayer.append(this.pulseGroup);
-    pane.append(this.mapLayer, canvasHost, this.pulseLayer);
+    // Pulses travel under the canvas, so brand icons and labels stay on top of them.
+    pane.append(this.mapLayer, this.pulseLayer, canvasHost);
 
     this.cy = cytoscape({
       container: canvasHost,
@@ -115,6 +129,7 @@ export class DesignerGraph {
     this.cy.on('tap', 'node[kind = "marker"]', (e) => {
       const marker = e.target as NodeSingular;
       if (marker.data('isCluster')) this.zoomToCluster(marker);
+      else if (callbacks.onOpenCity) callbacks.onOpenCity(mapLocationForCity(marker.data('city')));
       else this.toggleCity(marker.data('city'));
     });
     this.cy.on('tap', 'node[kind = "house"]', (e) => {
@@ -138,16 +153,17 @@ export class DesignerGraph {
     this.cy.on('mouseover', 'edge[kind = "move"], edge[kind = "collaboration"]', (e) => {
       const edge = e.target as EdgeSingular;
       callbacks.onConnectionHover?.(edge.data('label'));
-      this.playPulses([edge]);
+      this.addPulse(edge, true);
     });
     this.cy.on('mouseout', 'edge', () => {
       callbacks.onConnectionHover?.(null);
-      this.playPulses();
+      this.removeHoverPulses();
     });
-    this.cy.on('viewport', () => this.syncMapLayer());
+    this.cy.on('viewport', () => { this.clampPan(); this.syncMapLayer(); });
     this.cy.on('zoom', () => {
       // Keep sizes responsive while zooming; resolve collisions once the gesture settles.
       this.sizeMarkers(false);
+      this.scalePulses();
       clearTimeout(this.markerTimer);
       this.markerTimer = setTimeout(() => this.sizeMarkers(), 90);
     });
@@ -273,6 +289,7 @@ export class DesignerGraph {
     for (const city of this.autoRevealed.keys()) this.expanded.delete(city);
     this.autoRevealed.clear();
     this.revealedLabels.clear();
+    this.connectionPartners.clear();
 
     if (sel) {
       const ids = new Set(sel.kind === 'house' ? [sel.id]
@@ -285,8 +302,8 @@ export class DesignerGraph {
         // Read the underlying moves: collapsed endpoints currently point at pins.
         for (const move of !this.showMoves || this.connectionFilter === 'collaborations' ? [] : allMoves()) {
           if (move.year > this.year || !this.matchesHouse(move.from.house) || !this.matchesHouse(move.to.house)) continue;
-          if (move.from.house === sel.id) ids.add(move.to.house);
-          if (move.to.house === sel.id) ids.add(move.from.house);
+          if (move.from.house === sel.id) { ids.add(move.to.house); this.connectionPartners.add(move.to.house); }
+          if (move.to.house === sel.id) { ids.add(move.from.house); this.connectionPartners.add(move.from.house); }
         }
         if (this.showCollaborations && this.connectionFilter !== 'designers') {
           for (const project of collaborationsOf(sel.id)) {
@@ -294,6 +311,7 @@ export class DesignerGraph {
             for (const partner of project.houses) {
               if (!this.matchesHouse(partner)) continue;
               ids.add(partner);
+              if (partner !== sel.id) this.connectionPartners.add(partner);
               for (const ancestor of mapHousePath(partner)) this.revealedLabels.add(ancestor);
             }
           }
@@ -360,6 +378,20 @@ export class DesignerGraph {
     if (this.connectionFilter === filter) return;
     this.connectionFilter = filter;
     this.refreshSelection(false, true);
+  }
+
+  /** The visible brand icon under a viewport point, for the map's context menu. */
+  houseAt(clientX: number, clientY: number): string | undefined {
+    const rect = this.cy.container()?.getBoundingClientRect();
+    if (!rect) return undefined;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    const hits = this.cy.nodes('[kind = "house"]').filter((node) => {
+      if (!node.visible()) return false;
+      const box = node.renderedBoundingBox({ includeLabels: false });
+      return x >= box.x1 && x <= box.x2 && y >= box.y1 && y <= box.y2;
+    });
+    return hits.nonempty() ? hits.last().data('refId') : undefined;
   }
 
   get allExpanded() {
@@ -432,6 +464,7 @@ export class DesignerGraph {
       && !selectedNode.hasClass('hidden') && openLocations.has(focusedLocation)
       ? { houseId: selectedId!, position: previousPositions.get(selectedId!)! } : undefined;
     const layout = layoutMap(this.expanded, byCity, anchor);
+    for (const [id, position] of this.selectionRing(layout.houses, selectedId, selectedLocation)) layout.houses.set(id, position);
 
     cy.batch(() => {
       cy.nodes('[kind = "marker"][!isCluster]').forEach((marker) => {
@@ -478,6 +511,28 @@ export class DesignerGraph {
 
     this.applyYear();
     if (updateSelection) this.applySelection(false);
+  }
+
+  /**
+   * Partners in the selected brand's own city would sit a tile away in its grid,
+   * too close to read their lines, so they ring the brand instead (until the
+   * selection changes and the grid is restored).
+   */
+  private selectionRing(positions: ReadonlyMap<string, Point>, selectedId?: string, location?: string): Map<string, Point> {
+    const center = selectedId && positions.get(selectedId);
+    if (!center || !location) return new Map();
+    const local: string[] = [];
+    const avoid: number[] = [];
+    for (const id of this.connectionPartners) {
+      const sameCity = mapLocationForHouse(id) === location;
+      const pin = sameCity ? undefined : this.cy.getElementById(nodeId.city(mapLocationForHouse(id)));
+      const at = positions.get(id) ?? (pin?.nonempty() ? pin.position() : undefined);
+      if (!at) continue;
+      if (sameCity) local.push(id);
+      else avoid.push(Math.atan2(at.y - center.y, at.x - center.x));
+    }
+    local.sort((a, b) => (getHouse(a)?.name ?? a).localeCompare(getHouse(b)?.name ?? b));
+    return ringLayout(center, local, avoid);
   }
 
   /** Only display membership/counts change with filters; the geographic hierarchy is cached. */
@@ -648,6 +703,19 @@ export class DesignerGraph {
   }
 
   /** The SVG map is drawn in model coordinates; mirror Cytoscape's pan + zoom onto it. */
+  /**
+   * Keep the world map covering the view: panning or dragging stops at its
+   * edges instead of revealing empty space beyond them. A map smaller than the
+   * view on one axis (never at the default zoom limits) is centred instead.
+   */
+  private clampPan() {
+    const zoom = this.cy.zoom();
+    const { x, y } = this.cy.pan();
+    const axis = (pan: number, view: number, size: number) => size <= view ? (view - size) / 2 : Math.min(0, Math.max(view - size, pan));
+    const next = { x: axis(x, this.cy.width(), MAP_WIDTH * zoom), y: axis(y, this.cy.height(), MAP_HEIGHT * zoom) };
+    if (Math.abs(next.x - x) > 0.5 || Math.abs(next.y - y) > 0.5) this.cy.pan(next);
+  }
+
   private syncMapLayer() {
     const { x, y } = this.cy.pan();
     const transform = `translate(${x} ${y}) scale(${this.cy.zoom()})`;
@@ -694,43 +762,165 @@ export class DesignerGraph {
 
   private clearPulses() {
     clearTimeout(this.pulseTimer);
-    this.pulseGroup.replaceChildren();
+    for (const pulse of this.pulses.values()) if (!pulse.edge.removed()) pulse.edge.removeClass('traced');
+    this.traceGroup.replaceChildren();
+    this.blockGroup.replaceChildren();
+    this.pulses.clear();
+  }
+
+  /**
+   * Start pulses on the selected lines. Lines that are already pulsing keep
+   * their running animation, so hovering never restarts them.
+   */
+  private playPulses() {
+    const selected = this.cy.edges('.highlight').filter((edge) => edge.visible());
+    const ids = new Set(selected.map((edge) => edge.id()));
+    for (const [id, pulse] of this.pulses) {
+      if (ids.has(id)) pulse.hover = false;
+      else if (!pulse.hover) this.removePulse(id);
+    }
+    selected.forEach((edge) => this.addPulse(edge as EdgeSingular, false));
+  }
+
+  private removeHoverPulses() {
+    for (const [id, pulse] of this.pulses) if (pulse.hover) this.removePulse(id);
+  }
+
+  private removePulse(id: string) {
+    const pulse = this.pulses.get(id);
+    if (!pulse) return;
+    pulse.node.remove();
+    pulse.trace.remove();
+    if (!pulse.edge.removed()) pulse.edge.removeClass('traced');
+    this.pulses.delete(id);
+  }
+
+  /**
+   * Pulses live in model space, so they grow with the map and its brand icons
+   * when zooming in. Zoomed out, hold them at their zoom-1 size so they stay visible.
+   */
+  private pulseScale() {
+    return `scale(${1 / Math.min(1, this.cy.zoom())})`;
+  }
+
+  private scalePulses() {
+    const scale = this.pulseScale();
+    for (const pulse of this.pulses.values()) {
+      pulse.block.setAttribute('transform', scale);
+      this.scaleTrace(pulse);
+    }
+  }
+
+  /** Match the canvas edge's on-screen width (see scaleEdges) and arrow size. */
+  private scaleTrace(pulse: Pulse) {
+    const screen = Math.min(1, this.cy.zoom());
+    pulse.trace.querySelector('path')?.setAttribute('stroke-width', String(pulse.width * screen));
+    const arrow = pulse.trace.querySelector('.pulse-arrow');
+    if (arrow) arrow.setAttribute('transform', `${arrow.getAttribute('data-at')} scale(${screen / this.cy.zoom()})`);
+  }
+
+  /** The line itself, in the pulse layer under the block, with the same colour, dash and arrowhead. */
+  private drawTrace(edge: EdgeSingular, path: string, end: { x: number; y: number }, lastControl: { x: number; y: number }): { trace: SVGGElement; width: number } {
+    const ns = 'http://www.w3.org/2000/svg';
+    const collaboration = edge.data('kind') === 'collaboration';
+    const highlighted = edge.hasClass('highlight');
+    const colour = collaboration ? '#cc0000' : highlighted ? '#000080' : '#808080';
+    const width = highlighted ? 2 : 1;
+    const trace = document.createElementNS(ns, 'g');
+    trace.classList.add('pulse-trace');
+    const line = document.createElementNS(ns, 'path');
+    line.setAttribute('d', path);
+    line.setAttribute('fill', 'none');
+    line.setAttribute('stroke', colour);
+    line.setAttribute('vector-effect', 'non-scaling-stroke');
+    if (collaboration || edge.data('concurrent')) line.setAttribute('stroke-dasharray', '6 3');
+    trace.append(line);
+    if (!collaboration) {
+      // Cytoscape's triangle arrowhead, at the target end, pointing along the final tangent.
+      const angle = Math.atan2(end.y - lastControl.y, end.x - lastControl.x) * 180 / Math.PI;
+      const arrow = document.createElementNS(ns, 'polygon');
+      arrow.classList.add('pulse-arrow');
+      arrow.setAttribute('points', '0,0 -9,-4.5 -9,4.5');
+      arrow.setAttribute('fill', edge.data('concurrent') ? '#ffffff' : colour);
+      arrow.setAttribute('stroke', colour);
+      arrow.setAttribute('data-at', `translate(${end.x} ${end.y}) rotate(${angle})`);
+      trace.append(arrow);
+    }
+    return { trace, width };
   }
 
   /** Native SVG motion follows the rendered Bezier route without restyling Cytoscape per frame. */
-  private playPulses(edges?: EdgeSingular[]) {
-    this.clearPulses();
-    if (this.disposed || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-    const selected = this.cy.edges('.highlight').filter((edge) => edge.visible()).map((edge) => edge as EdgeSingular);
-    for (const edge of edges ?? []) if (!selected.some((item) => item.id() === edge.id())) selected.push(edge);
-    const ns = 'http://www.w3.org/2000/svg';
-    for (const edge of selected) {
-      if (!edge.visible() || edge.removed()) continue;
-      const route = renderedRoute(edge);
-      if (!route) continue;
-      const { start, end, controls } = route;
-      const points = [start, ...controls, end];
-      if (points.some((point) => !Number.isFinite(point.x) || !Number.isFinite(point.y))) continue;
-      let path = `M ${start.x} ${start.y}`;
-      controls.forEach((control, i) => {
-        const next = controls[i + 1];
-        const target = next ? { x: (control.x + next.x) / 2, y: (control.y + next.y) / 2 } : end;
-        path += ` Q ${control.x} ${control.y} ${target.x} ${target.y}`;
-      });
-      if (!controls.length) path += ` L ${end.x} ${end.y}`;
-      const dot = document.createElementNS(ns, 'circle');
-      dot.setAttribute('r', String(3 / this.cy.zoom()));
-      dot.setAttribute('fill', edge.data('kind') === 'collaboration' ? '#cc0000' : '#000080');
-      const motion = document.createElementNS(ns, 'animateMotion');
-      motion.setAttribute('path', path);
-      motion.setAttribute('dur', '3s');
-      motion.setAttribute('repeatCount', 'indefinite');
-      motion.setAttribute('begin', 'indefinite');
-      motion.setAttribute('fill', 'freeze');
-      dot.append(motion);
-      this.pulseGroup.append(dot);
-      motion.beginElement?.();
+  private addPulse(edge: EdgeSingular, hover: boolean) {
+    if (this.disposed || this.pulses.has(edge.id()) || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    if (!edge.visible() || edge.removed()) return;
+    const route = renderedRoute(edge);
+    if (!route) return;
+    const { start, end, controls } = route;
+    if ([start, ...controls, end].some((point) => !Number.isFinite(point.x) || !Number.isFinite(point.y))) return;
+    let path = `M ${start.x} ${start.y}`;
+    let length = 0;
+    let from = start;
+    controls.forEach((control, i) => {
+      const next = controls[i + 1];
+      const target = next ? { x: (control.x + next.x) / 2, y: (control.y + next.y) / 2 } : end;
+      path += ` Q ${control.x} ${control.y} ${target.x} ${target.y}`;
+      length += quadraticLength(from, control, target);
+      from = target;
+    });
+    if (!controls.length) {
+      path += ` L ${end.x} ${end.y}`;
+      length = Math.hypot(end.x - start.x, end.y - start.y);
     }
+    const ns = 'http://www.w3.org/2000/svg';
+    // The outer group carries the motion; the inner one is scaled, so motion stays in model units.
+    const node = document.createElementNS(ns, 'g');
+    node.classList.add('pulse');
+    const block = document.createElementNS(ns, 'g');
+    block.setAttribute('transform', this.pulseScale());
+    const square = (x: number, y: number, size: number, fill: string) => {
+      const rect = document.createElementNS(ns, 'rect');
+      for (const [name, value] of [['x', x], ['y', y], ['width', size], ['height', size]] as const) rect.setAttribute(name, String(value));
+      rect.setAttribute('fill', fill);
+      rect.setAttribute('shape-rendering', 'crispEdges');
+      block.append(rect);
+    };
+    if (edge.data('kind') === 'collaboration') {
+      // A revealed Minesweeper cell: grey square, dark top-left edge, number of releases with the partner.
+      const count = Number(edge.data('count')) || 1;
+      block.classList.add('pulse-tile');
+      square(-8, -8, 16, '#000000');
+      square(-7, -7, 14, '#808080');
+      square(-6, -6, 13, '#c0c0c0');
+      const label = document.createElementNS(ns, 'text');
+      label.textContent = String(count);
+      label.setAttribute('x', '0.5');
+      label.setAttribute('y', '1');
+      label.setAttribute('text-anchor', 'middle');
+      label.setAttribute('dominant-baseline', 'central');
+      label.setAttribute('font-family', "'Pixelated MS Sans Serif', Arial, sans-serif");
+      label.setAttribute('font-weight', 'bold');
+      label.setAttribute('font-size', count > 9 ? '9' : '12');
+      label.setAttribute('fill', minesweeperColour(count));
+      block.append(label);
+    } else {
+      // A raised Win98 button bevel: dark outline, white highlight, grey shadow, navy face.
+      for (const [x, y, size, fill] of [[-4, -4, 8, '#0a0a0a'], [-4, -4, 7, '#ffffff'], [-3, -3, 6, '#808080'], [-3, -3, 5, '#000080']] as const) square(x, y, size, fill);
+    }
+    const motion = document.createElementNS(ns, 'animateMotion');
+    motion.setAttribute('path', path);
+    motion.setAttribute('dur', `${pulseDuration(length * this.cy.zoom())}s`);
+    motion.setAttribute('repeatCount', 'indefinite');
+    motion.setAttribute('begin', 'indefinite');
+    motion.setAttribute('fill', 'freeze');
+    node.append(block, motion);
+    const { trace, width } = this.drawTrace(edge, path, end, controls.at(-1) ?? start);
+    this.traceGroup.append(trace);
+    this.blockGroup.append(node);
+    const pulse: Pulse = { node, block, trace, width, edge, hover };
+    this.pulses.set(edge.id(), pulse);
+    this.scaleTrace(pulse);
+    edge.addClass('traced');
+    motion.beginElement?.();
   }
 
   private focusFor(sel: NonNullable<Selection>): Collection {
@@ -797,6 +987,43 @@ export class DesignerGraph {
 const selectionKey = (sel: Selection) => (sel ? `${sel.kind}:${sel.id}` : '');
 
 /** An edge's drawn route, or undefined before the renderer has laid it out. */
+interface Pulse {
+  node: SVGGElement; block: SVGGElement; trace: SVGGElement;
+  /** Base line width before zoom capping, as in scaleEdges. */
+  width: number;
+  edge: EdgeSingular;
+  /** Added only while the line is hovered. */
+  hover: boolean;
+}
+
+/** Pulses travel at one on-screen speed, so long lines stay as readable as short ones. */
+export const PULSE_SPEED = 45; // px per second
+const MIN_PULSE_SECONDS = 1.2;
+export function pulseDuration(screenLength: number) {
+  return Math.round(Math.max(MIN_PULSE_SECONDS, screenLength / PULSE_SPEED) * 100) / 100;
+}
+
+/** Arc length of a quadratic Bezier, by sampling: close enough for animation timing. */
+function quadraticLength(p0: { x: number; y: number }, p1: { x: number; y: number }, p2: { x: number; y: number }) {
+  let length = 0;
+  let previous = p0;
+  for (let i = 1; i <= 16; i++) {
+    const t = i / 16;
+    const u = 1 - t;
+    const point = { x: u * u * p0.x + 2 * u * t * p1.x + t * t * p2.x, y: u * u * p0.y + 2 * u * t * p1.y + t * t * p2.y };
+    length += Math.hypot(point.x - previous.x, point.y - previous.y);
+    previous = point;
+  }
+  return length;
+}
+
+/** Classic Minesweeper number colours for 1–7; more than seven releases show in bright orange. */
+const MINESWEEPER_COLOURS = ['#0000ff', '#008000', '#ff0000', '#000080', '#800000', '#008080', '#000000'];
+export const MANY_COLLABORATIONS_COLOUR = '#ff8c00';
+export function minesweeperColour(count: number) {
+  return MINESWEEPER_COLOURS[count - 1] ?? MANY_COLLABORATIONS_COLOUR;
+}
+
 function renderedRoute(edge: EdgeSingular) {
   try {
     const start = edge.sourceEndpoint();

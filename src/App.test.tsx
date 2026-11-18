@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { StrictMode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { GraphCallbacks } from './graph/graph';
 
@@ -9,7 +9,7 @@ const mocks = vi.hoisted(() => ({ instances: [] as {
   select: ReturnType<typeof vi.fn>; setHouseFilter: ReturnType<typeof vi.fn>;
   setYear: ReturnType<typeof vi.fn>; setShowMoves: ReturnType<typeof vi.fn>;
   setShowCollaborations: ReturnType<typeof vi.fn>; setConnectionFilter: ReturnType<typeof vi.fn>;
-  setAllExpanded: ReturnType<typeof vi.fn>; destroy: ReturnType<typeof vi.fn>;
+  setAllExpanded: ReturnType<typeof vi.fn>; destroy: ReturnType<typeof vi.fn>; houseAt: ReturnType<typeof vi.fn>;
 }[] }));
 vi.mock('./graph/graph', () => ({
   DesignerGraph: class {
@@ -21,6 +21,7 @@ vi.mock('./graph/graph', () => ({
     setShowMoves = vi.fn();
     setShowCollaborations = vi.fn();
     setConnectionFilter = vi.fn();
+    houseAt = vi.fn((): string | undefined => 'dior');
     fit = vi.fn();
     refreshStyle = vi.fn();
     destroy = vi.fn();
@@ -32,6 +33,8 @@ vi.mock('./graph/graph', () => ({
   },
 }));
 import { App } from './App';
+import { cityWindowSize } from './ui/city-window';
+import { clampRect, defaultRect } from './ui/side-panel';
 import { GroupId } from './data/groups';
 
 const openStart = (user: ReturnType<typeof userEvent.setup>) => user.click(screen.getByRole('button', { name: 'Start' }));
@@ -39,9 +42,16 @@ const openStart = (user: ReturnType<typeof userEvent.setup>) => user.click(scree
 afterEach(() => {
   cleanup();
   localStorage.clear();
+  // Share links write the view into the URL hash; start each test from a plain URL.
+  history.replaceState(null, '', '/');
   mocks.instances.length = 0;
   vi.useRealTimers();
 });
+
+/** The year slider lives in the taskbar clock's pop-up. */
+const openYear = () => {
+  if (!screen.queryByRole('slider')) fireEvent.click(screen.getByRole('button', { name: /Year:/ }));
+};
 
 describe('React app graph integration', () => {
   it('persists the collaboration toggle independently from career lines', async () => {
@@ -91,9 +101,9 @@ describe('React app graph integration', () => {
     await user.click(screen.getByRole('option', { name: 'WHP Global group' }));
     expect(screen.getByRole('heading', { name: 'WHP Global' })).toBeTruthy();
     expect(graph.select).toHaveBeenLastCalledWith({ kind: 'group', id: GroupId.WHPGlobal }, true);
-    await user.click(screen.getByRole('link', { name: 'Marc Jacobs' }));
+    await user.click(within(screen.getByRole('dialog', { name: 'WHP Global' })).getByRole('link', { name: 'Marc Jacobs' }));
     expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'marcJacobs' }, true);
-    await user.click(screen.getByRole('link', { name: 'WHP Global' }));
+    await user.click(within(screen.getByRole('dialog', { name: 'Marc Jacobs' })).getByRole('link', { name: 'WHP Global' }));
     expect(screen.getByRole('heading', { name: 'WHP Global' })).toBeTruthy();
     expect(graph.select).toHaveBeenLastCalledWith({ kind: 'group', id: GroupId.WHPGlobal }, true);
   });
@@ -113,11 +123,13 @@ describe('React app graph integration', () => {
     const ids = graph.setHouseFilter.mock.lastCall?.[0] as Set<string>;
     expect(ids.has('dior')).toBe(true);
     expect(ids.has('rimowa')).toBe(false);
+    openYear();
     fireEvent.change(screen.getByRole('slider'), { target: { value: '1940' } });
     expect(document.getElementById('panel-title')?.textContent).toBe('Directory');
     expect(graph.setYear).toHaveBeenLastCalledWith(1940);
     expect(graph.select).toHaveBeenLastCalledWith(null, false);
     await user.click(screen.getByRole('button', { name: 'Clear All' }));
+    openYear();
     expect(screen.getByRole<HTMLInputElement>('slider').value).toBe('1940');
     expect(graph.setHouseFilter).toHaveBeenLastCalledWith(undefined);
     expect(mocks.instances).toHaveLength(2);
@@ -155,9 +167,84 @@ describe('React app graph integration', () => {
     expect(document.activeElement).toBe(document.getElementById('graph'));
   });
 
+  it('searches from the taskbar, suggesting only once the user types, and sets the year from the clock', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const taskbar = within(document.querySelector<HTMLElement>('.taskbar')!);
+    const find = taskbar.getByRole('combobox');
+    await user.click(find);
+    expect(find.getAttribute('aria-expanded')).toBe('false');
+    expect(screen.queryByRole('option')).toBeNull();
+    await user.type(find, 'dio');
+    expect(find.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByRole('option', { name: 'Dior house' })).toBeTruthy();
+    await user.clear(find);
+    expect(screen.queryByRole('option')).toBeNull();
+    // The clock opens the year slider; a set year shows beside the time.
+    expect(screen.queryByRole('slider')).toBeNull();
+    await user.click(taskbar.getByRole('button', { name: /Year: all years/ }));
+    fireEvent.change(within(screen.getByRole('dialog', { name: 'Year' })).getByRole('slider'), { target: { value: '1990' } });
+    expect(taskbar.getByRole('button', { name: /Year: 1990/ }).textContent).toContain('1990');
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog', { name: 'Year' })).toBeNull();
+  });
+
+  it('opens one Statistics window from the Start menu, following the filters', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    await openStart(user);
+    await user.click(screen.getByRole('button', { name: 'Statistics' }));
+    const stats = screen.getByRole('dialog', { name: 'Statistics' });
+    expect(within(stats).getByRole('table', { name: 'Brands by market positioning' })).toBeTruthy();
+    expect(within(stats).getByText('For every brand on the map.')).toBeTruthy();
+    expect(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('button', { name: 'Statistics' })).toBeTruthy();
+    // Opening it again focuses the same window; names in it open their windows.
+    await openStart(user);
+    await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'Statistics' }));
+    expect(screen.getAllByRole('dialog', { name: 'Statistics' })).toHaveLength(1);
+    const countries = within(stats).getByRole('table', { name: 'Main brands by country' });
+    await user.click(within(countries).getAllByRole('link')[0]!);
+    expect(screen.getAllByRole('dialog').length).toBeGreaterThan(2);
+    const directors = within(screen.getByRole('dialog', { name: 'Statistics' })).getByRole('table', { name: 'Brands by number of creative directors' });
+    await user.click(within(directors).getAllByRole('link')[0]!);
+    expect(graph.select).toHaveBeenLastCalledWith(expect.objectContaining({ kind: 'house' }), true);
+    openYear();
+    fireEvent.change(screen.getByRole('slider'), { target: { value: '1900' } });
+    expect(within(screen.getByRole('dialog', { name: 'Statistics' })).getByText('For brands founded by 1900.')).toBeTruthy();
+  });
+
+  it('opens a shared link\'s brand and year, and keeps the address bar in step', () => {
+    history.replaceState(null, '', '/#brand=dior&year=1990');
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    expect(graph.setYear).toHaveBeenLastCalledWith(1990);
+    expect(screen.getByRole('dialog', { name: 'Dior' })).toBeTruthy();
+    expect(location.hash).toBe('#brand=dior&year=1990');
+    openYear();
+    fireEvent.change(screen.getByRole('slider'), { target: { value: '2000' } });
+    expect(location.hash).toBe('#brand=dior&year=2000');
+  });
+
+  it('opens the Recycle Bin of ended brands from its desktop icon, and the What\'s Missing report in development', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole('button', { name: /Recycle Bin/ }));
+    const bin = screen.getByRole('dialog', { name: 'Recycle Bin' });
+    const ended = within(within(bin).getByRole('table', { name: 'Ended brands' })).getAllByRole('row').slice(1);
+    expect(ended.length).toBeGreaterThan(5);
+    const years = ended.map((row) => Number(row.lastElementChild!.textContent));
+    expect(years).toEqual([...years].sort((a, b) => b - a));
+    await openStart(user);
+    await user.click(screen.getByRole('button', { name: "What's Missing" }));
+    expect(within(screen.getByRole('dialog', { name: "What's Missing" })).getByRole('button', { name: /^No founder or creative director \(\d+\)$/ })).toBeTruthy();
+  });
+
   it('plays and stops the timeline and cleans up playback and clock timers on unmount', () => {
     vi.useFakeTimers();
     const view = render(<StrictMode><App /></StrictMode>);
+    openYear();
     const slider = screen.getByRole<HTMLInputElement>('slider');
     fireEvent.click(screen.getByRole('button', { name: '▶ Play' }));
     act(() => { vi.advanceTimersByTime(150); });
@@ -178,10 +265,379 @@ it('changes the map connection filter without rebuilding the graph', async () =>
   const user = userEvent.setup();
   render(<App />);
   const graph = mocks.instances[0]!;
-  await user.click(screen.getByRole('button', { name: 'Collaborations' }));
+  await openStart(user);
+  await user.click(screen.getByRole('radio', { name: 'Collaborations only' }));
   expect(graph.setConnectionFilter).toHaveBeenLastCalledWith('collaborations');
-  expect(screen.getByRole('button', { name: 'Collaborations' }).getAttribute('aria-pressed')).toBe('true');
-  await user.click(screen.getByRole('button', { name: 'Designers' }));
+  expect(screen.getByRole<HTMLInputElement>('radio', { name: 'Collaborations only' }).checked).toBe(true);
+  await user.click(screen.getByRole('radio', { name: 'Designers only' }));
   expect(graph.setConnectionFilter).toHaveBeenLastCalledWith('designers');
   expect(mocks.instances).toHaveLength(1);
+});
+
+describe('Properties window layout', () => {
+  it('minimizes to the taskbar and restores, remembering the state', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<App />);
+    const panel = document.getElementById('side-window')!;
+    const task = screen.getByRole('button', { name: 'Directory' , pressed: true });
+    expect(panel.hidden).toBe(false);
+    await user.click(screen.getByRole('button', { name: 'Minimize Directory' }));
+    expect(panel.hidden).toBe(true);
+    expect(task.getAttribute('aria-pressed')).toBe('false');
+    expect(screen.queryByRole('separator', { name: 'Resize Directory' })).toBeNull();
+    expect(localStorage.getItem('designer-map:panel-minimized')).toBe('on');
+    unmount();
+    render(<App />);
+    expect(document.getElementById('side-window')!.hidden).toBe(true);
+    await user.click(screen.getByRole('button', { name: 'Directory', pressed: false }));
+    expect(document.getElementById('side-window')!.hidden).toBe(false);
+    expect(localStorage.getItem('designer-map:panel-minimized')).toBe('off');
+  });
+
+  const withArea = (run: () => Promise<void> | void) => async () => {
+    // jsdom has no layout: give the map area a size so the window can be placed.
+    const width = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(1000);
+    const height = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(600);
+    try { await run(); } finally { width.mockRestore(); height.mockRestore(); }
+  };
+
+  it('floats at the right edge, moves by its title bar and stays inside the map area', withArea(() => {
+    render(<App />);
+    const panel = document.getElementById('side-window')!;
+    expect([panel.style.left, panel.style.top, panel.style.width, panel.style.height]).toEqual(['588px', '12px', '400px', '576px']);
+    const titleBar = screen.getByLabelText('Move Directory window');
+    fireEvent.pointerDown(titleBar, { button: 0, clientX: 700, clientY: 20, pointerId: 1 });
+    fireEvent.pointerMove(titleBar, { clientX: 400, clientY: 120, pointerId: 1 });
+    fireEvent.pointerUp(titleBar, { pointerId: 1 });
+    expect([panel.style.left, panel.style.top]).toEqual(['288px', '24px']);
+    fireEvent.pointerDown(titleBar, { button: 0, clientX: 400, clientY: 120, pointerId: 1 });
+    fireEvent.pointerMove(titleBar, { clientX: -900, clientY: 900, pointerId: 1 });
+    expect([panel.style.left, panel.style.top]).toEqual(['0px', '24px']);
+    fireEvent.pointerUp(titleBar, { pointerId: 1 });
+    expect(JSON.parse(localStorage.getItem('designer-map:properties-window')!)).toEqual({ x: 0, y: 24, width: 400, height: 576 });
+    fireEvent.doubleClick(titleBar);
+    expect(panel.style.left).toBe('588px');
+  }));
+
+  it('resizes from the grip with pointer and keyboard, within minimum sizes', withArea(async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const panel = document.getElementById('side-window')!;
+    const grip = screen.getByRole('separator', { name: 'Resize Directory' });
+    fireEvent.pointerDown(grip, { button: 0, clientX: 990, clientY: 590, pointerId: 1 });
+    fireEvent.pointerMove(grip, { clientX: 690, clientY: 190, pointerId: 1 });
+    fireEvent.pointerUp(grip, { pointerId: 1 });
+    expect([panel.style.width, panel.style.height]).toEqual(['260px', '180px']);
+    grip.focus();
+    await user.keyboard('{ArrowRight}{ArrowDown}');
+    expect([panel.style.width, panel.style.height]).toEqual(['270px', '190px']);
+    screen.getByLabelText('Move Directory window').focus();
+    await user.keyboard('{ArrowLeft}');
+    expect(panel.style.left).toBe('578px');
+  }));
+});
+
+describe('Map context menu', () => {
+  it('opens a brand in Properties from Show More, restoring a minimized window', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    await user.click(screen.getByRole('button', { name: 'Minimize Directory' }));
+    expect(document.getElementById('side-window')!.hidden).toBe(true);
+    fireEvent.contextMenu(document.getElementById('graph')!, { clientX: 40, clientY: 50 });
+    expect(graph.houseAt).toHaveBeenCalledWith(40, 50);
+    await user.click(screen.getByRole('menuitem', { name: 'Show More' }));
+    expect(screen.getByRole('dialog', { name: 'Dior' })).toBeTruthy();
+    // A minimized Dior window is restored by Show More too.
+    await user.click(screen.getByRole('button', { name: 'Minimize Dior' }));
+    expect(screen.queryByRole('dialog', { name: 'Dior' })).toBeNull();
+    fireEvent.contextMenu(document.getElementById('graph')!, { clientX: 40, clientY: 50 });
+    await user.click(screen.getByRole('menuitem', { name: 'Show More' }));
+    expect(screen.getByRole('dialog', { name: 'Dior' })).toBeTruthy();
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    expect(screen.getByRole('heading', { name: 'Dior' })).toBeTruthy();
+  });
+
+  it('offers only map actions away from a brand', () => {
+    render(<App />);
+    mocks.instances[0]!.houseAt.mockReturnValue(undefined);
+    fireEvent.contextMenu(document.getElementById('graph')!, { clientX: 40, clientY: 50 });
+    expect(screen.queryByRole('menuitem', { name: 'Show More' })).toBeNull();
+    expect(screen.getByRole('menuitem', { name: 'Expand All' })).toBeTruthy();
+  });
+});
+
+describe('Multiple Properties windows', () => {
+  const pick = async (user: ReturnType<typeof userEvent.setup>, text: string, option: string) => {
+    const find = within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('combobox');
+    await user.clear(find);
+    await user.type(find, text);
+    await user.click(screen.getByRole('option', { name: option }));
+  };
+  const titles = () => screen.getAllByRole('dialog').map((dialog) => dialog.getAttribute('aria-labelledby'))
+    .map((id) => document.getElementById(id!)!.textContent);
+
+  it('opens designers as their own window type, never reusing a brand window', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await pick(user, 'dior', 'Dior house');
+    await pick(user, 'chanel', 'Chanel house');
+    await pick(user, 'prada', 'Prada house');
+    const find = within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('combobox');
+    await user.clear(find);
+    await user.type(find, 'maria grazia chiuri');
+    await user.click(screen.getByRole('option', { name: /^Maria Grazia Chiuri/ }));
+    expect(titles()).toEqual(['Directory', 'Dior', 'Chanel', 'Prada', 'Maria Grazia Chiuri']);
+    const taskbar = within(document.querySelector<HTMLElement>('.taskbar')!);
+    expect(taskbar.getByRole('button', { name: 'Brands, 3 windows' })).toBeTruthy();
+    expect(taskbar.getByRole('button', { name: 'Maria Grazia Chiuri' })).toBeTruthy();
+  });
+
+  it('offers Win98 window commands when right-clicking taskbar buttons', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    const taskbar = within(document.querySelector<HTMLElement>('.taskbar')!);
+    await pick(user, 'dior', 'Dior house');
+    // A single window: Restore is greyed out until it is minimized.
+    fireEvent.contextMenu(taskbar.getByRole('button', { name: 'Dior' }));
+    let menu = screen.getByRole('menu', { name: 'Dior window' });
+    expect(within(menu).getAllByRole('menuitem').map((item) => item.textContent)).toEqual(['Restore', 'Minimize', 'Show on Map', 'Close']);
+    expect((within(menu).getByRole('menuitem', { name: 'Restore' }) as HTMLButtonElement).disabled).toBe(true);
+    await user.click(within(menu).getByRole('menuitem', { name: 'Minimize' }));
+    expect(screen.queryByRole('dialog', { name: 'Dior' })).toBeNull();
+    fireEvent.contextMenu(taskbar.getByRole('button', { name: 'Dior' }));
+    await user.click(within(screen.getByRole('menu', { name: 'Dior window' })).getByRole('menuitem', { name: 'Restore' }));
+    expect(screen.getByRole('dialog', { name: 'Dior' }).hasAttribute('data-active')).toBe(true);
+    // Two brands collapse into a group: minimize, restore and close them together.
+    await pick(user, 'chanel', 'Chanel house');
+    const group = taskbar.getByRole('button', { name: 'Brands, 2 windows' });
+    fireEvent.contextMenu(group);
+    menu = screen.getByRole('menu', { name: 'Brands group' });
+    expect(within(menu).getAllByRole('menuitem').map((item) => item.textContent)).toEqual(['Restore All', 'Minimize All', 'Close All']);
+    await user.click(within(menu).getByRole('menuitem', { name: 'Minimize All' }));
+    expect(screen.queryByRole('dialog', { name: 'Dior' })).toBeNull();
+    expect(screen.queryByRole('dialog', { name: 'Chanel' })).toBeNull();
+    fireEvent.contextMenu(group);
+    await user.click(within(screen.getByRole('menu', { name: 'Brands group' })).getByRole('menuitem', { name: 'Restore All' }));
+    expect(screen.getByRole('dialog', { name: 'Dior' })).toBeTruthy();
+    expect(screen.getByRole('dialog', { name: 'Chanel' }).hasAttribute('data-active')).toBe(true);
+    // Rows in the group list have their own window menu and an X that closes that window.
+    await pick(user, 'prada', 'Prada house');
+    const brands = taskbar.getByRole('button', { name: 'Brands, 3 windows' });
+    await user.click(brands);
+    fireEvent.contextMenu(within(taskbar.getByRole('menu', { name: 'Brands windows' })).getByRole('menuitem', { name: 'Dior' }));
+    await user.click(within(screen.getByRole('menu', { name: 'Dior window' })).getByRole('menuitem', { name: 'Minimize' }));
+    expect(screen.queryByRole('dialog', { name: 'Dior' })).toBeNull();
+    await user.click(brands);
+    await user.click(taskbar.getByRole('button', { name: 'Close Chanel window' }));
+    expect(screen.queryByRole('dialog', { name: 'Chanel' })).toBeNull();
+    expect(within(taskbar.getByRole('menu', { name: 'Brands windows' })).getAllByRole('menuitem').map((item) => item.textContent))
+      .toEqual(['(minimized) Dior', 'Prada']);
+    fireEvent.contextMenu(taskbar.getByRole('button', { name: 'Brands, 2 windows' }));
+    await user.click(within(screen.getByRole('menu', { name: 'Brands group' })).getByRole('menuitem', { name: 'Close All' }));
+    expect(titles()).toEqual(['Directory']);
+    expect(graph.select).toHaveBeenLastCalledWith(null, false);
+  });
+
+  it('opens item windows beside the Directory, focusing an open item instead of repeating it', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    await pick(user, 'dior', 'Dior house');
+    await pick(user, 'chanel', 'Chanel house');
+    await pick(user, 'prada', 'Prada house');
+    expect(titles()).toEqual(['Directory', 'Dior', 'Chanel', 'Prada']);
+    // Picking an open item focuses its window instead of opening another.
+    await pick(user, 'dior', 'Dior house');
+    expect(screen.getAllByRole('dialog')).toHaveLength(4);
+    expect(screen.getByRole('dialog', { name: 'Dior' }).hasAttribute('data-active')).toBe(true);
+    // The taskbar collapses them into one button whose menu lists each window.
+    const taskbar = within(document.querySelector<HTMLElement>('.taskbar')!);
+    expect(taskbar.queryByRole('button', { name: 'Dior' })).toBeNull();
+    await user.click(taskbar.getByRole('button', { name: 'Brands, 3 windows' }));
+    const menu = taskbar.getByRole('menu', { name: 'Brands windows' });
+    expect(within(menu).getAllByRole('menuitem').map((item) => item.textContent))
+      .toEqual(['Dior', 'Chanel', 'Prada']);
+    await user.click(screen.getByRole('button', { name: 'Minimize Dior' }));
+    await user.click(taskbar.getByRole('button', { name: 'Brands, 3 windows' }));
+    await user.click(within(taskbar.getByRole('menu')).getByRole('menuitem', { name: /Dior/ }));
+    expect(taskbar.queryByRole('menu')).toBeNull();
+    expect((screen.getByRole('dialog', { name: 'Dior' }) as HTMLElement).hidden).toBe(false);
+    expect(screen.getByRole('dialog', { name: 'Dior' }).hasAttribute('data-active')).toBe(true);
+    // Clicking a window brings it forward and highlights its brand on the map.
+    fireEvent.pointerDown(screen.getByRole('dialog', { name: 'Prada' }));
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'prada' }, false);
+    expect(screen.getByRole('dialog', { name: 'Prada' }).hasAttribute('data-active')).toBe(true);
+  });
+
+  it('closes windows with the X, moving the map selection to the next window', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    await pick(user, 'dior', 'Dior house');
+    await pick(user, 'chanel', 'Chanel house');
+    await user.click(screen.getByRole('button', { name: 'Close Chanel' }));
+    expect(screen.queryByRole('dialog', { name: 'Chanel' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Chanel' })).toBeNull();
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, false);
+    await user.click(screen.getByRole('button', { name: 'Close Dior' }));
+    expect(graph.select).toHaveBeenLastCalledWith(null, false);
+    expect(document.getElementById('status-selection')!.textContent).toBe('Nothing selected');
+    // The Directory closes too, and the Start menu brings it back.
+    await user.click(screen.getByRole('button', { name: 'Close Directory' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    await openStart(user);
+    await user.click(screen.getByRole('button', { name: 'Directory' }));
+    expect(screen.getByRole('dialog', { name: 'Directory' })).toBeTruthy();
+  });
+});
+
+describe('City windows', () => {
+  const openCity = (city: string) => act(() => {
+    (mocks.instances.at(-1) as unknown as { callbacks: GraphCallbacks }).callbacks.onOpenCity!(city);
+  });
+
+  it('opens a city pin as a window of brand icons that opens brands and closes', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    openCity('Paris');
+    const paris = screen.getByRole('dialog', { name: 'Paris' });
+    const grid = within(paris).getByRole('list', { name: 'Brands in Paris' });
+    expect(within(grid).getAllByRole('button').length).toBeGreaterThan(20);
+    expect(within(paris).getByRole('button', { name: 'Minimize Paris' })).toBeTruthy();
+    expect(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('button', { name: 'Paris' })).toBeTruthy();
+    // City windows leave the map selection alone.
+    expect(graph.select).toHaveBeenLastCalledWith(null, false);
+    await user.click(within(grid).getByRole('button', { name: 'Dior' }));
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    expect(screen.getByRole('dialog', { name: 'Dior' })).toBeTruthy();
+    await user.click(within(screen.getByRole('dialog', { name: 'Paris' })).getByRole('button', { name: 'Close Paris' }));
+    expect(screen.queryByRole('dialog', { name: 'Paris' })).toBeNull();
+    expect(screen.getByRole('dialog', { name: 'Dior' })).toBeTruthy();
+  });
+
+  it('frames logos and finds brands in a city from its search dropdown', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    openCity('Paris');
+    const paris = screen.getByRole('dialog', { name: 'Paris' });
+    const grid = within(paris).getByRole('list', { name: 'Brands in Paris' });
+    expect(grid.querySelectorAll('.city-icon-frame').length).toBe(within(grid).getAllByRole('button').length);
+    const find = within(paris).getByRole('combobox');
+    await user.click(find);
+    // The dropdown lists every brand here, not just the first page.
+    const options = within(paris).getAllByRole('option');
+    expect(options.length).toBe(within(grid).getAllByRole('button').length);
+    expect(options.length).toBeGreaterThan(60);
+    await user.type(find, 'louis v');
+    expect(within(grid).getAllByRole('button').map((button) => button.textContent)).toEqual(['Louis Vuitton']);
+    expect(within(paris).getByText(/^1 of \d+ brands$/)).toBeTruthy();
+    await user.click(within(paris).getByRole('option', { name: 'Louis Vuitton' }));
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'louisVuitton' }, true);
+    expect((find as HTMLInputElement).value).toBe('');
+    expect(within(screen.getByRole('list', { name: 'Brands in Paris' })).getAllByRole('button').length).toBeGreaterThan(60);
+  });
+
+  it('opens city windows three icons wide, just tall enough for their brands up to four rows', () => {
+    const one = cityWindowSize(1);
+    const three = cityWindowSize(3);
+    const six = cityWindowSize(6);
+    const twelve = cityWindowSize(12);
+    const sixteen = cityWindowSize(16);
+    expect(one).toEqual(three);
+    expect(six.width).toBe(one.width);
+    expect(six.height).toBeGreaterThan(one.height);
+    expect(twelve.height).toBe(sixteen.height);
+    // The scrollbar's gutter is always reserved, so scrolling windows keep the same width.
+    expect(sixteen.width).toBe(twelve.width);
+    expect(cityWindowSize(200)).toEqual(sixteen);
+    // A one-brand window isn't widened to the Properties window minimum.
+    const area = { width: 1400, height: 900 };
+    const small = clampRect(defaultRect(area, 0, 'left', one, one), area, one);
+    expect([small.width, small.height]).toEqual([one.width, one.height]);
+    expect(one.height).toBeLessThan(cityWindowSize(16).height);
+    const width = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(1400);
+    const height = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(900);
+    try {
+      render(<App />);
+      openCity('Paris');
+      const paris = screen.getByRole('dialog', { name: 'Paris' });
+      expect([paris.style.width, paris.style.height]).toEqual([`${sixteen.width}px`, `${sixteen.height}px`]);
+    } finally { width.mockRestore(); height.mockRestore(); }
+  });
+
+  it('opens a brand\'s origin city, listing brands founded there that moved away', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.type(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('combobox'), 'duvetica');
+    await user.click(screen.getByRole('option', { name: 'Duvetica house' }));
+    await user.click(within(screen.getByRole('dialog', { name: 'Duvetica' })).getByRole('link', { name: 'Mogliano Veneto' }));
+    const origin = screen.getByRole('dialog', { name: 'Mogliano Veneto' });
+    expect(within(origin).getByText('Founded here, now based elsewhere')).toBeTruthy();
+    expect(within(within(origin).getByRole('list', { name: 'Brands in Mogliano Veneto' })).getByRole('button', { name: 'Duvetica' })).toBeTruthy();
+    expect(within(origin).getByText(/1 founded here/)).toBeTruthy();
+  });
+
+  it('opens city and country windows from the location in a brand\'s Properties', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    await user.type(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('combobox'), 'dior');
+    await user.click(screen.getByRole('option', { name: 'Dior house' }));
+    const dior = screen.getByRole('dialog', { name: 'Dior' });
+    await user.click(within(dior).getByRole('link', { name: 'Paris' }));
+    expect(within(screen.getByRole('dialog', { name: 'Paris' })).getByRole('list', { name: 'Brands in Paris' })).toBeTruthy();
+    await user.click(within(screen.getByRole('dialog', { name: 'Dior' })).getByRole('link', { name: 'France' }));
+    const france = screen.getByRole('dialog', { name: 'France' });
+    const names = within(within(france).getByRole('list', { name: 'Brands in France' })).getAllByRole('button').map((button) => button.textContent);
+    expect(names).toContain('Chanel');
+    expect(names).toContain('Dior');
+    // Place windows don't change the map selection.
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    await user.click(within(france).getByRole('button', { name: 'Chanel' }));
+    expect(screen.getByRole('dialog', { name: 'Chanel' })).toBeTruthy();
+  });
+
+  it('opens each city once, focusing an open city instead of repeating it', () => {
+    render(<App />);
+    for (const city of ['Paris', 'Milan', 'London']) openCity(city);
+    const titles = screen.getAllByRole('dialog').map((dialog) => document.getElementById(dialog.getAttribute('aria-labelledby')!)!.textContent);
+    expect(titles).toEqual(['Directory', 'Paris', 'Milan', 'London']);
+    // Re-opening an open city focuses it rather than adding another.
+    openCity('Milan');
+    expect(screen.getAllByRole('dialog')).toHaveLength(4);
+    expect(screen.getByRole('dialog', { name: 'Milan' }).hasAttribute('data-active')).toBe(true);
+  });
+
+  it('can expand cities on the map instead, remembering the choice without rebuilding the graph', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<App />);
+    const graph = mocks.instances[0]! as typeof mocks.instances[0] & { toggleCity: ReturnType<typeof vi.fn> };
+    graph.toggleCity = vi.fn();
+    await user.click(screen.getByRole('radio', { name: 'On map' }));
+    openCity('Paris');
+    expect(graph.toggleCity).toHaveBeenCalledWith('Paris');
+    expect(screen.queryByRole('dialog', { name: 'Paris' })).toBeNull();
+    expect(mocks.instances).toHaveLength(1);
+    expect(localStorage.getItem('designer-map:city-view')).toBe('map');
+    unmount();
+    render(<App />);
+    expect(screen.getByRole<HTMLInputElement>('radio', { name: 'On map' }).checked).toBe(true);
+    await user.click(screen.getByRole('radio', { name: 'In windows' }));
+    openCity('Paris');
+    expect(screen.getByRole('dialog', { name: 'Paris' })).toBeTruthy();
+  });
+
+  it('only lists main brands that match the year and tag filters', () => {
+    render(<App />);
+    openYear();
+    fireEvent.change(screen.getByRole('slider'), { target: { value: '1900' } });
+    openCity('Paris');
+    const names = within(screen.getByRole('list', { name: 'Brands in Paris' })).getAllByRole('button').map((button) => button.textContent);
+    expect(names).toContain('Louis Vuitton');
+    expect(names).not.toContain('Dior');
+  });
 });
