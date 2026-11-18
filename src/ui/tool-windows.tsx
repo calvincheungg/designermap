@@ -1,6 +1,7 @@
 import { useMemo, type ReactNode } from 'react';
 import { designers, getHouse, houses } from '../data';
 import { missingOriginCandidates } from '../data/validate';
+import { minesweeperColour } from '../graph/minesweeper';
 import type { House } from '../types';
 import { EntityLink, ProfileSection, type Actions } from './panel';
 
@@ -66,5 +67,52 @@ export function MissingReportContent({ onSelect }: { onSelect: Actions['onSelect
     <ProfileSection title={`No logo (${report.logos.length})`} defaultOpen={false}><BrandList list={report.logos} onSelect={onSelect} /></ProfileSection>
     <ProfileSection title={`No website (${report.websites.length})`} defaultOpen={false}><BrandList list={report.websites} onSelect={onSelect} /></ProfileSection>
     <ProfileSection title={`No Instagram (${report.instagram.length})`} defaultOpen={false}><BrandList list={report.instagram} onSelect={onSelect} /></ProfileSection>
+  </>;
+}
+
+/** A Win98 Minesweeper digit, as drawn on collaboration pulses. */
+const Digit = ({ count }: { count: number }) => <span className="help-digit" style={{ color: minesweeperColour(count) }}>{count > 7 ? '8+' : count}</span>;
+
+/** Help ▸ how to read and use the map: pins, lines, pulses, windows and brand details. */
+export function HelpContent() {
+  return <>
+    <h2>Designer Map Help</h2>
+    <p className="hint">A world map of fashion houses and the creative directors who move between them.</p>
+    <ProfileSection title="Getting around">
+      <ul className="help-list">
+        <li>Drag to pan and scroll or pinch to zoom. Search in the taskbar, or use Start ▸ Run… to open anything by name.</li>
+        <li>Click a city pin to see its brands. Choose whether cities open in windows or on the map under Start ▸ Open cities.</li>
+        <li>Click a brand to select it: the map shows its connections and its Properties window opens.</li>
+        <li>Use the clock in the taskbar to pick a year, or press Play to watch the map grow over time.</li>
+        <li>Start ▸ Documents lists what you opened recently. Start ▸ Reset View clears everything and starts again.</li>
+      </ul>
+    </ProfileSection>
+    <ProfileSection title="Map pins">
+      <table className="help-legend"><tbody>
+        <tr><td><span className="help-pin" /></td><td>A city. Larger fashion cities always keep their own pin.</td></tr>
+        <tr><td><span className="help-pin cluster" /></td><td>A group of nearby smaller cities, with their brand count. Click to zoom in.</td></tr>
+        <tr><td><span className="help-pin open" /></td><td>An open city, with its brands shown on the map.</td></tr>
+      </tbody></table>
+    </ProfileSection>
+    <ProfileSection title="Connection lines">
+      <table className="help-legend"><tbody>
+        <tr><td><span className="help-line move" /></td><td>A designer move: someone started at another house. The navy block travels in the direction of their career.</td></tr>
+        <tr><td><span className="help-line collaboration" /></td><td>A collaboration between two brands. Repeat releases share one line.</td></tr>
+        <tr><td><span className="help-digits">{[1, 2, 3, 4, 5, 6, 7, 8].map((n) => <Digit key={n} count={n} />)}</span></td>
+          <td>Collaboration pulses show how many releases the two brands have made together, in Minesweeper colours.</td></tr>
+      </tbody></table>
+      <p className="hint">Lines appear for the selected brand or designer. Turn them on or off under Start ▸ Connection lines.</p>
+    </ProfileSection>
+    <ProfileSection title="Brand details">
+      <ul className="help-list">
+        <li>Market positioning runs High Luxury → Luxury → Premium → Mid-market → Budget. These are editorial tiers, not rankings.</li>
+        <li>Brands that have closed or paused show an Ended year and appear in the Recycle Bin.</li>
+        <li>Other roles are design-team positions; they don't count as creative direction.</li>
+        <li>Start ▸ Show brands at ▸ Origin moves brands to the city where they were founded.</li>
+      </ul>
+    </ProfileSection>
+    <ProfileSection title="Sharing">
+      <p>The address bar always holds the current selection, year and filters, so you can copy the link to share the view.</p>
+    </ProfileSection>
   </>;
 }

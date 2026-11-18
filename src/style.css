@@ -48,6 +48,7 @@ html, body {
   border-bottom: 1px solid #808080;
   box-shadow: 0 1px 0 #fff;
 }
+.toolbar:empty { display: none; }
 .toolbar .field-row { margin: 0; }
 /* Same 14px as the Properties window (98.css defaults to 11px). */
 .toolbar label,
@@ -60,8 +61,6 @@ html, body {
 .toolbar button { min-height: 26px; }
 
 
-.city-view { display: flex; align-items: center; gap: 8px; margin: 0; padding: 0; border: 0; font-size: 12px; white-space: nowrap; }
-.city-view .field-row + .field-row { margin-top: 0; }
 .active-filters { display: flex; flex: 1 1 320px; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; font-size: 13px; }
 .active-filters .selected-filter-list { display: flex; flex-wrap: wrap; gap: 4px; max-height: 56px; overflow-y: auto; min-width: 0; }
 .filter-chip { min-width: 0; min-height: 22px; white-space: nowrap; padding: 0 6px; }
@@ -245,14 +244,13 @@ html, body {
 .resize-grip:focus-visible { outline: 1px dotted #000; }
 
 /* ---------- desktop icons over the map (ui/desktop-icon.tsx) ---------- */
-/* Defaults to the top-right of the map, below the connection-details strip and just left of the
-   Directory's default spot (12px margin + 400px window, side-panel.tsx), so the window doesn't hide it.
-   Dragging sets left/top. */
+/* Defaults to the top-right corner of the map, below the connection-details strip, stacked one
+   72px row per `--slot` (Recycle Bin, then Statistics). Dragging sets left/top. */
 .desktop-icon {
   position: absolute;
   z-index: 15;
-  top: 40px;
-  right: 428px;
+  top: calc(40px + var(--slot, 0) * 72px);
+  right: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -272,11 +270,47 @@ html, body {
 .desktop-icon:not(:disabled):active { box-shadow: none; text-shadow: none; }
 .desktop-icon:focus { outline: none; }
 .desktop-icon-image { display: block; filter: drop-shadow(1px 1px 0 rgb(0 0 0 / 0.35)); }
-.desktop-icon-image img { display: block; width: 32px; height: 32px; image-rendering: pixelated; }
+.desktop-icon-image img, .desktop-icon-image svg { display: block; width: 32px; height: 32px; image-rendering: pixelated; }
 .desktop-icon-label { padding: 0 3px; font-size: 12px; line-height: 1.25; background: rgb(255 255 255 / 0.75); }
 .desktop-icon:hover .desktop-icon-label, .desktop-icon:focus-visible .desktop-icon-label { background: var(--navy); color: #fff; }
 .desktop-icon:focus-visible .desktop-icon-label { outline: 1px dotted #fff; outline-offset: -1px; }
 .desktop-icon:focus-visible .desktop-icon-image { filter: brightness(0.8) sepia(1) hue-rotate(190deg) saturate(2); }
+/* ---------- Help window (ui/tool-windows.tsx HelpContent) ---------- */
+.side-window .help-list { margin: 0; padding-left: 18px; }
+.side-window .help-list li { margin: 3px 0; }
+.help-legend { border-collapse: collapse; }
+.help-legend td { padding: 3px 6px 3px 0; vertical-align: middle; }
+.help-legend td:first-child { width: 1%; white-space: nowrap; text-align: center; }
+/* Pin swatches echo icons.ts cityMarkerIcon: grey city, teal cluster, navy open city. */
+.help-pin { display: inline-block; width: 14px; height: 14px; background: var(--face);
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf; }
+.help-pin.cluster { background: #008080; }
+.help-pin.open { background: var(--navy); }
+.help-line { display: inline-block; width: 40px; vertical-align: middle; border-top: 3px solid var(--navy); }
+.help-line.collaboration { border-top: 3px dashed #cc0000; }
+.help-digits { display: inline-flex; gap: 1px; }
+.help-digit { display: inline-block; min-width: 14px; padding: 0 1px; background: #bdbdbd; border: 1px solid #7b7b7b;
+  font: bold 12px/14px Arial, sans-serif; text-align: center; }
+
+/* ---------- Run window (ui/run-dialog.tsx): its suggestions may spill past the small window. ---------- */
+.side-window.run-window > .window-body { overflow: visible; }
+.run-form { display: flex; flex-direction: column; gap: 10px; margin: 4px; font-size: 13px; }
+.run-intro { display: flex; align-items: flex-start; gap: 12px; }
+.run-intro p { margin: 0; }
+.run-form .field-row { gap: 8px; }
+.run-form .field-row label { font-size: 13px; }
+.run-form .w98-combo { flex: 1; }
+.run-form .w98-combo input { width: 100%; }
+.run-error { margin: 0; color: #800000; }
+.run-buttons { display: flex; justify-content: flex-end; gap: 6px; }
+
+/* Start ▸ Documents: recent items with their kind in grey. */
+.documents-submenu { min-width: 260px; }
+.documents-submenu .start-subcommand { gap: 12px; }
+.recent-kind { color: #808080; font-size: 12px; }
+.start-subcommand:not(:disabled):hover .recent-kind, .start-subcommand:focus-visible .recent-kind { color: #c0c0c0; }
+.start-subcommand:disabled { color: #808080; text-shadow: 1px 1px #fff; }
+
 /* What's Missing report lists. */
 .side-window .missing-list { margin: 0; padding-left: 18px; }
 .side-window .missing-list li { margin: 2px 0; }
@@ -397,6 +431,9 @@ html, body {
 /* Row-limited tables (brand collaborations, panel.tsx RowLimitedPanel) scroll by wheel/touch without a scrollbar. */
 .side-window .sunken-panel.row-limited { scrollbar-width: none; overscroll-behavior: contain; }
 .side-window .sunken-panel.row-limited::-webkit-scrollbar { display: none; }
+/* Statistics tables (at most STATS_VISIBLE_ROWS rows tall) keep a visible scrollbar: they can list 100 rows. */
+.side-window .sunken-panel.row-limited.stats-table { scrollbar-width: auto; }
+.side-window .sunken-panel.row-limited.stats-table::-webkit-scrollbar { display: initial; }
 .side-window .sunken-panel table > tbody > tr > * { padding: 2px 6px; }
 .side-window .sunken-panel table > thead > tr > * { height: 22px; }
 .side-window table.interactive { width: 100%; }
@@ -738,8 +775,6 @@ table.fields .field-separator { margin: 0 8px; }
   /* One window at a time on phones: the active Properties window, else the Directory. */
   .side-window:not([data-active]) { display: none; }
   .task { width: auto; flex: 0 1 140px; }
-  .desktop-icon { right: 12px; }
-  .main-window > .title-bar .title-bar-controls { display: none; }
   .status-bar-field:not(:first-child) { display: none; }
   .main-window > .window-body { overflow-y: auto; }
   .content { flex-shrink: 0; min-height: 420px; }

@@ -161,7 +161,7 @@ function HistoryTable({ house, onSelect }: { house: House; onSelect: Actions['on
 /** Collaboration rows visible before the table scrolls (wheel/touch; the scrollbar is hidden). */
 export const COLLABORATION_ROWS = 8;
 /** A sunken table panel that shows at most `rows` body rows; the rest scroll without a scrollbar. */
-function RowLimitedPanel({ rows, children }: { rows: number; children: ReactNode }) {
+export function RowLimitedPanel({ rows, className, children }: { rows: number; className?: string; children: ReactNode }) {
   const panel = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const element = panel.current;
@@ -180,7 +180,7 @@ function RowLimitedPanel({ rows, children }: { rows: number; children: ReactNode
     if (table) observer.observe(table);
     return () => observer.disconnect();
   }, [rows, children]);
-  return <div ref={panel} className="sunken-panel row-limited">{children}</div>;
+  return <div ref={panel} className={['sunken-panel row-limited', className].filter(Boolean).join(' ')}>{children}</div>;
 }
 
 function CollaborationRow({ house, projects, onSelect }: {

@@ -71,18 +71,22 @@ export interface ListItem<T> { label: string; aliases?: readonly string[]; hint?
 const words = (value: string) => value.normalize('NFKD').replace(/\p{M}/gu, '').toLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
 const compact = (value: string) => words(value).join('');
 
-/** Ignore case, accents, punctuation and spaces; prefer prefix/word matches. */
-export function matchingItems<T>(items: readonly ListItem<T>[], query: string, limit = 60): ListItem<T>[] {
+/**
+ * Ignore case, accents, punctuation and spaces; prefer prefix/word matches.
+ * `exactFirst` lists exact names (or aliases) before them, as Run… needs.
+ */
+export function matchingItems<T>(items: readonly ListItem<T>[], query: string, limit = 60, exactFirst = false): ListItem<T>[] {
   const q = compact(query);
   if (!q) return items.slice(0, limit);
   const folded = items.map((item) => ({ item, terms: [item.label, ...(item.aliases ?? [])].map(words) }));
-  const starts = folded.filter(({ terms }) => terms.some((tokens) => tokens.some((_, index) => tokens.slice(index).join('').startsWith(q))));
-  const contains = folded.filter((item) => !starts.includes(item) && item.terms.some((tokens) => tokens.join('').includes(q)));
-  return [...starts, ...contains].slice(0, limit).map(({ item }) => item);
+  const exact = exactFirst ? folded.filter(({ terms }) => terms.some((tokens) => tokens.join('') === q)) : [];
+  const starts = folded.filter((item) => !exact.includes(item) && item.terms.some((tokens) => tokens.some((_, index) => tokens.slice(index).join('').startsWith(q))));
+  const contains = folded.filter((item) => !exact.includes(item) && !starts.includes(item) && item.terms.some((tokens) => tokens.join('').includes(q)));
+  return [...exact, ...starts, ...contains].slice(0, limit).map(({ item }) => item);
 }
 
 export function SearchBox<T>({ items, value, onChange, onPick, label = 'Find:', inputId = 'search', placeholder = 'House, person or group', limit = 60,
-  previewAll = true, dropUp = false }: {
+  previewAll = true, dropUp = false, exactFirst = false }: {
   items: readonly ListItem<T>[]; value: string; onChange: (value: string) => void; onPick: (item: ListItem<T>) => void;
   label?: string; inputId?: string; placeholder?: string;
   /** List every item while the box is empty; false shows suggestions only once the user types. */
@@ -91,6 +95,8 @@ export function SearchBox<T>({ items, value, onChange, onPick, label = 'Find:', 
   dropUp?: boolean;
   /** Most options listed; Infinity lists them all (e.g. every brand in a city). */
   limit?: number;
+  /** List exact name matches first (see matchingItems). */
+  exactFirst?: boolean;
 }) {
   const [focused, setOpen] = useState(false);
   const open = focused && (previewAll || !!value.trim());
@@ -98,7 +104,7 @@ export function SearchBox<T>({ items, value, onChange, onPick, label = 'Find:', 
   const input = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLUListElement>(null);
   const id = useId();
-  const matches = useMemo(() => matchingItems(items, value, limit), [items, value, limit]);
+  const matches = useMemo(() => matchingItems(items, value, limit, exactFirst), [items, value, limit, exactFirst]);
   const activeIndex = matches.length ? Math.min(active, matches.length - 1) : -1;
   useEffect(() => { setActive(0); }, [items, value]);
   useLayoutEffect(() => {

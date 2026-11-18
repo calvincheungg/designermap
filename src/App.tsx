@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { allMoves, designers, getDesigner, getGroup, getHouse, groups, houses, isBusinessLeadership, yearRange } from './data';
+import { allMoves, countryNames, designers, getDesigner, getGroup, getHouse, groups, houses, isBusinessLeadership, yearRange } from './data';
 import { matchesHouseFilters, type HouseFilters } from './data/tags';
 import type { ConnectionFilter, DesignerGraph } from './graph/graph';
 import { setLocationMode, type LocationMode } from './graph/locations';
@@ -10,19 +10,24 @@ import { StartIcon } from './ui/start-icons';
 import { StartMenu } from './ui/start-menu';
 import { PanelContent, panelTitle, type Place, type Selection } from './ui/panel';
 import { DIRECTORY_RECT_KEY, PropertiesWindow } from './ui/side-panel';
-import { DIRECTORY, closeWindow, focusWindow, initialDesk, isPlace, isTool, isSelectionItem, STATISTICS, tool, minimizeWindow, openItem, retainItems, saveDirectoryMinimized, sameItem, toggleTask, windowFor, windowType, closeWindows, minimizeWindows, restoreWindows, type Desk, type Item } from './ui/desktop';
+import { DIRECTORY, closeWindow, focusWindow, initialDesk, isPlace, isTool, isSelectionItem, STATISTICS, HELP, RUN, tool, minimizeWindow, openItem, retainItems, sameItem, toggleTask, windowFor, windowType, closeWindows, minimizeWindows, restoreWindows, type Desk, type Item } from './ui/desktop';
 import { TaskGroup, type Task } from './ui/taskbar';
 import { YearTray } from './ui/year-tray';
 import { StatisticsContent } from './ui/statistics';
-import { MissingReportContent, RecycleBinContent } from './ui/tool-windows';
+import { HelpContent, MissingReportContent, RecycleBinContent } from './ui/tool-windows';
+import { RunContent, type RunTarget } from './ui/run-dialog';
+import { addRecent, readRecent, recentLabel, saveRecent, type RecentItem } from './ui/recent';
 import { DesktopIcon } from './ui/desktop-icon';
 import { readSharedView, sharedViewHash } from './ui/share-link';
 
 /** Tool windows' opening sizes: Statistics is wider than Properties so its bar tables have room. */
-const TOOL_SIZES = { stats: { width: 460, height: 640 }, recycle: { width: 380, height: 480 }, missing: { width: 420, height: 560 } } as const;
+const TOOL_SIZES = { stats: { width: 460, height: 640 }, recycle: { width: 380, height: 480 }, missing: { width: 420, height: 560 }, help: { width: 440, height: 560 }, run: { width: 400, height: 240 } } as const;
+/** Run is a small dialog-like window, so it may be smaller than the Properties minimum. */
+const RUN_MIN_SIZE = { width: 320, height: 200 };
 /** Start menu's What's Missing report: a research aid, so development builds only. */
 const SHOW_MISSING_REPORT = import.meta.env.DEV;
 const RECYCLE_BIN_KEY = 'designer-map:recycle-bin-position';
+const STATISTICS_ICON_KEY = 'designer-map:statistics-icon-position';
 import type { MenuAction } from './ui/context-menu';
 import { PlaceWindowContent, cityWindowSize, placeTileCount, placeTitle } from './ui/city-window';
 
@@ -40,9 +45,19 @@ const searchItems: ListItem<NonNullable<Selection>>[] = [
   ...groups.map((g) => ({ label: g.name, hint: 'group', value: { kind: 'group' as const, id: g.id } })),
   ...designers.map((d) => ({ label: d.name, hint: d.career.some(isBusinessLeadership) ? 'leader' : 'designer', value: { kind: 'designer' as const, id: d.id } })),
 ].sort((a, b) => collator.compare(a.label, b.label) || a.hint.localeCompare(b.hint));
+/** Run… also opens places (every base or origin city, and every country with a brand) and years. */
+const placeRunItems: ListItem<RunTarget>[] = [
+  ...[...new Set(houses.flatMap((h) => h.origin ? [h.city, h.origin.city] : [h.city]))]
+    .map((city) => ({ label: city, hint: 'city', value: { kind: 'place' as const, value: { kind: 'city' as const, id: city } } })),
+  ...[...new Set(houses.flatMap((h) => h.origin ? [h.country, h.origin.country] : [h.country]))]
+    .map((country) => ({ label: countryNames[country], hint: 'country', value: { kind: 'place' as const, value: { kind: 'country' as const, id: country } } })),
+].sort((a, b) => collator.compare(a.label, b.label));
+const yearRunItems: ListItem<RunTarget>[] = Array.from({ length: maxYear - minYear + 1 }, (_, i) => maxYear - i)
+  .map((year) => ({ label: String(year), hint: 'year', value: { kind: 'year' as const, year } }));
+const RECENT_HINTS = { house: 'brand', designer: 'designer', group: 'group', city: 'city', country: 'country' } as const;
 
 /** Place windows are titled with the city or country, like an Explorer folder; others as Properties. */
-const TOOL_TITLES = { stats: 'Statistics', recycle: 'Recycle Bin', missing: "What's Missing" } as const;
+const TOOL_TITLES = { stats: 'Statistics', recycle: 'Recycle Bin', missing: "What's Missing", help: 'Help', run: 'Run' } as const;
 const windowTitle = (item: Item) => isPlace(item) ? placeTitle(item) : isTool(item) ? TOOL_TITLES[item.id] : panelTitle(item);
 
 export function App() {
@@ -58,6 +73,8 @@ export function App() {
   const [allExpanded, setAllExpanded] = useState(false);
   const [connectionFilter, setConnectionFilter] = useState<ConnectionFilter>('all');
   const [desk, setDesk] = useState<Desk>(initialDesk);
+  const [recent, setRecent] = useState<readonly RecentItem[]>(readRecent);
+  const [resets, setResets] = useState(0);
   const deskRef = useRef(desk);
   deskRef.current = desk;
   const [showLines, setShowLines] = useState(() => {
@@ -139,7 +156,6 @@ export function App() {
     graph.current?.select(selection, request.reveal);
   }, [selection, request, locationMode]);
   useEffect(() => { if (desk.windows.some((w) => !isVisibleItem(w.item))) setDesk((current) => retainItems(current, isVisibleItem)); }, [desk.windows, isVisibleItem]);
-  useEffect(() => saveDirectoryMinimized(desk), [desk.directoryMinimized]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (!keepSelection) select(null); }, [keepSelection, select]);
   useEffect(() => {
     graph.current?.setShowMoves(showLines);
@@ -167,15 +183,23 @@ export function App() {
     if (playFrom !== null || viewHash === location.hash || (!viewHash && !location.hash)) return;
     history.replaceState(null, '', `${location.pathname}${location.search}${viewHash}`);
   }, [viewHash, playFrom]);
+  // Start ▸ Documents: whatever brand, designer, group or place window is brought to the front.
+  const activeItem = windowFor(desk, desk.active)?.item;
+  useEffect(() => {
+    if (activeItem && !isTool(activeItem)) setRecent((list) => addRecent(list, activeItem));
+  }, [activeItem?.kind, activeItem?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => saveRecent(recent), [recent]);
+  // Reset View: once the cleared selection reaches the graph, close open cities and show the whole map.
+  useLayoutEffect(() => {
+    if (!resets) return;
+    graph.current?.setAllExpanded(false);
+    graph.current?.fit();
+  }, [resets]);
   useEffect(() => {
     if (!notice) return;
     const timer = window.setTimeout(() => setNotice(null), 3000);
     return () => clearTimeout(timer);
   }, [notice]);
-  const copyLink = useCallback(async () => {
-    const link = `${location.origin}${location.pathname}${location.search}${sharedViewHash({ selection, year, filters }, maxYear)}`;
-    try { await navigator.clipboard.writeText(link); setNotice('Link copied to the clipboard'); } catch { setNotice(`Copy this link: ${link}`); }
-  }, [selection, year, filters]);
   useEffect(() => {
     if (playFrom === null) return;
     let next = playFrom;
@@ -189,6 +213,30 @@ export function App() {
   const availableSearchItems = useMemo(() => searchItems.filter((item) => item.value.kind === 'group' || (item.value.kind === 'house'
     ? visibleIds.has(item.value.id) : getDesigner(item.value.id)?.career.some((t) => visibleIds.has(t.house)
       && (visibleYear === Infinity || (t.start !== undefined && t.start <= visibleYear))))), [visibleIds, visibleYear]);
+  const runItems = useMemo<ListItem<RunTarget>[]>(() => [
+    ...availableSearchItems.map((item) => ({ ...item, value: { kind: 'select' as const, value: item.value } })),
+    ...placeRunItems, ...yearRunItems,
+  ], [availableSearchItems]);
+  /** Run… keeps its window open: the opened brand, designer or place window comes to the front over it. */
+  const run = (target: RunTarget) => {
+    if (target.kind === 'select') select(target.value, true);
+    else if (target.kind === 'place') openPlace(target.value);
+    else { setPlayFrom(null); setYear(target.year); }
+  };
+  const openRecent = (item: RecentItem) => item.kind === 'city' || item.kind === 'country' ? openPlace(item) : select(item, true);
+  const openDirectory = () => { changeDesk((d) => focusWindow({ ...d, directoryOpen: true }, DIRECTORY)); graph.current?.fit(); };
+  /** Start ▸ Reset View: no selection, filters, year, open windows or open cities. Map settings stay as they are. */
+  const resetView = () => {
+    setPlayFrom(null);
+    setFilters({});
+    setSearch('');
+    setYear(maxYear);
+    setConnectionFilter('all');
+    setRequest((current) => ({ value: null, reveal: false, revision: current.revision + 1 }));
+    setDesk(initialDesk());
+    setResets((n) => n + 1);
+    setNotice('View reset');
+  };
   const name = selection?.kind === 'group' ? getGroup(selection.id)?.name
     : selection?.kind === 'house' ? getHouse(selection.id)?.name : selection ? getDesigner(selection.id)?.name : undefined;
   const filterKey = `${visibleYear}:${JSON.stringify(filters)}`;
@@ -223,23 +271,14 @@ export function App() {
   };
 
   return <div className="desktop"><div className="window main-window">
-    <div className="title-bar"><div className="title-bar-text">Designer Map: Fashion Houses &amp; Creative Directors</div>
-      <div className="title-bar-controls" aria-hidden="true"><button aria-label="Minimize" tabIndex={-1} /><button aria-label="Maximize" tabIndex={-1} /><button aria-label="Close" tabIndex={-1} /></div>
-    </div>
     <div className="window-body"><div className="toolbar">
-      <fieldset className="city-view" title="What clicking a city pin does">
-        <legend className="visually-hidden">Open cities</legend>
-        <span aria-hidden="true">Open cities:</span>
-        {([['window', 'In windows'], ['map', 'On map']] as const).map(([view, label]) => <span className="field-row" key={view}>
-          <input type="radio" id={`city-view-${view}`} name="city-view" checked={cityView === view} onChange={() => setCityView(view)} />
-          <label htmlFor={`city-view-${view}`}>{label}</label>
-        </span>)}
-      </fieldset>
       <ActiveFilters value={filters} onChange={changeFilters} count={visibleHouses.length} total={houses.length} />
     </div>
       <div className="content">
         <DesktopIcon label="Recycle Bin" icon={<img src="/assets/bin.webp" alt="" width={32} height={32} draggable={false} />} storageKey={RECYCLE_BIN_KEY}
           onOpen={() => changeDesk((d) => openItem(d, tool('recycle')))} />
+        <DesktopIcon label="Statistics" icon={<StartIcon name="chart" />} storageKey={STATISTICS_ICON_KEY} slot={1}
+          onOpen={() => changeDesk((d) => openItem(d, STATISTICS))} />
         <MapView key={locationMode} graphRef={graph} connectionFilter={connectionFilter} onSelect={select} onExpandChange={onExpandChange} onShowMore={showMore} onOpenCity={openCity} />
         {desk.directoryOpen && <PropertiesWindow id="side-window" titleId="panel-title" bodyId="panel" title="Directory"
           storageKey={DIRECTORY_RECT_KEY} scrollKey={visibleHouses} minimized={desk.directoryMinimized}
@@ -249,9 +288,9 @@ export function App() {
           <PanelContent key={filterKey} selection={null} visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onTag={addTag} />
         </PropertiesWindow>}
         {desk.windows.map((w) => <PropertiesWindow key={w.key} id={w.key} titleId={`${w.key}-title`} bodyId={`${w.key}-body`}
-          title={windowTitle(w.item)} cascade={w.slot} align={isPlace(w.item) || isTool(w.item) ? 'left' : 'right'} className={isPlace(w.item) ? 'city-window' : undefined}
+          title={windowTitle(w.item)} cascade={w.slot} align={isPlace(w.item) || isTool(w.item) ? 'left' : 'right'} className={isPlace(w.item) ? 'city-window' : isTool(w.item) && w.item.id === 'run' ? 'run-window' : undefined}
           preferredSize={isPlace(w.item) ? cityWindowSize(placeTileCount(w.item, visibleIds)) : isTool(w.item) ? TOOL_SIZES[w.item.id] : undefined}
-          minSize={isPlace(w.item) ? cityWindowSize(1) : undefined}
+          minSize={isPlace(w.item) ? cityWindowSize(1) : isTool(w.item) && w.item.id === 'run' ? RUN_MIN_SIZE : undefined}
           fitHeight={isSelectionItem(w.item)}
           scrollKey={w.revision} minimized={w.minimized} active={desk.active === w.key} zIndex={zIndex(w.key)}
           onFocus={() => changeDesk((d) => focusWindow(d, w.key))} onMinimize={() => changeDesk((d) => minimizeWindow(d, w.key))}
@@ -259,6 +298,8 @@ export function App() {
           {isPlace(w.item) ? <PlaceWindowContent place={w.item} visibleIds={visibleIds} onSelect={select} />
             : isTool(w.item) ? w.item.id === 'stats' ? <StatisticsContent visibleHouses={visibleHouses} year={visibleYear} filtered={!!matchingIds} onSelect={select} onOpenPlace={openPlace} />
               : w.item.id === 'recycle' ? <RecycleBinContent visibleHouses={visibleHouses} year={visibleYear} onSelect={select} />
+              : w.item.id === 'help' ? <HelpContent />
+              : w.item.id === 'run' ? <RunContent items={runItems} onRun={run} onBrowse={openDirectory} onClose={() => closeKeys([w.key])} />
               : <MissingReportContent onSelect={select} />
             : <PanelContent key={`${w.revision}:${filterKey}`} selection={w.item} visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onTag={addTag} onOpenPlace={openPlace} />}
         </PropertiesWindow>)}
@@ -270,12 +311,35 @@ export function App() {
     </div>
   </div><div className="taskbar"><StartMenu>{(close) => <>
       <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
+        <StartIcon name="documents" /><span className="start-label">Documents</span><span className="start-arrow" aria-hidden="true" />
+        <div className="window start-submenu documents-submenu" role="group" aria-label="Documents">
+          {recent.length ? recent.map((item) => <button type="button" className="start-subitem start-subcommand" key={`${item.kind}:${item.id}`}
+            disabled={!isVisibleItem(item)} title={isVisibleItem(item) ? undefined : 'Hidden by the year or brand filters'}
+            onClick={() => { close(); openRecent(item); }}>
+            <span className="start-label">{recentLabel(item)}</span><span className="recent-kind">{RECENT_HINTS[item.kind]}</span>
+          </button>) : <button type="button" className="start-subitem start-subcommand" disabled>(Empty)</button>}
+          {recent.length > 0 && <><hr className="start-separator" />
+            <button type="button" className="start-subitem start-subcommand" onClick={() => setRecent([])}>Clear Documents</button></>}
+        </div>
+      </div>
+      <hr className="start-separator" />
+      <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
         <StartIcon name="globe" /><span className="start-label">Show brands at</span><span className="start-arrow" aria-hidden="true" />
         <fieldset className="window start-submenu" title={`${movedCount} brands have a different origin city`}>
           <legend className="visually-hidden">Show brands at</legend>
           {([['current', 'Current base'], ['origin', 'Origin']] as const).map(([mode, label]) => <div className="field-row start-subitem" key={mode}>
             <input type="radio" id={`location-${mode}`} name="location-mode" checked={locationMode === mode} onChange={() => changeLocationMode(mode)} />
             <label htmlFor={`location-${mode}`}>{label}</label>
+          </div>)}
+        </fieldset>
+      </div>
+      <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
+        <StartIcon name="folder" /><span className="start-label">Open cities</span><span className="start-arrow" aria-hidden="true" />
+        <fieldset className="window start-submenu" title="What clicking a city pin does">
+          <legend className="visually-hidden">Open cities</legend>
+          {([['window', 'In windows'], ['map', 'On map']] as const).map(([view, label]) => <div className="field-row start-subitem" key={view}>
+            <input type="radio" id={`city-view-${view}`} name="city-view" checked={cityView === view} onChange={() => setCityView(view)} />
+            <label htmlFor={`city-view-${view}`}>{label}</label>
           </div>)}
         </fieldset>
       </div>
@@ -297,12 +361,15 @@ export function App() {
       <FilterMenu value={filters} onChange={changeFilters} />
       <hr className="start-separator" />
       <button className="start-item start-command" id="expand-all" aria-pressed={allExpanded} onClick={() => { close(); graph.current?.setAllExpanded(!graph.current.allExpanded); }}><StartIcon name={allExpanded ? 'collapse' : 'expand'} /><span className="start-label">{allExpanded ? 'Collapse all' : 'Expand all'}</span></button>
-      <button className="start-item start-command" id="fit" onClick={() => { close(); graph.current?.fit(); }}><StartIcon name="fit" /><span className="start-label">Fit map</span></button>
       <hr className="start-separator" />
-      <button className="start-item start-command" id="copy-link" onClick={() => { close(); void copyLink(); }}><StartIcon name="link" /><span className="start-label">Copy Link</span></button>
       <button className="start-item start-command" id="statistics" onClick={() => { close(); changeDesk((d) => openItem(d, STATISTICS)); }}><StartIcon name="chart" /><span className="start-label">Statistics</span></button>
       {SHOW_MISSING_REPORT && <button className="start-item start-command" id="missing-report" onClick={() => { close(); changeDesk((d) => openItem(d, tool('missing'))); }}><StartIcon name="folder" /><span className="start-label">What's Missing</span></button>}
-      <button className="start-item start-command" id="home" onClick={() => { close(); changeDesk((d) => focusWindow({ ...d, directoryOpen: true }, DIRECTORY)); graph.current?.fit(); }}><StartIcon name="folder" /><span className="start-label">Directory</span></button>
+      <button className="start-item start-command" id="home" onClick={() => { close(); openDirectory(); }}><StartIcon name="folder" /><span className="start-label">Directory</span></button>
+      <hr className="start-separator" />
+      <button className="start-item start-command" id="help" onClick={() => { close(); changeDesk((d) => openItem(d, HELP)); }}><StartIcon name="help" /><span className="start-label">Help</span></button>
+      <button className="start-item start-command" id="run" onClick={() => { close(); changeDesk((d) => openItem(d, RUN)); }}><StartIcon name="run" /><span className="start-label">Run…</span></button>
+      <hr className="start-separator" />
+      <button className="start-item start-command" id="reset-view" onClick={() => { close(); resetView(); }}><StartIcon name="reset" /><span className="start-label">Reset View</span></button>
     </>}</StartMenu>
     <div className="taskbar-search">
       <SearchBox items={availableSearchItems} value={search} onChange={setSearch} onPick={(item) => select(item.value, true)}
@@ -312,7 +379,7 @@ export function App() {
     {desk.directoryOpen && <TaskGroup label="Directory" active={desk.active} onToggle={toggle} onShow={show}
       onClose={(key) => closeKeys([key])} windowActions={windowActions} groupActions={groupActions}
       tasks={[{ key: DIRECTORY, title: 'Directory', minimized: desk.directoryMinimized, controls: 'side-window' }]} />}
-    {([['Brands', 'brand'], ['Designers', 'designer'], ['Locations', 'place'], ['Statistics', 'stats'], ['Recycle Bin', 'recycle'], ["What's Missing", 'missing']] as const).map(([label, type]) => <TaskGroup key={label} label={label} active={desk.active}
+    {([['Brands', 'brand'], ['Designers', 'designer'], ['Locations', 'place'], ['Statistics', 'stats'], ['Recycle Bin', 'recycle'], ["What's Missing", 'missing'], ['Help', 'help'], ['Run', 'run']] as const).map(([label, type]) => <TaskGroup key={label} label={label} active={desk.active}
       onToggle={toggle} onShow={show} onClose={(key) => closeKeys([key])} windowActions={windowActions} groupActions={groupActions} tasks={desk.windows.filter((w) => windowType(w.item) === type)
         .map((w) => ({ key: w.key, title: windowTitle(w.item), minimized: w.minimized, controls: w.key }))} />)}<YearTray year={year} minYear={minYear} maxYear={maxYear} playing={playFrom !== null} onYear={setYear}
       onPlay={() => setPlayFrom((current) => current === null ? year >= maxYear ? minYear : year : null)} />

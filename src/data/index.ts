@@ -88,10 +88,19 @@ export function careerOf(designerId: string): Tenure[] {
 
 /** Everyone who has held a role at a house, in chronological order. */
 export function tenuresAt(houseId: string): HouseTenure[] {
-  return designers
-    .flatMap((d) => d.career.map((t) => ({ ...t, designerId: d.id })))
-    .filter((t) => t.house === houseId)
-    .sort(byStart);
+  return [...(tenuresByHouse().get(houseId) ?? [])];
+}
+
+/**
+ * Every tenure grouped by house, built once: scanning all careers per call made
+ * per-brand loops (Statistics, What's Missing) quadratic, ~1s on the main thread.
+ */
+let tenureIndex: Map<string, readonly HouseTenure[]> | undefined;
+function tenuresByHouse(): Map<string, readonly HouseTenure[]> {
+  if (tenureIndex) return tenureIndex;
+  const grouped = Map.groupBy(designers.flatMap((d) => d.career.map((t): HouseTenure => ({ ...t, designerId: d.id }))), (t) => t.house as string);
+  for (const list of grouped.values()) list.sort(byStart);
+  return tenureIndex = grouped;
 }
 
 /** Business appointments must never be presented as creative direction. */

@@ -2,7 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { allMoves, collaborations, countryNames, designers, getDesigner, getHouse, groups, isBusinessLeadership, marketPositionings, tenuresAt, type CountryCode } from '../data';
 import type { House } from '../types';
 import { mapLocationForCity } from '../graph/locations';
-import { EntityLink, Fields, PlaceLink, ProfileSection, type Actions } from './panel';
+import { EntityLink, Fields, PlaceLink, ProfileSection, RowLimitedPanel, type Actions } from './panel';
 import { SelectBox } from './listbox';
 
 /** Rows shown in each "top" table. */
@@ -14,8 +14,11 @@ interface Row {
   cells?: ReactNode[];
 }
 
+/** Rows a table shows before it scrolls, however many the "Show" picker lists. */
+export const STATS_VISIBLE_ROWS = 25;
+
 /** Row counts the collaboration tables can show. */
-export const COLLAB_LIMITS = [STATS_TOP, 25, 50] as const;
+export const COLLAB_LIMITS = [STATS_TOP, 25, 50, 100] as const;
 
 /** A statistics section with a "Show" picker for how many rows its table lists. */
 function LimitedSection({ title, children }: { title: string; children: (limit: number) => ReactNode }) {
@@ -45,13 +48,13 @@ function BarTable({ heading, rows, label, countHeading = 'Count', columns = [] }
 }) {
   const max = Math.max(1, ...rows.map((row) => row.count));
   if (!rows.length) return <p className="hint">Nothing to count with the current filters.</p>;
-  return <div className="sunken-panel stats-table"><table aria-label={label}>
+  return <RowLimitedPanel rows={STATS_VISIBLE_ROWS} className="stats-table"><table aria-label={label}>
     <thead><tr><th>{heading}</th>{columns.map((column) => <th key={column}>{column}</th>)}<th className="stats-count">{countHeading}</th><th className="stats-bar-cell" aria-hidden="true"></th></tr></thead>
     <tbody>{rows.map((row) => <tr key={row.key}>
       <td>{row.label}</td>{columns.map((column, index) => <td key={column}>{row.cells?.[index]}</td>)}<td className="stats-count">{row.count.toLocaleString()}</td>
       <td className="stats-bar-cell" aria-hidden="true"><span className="stats-bar" style={{ width: `${(row.count / max) * 100}%` }} /></td>
     </tr>)}</tbody>
-  </table></div>;
+  </table></RowLimitedPanel>;
 }
 
 /**

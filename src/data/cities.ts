@@ -154,10 +154,17 @@ export const cities = {
   Madrid: [40.4168, -3.7038],
   'New York': [40.7128, -74.006],
   Poughkeepsie: [41.7004, -73.921],
+  Ronkonkoma: [40.8154, -73.1124],
+  Aberdeen: [57.1497, -2.0943],
+  Elgin: [57.6498, -3.3168],
   'Nagano Prefecture': [36.2048, 138.2529],
   'San Francisco': [37.7749, -122.4194],
   Ventura: [34.2746, -119.229],
   'Los Angeles': [34.0522, -118.2437],
+  Encinitas: [33.037, -117.292],
+  Solihull: [52.4118, -1.7776],
+  Bromsgrove: [52.3353, -2.0579],
+  Redditch: [52.3094, -1.9409],
   Antwerp: [51.2194, 4.4025],
   Moss: [59.434, 10.6577],
   Stockholm: [59.3293, 18.0686],
@@ -305,6 +312,10 @@ export const cities = {
   'Ellera di Corciano': [43.0970, 12.3150],
   'La Chaux-de-Fonds': [47.1035, 6.8328],
   Lancashire: [53.7632, -2.7031],
+  Hudson: [42.3918, -71.5662],
+  Englewood: [40.8929, -73.9726],
+  'Florence, Alabama': [34.7998, -87.6773],
+  Sunderland: [54.9069, -1.3838],
 } satisfies Record<string, LatLng>;
 
 export type CityName = keyof typeof cities;
@@ -322,6 +333,8 @@ export const cityRegions: Partial<Record<CityName, { country: CountryCode; regio
   Shellbrook: { country: CountryCode.Canada, region: 'Saskatchewan' },
   Kutztown: { country: CountryCode.UnitedStates, region: 'Pennsylvania' },
   Waltham: { country: CountryCode.UnitedStates, region: 'Massachusetts' },
+  Hudson: { country: CountryCode.UnitedStates, region: 'Massachusetts' },
+  Englewood: { country: CountryCode.UnitedStates, region: 'New Jersey' },
   Abington: { country: CountryCode.UnitedStates, region: 'Massachusetts' },
   Newmarket: { country: CountryCode.UnitedStates, region: 'New Hampshire' },
   Pendleton: { country: CountryCode.UnitedStates, region: 'Oregon' },
@@ -406,9 +419,11 @@ export const cityRegions: Partial<Record<CityName, { country: CountryCode; regio
   Seattle: { country: CountryCode.UnitedStates, region: 'Washington' },
   'New York': { country: CountryCode.UnitedStates, region: 'New York' },
   Poughkeepsie: { country: CountryCode.UnitedStates, region: 'New York' },
+  Ronkonkoma: { country: CountryCode.UnitedStates, region: 'New York' },
   'San Francisco': { country: CountryCode.UnitedStates, region: 'California' },
   Ventura: { country: CountryCode.UnitedStates, region: 'California' },
   'Los Angeles': { country: CountryCode.UnitedStates, region: 'California' },
+  Encinitas: { country: CountryCode.UnitedStates, region: 'California' },
   'Santa Barbara': { country: CountryCode.UnitedStates, region: 'California' },
   Goleta: { country: CountryCode.UnitedStates, region: 'California' },
   'Port Washington': { country: CountryCode.UnitedStates, region: 'Wisconsin' },
@@ -429,6 +444,7 @@ export const cityRegions: Partial<Record<CityName, { country: CountryCode; regio
   Montreal: { country: CountryCode.Canada, region: 'Quebec' },
   Stamford: { country: CountryCode.UnitedStates, region: 'Connecticut' },
   "Martha's Vineyard": { country: CountryCode.UnitedStates, region: 'Massachusetts' },
+  'Florence, Alabama': { country: CountryCode.UnitedStates, region: 'Alabama' },
 };
 
 /** Human-readable location; never use this label as a map key. */

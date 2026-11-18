@@ -9,7 +9,7 @@ const mocks = vi.hoisted(() => ({ instances: [] as {
   select: ReturnType<typeof vi.fn>; setHouseFilter: ReturnType<typeof vi.fn>;
   setYear: ReturnType<typeof vi.fn>; setShowMoves: ReturnType<typeof vi.fn>;
   setShowCollaborations: ReturnType<typeof vi.fn>; setConnectionFilter: ReturnType<typeof vi.fn>;
-  setAllExpanded: ReturnType<typeof vi.fn>; destroy: ReturnType<typeof vi.fn>; houseAt: ReturnType<typeof vi.fn>;
+  setAllExpanded: ReturnType<typeof vi.fn>; fit: ReturnType<typeof vi.fn>; destroy: ReturnType<typeof vi.fn>; houseAt: ReturnType<typeof vi.fn>;
 }[] }));
 vi.mock('./graph/graph', () => ({
   DesignerGraph: class {
@@ -38,6 +38,11 @@ import { clampRect, defaultRect } from './ui/side-panel';
 import { GroupId } from './data/groups';
 
 const openStart = (user: ReturnType<typeof userEvent.setup>) => user.click(screen.getByRole('button', { name: 'Start' }));
+/** The Directory starts closed; the Start menu opens it. */
+const openDirectory = async (user: ReturnType<typeof userEvent.setup>) => {
+  await openStart(user);
+  await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'Directory' }));
+};
 
 afterEach(() => {
   cleanup();
@@ -125,7 +130,7 @@ describe('React app graph integration', () => {
     expect(ids.has('rimowa')).toBe(false);
     openYear();
     fireEvent.change(screen.getByRole('slider'), { target: { value: '1940' } });
-    expect(document.getElementById('panel-title')?.textContent).toBe('Directory');
+    expect(screen.queryByRole('dialog', { name: 'Dior' })).toBeNull();
     expect(graph.setYear).toHaveBeenLastCalledWith(1940);
     expect(graph.select).toHaveBeenLastCalledWith(null, false);
     await user.click(screen.getByRole('button', { name: 'Clear All' }));
@@ -194,7 +199,7 @@ describe('React app graph integration', () => {
     render(<App />);
     const graph = mocks.instances[0]!;
     await openStart(user);
-    await user.click(screen.getByRole('button', { name: 'Statistics' }));
+    await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'Statistics' }));
     const stats = screen.getByRole('dialog', { name: 'Statistics' });
     expect(within(stats).getByRole('table', { name: 'Brands by market positioning' })).toBeTruthy();
     expect(within(stats).getByText('For every brand on the map.')).toBeTruthy();
@@ -203,9 +208,11 @@ describe('React app graph integration', () => {
     await openStart(user);
     await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'Statistics' }));
     expect(screen.getAllByRole('dialog', { name: 'Statistics' })).toHaveLength(1);
+    await user.click(screen.getByTitle('Open Statistics (drag to move)'));
+    expect(screen.getAllByRole('dialog', { name: 'Statistics' })).toHaveLength(1);
     const countries = within(stats).getByRole('table', { name: 'Main brands by country' });
     await user.click(within(countries).getAllByRole('link')[0]!);
-    expect(screen.getAllByRole('dialog').length).toBeGreaterThan(2);
+    expect(screen.getAllByRole('dialog').length).toBeGreaterThan(1);
     const directors = within(screen.getByRole('dialog', { name: 'Statistics' })).getByRole('table', { name: 'Brands by number of creative directors' });
     await user.click(within(directors).getAllByRole('link')[0]!);
     expect(graph.select).toHaveBeenLastCalledWith(expect.objectContaining({ kind: 'house' }), true);
@@ -275,9 +282,11 @@ it('changes the map connection filter without rebuilding the graph', async () =>
 });
 
 describe('Properties window layout', () => {
-  it('minimizes to the taskbar and restores, remembering the state', async () => {
+  it('starts closed, opens from the Start menu, minimizes to the taskbar and restores', async () => {
     const user = userEvent.setup();
-    const { unmount } = render(<App />);
+    render(<App />);
+    expect(document.getElementById('side-window')).toBeNull();
+    await openDirectory(user);
     const panel = document.getElementById('side-window')!;
     const task = screen.getByRole('button', { name: 'Directory' , pressed: true });
     expect(panel.hidden).toBe(false);
@@ -285,13 +294,8 @@ describe('Properties window layout', () => {
     expect(panel.hidden).toBe(true);
     expect(task.getAttribute('aria-pressed')).toBe('false');
     expect(screen.queryByRole('separator', { name: 'Resize Directory' })).toBeNull();
-    expect(localStorage.getItem('designer-map:panel-minimized')).toBe('on');
-    unmount();
-    render(<App />);
-    expect(document.getElementById('side-window')!.hidden).toBe(true);
     await user.click(screen.getByRole('button', { name: 'Directory', pressed: false }));
     expect(document.getElementById('side-window')!.hidden).toBe(false);
-    expect(localStorage.getItem('designer-map:panel-minimized')).toBe('off');
   });
 
   const withArea = (run: () => Promise<void> | void) => async () => {
@@ -301,8 +305,9 @@ describe('Properties window layout', () => {
     try { await run(); } finally { width.mockRestore(); height.mockRestore(); }
   };
 
-  it('floats at the right edge, moves by its title bar and stays inside the map area', withArea(() => {
+  it('floats at the right edge, moves by its title bar and stays inside the map area', withArea(async () => {
     render(<App />);
+    await openDirectory(userEvent.setup());
     const panel = document.getElementById('side-window')!;
     expect([panel.style.left, panel.style.top, panel.style.width, panel.style.height]).toEqual(['588px', '12px', '400px', '576px']);
     const titleBar = screen.getByLabelText('Move Directory window');
@@ -322,6 +327,7 @@ describe('Properties window layout', () => {
   it('resizes from the grip with pointer and keyboard, within minimum sizes', withArea(async () => {
     const user = userEvent.setup();
     render(<App />);
+    await openDirectory(user);
     const panel = document.getElementById('side-window')!;
     const grip = screen.getByRole('separator', { name: 'Resize Directory' });
     fireEvent.pointerDown(grip, { button: 0, clientX: 990, clientY: 590, pointerId: 1 });
@@ -342,6 +348,7 @@ describe('Map context menu', () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
+    await openDirectory(user);
     await user.click(screen.getByRole('button', { name: 'Minimize Directory' }));
     expect(document.getElementById('side-window')!.hidden).toBe(true);
     fireEvent.contextMenu(document.getElementById('graph')!, { clientX: 40, clientY: 50 });
@@ -387,7 +394,7 @@ describe('Multiple Properties windows', () => {
     await user.clear(find);
     await user.type(find, 'maria grazia chiuri');
     await user.click(screen.getByRole('option', { name: /^Maria Grazia Chiuri/ }));
-    expect(titles()).toEqual(['Directory', 'Dior', 'Chanel', 'Prada', 'Maria Grazia Chiuri']);
+    expect(titles()).toEqual(['Dior', 'Chanel', 'Prada', 'Maria Grazia Chiuri']);
     const taskbar = within(document.querySelector<HTMLElement>('.taskbar')!);
     expect(taskbar.getByRole('button', { name: 'Brands, 3 windows' })).toBeTruthy();
     expect(taskbar.getByRole('button', { name: 'Maria Grazia Chiuri' })).toBeTruthy();
@@ -436,7 +443,7 @@ describe('Multiple Properties windows', () => {
       .toEqual(['(minimized) Dior', 'Prada']);
     fireEvent.contextMenu(taskbar.getByRole('button', { name: 'Brands, 2 windows' }));
     await user.click(within(screen.getByRole('menu', { name: 'Brands group' })).getByRole('menuitem', { name: 'Close All' }));
-    expect(titles()).toEqual(['Directory']);
+    expect(screen.queryAllByRole('dialog')).toHaveLength(0);
     expect(graph.select).toHaveBeenLastCalledWith(null, false);
   });
 
@@ -444,6 +451,7 @@ describe('Multiple Properties windows', () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
+    await openDirectory(user);
     await pick(user, 'dior', 'Dior house');
     await pick(user, 'chanel', 'Chanel house');
     await pick(user, 'prada', 'Prada house');
@@ -475,6 +483,7 @@ describe('Multiple Properties windows', () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
+    await openDirectory(user);
     await pick(user, 'dior', 'Dior house');
     await pick(user, 'chanel', 'Chanel house');
     await user.click(screen.getByRole('button', { name: 'Close Chanel' }));
@@ -605,10 +614,10 @@ describe('City windows', () => {
     render(<App />);
     for (const city of ['Paris', 'Milan', 'London']) openCity(city);
     const titles = screen.getAllByRole('dialog').map((dialog) => document.getElementById(dialog.getAttribute('aria-labelledby')!)!.textContent);
-    expect(titles).toEqual(['Directory', 'Paris', 'Milan', 'London']);
+    expect(titles).toEqual(['Paris', 'Milan', 'London']);
     // Re-opening an open city focuses it rather than adding another.
     openCity('Milan');
-    expect(screen.getAllByRole('dialog')).toHaveLength(4);
+    expect(screen.getAllByRole('dialog')).toHaveLength(3);
     expect(screen.getByRole('dialog', { name: 'Milan' }).hasAttribute('data-active')).toBe(true);
   });
 
@@ -617,6 +626,7 @@ describe('City windows', () => {
     const { unmount } = render(<App />);
     const graph = mocks.instances[0]! as typeof mocks.instances[0] & { toggleCity: ReturnType<typeof vi.fn> };
     graph.toggleCity = vi.fn();
+    await openStart(user);
     await user.click(screen.getByRole('radio', { name: 'On map' }));
     openCity('Paris');
     expect(graph.toggleCity).toHaveBeenCalledWith('Paris');
@@ -625,6 +635,7 @@ describe('City windows', () => {
     expect(localStorage.getItem('designer-map:city-view')).toBe('map');
     unmount();
     render(<App />);
+    await openStart(user);
     expect(screen.getByRole<HTMLInputElement>('radio', { name: 'On map' }).checked).toBe(true);
     await user.click(screen.getByRole('radio', { name: 'In windows' }));
     openCity('Paris');
@@ -639,5 +650,110 @@ describe('City windows', () => {
     const names = within(screen.getByRole('list', { name: 'Brands in Paris' })).getAllByRole('button').map((button) => button.textContent);
     expect(names).toContain('Louis Vuitton');
     expect(names).not.toContain('Dior');
+  });
+});
+
+describe('Start menu commands', () => {
+  const startMenu = () => within(screen.getByRole('dialog', { name: 'Start menu' }));
+  const runCommand = async (user: ReturnType<typeof userEvent.setup>, text: string) => {
+    await openStart(user);
+    await user.click(startMenu().getByRole('button', { name: 'Run…' }));
+    const input = within(screen.getByRole('dialog', { name: 'Run' })).getByRole('combobox');
+    await user.clear(input);
+    await user.type(input, text);
+    await user.keyboard('{Enter}');
+  };
+
+  it('Run… opens a brand by its exact name, a place or a year, and reports unknown names', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await runCommand(user, 'Dior');
+    // Run stays open as an ordinary window, behind the brand it opened.
+    const runWindow = screen.getByRole('dialog', { name: 'Run' });
+    expect(within(runWindow).getByRole('combobox')).toHaveProperty('value', 'Dior');
+    expect(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('button', { name: 'Run' })).toBeTruthy();
+    expect(screen.getByRole('dialog', { name: 'Dior' })).toBeTruthy();
+    expect(mocks.instances[0]!.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+
+    await runCommand(user, 'Paris');
+    expect(screen.getByRole('dialog', { name: 'Paris' })).toBeTruthy();
+
+    await runCommand(user, '1990');
+    expect(screen.getByText('Up to 1990')).toBeTruthy();
+
+    await runCommand(user, 'zzqx');
+    const dialog = screen.getByRole('dialog', { name: 'Run' });
+    expect(within(dialog).getByRole('alert').textContent).toContain("Cannot find 'zzqx'");
+    await user.click(within(dialog).getByRole('button', { name: 'Browse…' }));
+    expect(screen.getByRole('dialog', { name: 'Directory' })).toBeTruthy();
+    // Opening Run again focuses the same window; Cancel closes it.
+    await openStart(user);
+    await user.click(startMenu().getByRole('button', { name: 'Run…' }));
+    expect(screen.getAllByRole('dialog', { name: 'Run' })).toHaveLength(1);
+    await user.click(within(screen.getByRole('dialog', { name: 'Run' })).getByRole('button', { name: 'Cancel' }));
+    expect(screen.queryByRole('dialog', { name: 'Run' })).toBeNull();
+  });
+
+  it('the Run window minimizes and restores from the taskbar like other windows', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await openStart(user);
+    await user.click(startMenu().getByRole('button', { name: 'Run…' }));
+    const runWindow = screen.getByRole('dialog', { name: 'Run' });
+    await user.click(within(runWindow).getByRole('button', { name: 'Minimize Run' }));
+    expect(screen.queryByRole('dialog', { name: 'Run' })).toBeNull();
+    await user.click(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('button', { name: 'Run' }));
+    expect(screen.getByRole('dialog', { name: 'Run' })).toBeTruthy();
+  });
+
+  it('Documents lists recently opened items, newest first, and reopens them', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await openStart(user);
+    expect(startMenu().getByRole('group', { name: 'Documents' }).textContent).toContain('(Empty)');
+    await user.keyboard('{Escape}');
+    await runCommand(user, 'Dior');
+    await runCommand(user, 'Paris');
+    await openStart(user);
+    const documents = startMenu().getByRole('group', { name: 'Documents' });
+    expect(within(documents).getAllByRole('button').map((b) => b.querySelector('.start-label')?.textContent).filter(Boolean)).toEqual(['Paris', 'Dior']);
+    expect(JSON.parse(localStorage.getItem('designer-map:recent')!)).toEqual([{ kind: 'city', id: 'Paris' }, { kind: 'house', id: 'dior' }]);
+    await user.click(within(documents).getByRole('button', { name: /Dior/ }));
+    expect(screen.queryByRole('dialog', { name: 'Start menu' })).toBeNull();
+    expect(mocks.instances[0]!.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    await openStart(user);
+    await user.click(startMenu().getByRole('button', { name: 'Clear Documents' }));
+    expect(startMenu().getByRole('group', { name: 'Documents' }).textContent).toContain('(Empty)');
+  });
+
+  it('Help opens one Help window with the map legend', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await openStart(user);
+    await user.click(startMenu().getByRole('button', { name: 'Help' }));
+    const help = screen.getByRole('dialog', { name: 'Help' });
+    expect(within(help).getByText('Connection lines')).toBeTruthy();
+    expect(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('button', { name: 'Help' })).toBeTruthy();
+  });
+
+  it('Reset View clears the selection, filters, year and windows, and shows the whole map', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    await runCommand(user, 'Dior');
+    await runCommand(user, '1990');
+    await openStart(user);
+    await user.click(startMenu().getByRole('button', { name: 'Statistics' }));
+    graph.setAllExpanded.mockClear();
+    await openStart(user);
+    await user.click(startMenu().getByRole('button', { name: 'Reset View' }));
+    expect(screen.queryByRole('dialog', { name: 'Dior' })).toBeNull();
+    expect(screen.queryByRole('dialog', { name: 'Statistics' })).toBeNull();
+    expect(screen.getByText('Showing all years')).toBeTruthy();
+    expect(screen.getByText('Nothing selected')).toBeTruthy();
+    expect(graph.select).toHaveBeenLastCalledWith(null, false);
+    expect(graph.setAllExpanded).toHaveBeenCalledWith(false);
+    expect(graph.fit).toHaveBeenCalled();
+    expect(document.getElementById('status-counts')!.textContent).toBe('View reset');
   });
 });

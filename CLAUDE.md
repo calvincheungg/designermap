@@ -44,7 +44,9 @@ src/ui/listbox.tsx    React Win98 Find combobox (replaces <datalist>)
 src/ui/filters.tsx    Start menu "Filter brands" cascade + toolbar chips for active filters
 src/ui/side-panel.tsx floating Properties window: move, resize, minimize, close
 src/ui/desktop.ts     window manager: Directory + up to 3 Properties + up to 3 city/country windows
-src/ui/tool-windows.tsx Recycle Bin (ended brands) and dev-only What's Missing report windows
+src/ui/tool-windows.tsx Recycle Bin (ended brands), Help (map legend) and dev-only What's Missing report windows
+src/ui/run-dialog.tsx Start ▸ Run… box: open a brand, designer, group, city, country or year by name
+src/ui/recent.ts      Start ▸ Documents: recently opened items (localStorage)
 src/ui/desktop-icon.tsx draggable Win98 desktop icon (Recycle Bin, public/assets/bin.webp)
 src/ui/share-link.ts  shareable view in the URL hash: #brand=…&year=…&<filter>=a,b
 src/ui/statistics.tsx  Statistics window (Start menu): filtered totals, tiers, countries, cities, top lists
@@ -119,7 +121,7 @@ Key rules:
     with the map when zoomed out but cap at ~26px on screen (`sizeMarkers`,
     re-run on every zoom); colliding labels are hidden via `text-opacity`
     (an empty `label` bypass would *remove* the override) and appear on hover. Clicking a pin opens a
-    city window (toolbar "Open cities: In windows", the default) or, with "On map"
+    city window (Start menu "Open cities: In windows", the default) or, with "On map"
     (`designer-map:city-view`, read via a ref so the graph is never rebuilt),
     toggles the city on the map; `DesignerGraph.expanded` holds open cities. An open city's
     houses sit in an invisible `grid` compound in the nearest spot that covers no
@@ -317,17 +319,30 @@ Key rules:
 - Map options live in the taskbar Start menu (`StartMenu`), styled after
   `public/assets/start_menu.gif`: navy side banner, 32px pixel icons
   (`ui/start-icons.tsx`), etched separators, navy highlight rows and black
-  submenu arrows. "Show brands at" and "Connection lines" are cascading
+  submenu arrows. "Show brands at", "Open cities" and "Connection lines" are cascading
   submenus (CSS hover/focus-within) with menu bullets/check marks; Expand all,
-  Fit map and Directory are commands that close the menu. Escape and outside
+  Statistics, Directory, Help, Run… and Reset View are commands that close the menu.
+  "Documents" (first) lists the last `MAX_RECENT` (10) brands, designers, groups
+  and places brought to the front (`ui/recent.ts`, `designer-map:recent`); items
+  the filters hide are disabled, and Clear Documents empties it. Run… opens the
+  Run tool window (`RUN`, type `run`, `RunContent`): a normal desktop window
+  (drag, resize, minimize, close, taskbar button) that stays open after running,
+  keeping its last entry, with the opened window in front. Enter runs the best match, exact names
+  first (`matchingItems(…, exactFirst)`; the taskbar Find keeps its order),
+  4-digit years set the year, unknown names show Win98's "Cannot find" message,
+  Cancel closes it and Browse… opens the Directory. Help is a tool window (`HELP`, type `help`)
+  with the pin/line/pulse legend. Reset View clears selection, filters, year,
+  connection filter, every window and open city, then fits the map; display
+  settings (lines, Show brands at, Open cities) stay. Minesweeper colours live
+  in `graph/minesweeper.ts` so UI code can use them without the graph engine. Escape and outside
   clicks close it. The Start button's flag is cropped from
   `public/assets/start_logo.jpg`. Find sits in the taskbar beside Start
   (`.taskbar-search`, placeholder "Search"): its suggestions open upward and
   appear only once the user types (`SearchBox previewAll={false} dropUp`); city
   windows' Find still lists every brand. The year slider and Play live in the
   clock's pop-up (`ui/year-tray.tsx YearTray`); a set year shows beside the
-  time. The toolbar keeps the "Open cities: In windows / On map" toggle and
-  removable chips for active filters (shown only while filtering).
+  time. The main window has no title bar; the toolbar holds only the
+  removable chips for active filters and is hidden (`.toolbar:empty`) unless filtering.
 - City windows (`CityWindowContent`) list a pin's main brands (no sublabels)
   within the year/tag filters as Win98 desktop icons in the map's grey frame;
   clicking one opens its Properties. A Find box (the shared `SearchBox`, with
@@ -358,9 +373,8 @@ Key rules:
   (`ContextMenu`): Restore, Minimize, Show on Map (brands/designers/groups),
   Close Other Windows (same type), Close; a grouped button offers Restore All,
   Minimize All and Close All (`desktop.ts restoreWindows/minimizeWindows/closeWindows`).
-  - One Directory window (position and minimized state remembered:
-    `designer-map:properties-window`, `designer-map:panel-minimized`); closing it
-    is undone by the Start menu's Directory command.
+  - One Directory window, closed on startup and opened by the Start menu's
+    Directory command (position remembered: `designer-map:properties-window`).
   - Up to `MAX_PROPERTY_WINDOWS` brand/group windows and, as a separate
     window type (`desktop.ts windowType`), up to `MAX_DESIGNER_WINDOWS`
     designer windows, cascaded from the Directory (designers continue the cascade
@@ -375,21 +389,26 @@ Key rules:
     whose item the year/tag filters hide are closed.
   - Tool windows (`desktop.ts ToolItem`, one each, each its own window type and
     taskbar button): Statistics, the Recycle Bin and What's Missing. The Recycle
-    Bin desktop icon (`DesktopIcon`) starts top-right of the map, left of the
-    Directory's default spot; dragging it is remembered as
-    `designer-map:recycle-bin-position`, and a click (not a drag) opens the window
+    Bin and Statistics desktop icons (`DesktopIcon`) start stacked in the map's
+    top-right corner (`slot` 0 and 1); dragging is remembered as
+    `designer-map:recycle-bin-position` / `designer-map:statistics-icon-position`.
+    Clicking the Statistics icon opens Statistics; a Recycle Bin click (not a drag) opens the window
     of brands with an Ended year, within the filters, newest first. What's Missing
     (Start menu, `import.meta.env.DEV` only) lists research gaps across all brands:
     nobody linked, likely missing origins (`missingOriginCandidates`), and no
     founding year, logo, website or Instagram.
   - Share links: the URL hash holds the selection, year and tag filters
     (`share-link.ts`); it's read at startup and on `hashchange`, rewritten with
-    `history.replaceState` as the view changes (not during Play), and the Start
-    menu's Copy Link copies it, confirming in the status bar.
-  - The map can't be panned or dragged past its edges (`graph.ts clampPan`, run
-    on every viewport change).
+    `history.replaceState` as the view changes (not during Play), so the address
+    bar URL is always the shareable link.
+  - The map can be dragged up to `OVERSCROLL` (40% of the view) past each edge,
+    so border places like Japan can reach the centre from under a window
+    (`graph.ts clampPan`, run on every viewport change; programmatic changes clamp
+    hard). Dragging past that allowance meets rubber-band resistance (at most
+    `RUBBER_BAND` px) and springs back on release (`releasePan`; instant with
+    reduced motion).
   - One Statistics window (`desktop.ts STATISTICS`, window type `stats`), opened
-    from the Start menu. It follows the year/tag filters, isn't a map selection
+    from the Start menu or its desktop icon. It follows the year/tag filters, isn't a map selection
     (`isSelectionItem` excludes it with place windows), and its names open the
     matching brand, designer, city or country window.
   - On phones only the active window shows, stacked under the map.

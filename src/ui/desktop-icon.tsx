@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
 
 interface Point { x: number; y: number }
 const DRAG_THRESHOLD = 4;
@@ -14,9 +14,9 @@ function readPoint(key: string): Point | null {
 /**
  * A Win98 desktop icon floating over the map: drag it anywhere inside the map
  * area (position remembered under `storageKey`), click or press Enter to open.
- * Without a saved position it sits in the top-right corner.
+ * Without a saved position it sits in the top-right corner, `slot` rows down.
  */
-export function DesktopIcon({ label, icon, storageKey, onOpen }: { label: string; icon: ReactNode; storageKey: string; onOpen: () => void }) {
+export function DesktopIcon({ label, icon, storageKey, slot = 0, onOpen }: { label: string; icon: ReactNode; storageKey: string; slot?: number; onOpen: () => void }) {
   const button = useRef<HTMLButtonElement>(null);
   const [point, setPoint] = useState<Point | null>(() => readPoint(storageKey));
   const drag = useRef<{ start: Point; origin: Point; moved: boolean } | null>(null);
@@ -68,7 +68,7 @@ export function DesktopIcon({ label, icon, storageKey, onOpen }: { label: string
   };
 
   return <button ref={button} type="button" className="desktop-icon" title={`Open ${label} (drag to move)`}
-    style={point ? { left: point.x, top: point.y, right: 'auto' } : undefined}
+    style={point ? { left: point.x, top: point.y, right: 'auto' } : { '--slot': slot } as CSSProperties}
     onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={() => { drag.current = null; }}
     onKeyDown={keys} onDoubleClick={(event) => event.preventDefault()}>
     <span className="desktop-icon-image" aria-hidden="true">{icon}</span>

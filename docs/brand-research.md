@@ -144,6 +144,13 @@ work in this order to keep searches cheap:
      of the brand's Hypebeast archive, `https://hypebeast.com/brands/<slug>`
      then `/page/2`, `/page/3`… until a page returns 404. Do not stop at a
      fixed page count; established brands run to 50–90 pages, back to ~2007.
+     **Check pagination first:** some `/brands/<slug>/page/N` URLs ignore the
+     page number and return page 1 every time (no 404, identical articles).
+     If page 2 matches page 1, crawl the tag archive instead,
+     `https://hypebeast.com/tags/<slug>/page/N` (the "Load More" link on page 1
+     points to it), which pages normally and ends in a 404. Tell each agent to
+     compare page 2 with page 1 and switch to `/tags/` if they match, and to
+     report which URL scheme it used.
      Split the page range across two or three parallel `web-fetch` agents
      (for example 1–25, 26–60, 61+), and have each report the last page that
      existed and its oldest article date, so you can confirm the crawl reached

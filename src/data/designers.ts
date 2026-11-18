@@ -2546,6 +2546,29 @@ export const designers = {
     career: [{ house: 'lisaYang', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null }],
     sources: ['https://lisa-yang.com/pages/about', 'https://se.linkedin.com/in/samuelstenberg'],
   },
+  elinKling: {
+    name: 'Elin Kling',
+    nationality: 'Swedish',
+    career: [{ house: 'toteme', role: 'Founder', roleDetail: 'Co-founder, creative director', start: 2014, end: null }],
+    notes: 'Former fashion journalist who wrote the blog Style by Kling and founded the Swedish fashion magazine StyleBy in 2011 before launching Toteme with her husband, Karl Lindman.',
+    sources: ['https://businessoffashion.com/articles/luxury/the-secrets-behind-totemes-success/', 'https://thefashionography.com/fashion-brands/toteme/'],
+  },
+  karlLindman: {
+    name: 'Karl Lindman',
+    nationality: 'Swedish',
+    career: [{ house: 'toteme', role: 'Founder', roleDetail: 'Co-founder, brand director', start: 2014, end: null }],
+    notes: 'Former model who became a senior art director at Baron & Baron and design director of Interview magazine before co-founding Toteme with his wife, Elin Kling. Oversees branding, stores and the menswear line.',
+    sources: ['https://en.wikipedia.org/wiki/Karl_Lindman', 'https://www.brownsfashion.com/uk/story/elin-kling-karl-lindman-toteme-interview', 'https://www.highsnobiety.com/p/toteme-menswear-interview/'],
+  },
+  alexanderHaggblad: {
+    name: 'Alexander Häggblad',
+    nationality: 'Swedish',
+    career: [
+      { house: 'celine', role: 'Other', roleDetail: 'Designer under Hedi Slimane' },
+      { house: 'toteme', role: 'Other', roleDetail: 'Menswear designer', start: 2025, end: null },
+    ],
+    sources: ['https://www.highsnobiety.com/p/toteme-menswear-interview/', 'https://fashionunited.com/news/fashion/toteme-to-enter-menswear-with-debut-collection-in-august/2026061873045'],
+  },
   rohdiHeintz: {
     name: 'Rohdi Heintz',
     career: [{ house: 'bjornBorg', role: 'Head Designer', roleDetail: 'Lead designer of the original Björn Borg Collection', start: 1984 }],
@@ -3325,6 +3348,7 @@ export const designers = {
       { house: 'yohjiYamamoto', role: 'Founder', start: 1972, end: null },
       { house: 'yohjiYamamotoPourHomme', role: 'Head Designer', start: 1984, end: null, sources: ['https://www.yohjiyamamoto.co.jp/news/detail/yohji-yamamoto-chronicle-yohji-yamamoto-pour-homme/'] },
       { house: 'y3', role: 'Creative Director', start: 2002, end: null },
+      { house: 'ys', role: 'Founder', start: 1972, end: null, sources: ['https://hypebeast.com/2022/4/ys-50-years-anniversary-collection-new-release-info'] },
     ],
   },
   reiKawakubo: {
@@ -17356,6 +17380,12 @@ export const designers = {
     nationality: 'British',
     career: [{ house: 'biancaSaundersLabel', role: 'Founder', roleDetail: 'Founder and designer', start: 2017, end: null }],
   },
+  pariaFarzaneh: {
+    name: 'Paria Farzaneh',
+    nationality: 'British',
+    career: [{ house: 'pariaFarzanehLabel', role: 'Founder', roleDetail: 'Founder and designer', start: 2017, end: null }],
+    notes: 'British designer of Iranian descent, born in North Ferriby, East Yorkshire; studied menswear design at Ravensbourne University London (2016). BFC NEWGEN recipient and 2019 LVMH Prize semi-finalist.',
+  },
   danyDosSantos: {
     name: 'Dany Dos Santos',
     career: [{ house: 'droleDeMonsieur', role: 'Founder', roleDetail: 'Co-founder', start: 2014 }],
@@ -17485,7 +17515,10 @@ export const designers = {
   },
   ryoIshikawa: {
     name: 'Ryo Ishikawa',
-    career: [{ house: 'fr2', role: 'Founder', roleDetail: 'Founder and creative director', start: 2014, end: null, notes: 'Also known for the Vanquish label.' }],
+    career: [
+      { house: 'vanquish', role: 'Founder', roleDetail: 'Founder and designer', start: 2004 },
+      { house: 'fr2', role: 'Founder', roleDetail: 'Founder and creative director', start: 2014, end: null },
+    ],
   },
   shawnYue: {
     name: 'Shawn Yue',
@@ -17903,6 +17936,261 @@ export const designers = {
     career: [{ house: 'rockyMountainFeatherbed', role: 'Other', roleDetail: 'Revived the brand; representative of 35 Summers', start: 2005, end: null }],
     notes: 'Vintage collector and importer whose company 35 Summers acquired the trademark and relaunched the brand from archive pieces.',
     sources: ['https://rocky-mountain-featherbed.com/en/pages/story', 'https://fashiontechnews.zozo.com/en/articles/rockymountainfeatherbed'],
+  },
+  /* ---------- Outdoor streetwear and surf labels ---------- */
+  brianChor: {
+    name: 'Brian Chor',
+    career: [{ house: 'afieldOut', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2017, end: null }],
+    sources: ['https://hbx.com/men/brands/afield-out', 'https://www.complex.com/shop/brands/Afield%20Out'],
+  },
+  kalynnNguyen: {
+    name: 'Kalynn Nguyen',
+    career: [{ house: 'afieldOut', role: 'Founder', roleDetail: 'Co-founder', start: 2017 }],
+    sources: ['https://www.complex.com/shop/brands/Afield%20Out'],
+  },
+  chrisGentile: {
+    name: 'Chris Gentile',
+    nationality: 'American',
+    career: [{ house: 'pilgrimSurfSupply', role: 'Founder', roleDetail: 'Co-founder', start: 2012, end: null }],
+    notes: 'Previously ran the Brooklyn outpost of the San Francisco surf shop Mollusk from 2007.',
+    sources: ['https://pilgrimsurfsupply.com/pages/about-page', 'https://coolhunting.com/culture/pilgrim-surf-supply/'],
+  },
+  erinGentile: {
+    name: 'Erin Gentile',
+    career: [{ house: 'pilgrimSurfSupply', role: 'Founder', roleDetail: 'Co-founder', start: 2012 }],
+    sources: ['https://pilgrimsurfsupply.com/pages/about-page'],
+  },
+  shinyaHasegawa: {
+    name: 'Shinya Hasegawa',
+    nationality: 'Japanese',
+    career: [
+      { house: 'woolrich', role: 'Other', roleDetail: 'Design assistant to Daiki Suzuki, Woolrich Woolen Mills', start: 2007, end: 2011, approximate: true },
+      { house: 'battenwear', role: 'Founder', roleDetail: 'Founder, designer', start: 2011, end: null },
+    ],
+    notes: 'Studied marketing at FIT in New York and worked for the vintage dealer What Comes Around Goes Around before four years assisting Daiki Suzuki on Woolrich Woolen Mills.',
+    sources: ['https://hypebeast.com/2012/2/batten-sportswear-interview-with-shinya-hasegawa', 'https://www.propermag.com/?p=83672', 'https://battenwear.com/pages/about-2-0'],
+  },
+  meiYong: {
+    name: 'Mei Yong',
+    career: [{ house: 'liberaiders', role: 'Founder', roleDetail: 'Founder, director', start: 2017, end: null }],
+    notes: 'Born and raised in Beijing; moved to Japan in his late teens and worked with labels in Ura-Harajuku before launching Liberaiders. Also a photographer.',
+    sources: ['https://content.liberaiders.jp/about', 'https://urahara-store.com/pages/urahara-journal-liberaiders'],
+  },
+  emmaChopova: {
+    name: 'Emma Chopova',
+    career: [{ house: 'chopovaLowena', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2017, end: null }],
+    notes: 'Born in Bulgaria and raised from age seven in New Jersey; met Laura Lowena at Central Saint Martins, where both completed the MA before launching their label. Her Bulgarian heritage shapes its folk-costume references.',
+    sources: ['https://www.lvmhprize.com/en/emma-chopova-and-laura-lowena', 'https://www.luckyscent.com/brands/chopova-lowena'],
+  },
+  lauraLowena: {
+    name: 'Laura Lowena',
+    nationality: 'British',
+    career: [{ house: 'chopovaLowena', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2017, end: null }],
+    notes: 'Also known as Laura Lowena-Irons. Grew up in Somerset and met Emma Chopova at Central Saint Martins, where both completed the MA before launching their label.',
+    sources: ['https://www.lvmhprize.com/en/emma-chopova-and-laura-lowena', 'https://www.luckyscent.com/brands/chopova-lowena'],
+  },
+  fodayDumbuya: {
+    name: 'Foday Dumbuya',
+    career: [
+      { house: 'labrum', role: 'Founder', roleDetail: 'Founder and creative director', start: 2014, end: null },
+      { house: 'nike', role: 'Other', roleDetail: 'Product and design specialist', notes: 'Before founding LABRUM; dates unconfirmed.', sources: ['https://www.pressreader.com/uk/elle-uk/20240301/281788518941848'] },
+    ],
+    notes: 'Born in Sierra Leone, spent part of his childhood in Cyprus and moved to London at 12. Studied menswear at London College of Fashion. Earlier worked at DKNY (role unconfirmed) and Nike before launching LABRUM.',
+    sources: ['https://labrumlondon.com/pages/about', 'https://www.londonmuseum.org.uk/collections/london-stories/labrum-tells-west-african-stories-through-fashion/', 'https://www.pressreader.com/uk/elle-uk/20240301/281788518941848'],
+  },
+  jeffStaple: {
+    name: 'Jeff Staple',
+    nationality: 'American',
+    career: [{ house: 'staple', role: 'Founder', roleDetail: 'Founder and designer', start: 1997, end: null }],
+    notes: 'Born Jeff Ng. Started Staple by silk-screening T-shirts in New York in 1997; also founded the Staple Design creative agency and the Reed Space store and gallery (opened 2002).',
+    sources: ['https://en.wikipedia.org/wiki/Staple_Design', 'https://global.staplepigeon.com/pages/about-staple'],
+  },
+  harveyGross: {
+    name: 'Harvey Gross',
+    nationality: 'American',
+    career: [{ house: 'penfield', role: 'Founder', start: 1975 }],
+    notes: 'American outerwear maker active from the early 1960s; founded Penfield in a former textile mill in Hudson, Massachusetts, in 1975.',
+    sources: ['https://www.penfield.com/pages/about-us'],
+  },
+  patrickEwing: {
+    name: 'Patrick Ewing',
+    nationality: 'Jamaican-American',
+    career: [
+      { house: 'ewingAthletics', role: 'Founder', start: 1989, end: null },
+      { house: 'ewingAthletics', role: 'President', start: 2023, end: null },
+    ],
+    notes: 'Hall of Fame New York Knicks centre who launched his own basketball shoe company in 1989 and became its owner and president in 2023.',
+    sources: ['https://shop.ewingathletics.com/pages/about-us', 'https://www.complex.com/sneakers/a/brendan-dunne/patrick-ewing-athletics-president-sl33'],
+  },
+  davidFalk: {
+    name: 'David Falk',
+    nationality: 'American',
+    career: [{ house: 'ewingAthletics', role: 'Other', roleDetail: 'Co-founder', start: 1989 }],
+    notes: 'Sports agent who represented Patrick Ewing and co-founded Ewing Athletics with him.',
+    sources: ['https://en.wikipedia.org/wiki/Ewing_Athletics', 'https://boardroom.tv/ewing-athletics-sneakers-david-falk'],
+  },
+  miltonSomberg: {
+    name: 'Milton Somberg',
+    nationality: 'American',
+    career: [
+      { house: 'rothco', role: 'Founder', roleDetail: 'Founder; took over his father-in-law\'s Morris Rothenberg & Son', start: 1953, end: 2019, sources: ['https://www.rothco.com/cms/rothco-about-us', 'https://rothco.com/cms/milton-somberg-founder-rothco'] },
+    ],
+    notes: 'Turned a surplus and used-clothing dealer into a manufacturer of military-style clothing and gear. Died in 2019; his son Howard Somberg joined in the early 1970s and later became chairman.',
+  },
+  brianToft: {
+    name: 'Brian Toft',
+    nationality: 'British',
+    career: [
+      { house: 'hanon', role: 'Founder', roleDetail: 'Co-founder', start: 1993, end: 2023, sources: ['https://hypebeast.com/2023/6/hanon-shop-aberdeen-scotland-store-closing'] },
+    ],
+  },
+  edwardToft: {
+    name: 'Edward Toft',
+    nationality: 'British',
+    career: [
+      { house: 'hanon', role: 'Founder', roleDetail: 'Co-founder', start: 1993, end: 2023, sources: ['https://hypebeast.com/2023/6/hanon-shop-aberdeen-scotland-store-closing'] },
+    ],
+  },
+  yaelAflalo: {
+    name: 'Yael Aflalo',
+    nationality: 'American',
+    career: [
+      { house: 'reformation', role: 'Founder', roleDetail: 'Founder and CEO', start: 2009, end: 2020, sources: ['https://fashionunited.uk/news/people/hali-borenstein-the-insider-taking-reformation-public/2026070288970'] },
+    ],
+    notes: 'Earlier ran the womenswear label Ya-Ya, which is not in the dataset. Stepped down as Reformation CEO in June 2020 and was succeeded by Hali Borenstein.',
+  },
+  billyReid: {
+    name: 'Billy Reid',
+    career: [{ house: 'billyReid', role: 'Founder', roleDetail: 'Founder and designer', start: 2004, end: null }],
+    notes: 'Louisiana-born designer who launched the William Reid menswear line in 1998; it closed after 2001, and he relaunched under his own name in Florence, Alabama. CFDA member and 2010 CFDA/Vogue Fashion Fund winner.',
+    sources: ['https://en.wikipedia.org/wiki/Billy_Reid_(fashion_designer)', 'https://cfda.com/member/billy-reid/'],
+  },
+  henryHolland: {
+    name: 'Henry Holland',
+    career: [{ house: 'houseOfHolland', role: 'Founder', roleDetail: 'Founder and creative director', start: 2008, end: 2020 }],
+    notes: 'British designer and former fashion journalist whose slogan T-shirts led to House of Holland. Stepped back from the label in 2020 as it entered administration.',
+    sources: ['https://fashionunited.com/news/people/henry-holland-to-exit-label/2020030332388'],
+  },
+  grahamCutler: {
+    name: 'Graham Cutler',
+    career: [{ house: 'cutlerAndGross', role: 'Founder', roleDetail: 'Co-founder; optician', start: 1969 }],
+    notes: 'Optician who met Tony Gross while studying optometry at Northampton College in the early 1960s.',
+    sources: ['https://www.cutlerandgross.com/blogs/news/55-years-of-craft-the-origins'],
+  },
+  tonyGross: {
+    name: 'Tony Gross',
+    career: [{ house: 'cutlerAndGross', role: 'Founder', roleDetail: 'Co-founder; optician', start: 1969 }],
+    notes: 'Optician and Cutler and Gross co-founder; met Graham Cutler at Northampton College.',
+    sources: ['https://www.cutlerandgross.com/blogs/news/55-years-of-craft-the-origins'],
+  },
+  marieWilkinson: {
+    name: 'Marie Wilkinson',
+    career: [{ house: 'cutlerAndGross', role: 'Creative Director', roleDetail: 'Design director', notes: 'Says she joined in 1981; also titled style director in 2019. Appointment year for the design-director title is unconfirmed.' }],
+    sources: ['https://www.raconteur.net/contributors/marie-wilkinson', 'https://www.aop.org.uk/ot/features/2019/03/06/courage-to-experiment', 'https://sharpmagazine.com/2017/05/24/meet-the-woman-behind-the-worlds-coolest-glasses/'],
+  },
+  monicaChong: {
+    name: 'Monica Chong',
+    career: [{ house: 'cutlerAndGross', role: 'Creative Director', notes: 'Described in 2012 as creative director for ten years; exact dates are unconfirmed.' }],
+    sources: ['https://www.dazeddigital.com/fashion/article/13568/1/fashion'],
+  },
+  jeffKearl: {
+    name: 'Jeff Kearl',
+    career: [
+      { house: 'stance', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
+      { house: 'stance', role: 'CEO', start: 2009, end: 2020 },
+    ],
+    notes: 'Remained chairman until 2024, then became a general partner at Pelion Venture Partners.',
+    sources: ['https://en.wikipedia.org/wiki/Stance_(brand)'],
+  },
+  johnWilson: {
+    name: 'John Wilson',
+    career: [{ house: 'stance', role: 'Founder', roleDetail: 'Co-founder; president', start: 2009 }],
+    sources: ['https://en.wikipedia.org/wiki/Stance_(brand)'],
+  },
+  aaronHennings: {
+    name: 'Aaron Hennings',
+    career: [
+      { house: 'stance', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
+      { house: 'stance', role: 'Creative Director', roleDetail: 'Chief creative officer', notes: 'Titled chief creative officer in 2017; start and end years are unconfirmed.' },
+    ],
+    sources: ['https://www.sanclementejournal.com/2017/03/06/136652/making-socks-in-flip-flop-town', 'https://en.wikipedia.org/wiki/Stance_(brand)'],
+  },
+  ryanKingman: {
+    name: 'Ryan Kingman',
+    career: [{ house: 'stance', role: 'Founder', roleDetail: 'Co-founder; chief marketing officer', start: 2009 }],
+    sources: ['https://en.wikipedia.org/wiki/Stance_(brand)'],
+  },
+  taylorShupe: {
+    name: 'Taylor Shupe',
+    career: [{ house: 'stance', role: 'Founder', roleDetail: 'Co-founder; chief product officer', start: 2009 }],
+    sources: ['https://en.wikipedia.org/wiki/Stance_(brand)'],
+  },
+  yujiNakagawa: {
+    name: 'Yuji Nakagawa',
+    career: [{ house: 'briefing', role: 'Founder', roleDetail: 'Founder; head of Sellts Limited', start: 1998 }],
+    notes: 'Worked at a Japanese bag and accessories company before founding Sellts Limited and BRIEFING.',
+    sources: ['https://briefing-us.com/en/StoryVol1.html', 'https://www.fashion-press.net/brands/4382'],
+  },
+  gakuTsuyoshi: {
+    name: 'Gaku Tsuyoshi',
+    career: [{ house: 'fdmtl', role: 'Founder', roleDetail: 'Founder and designer', start: 2005, end: null }],
+    notes: 'Started the label after failing to find jeans with the fits and washes he wanted.',
+    sources: ['https://english.honeyee.com/detail/85069', 'https://hypebeast.com/2017/1/fdmtl-gaku-tsuyoshi-interview'],
+  },
+  peterLockey: {
+    name: 'Peter Lockey',
+    career: [{ house: 'berghaus', role: 'Founder', roleDetail: 'Co-founder', start: 1966 }],
+    notes: 'Climber who co-founded the LD Mountain Centre in Newcastle upon Tyne.',
+    sources: ['https://en.wikipedia.org/wiki/Berghaus'],
+  },
+  gordonDavison: {
+    name: 'Gordon Davison',
+    career: [{ house: 'berghaus', role: 'Founder', roleDetail: 'Co-founder; product design and engineering', start: 1966 }],
+    notes: 'Climber and engineer whose work led to the first Berghaus products (1934–2020).',
+    sources: ['https://berghaus.com/blogs/news/gordon-davison-co-founder-of-berghaus-30-11-34-24-06-20'],
+  },
+  joeKudla: {
+    name: 'Joe Kudla',
+    nationality: 'American',
+    career: [
+      { house: 'vuori', role: 'Founder', start: 2015, end: null, notes: 'Developed the concept in 2014 and launched Vuori in Encinitas in 2015; retains majority ownership.' },
+      { house: 'vuori', role: 'CEO', roleDetail: 'Founder and CEO', start: 2015, end: null },
+    ],
+    sources: ['https://en.wikipedia.org/wiki/Vuori'],
+  },
+  garryChopra: {
+    name: 'Garry Chopra',
+    career: [{ house: 'youngla', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null }],
+    notes: 'Co-founded YoungLA with his brother Robby after leaving an accounting job at Ernst & Young; some reports give his name as Gurmer Chopra.',
+    sources: ['https://www.youngla.com/pages/about-us'],
+  },
+  robbyChopra: {
+    name: 'Robby Chopra',
+    career: [{ house: 'youngla', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null }],
+    notes: 'Co-founded YoungLA with his brother Garry; some reports give his name as Dashmeet Chopra.',
+    sources: ['https://www.youngla.com/pages/about-us'],
+  },
+  benFrancis: {
+    name: 'Ben Francis',
+    nationality: 'British',
+    career: [
+      { house: 'gymshark', role: 'Founder', roleDetail: 'Co-founder and majority owner', start: 2012, end: null, notes: 'Taught himself to design and make gym wear, sewing and screen-printing the first pieces in his parents\' garage in Bromsgrove.' },
+      { house: 'gymshark', role: 'CEO', start: 2012, end: 2017, notes: 'Stepped down to become chief brand officer; some reports date the handover to 2015.' },
+      { house: 'gymshark', role: 'CEO', start: 2021, end: null, notes: 'Returned as CEO on 1 August 2021, succeeding Steve Hewitt.' },
+    ],
+    sources: ['https://en.wikipedia.org/wiki/Ben_Francis', 'https://fashionunited.uk/news/business/gymshark-co-founder-ben-francis-returns-to-ceo-role/2021070256366'],
+  },
+  lewisMorgan: {
+    name: 'Lewis Morgan',
+    nationality: 'British',
+    career: [{ house: 'gymshark', role: 'Founder', roleDetail: 'Co-founder', start: 2012, notes: 'School friend of Ben Francis; partly exited the business in 2016 while keeping a 20% stake.' }],
+    sources: ['https://en.wikipedia.org/wiki/Gymshark'],
+  },
+  steveHewitt: {
+    name: 'Steve Hewitt',
+    nationality: 'British',
+    career: [{ house: 'gymshark', role: 'CEO', start: 2017, end: 2021, notes: 'Former Reebok executive; joined Gymshark in 2015 and became CEO in 2017. Moved to executive president when Ben Francis resumed the role in 2021.' }],
+    sources: ['https://fashionunited.uk/news/business/gymshark-co-founder-ben-francis-returns-to-ceo-role/2021070256366', 'https://www.sgieurope.com/gymsharks-co-founder-and-main-shareholder-replaces-hewitt-as-ceo/90424.article'],
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 

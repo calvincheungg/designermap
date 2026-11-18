@@ -7,13 +7,14 @@ export const MAX_DESIGNER_WINDOWS = 10;
 /** City and country windows open at once, counted separately from Properties. */
 export const MAX_LOCATION_WINDOWS = 10;
 export const DIRECTORY = 'directory';
-const MINIMIZED_KEY = 'designer-map:panel-minimized';
 
-/** Single-instance tool windows: Statistics, the Recycle Bin of ended brands, and the What's Missing report. */
-export type ToolId = 'stats' | 'recycle' | 'missing';
+/** Single-instance tool windows: Statistics, the Recycle Bin of ended brands, the What's Missing report, Help and Run. */
+export type ToolId = 'stats' | 'recycle' | 'missing' | 'help' | 'run';
 export type ToolItem = { kind: 'tool'; id: ToolId };
 export const tool = (id: ToolId): ToolItem => ({ kind: 'tool', id });
 export const STATISTICS = tool('stats');
+export const HELP = tool('help');
+export const RUN = tool('run');
 /** A map selection shown in Properties, a city's brand grid, or a tool window. */
 export type Item = NonNullable<Selection> | Place | ToolItem;
 /** City and country windows: grids of brands, not map selections. */
@@ -49,12 +50,7 @@ export const sameItem = (a: Item | null | undefined, b: Item | null | undefined)
   a === b || (!!a && !!b && a.kind === b.kind && a.id === b.id);
 
 export function initialDesk(): Desk {
-  let minimized = false;
-  try { minimized = localStorage.getItem(MINIMIZED_KEY) === 'on'; } catch { /* storage unavailable */ }
-  return { windows: [], order: [DIRECTORY], active: minimized ? null : DIRECTORY, directoryOpen: true, directoryMinimized: minimized, nextKey: 1 };
-}
-export function saveDirectoryMinimized(desk: Desk) {
-  try { localStorage.setItem(MINIMIZED_KEY, desk.directoryMinimized ? 'on' : 'off'); } catch { /* storage unavailable */ }
+  return { windows: [], order: [], active: null, directoryOpen: false, directoryMinimized: false, nextKey: 1 };
 }
 
 export const windowFor = (desk: Desk, key: string | null) => desk.windows.find((w) => w.key === key);

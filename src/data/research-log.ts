@@ -29,8 +29,11 @@ export const collabSearches = {
   brooks: { date: '2026-11-18', complete: true },
   burberry: { date: '2026-11-18', complete: true },
   calvinKlein: { date: '2026-11-18', complete: true },
+  canadaGoose: { date: '2026-11-18', complete: true, lastPage: 10, oldestYear: 2008 },
   champion: { date: '2026-11-18', complete: true },
   commonProjects: { date: '2026-11-18', complete: true },
+  dior: { date: '2026-11-18', complete: true, lastPage: 53, oldestYear: 2008 },
+  drMartens: { date: '2026-11-18', complete: true, lastPage: 36, oldestYear: 2007 },
   eckhausLatta: { date: '2026-11-18', complete: true },
   fila: { date: '2026-11-18', complete: true },
   fragmentDesign: { date: '2026-11-18', complete: true },
@@ -38,19 +41,22 @@ export const collabSearches = {
   herschelSupply: { date: '2026-11-18', complete: true },
   jwAnderson: { date: '2026-11-18', complete: true },
   kappa: { date: '2026-11-18', complete: true, lastPage: 10, oldestYear: 2016 },
-  // Pages 29–30 and 46+ returned empty responses; 2019 (p29–30) and pre-Nov 2013 covered by web searches only.
-  levis: { date: '2026-11-18', complete: false, lastPage: 45, oldestYear: 2013 },
+  // Archive ends at page 79 (2007). Pages 67–72 (2008–2009) still return empty responses; pre-Nov 2013 gaps otherwise filled.
+  levis: { date: '2026-11-18', complete: false, lastPage: 79, oldestYear: 2007 },
   littleTokyoTableTennis: { date: '2026-11-18', complete: true, lastPage: 1, oldestYear: 2022 },
+  moncler: { date: '2026-11-18', complete: true, lastPage: 38, oldestYear: 2008 },
+  nanga: { date: '2026-11-18', complete: true, lastPage: 5, oldestYear: 2016 },
   needles: { date: '2026-11-18', complete: true, lastPage: 29, oldestYear: 2009 },
-  // Pages past 134 wouldn't load; earlier years were covered by web searches only.
-  newBalance: { date: '2026-11-18', complete: false, lastPage: 134, oldestYear: 2021 },
+  // Read to page 238 (Oct 2016). Still empty: 160–162, 172–175, 200–203, 213–216, 228–229 and 239+ (end not yet found).
+  newBalance: { date: '2026-11-18', complete: false, lastPage: 238, oldestYear: 2016 },
   nexusVII: { date: '2026-11-18', complete: true, lastPage: 10, oldestYear: 2010 },
   onitsukaTiger: { date: '2026-11-18', complete: true },
   onRunning: { date: '2026-11-18', complete: true },
-  // /brands/ pages don't paginate; /tags/palace-skateboards pages 6+ returned empty responses.
-  // Earlier years covered by web searches and existing records only.
-  palace: { date: '2026-11-18', complete: false, lastPage: 5, oldestYear: 2026 },
+  // /brands/ pages don't paginate; crawled /tags/palace-skateboards to page 43 (Aug 2020).
+  // Still empty: 30–33 (early 2022) and 44+ (end not yet found); earlier years covered by web searches only.
+  palace: { date: '2026-11-18', complete: false, lastPage: 43, oldestYear: 2020 },
   palladium: { date: '2026-11-18', complete: true, lastPage: 7, oldestYear: 2009 },
+  pariaFarzanehLabel: { date: '2026-11-18', complete: true, lastPage: 3, oldestYear: 2017 },
   paulSmith: { date: '2026-11-18', complete: true },
   perryEllis: { date: '2026-11-18', complete: true },
   poloRalphLauren: { date: '2026-11-18', complete: true },
@@ -60,13 +66,18 @@ export const collabSearches = {
   roots: { date: '2026-11-18', complete: true },
   saucony: { date: '2026-11-18', complete: true },
   solovair: { date: '2026-11-18', complete: true },
+  staple: { date: '2026-11-18', complete: true, lastPage: 16, oldestYear: 2007 },
+  stellaMcCartney: { date: '2026-11-18', complete: true, lastPage: 5, oldestYear: 2011 },
   stoneIsland: { date: '2026-11-18', complete: true, lastPage: 49, oldestYear: 2008 },
-  // Pages 30–35 (2018–2020) and 54+ returned empty responses; pre-2015 covered by web searches only.
-  stussy: { date: '2026-11-18', complete: false, lastPage: 53, oldestYear: 2015 },
+  // Read to page 87 (Oct 2012). Still empty: 75–80 (2013) and 88+ (end not yet found).
+  stussy: { date: '2026-11-18', complete: false, lastPage: 87, oldestYear: 2012 },
+  tenDeep: { date: '2026-11-18', complete: true, lastPage: 10, oldestYear: 2011 },
+  thebeMagugu: { date: '2026-11-18', complete: true, lastPage: 1, oldestYear: 2019 },
   theNorthFace: { date: '2026-11-18', complete: true },
   timberland: { date: '2026-11-18', complete: true, lastPage: 42, oldestYear: 2007 },
   tommyHilfiger: { date: '2026-11-18', complete: true },
   ugg: { date: '2026-11-18', complete: true, lastPage: 12, oldestYear: 2008 },
+  umbro: { date: '2026-11-18', complete: true, lastPage: 13, oldestYear: 2007 },
   versace: { date: '2026-11-18', complete: true },
   vineyardVines: { date: '2026-11-18', complete: true, noArchive: true },
   wackoMaria: { date: '2026-11-17', complete: true },

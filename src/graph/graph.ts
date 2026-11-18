@@ -1,3 +1,4 @@
+import { minesweeperColour } from './minesweeper';
 import cytoscape, { type Collection, type Core, type EdgeSingular, type NodeSingular, type SingularElementArgument } from 'cytoscape';
 import { allMoves, collaborationsOf, careerOf, getHouse, houses, housesInGroup, type GroupId } from '../data';
 import { collaborationEdges, mapElements, moveEdges, nodeId } from './elements';
@@ -14,6 +15,19 @@ export type Selection = { kind: 'house' | 'designer'; id: string } | { kind: 'gr
 
 /** Elements that are scenery, never faded. */
 const SCENERY = '[kind = "marker"], [kind = "leader"], [kind = "grid"]';
+
+/** How far past each map edge it can be dragged, as a fraction of the view. */
+const OVERSCROLL = 0.4;
+/** The most a drag can stretch past that allowance, in screen px, before it springs back. */
+const RUBBER_BAND = 60;
+
+/** Damp the part of `value` outside [min, max]: it approaches RUBBER_BAND px but never reaches it. */
+function rubberBand(value: number, min: number, max: number): number {
+  const stretch = (excess: number) => RUBBER_BAND * excess / (excess + RUBBER_BAND);
+  if (value < min) return min - stretch(min - value);
+  if (value > max) return max + stretch(value - max);
+  return value;
+}
 
 /**
  * Turn `cls` on or off for each element, touching only the ones that change.
@@ -87,6 +101,11 @@ export class DesignerGraph {
   private resizeObserver: ResizeObserver;
   private pendingImages = new Set<HTMLImageElement>();
   private disposed = false;
+  /** The un-damped pan of the drag in progress, the pan last shown, and the zoom it started at. */
+  private dragPan: { x: number; y: number } | null = null;
+  private shownPan: { x: number; y: number } | null = null;
+  private dragZoom = 1;
+  private panBouncing = false;
 
   constructor(
     pane: HTMLElement,
@@ -160,6 +179,8 @@ export class DesignerGraph {
       this.removeHoverPulses();
     });
     this.cy.on('viewport', () => { this.clampPan(); this.syncMapLayer(); });
+    this.cy.on('tapstart', () => this.grabPan());
+    this.cy.on('tapend', () => this.releasePan());
     this.cy.on('zoom', () => {
       // Keep sizes responsive while zooming; resolve collisions once the gesture settles.
       this.sizeMarkers(false);
@@ -704,16 +725,64 @@ export class DesignerGraph {
 
   /** The SVG map is drawn in model coordinates; mirror Cytoscape's pan + zoom onto it. */
   /**
-   * Keep the world map covering the view: panning or dragging stops at its
-   * edges instead of revealing empty space beyond them. A map smaller than the
-   * view on one axis (never at the default zoom limits) is centred instead.
+   * The pan range on one axis: the map may be dragged up to OVERSCROLL of the
+   * view past each edge, so a place near the border (Japan, say) can still be
+   * brought to the centre from under a window. A map smaller than the view is
+   * centred, with the same allowance either side.
+   */
+  private panRange(view: number, size: number): [min: number, max: number] {
+    const slack = view * OVERSCROLL;
+    if (size <= view) { const centre = (view - size) / 2; return [centre - slack, centre + slack]; }
+    return [view - size - slack, slack];
+  }
+
+  /**
+   * Keep the map near the view. Programmatic changes (zoom, fit, animations)
+   * clamp hard to `panRange`. While the pointer is down, the drag is tracked
+   * un-damped in `dragPan`, and past the range it stretches with growing
+   * resistance (at most RUBBER_BAND px); releasing springs back (`releasePan`).
    */
   private clampPan() {
+    if (this.panBouncing) return;
     const zoom = this.cy.zoom();
-    const { x, y } = this.cy.pan();
-    const axis = (pan: number, view: number, size: number) => size <= view ? (view - size) / 2 : Math.min(0, Math.max(view - size, pan));
-    const next = { x: axis(x, this.cy.width(), MAP_WIDTH * zoom), y: axis(y, this.cy.height(), MAP_HEIGHT * zoom) };
-    if (Math.abs(next.x - x) > 0.5 || Math.abs(next.y - y) > 0.5) this.cy.pan(next);
+    const pan = this.cy.pan();
+    const [minX, maxX] = this.panRange(this.cy.width(), MAP_WIDTH * zoom);
+    const [minY, maxY] = this.panRange(this.cy.height(), MAP_HEIGHT * zoom);
+    let next: { x: number; y: number };
+    if (this.dragPan && this.shownPan && zoom === this.dragZoom) {
+      this.dragPan = { x: this.dragPan.x + pan.x - this.shownPan.x, y: this.dragPan.y + pan.y - this.shownPan.y };
+      next = { x: rubberBand(this.dragPan.x, minX, maxX), y: rubberBand(this.dragPan.y, minY, maxY) };
+    } else {
+      next = { x: Math.min(maxX, Math.max(minX, pan.x)), y: Math.min(maxY, Math.max(minY, pan.y)) };
+      if (this.dragPan) { this.dragPan = { ...next }; this.dragZoom = zoom; }
+    }
+    this.shownPan = next;
+    if (Math.abs(next.x - pan.x) > 0.5 || Math.abs(next.y - pan.y) > 0.5) this.cy.pan(next);
+  }
+
+  private grabPan() {
+    if (this.panBouncing) { this.cy.stop(); this.panBouncing = false; }
+    this.dragPan = { ...this.cy.pan() };
+    this.shownPan = { ...this.dragPan };
+    this.dragZoom = this.cy.zoom();
+  }
+
+  /** On release, spring a stretched map back inside its pan range. */
+  private releasePan() {
+    if (!this.dragPan) return;
+    this.dragPan = this.shownPan = null;
+    const zoom = this.cy.zoom();
+    const pan = this.cy.pan();
+    const [minX, maxX] = this.panRange(this.cy.width(), MAP_WIDTH * zoom);
+    const [minY, maxY] = this.panRange(this.cy.height(), MAP_HEIGHT * zoom);
+    const target = { x: Math.min(maxX, Math.max(minX, pan.x)), y: Math.min(maxY, Math.max(minY, pan.y)) };
+    if (Math.abs(target.x - pan.x) < 0.5 && Math.abs(target.y - pan.y) < 0.5) return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { this.cy.pan(target); return; }
+    this.panBouncing = true;
+    this.cy.animate({
+      pan: target, duration: 450, easing: 'spring(380, 20)' as cytoscape.Css.TransitionTimingFunction,
+      complete: () => { this.panBouncing = false; this.clampPan(); },
+    });
   }
 
   private syncMapLayer() {
@@ -1017,12 +1086,7 @@ function quadraticLength(p0: { x: number; y: number }, p1: { x: number; y: numbe
   return length;
 }
 
-/** Classic Minesweeper number colours for 1–7; more than seven releases show in bright orange. */
-const MINESWEEPER_COLOURS = ['#0000ff', '#008000', '#ff0000', '#000080', '#800000', '#008080', '#000000'];
-export const MANY_COLLABORATIONS_COLOUR = '#ff8c00';
-export function minesweeperColour(count: number) {
-  return MINESWEEPER_COLOURS[count - 1] ?? MANY_COLLABORATIONS_COLOUR;
-}
+export { MANY_COLLABORATIONS_COLOUR, minesweeperColour } from './minesweeper';
 
 function renderedRoute(edge: EdgeSingular) {
   try {
