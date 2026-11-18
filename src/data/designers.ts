@@ -8738,6 +8738,22 @@ export const designers = {
       sources: ['https://www.karrimor.com/customerservices/otherinformation/aboutus'],
     }],
   },
+  charlieClifford: {
+    name: 'Charlie Clifford',
+    nationality: 'American',
+    career: [{
+      house: 'tumi', role: 'Founder', start: 1975,
+      sources: ['https://en.wikipedia.org/wiki/Tumi_Inc.', 'https://luminaries.indiana.edu/luminaries/charlie-clifford.html'],
+    }],
+  },
+  victorSanz: {
+    name: 'Victor Sanz',
+    nationality: 'American',
+    career: [{
+      house: 'tumi', role: 'Creative Director', start: 2016, end: null,
+      sources: ['https://www.pinupmagazine.org/articles/tumi-victor-sanz-interview', 'https://uk.tumi.com/history.html'],
+    }],
+  },
   dennisSignor: {
     name: 'Dennis Signor',
     nationality: 'Italian',
@@ -18001,7 +18017,10 @@ export const designers = {
   jeffStaple: {
     name: 'Jeff Staple',
     nationality: 'American',
-    career: [{ house: 'staple', role: 'Founder', roleDetail: 'Founder and designer', start: 1997, end: null }],
+    career: [
+      { house: 'staple', role: 'Founder', roleDetail: 'Founder and designer', start: 1997, end: null },
+      { house: 'airwalk', role: 'Other', roleDetail: 'Strategic creative adviser, Airwalk Classics relaunch', start: 2016, sources: ['https://hypebeast.com/2016/8/jeff-staples-airwalk-airwalk-classics'] },
+    ],
     notes: 'Born Jeff Ng. Started Staple by silk-screening T-shirts in New York in 1997; also founded the Staple Design creative agency and the Reed Space store and gallery (opened 2002).',
     sources: ['https://en.wikipedia.org/wiki/Staple_Design', 'https://global.staplepigeon.com/pages/about-staple'],
   },
@@ -18191,6 +18210,106 @@ export const designers = {
     nationality: 'British',
     career: [{ house: 'gymshark', role: 'CEO', start: 2017, end: 2021, notes: 'Former Reebok executive; joined Gymshark in 2015 and became CEO in 2017. Moved to executive president when Ben Francis resumed the role in 2021.' }],
     sources: ['https://fashionunited.uk/news/business/gymshark-co-founder-ben-francis-returns-to-ceo-role/2021070256366', 'https://www.sgieurope.com/gymsharks-co-founder-and-main-shareholder-replaces-hewitt-as-ceo/90424.article'],
+  },
+  joshGoot: {
+    name: 'Josh Goot',
+    nationality: 'Australian',
+    notes: 'Sydney designer who launched his own ready-to-wear label in 2005, which is not separately represented.',
+    career: [
+      { house: 'wardrobeNyc', role: 'Founder', roleDetail: 'Co-founder and designer with Christine Centenera', start: 2017, end: null },
+    ],
+  },
+  christineCentenera: {
+    name: 'Christine Centenera',
+    nationality: 'Australian',
+    notes: 'Stylist and fashion editor, fashion director of Vogue Australia when WARDROBE.NYC launched.',
+    career: [
+      { house: 'wardrobeNyc', role: 'Founder', roleDetail: 'Co-founder with Josh Goot', start: 2017, end: null },
+    ],
+  },
+  rokHwang: {
+    name: 'Rok Hwang',
+    nationality: 'South Korean',
+    notes: 'Born in Seoul and raised in Austin, Texas; studied womenswear at Central Saint Martins. Runner-up special prize, LVMH Prize 2018.',
+    career: [
+      { house: 'celine', role: 'Other', roleDetail: 'Ready-to-wear designer under Phoebe Philo', notes: 'Joined for Philo’s debut collection; exact years unconfirmed.' },
+      { house: 'chloe', role: 'Other', roleDetail: 'Freelance designer', notes: 'Years unconfirmed.' },
+      { house: 'louisVuitton', role: 'Other', roleDetail: 'Freelance designer', notes: 'Years unconfirmed.' },
+      { house: 'rokh', role: 'Founder', roleDetail: 'Founder and creative director', start: 2016, end: null },
+    ],
+  },
+  thierryDonard: {
+    name: 'Thierry Donard',
+    nationality: 'French',
+    notes: 'Extreme-sports filmmaker and professional skier.',
+    career: [
+      { house: 'perfectMoment', role: 'Founder', start: 1984 },
+    ],
+  },
+  janeGottschalk: {
+    name: 'Jane Gottschalk',
+    notes: 'Took ownership of Perfect Moment with her husband, Max Gottschalk, in 2010.',
+    career: [
+      { house: 'perfectMoment', role: 'Creative Director', roleDetail: 'Creative director, later also president', start: 2010, end: 2026, notes: 'Resigned as president, creative director and board director in November 2026; retained a one-year creative and brand advisory agreement.' },
+    ],
+  },
+  stephenMalbon: {
+    name: 'Stephen Malbon',
+    career: [{ house: 'malbonGolf', role: 'Founder', start: 2017, end: null }],
+    notes: 'Came to golf apparel from magazine publishing and streetwear. Founded Malbon Golf with his wife, Erica Malbon, after his golf Instagram account built a following.',
+  },
+  ericaMalbon: {
+    name: 'Erica Malbon',
+    career: [{ house: 'malbonGolf', role: 'Founder', start: 2017, end: null }],
+    notes: 'Co-founded Malbon Golf with her husband, Stephen Malbon, after encouraging him to turn his golf Instagram account into a brand.',
+  },
+  coletteRoussaux: {
+    name: 'Colette Roussaux',
+    career: [{ house: 'colette', role: 'Founder', start: 1997, end: 2017 }],
+    notes: 'Opened the colette concept store in Paris in 1997 with her daughter, Sarah Andelman. Her planned retirement was among the reasons given for closing the store in 2017.',
+  },
+  sarahAndelman: {
+    name: 'Sarah Andelman',
+    career: [{ house: 'colette', role: 'Founder', start: 1997, end: 2017 }],
+    notes: 'Co-founded colette with her mother, Colette Roussaux, and ran its buying and collaborations until it closed in December 2017. She later founded the creative consultancy Just an Idea.',
+  },
+  susanneHolzweiler: {
+    name: 'Susanne Holzweiler',
+    nationality: 'Norwegian',
+    career: [{ house: 'holzweiler', role: 'Founder', roleDetail: 'Co-founder', start: 2012 }],
+    notes: 'Co-founded Holzweiler with her brother Andreas, after the two started the Holzweiler Agency sales agency in 2007.',
+    sources: ['https://www.holzweileroslo.com/en/company'],
+  },
+  andreasHolzweiler: {
+    name: 'Andreas Holzweiler',
+    nationality: 'Norwegian',
+    career: [{ house: 'holzweiler', role: 'Founder', roleDetail: 'Co-founder', start: 2012 }],
+    notes: 'Co-founded Holzweiler with his sister Susanne, after the two started the Holzweiler Agency sales agency in 2007. Married to creative director Maria Skappel Holzweiler.',
+    sources: ['https://www.holzweileroslo.com/en/company', 'https://no.wikipedia.org/wiki/Holzweiler'],
+  },
+  mariaSkappelHolzweiler: {
+    name: 'Maria Skappel Holzweiler',
+    nationality: 'Norwegian',
+    career: [{ house: 'holzweiler', role: 'Creative Director', start: 2014, end: null }],
+    notes: 'Trained at the Oslo National Academy of the Arts (KHiO). Became a partner in Holzweiler in 2012 and its creative director when the ready-to-wear line launched in 2014.',
+    sources: ['https://www.holzweileroslo.com/en/company', 'https://no.wikipedia.org/wiki/Holzweiler'],
+  },
+  georgeYohn: {
+    name: 'George Yohn',
+    nationality: 'American',
+    career: [{ house: 'airwalk', role: 'Founder', roleDetail: 'Founder and CEO of parent Items International', start: 1986 }],
+    notes: 'Altoona, Pennsylvania shoe entrepreneur who founded Blair Co. and, in 1977, Items International, which launched Airwalk in 1986.',
+    sources: ['http://www.fundinguniverse.com/company-histories/items-international-airwalk-inc-history/', 'https://en.wikipedia.org/wiki/Airwalk'],
+  },
+  billMann: {
+    name: 'Bill Mann',
+    nationality: 'American',
+    career: [
+      { house: 'airwalk', role: 'Founder', roleDetail: 'Co-founder; president of Items International', start: 1986, end: 1992 },
+      { house: 'vans', role: 'Other', roleDetail: 'Vice-president of foreign sourcing', start: 1994, sources: ['http://www.fundinguniverse.com/company-histories/items-international-airwalk-inc-history/'] },
+    ],
+    notes: 'Former shoe buyer for Payless and Shoe Corporation of America who conceived Airwalk. Replaced as president of Items International by Lee Smith in 1992.',
+    sources: ['http://www.fundinguniverse.com/company-histories/items-international-airwalk-inc-history/', 'https://en.wikipedia.org/wiki/Airwalk'],
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 

@@ -1,5 +1,6 @@
 /** Stable identifiers; display names can change without changing house references. */
 export enum GroupId {
+  Samsonite = 'samsonite',
   Franky = 'franky',
   TrendyInternational = 'trendyInternational',
   Yeti = 'yeti',
@@ -179,6 +180,11 @@ export interface GroupData {
 }
 
 export const groups = {
+  [GroupId.Samsonite]: {
+    name: 'Samsonite Group',
+    description: 'Luggage and travel-goods company whose brands include TUMI, acquired in 2016.',
+    website: 'https://corporate.samsonite.com',
+  },
   [GroupId.KPGlobal]: {
     name: 'KP Global',
     description: 'Private owner of K-Swiss and Palladium, controlled by the Ding family through Ding Shun Investment. Separated from listed Xtep International on November 30, 2024.',

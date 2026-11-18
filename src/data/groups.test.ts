@@ -41,7 +41,7 @@ describe('group profiles', () => {
 
   it('groups the existing WHP portfolio and Vera Wang under the same stable ID', () => {
     expect(housesInGroup(GroupId.WHPGlobal).map((h) => h.id).sort()).toEqual([
-      'gStar', 'heavenMarcJacobs', 'marcJacobs', 'ragAndBone', 'veraWang',
+      'gStar', 'heavenMarcJacobs', 'lotto', 'marcJacobs', 'ragAndBone', 'veraWang',
     ]);
     expect(housesInGroup(GroupId.LVMH).map((h) => h.id)).not.toContain('marcJacobs');
     expect(houses.find((h) => h.id === 'marcJacobs')?.notes).toContain('owned equally');

@@ -247,6 +247,14 @@
     "background": "#ffffff",
     "bytes": 6450
   },
+  "airwalk.jpeg": {
+    "hash": "db738fc90de4f4b2",
+    "backgroundVersion": 2,
+    "file": "db738fc90de4f4b2.webp",
+    "ratio": 2.3986928104575163,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 12016
+  },
   "alaia.png": {
     "hash": "afe917b2df879021",
     "backgroundVersion": 2,
@@ -1351,6 +1359,14 @@
     "background": "#ffffff",
     "bytes": 9768
   },
+  "call_me_917.png": {
+    "hash": "f1cda46fd86026be",
+    "backgroundVersion": 2,
+    "file": "f1cda46fd86026be.webp",
+    "ratio": 1.0777777777777777,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 12568
+  },
   "calvin_klein.png": {
     "hash": "e7afc41069cc875e",
     "backgroundVersion": 2,
@@ -1782,6 +1798,14 @@
     "ratio": 1.7777777777777777,
     "background": "#ffffff",
     "bytes": 6932
+  },
+  "colette.png": {
+    "hash": "6966beed39386112",
+    "backgroundVersion": 2,
+    "file": "6966beed39386112.webp",
+    "ratio": 3.464788732394366,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 7256
   },
   "collina_strada.png": {
     "hash": "91dfb27fa32c1377",
@@ -2254,6 +2278,14 @@
     "ratio": 2.797814207650273,
     "background": "#ffffff",
     "bytes": 5686
+  },
+  "ebbets_field_flannels.jpeg": {
+    "hash": "737ec9ec8cd5ab44",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 9465
   },
   "ecco.png": {
     "hash": "584b7c3f12133afa",
@@ -4399,6 +4431,14 @@
     "background": "#ffffff",
     "bytes": 4186
   },
+  "malbon.jpg": {
+    "hash": "743d61f0e1de2df7",
+    "backgroundVersion": 2,
+    "file": "743d61f0e1de2df7.webp",
+    "ratio": 4.188679245283019,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 8312
+  },
   "mamekurogouchi.png": {
     "hash": "835470184a329555",
     "backgroundVersion": 2,
@@ -5407,6 +5447,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 11278
   },
+  "palladium.png": {
+    "hash": "9c6118d093dda6ea",
+    "backgroundVersion": 2,
+    "file": "9c6118d093dda6ea.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 16606
+  },
   "palm_angels.png": {
     "hash": "7958a285c9999741",
     "backgroundVersion": 2,
@@ -5502,6 +5550,14 @@
     "ratio": 1.9104477611940298,
     "background": "rgb(255, 255, 255)",
     "bytes": 3092
+  },
+  "patrik_ervell.png": {
+    "hash": "587b28beed5b58a2",
+    "backgroundVersion": 2,
+    "file": "587b28beed5b58a2.webp",
+    "ratio": 1.0504587155963303,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 11422
   },
   "patta.png": {
     "hash": "01d0beb359190e48",
@@ -6175,6 +6231,14 @@
     "background": "#ffffff",
     "bytes": 18383
   },
+  "rothco.png": {
+    "hash": "563dd039ee05a135",
+    "backgroundVersion": 2,
+    "file": "563dd039ee05a135.webp",
+    "ratio": 1.3333333333333333,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 12334
+  },
   "rowing_blazers.jpg": {
     "hash": "f84ef74ee8e30c03",
     "backgroundVersion": 2,
@@ -6695,6 +6759,14 @@
     "background": "#ffffff",
     "bytes": 3742
   },
+  "stance.png": {
+    "hash": "03aa4f332e01e254",
+    "backgroundVersion": 2,
+    "file": "03aa4f332e01e254.webp",
+    "ratio": 4.241379310344827,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 3728
+  },
   "staple.webp": {
     "hash": "1d42d3e4ae47b703",
     "backgroundVersion": 2,
@@ -6966,6 +7038,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 3798
+  },
+  "tanner_goods.jpeg": {
+    "hash": "aaafab7ec1bed820",
+    "backgroundVersion": 2,
+    "file": "aaafab7ec1bed820.webp",
+    "ratio": 2.377483443708609,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 16156
   },
   "tapout.png": {
     "hash": "2accdea0d631a135",
@@ -7694,6 +7774,14 @@
     "ratio": 2.2947976878612715,
     "background": "rgb(255, 255, 255)",
     "bytes": 16594
+  },
+  "wardrobe_nyc.png": {
+    "hash": "4c5265753c72ba25",
+    "backgroundVersion": 2,
+    "file": "4c5265753c72ba25.webp",
+    "ratio": 8.534246575342467,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 4408
   },
   "warehouse_co.avif": {
     "hash": "b7067025de0fc640",
