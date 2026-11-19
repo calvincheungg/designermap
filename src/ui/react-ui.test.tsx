@@ -8,7 +8,8 @@ import { ActiveFilters, FilterMenu } from './filters';
 import { SearchBox, matchingItems } from './listbox';
 import { PanelContent, type Selection } from './panel';
 import { ContextMenu } from './context-menu';
-import { getHouse, GroupId } from '../data';
+import { getHouse, GroupId, houses } from '../data';
+import { StatisticsContent } from './statistics';
 
 afterEach(cleanup);
 
@@ -54,7 +55,7 @@ describe('React interface interactions', () => {
     }
     const user = userEvent.setup();
     render(<Harness />);
-    const history = screen.getByText(/^Collaboration history \(\d+\)$/).closest('fieldset')!;
+    const history = screen.getByText(/^Collaboration history \(\d+ \| Unique: \d+\)$/).closest('fieldset')!;
     expect(within(history).queryByRole('link', { name: /Source/ })).toBeNull();
     expect(within(history).queryByRole('columnheader', { name: 'Collection' })).toBeNull();
     const nikeRow = within(history).getAllByRole('row').find((row) =>
@@ -88,7 +89,7 @@ describe('React interface interactions', () => {
     const view = render(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2005} onSelect={() => {}} onTag={() => {}} />);
     expect(screen.getByText('No collaborations recorded through 2005.')).toBeTruthy();
     view.rerender(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2020} onSelect={() => {}} onTag={() => {}} />);
-    const heading2020 = screen.getByText(/^Collaboration history \(\d+\)$/);
+    const heading2020 = screen.getByText(/^Collaboration history \(\d+ \| Unique: \d+\)$/);
     const count2020 = Number(heading2020.textContent!.match(/\d+/)![0]);
     const history = heading2020.closest('fieldset')!;
     expect(within(history).getByRole('link', { name: 'Visvim' })).toBeTruthy();
@@ -101,9 +102,18 @@ describe('React interface interactions', () => {
       within(row).queryByRole('link', { name: 'Sacai' }) && within(row).queryByRole('link', { name: 'Nike' }) && within(row).queryAllByRole('link').length === 3);
     expect(sacaiNikeRow(history)).toBeUndefined();
     view.rerender(<PanelContent selection={{ kind: 'house', id: 'fragmentDesign' }} year={2021} onSelect={() => {}} onTag={() => {}} />);
-    const heading2021 = screen.getByText(/^Collaboration history \(\d+\)$/);
+    const heading2021 = screen.getByText(/^Collaboration history \(\d+ \| Unique: \d+\)$/);
     expect(Number(heading2021.textContent!.match(/\d+/)![0])).toBeGreaterThan(count2020);
     expect(sacaiNikeRow(document.body)).toBeTruthy();
+  });
+
+  it('heads collaboration history with total releases and unique partnerships', () => {
+    render(<PanelContent selection={{ kind: 'house', id: 'humanMade' }} onSelect={() => {}} onTag={() => {}} />);
+    const heading = screen.getByText(/^Collaboration history \(\d+ \| Unique: \d+\)$/);
+    const [total, unique] = heading.textContent!.match(/\d+/g)!.map(Number);
+    const history = heading.closest('fieldset')!;
+    expect(unique).toBe(within(history).getAllByRole('row').length - 1);
+    expect(total).toBeGreaterThan(unique!);
   });
 
   it('consolidates repeat partners and searches the chosen release year', async () => {
@@ -113,7 +123,7 @@ describe('React interface interactions', () => {
     expect(within(history).getAllByRole('link', { name: 'Adidas' })).toHaveLength(1);
     const row = within(history).getByRole('link', { name: 'Adidas' }).closest('tr')!;
     const years = within(row).getByRole('combobox');
-    expect(years.textContent).toBe('2021');
+    expect(years.textContent).toBe('2022');
     await user.click(years);
     await user.click(screen.getByRole('option', { name: '2019' }));
     const search = within(row).getByRole('link', { name: 'Search' });
@@ -321,5 +331,26 @@ describe('React interface interactions', () => {
     expect(close).toHaveBeenCalledWith(true);
     fireEvent.pointerDown(document.body);
     expect(close).toHaveBeenCalledWith();
+  });
+
+  it('flips the Most collaborations sort to low to high on a second click', async () => {
+    const user = userEvent.setup();
+    render(<StatisticsContent visibleHouses={Object.values(houses)} year={Infinity} filtered={false} onSelect={() => {}} onOpenPlace={() => {}} />);
+    const table = () => screen.getByRole('table', { name: /^Brands by number of (collaborations|distinct partner brands)$/ });
+    const column = (index: number) => within(table()).getAllByRole('row').slice(1)
+      .map((row) => Number(within(row).getAllByRole('cell')[index]!.textContent!.replace(/,/g, '')));
+    const sorted = (values: number[], ascending: boolean) => values.every((value, i) => i === 0 || (ascending ? values[i - 1]! <= value : values[i - 1]! >= value));
+    for (const [name, index] of [['Releases', 2], ['Partners', 3]] as const) {
+      const button = () => within(table()).getByRole('button', { name: new RegExp(`^${name}`) });
+      if (name === 'Partners') await user.click(button());
+      expect(button().closest('th')!.getAttribute('aria-sort')).toBe('descending');
+      expect(sorted(column(index), false)).toBe(true);
+      await user.click(button());
+      expect(button().closest('th')!.getAttribute('aria-sort')).toBe('ascending');
+      expect(sorted(column(index), true)).toBe(true);
+      expect(column(index)[0]).toBeGreaterThan(0);
+      await user.click(button());
+      expect(button().closest('th')!.getAttribute('aria-sort')).toBe('descending');
+    }
   });
 });

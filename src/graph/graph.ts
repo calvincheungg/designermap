@@ -2,10 +2,10 @@ import { minesweeperColour } from './minesweeper';
 import cytoscape, { type Collection, type Core, type EdgeSingular, type NodeSingular, type SingularElementArgument } from 'cytoscape';
 import { allMoves, collaborationsOf, careerOf, getHouse, houses, housesInGroup, type GroupId } from '../data';
 import { collaborationEdges, mapElements, moveEdges, nodeId } from './elements';
-import { housesByMapLocation, LABEL_PX, layoutMap, MAP_HEIGHT, MAP_MIN_ZOOM, MAP_WIDTH, mapSvgMarkup, pinScale, ringLayout, type Point } from './geo';
+import { housesByMapLocation, LABEL_PX, layoutMap, MAP_HEIGHT, MAP_MIN_ZOOM, MAP_WIDTH, mapSvgMarkup, pinScale, project, ringLayout, type Point } from './geo';
 import { cityMarkerIcon, frameIcon, logoInfo, logoSize, PIN_H, PIN_W } from './icons';
-import { graphStyle } from './style';
-import { clusterLabel, mapHousePath, mapLocationForCity, mapLocationForHouse } from './locations';
+import { graphStyle, nightStyle, textStyle, NIGHT_BLUE, NIGHT_RED } from './style';
+import { clusterLabel, mapHousePath, mapLocationCoordinates, mapLocationForCity, mapLocationForHouse } from './locations';
 import { placeMarkers } from './markers';
 import { buildClusterLevels, clusterLevel, CLUSTER_ZOOMS, MIN_CLUSTER_CITIES, type PinCluster } from './clusters';
 
@@ -15,6 +15,15 @@ export type Selection = { kind: 'house' | 'designer'; id: string } | { kind: 'gr
 
 /** Elements that are scenery, never faded. */
 const SCENERY = '[kind = "marker"], [kind = "leader"], [kind = "grid"]';
+
+/** Night city lights: locations with at least this many shown main brands glow. */
+export const CITY_LIGHT_MIN = 3;
+/** On-screen glow radius in px for a location showing `count` main brands, at full size. */
+export const cityLightRadius = (count: number): number => Math.min(96, 8 + 6.5 * Math.sqrt(count));
+/** Glow strength (0–1): busier cities shine brighter. */
+export const cityLightOpacity = (count: number): number => Math.min(1, 0.45 + count / 40);
+/** Below this zoom the glows shrink with the map; above it they keep their screen size. */
+const CITY_LIGHT_ZOOM = 0.6;
 
 /** How far past each map edge it can be dragged, as a fraction of the view. */
 const OVERSCROLL = 0.4;
@@ -45,13 +54,24 @@ function setClass<E extends SingularElementArgument>(
   });
 }
 
+/** A box in viewport (client) pixels. */
+/** Half a city pin's largest on-screen size. */
+const PIN_HALF = 13;
+/** Room for a brand icon's label under it, in screen pixels. */
+const LABEL_HEIGHT = 16;
+
+export interface ScreenBox { left: number; top: number; right: number; bottom: number }
+
 export interface GraphCallbacks {
   onSelect: (sel: Selection) => void;
   onConnectionHover?: (label: string | null) => void;
   /** Fired when cities expand/collapse, so the toolbar can update its toggle. */
   onExpandChange?: (expandedCount: number, totalCities: number) => void;
-  /** Clicking a city pin: the app shows the city's brands in a window. Without it, the pin expands on the map. */
-  onOpenCity?: (city: string) => void;
+  /**
+   * Clicking a city pin: the app shows the city's brands in a window, placed
+   * beside `pin` (the pin's box in viewport pixels). Without it, the pin expands on the map.
+   */
+  onOpenCity?: (city: string, pin?: ScreenBox) => void;
 }
 
 /**
@@ -65,6 +85,10 @@ export class DesignerGraph {
   private matchingHouseIds: ReadonlySet<string> | undefined;
   /** Whether the selected brand's direct move connections are drawn. */
   private showMoves = true;
+  /** Night map colours (setNight). */
+  private night = false;
+  /** Map label size multiplier (setTextScale). */
+  private textScale = 1;
   private showCollaborations = true;
   private connectionFilter: ConnectionFilter = 'all';
   private pulseLayer: SVGSVGElement;
@@ -76,6 +100,10 @@ export class DesignerGraph {
   private traceGroup: SVGGElement;
   private blockGroup: SVGGElement;
   private selection: Selection = null;
+  /** Where a running reveal animation will leave the view, so windows can open beside places that are still moving. */
+  /** Where each node was last placed, so a running move animation's destination is known. */
+  private placedAt = new Map<string, { x: number; y: number }>();
+  private viewTarget: { zoom: number; pan: { x: number; y: number }; until: number } | null = null;
   /** The selection the current move and collaboration lines were built for. */
   private connectionsFor = selectionKey(null);
   private expanded = new Set<string>();
@@ -93,6 +121,8 @@ export class DesignerGraph {
   /** Group inside the map SVG that carries the pan/zoom transform. */
   private mapGroup: SVGGElement;
   private pinLeaders: SVGGElement;
+  /** Night-only warm glows under the busiest cities (CSS hides them by day). */
+  private cityLights: SVGGElement;
   private markerTips = new Map<string, { x: number; y: number }>();
   private markerTimer: ReturnType<typeof setTimeout> | undefined;
   private clusterLevels: readonly (readonly PinCluster[])[] = [];
@@ -117,9 +147,16 @@ export class DesignerGraph {
     // An SVG transform (not a CSS one) so `non-scaling-stroke` keeps borders hairline at any zoom.
     this.mapGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     this.mapGroup.innerHTML = mapSvgMarkup();
+    this.cityLights = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    this.cityLights.setAttribute('class', 'city-lights');
+    this.cityLights.innerHTML = '<defs><radialGradient id="city-light-glow">'
+      + '<stop offset="0" stop-color="#fff4c2" stop-opacity="0.95"/>'
+      + '<stop offset="0.18" stop-color="#ffd966" stop-opacity="0.75"/>'
+      + '<stop offset="0.5" stop-color="#ffb020" stop-opacity="0.28"/>'
+      + '<stop offset="1" stop-color="#ff9000" stop-opacity="0"/></radialGradient></defs>';
     this.pinLeaders = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     this.pinLeaders.setAttribute('class', 'pin-leaders');
-    this.mapGroup.append(this.pinLeaders);
+    this.mapGroup.append(this.cityLights, this.pinLeaders);
     this.mapLayer.append(this.mapGroup);
 
     const canvasHost = document.createElement('div');
@@ -148,7 +185,7 @@ export class DesignerGraph {
     this.cy.on('tap', 'node[kind = "marker"]', (e) => {
       const marker = e.target as NodeSingular;
       if (marker.data('isCluster')) this.zoomToCluster(marker);
-      else if (callbacks.onOpenCity) callbacks.onOpenCity(mapLocationForCity(marker.data('city')));
+      else if (callbacks.onOpenCity) callbacks.onOpenCity(mapLocationForCity(marker.data('city')), this.screenBox(marker));
       else this.toggleCity(marker.data('city'));
     });
     this.cy.on('tap', 'node[kind = "house"]', (e) => {
@@ -163,7 +200,7 @@ export class DesignerGraph {
       if (e.target === this.cy) callbacks.onSelect(null);
     });
     this.cy.on('mouseover', 'node[refId], node[kind = "marker"], edge[designerId]', () => {
-      canvasHost.style.cursor = 'pointer';
+      canvasHost.style.cursor = 'var(--cursor-pointer)';
     });
     this.cy.on('mouseout', 'node, edge', () => (canvasHost.style.cursor = ''));
     this.cy.on('mouseover', 'node[kind = "marker"]', (e) => e.target.style('text-opacity', 1));
@@ -178,12 +215,18 @@ export class DesignerGraph {
       callbacks.onConnectionHover?.(null);
       this.removeHoverPulses();
     });
-    this.cy.on('viewport', () => { this.clampPan(); this.syncMapLayer(); });
+    this.cy.on('viewport', () => {
+      // A press that moves the map shows the closed Win98 hand until release.
+      if (this.dragPan) canvasHost.classList.add('grabbing');
+      this.clampPan();
+      this.syncMapLayer();
+    });
     this.cy.on('tapstart', () => this.grabPan());
-    this.cy.on('tapend', () => this.releasePan());
+    this.cy.on('tapend', () => { canvasHost.classList.remove('grabbing'); this.releasePan(); });
     this.cy.on('zoom', () => {
       // Keep sizes responsive while zooming; resolve collisions once the gesture settles.
       this.sizeMarkers(false);
+      this.sizeCityLights();
       this.scalePulses();
       clearTimeout(this.markerTimer);
       this.markerTimer = setTimeout(() => this.sizeMarkers(), 90);
@@ -197,6 +240,13 @@ export class DesignerGraph {
       this.cy.fit(this.cy.elements(':visible'), 30);
     });
     this.resizeObserver.observe(canvasHost);
+    // Cytoscape caches the canvas's screen rect and refreshes it only on resize, so after the map
+    // window moves it would think presses land outside the map and ignore them. Re-measure before
+    // each press, wheel or hover entry (capture phase, ahead of Cytoscape's own listeners).
+    const remeasure = () => (this.cy as unknown as { renderer(): { invalidateContainerClientCoordsCache(): void } })
+      .renderer().invalidateContainerClientCoordsCache();
+    for (const type of ['pointerdown', 'mousedown', 'touchstart', 'wheel', 'pointerenter'])
+      canvasHost.addEventListener(type, remeasure, { capture: true, passive: true });
 
     pane.classList.add('is-map');
     this.applyZoomLimit();
@@ -448,6 +498,35 @@ export class DesignerGraph {
     if (visible.nonempty()) this.cy.animate({ fit: { eles: visible, padding: 30 } }, { duration: 300 });
   }
 
+  /** Scale brand and city labels on the map (Settings ▸ Text size). */
+  setTextScale(scale: number) {
+    if (this.textScale === scale) return;
+    this.textScale = scale;
+    this.applyStylesheet();
+    this.sizeMarkers();
+  }
+
+  private applyStylesheet() {
+    this.cy.style().fromJson([...graphStyle, ...(this.night ? nightStyle : []), ...textStyle(this.textScale)]).update();
+  }
+
+  /** Switch the map between its day and night colours. */
+  setNight(on: boolean) {
+    if (this.night === on) return;
+    this.night = on;
+    // The map's CSS colours key off the pane (.graph-pane.night), not Cytoscape's inner container.
+    this.canvasHost.parentElement?.classList.toggle('night', on);
+    this.applyStylesheet();
+    // Pulse traces copy the line colours when drawn, so recolour the running ones.
+    for (const pulse of this.pulses.values()) {
+      const { stroke, fill } = this.traceColours(pulse.edge);
+      pulse.trace.querySelector('path')?.setAttribute('stroke', stroke);
+      const arrow = pulse.trace.querySelector('polygon');
+      arrow?.setAttribute('stroke', stroke);
+      arrow?.setAttribute('fill', fill);
+    }
+  }
+
   /** Re-render after web fonts load (canvas text doesn't reflow on its own). */
   refreshStyle() {
     this.cy.style().update();
@@ -614,6 +693,44 @@ export class DesignerGraph {
     });
   }
 
+  /**
+   * The on-screen box (viewport pixels) of a brand's city pin, using the view a
+   * running reveal will settle on, so its Properties window can open beside it.
+   * Undefined when the city is outside the map view or the map isn't laid out.
+   */
+  locationBox(houseId: string): ScreenBox | undefined {
+    const container = this.cy.container();
+    const city = mapLocationForHouse(houseId);
+    const tip = city ? this.cy.getElementById(nodeId.city(city)).data('tip') as { x: number; y: number } | undefined : undefined;
+    if (!container || !tip) return undefined;
+    const target = this.viewTarget && this.viewTarget.until > performance.now() ? this.viewTarget : null;
+    const zoom = target?.zoom ?? this.cy.zoom();
+    const pan = target?.pan ?? this.cy.pan();
+    const x = tip.x * zoom + pan.x, y = tip.y * zoom + pan.y;
+    if (x < 0 || y < 0 || x > this.cy.width() || y > this.cy.height()) return undefined;
+    // The pin stands on its tip and is at most ~26px on screen.
+    const box = { left: x - PIN_HALF, top: y - 2 * PIN_HALF, right: x + PIN_HALF, bottom: y };
+    // Include the brand's own icon (and label) when it's shown, so the window doesn't cover it.
+    const node = this.cy.getElementById(nodeId.house(houseId));
+    if (node.nonempty() && node.visible()) {
+      const at = this.placedAt.get(node.id()) ?? node.position();
+      const half = (node.outerWidth() / 2) * zoom;
+      const cx = at.x * zoom + pan.x, cy = at.y * zoom + pan.y;
+      box.left = Math.min(box.left, cx - half); box.right = Math.max(box.right, cx + half);
+      box.top = Math.min(box.top, cy - half); box.bottom = Math.max(box.bottom, cy + half + LABEL_HEIGHT);
+    }
+    const host = container.getBoundingClientRect();
+    return { left: host.left + box.left, top: host.top + box.top, right: host.left + box.right, bottom: host.top + box.bottom };
+  }
+
+  /** A node's on-screen box in viewport pixels, for placing windows beside it. */
+  private screenBox(node: NodeSingular): ScreenBox | undefined {
+    const container = this.cy.container();
+    if (!container) return undefined;
+    const host = container.getBoundingClientRect();
+    const box = node.renderedBoundingBox({ includeLabels: false });
+    return { left: host.left + box.x1, top: host.top + box.y1, right: host.left + box.x2, bottom: host.top + box.y2 };
+  }
   private zoomToCluster(marker: NodeSingular) {
     const cy = this.cy;
     const points = (marker.data('members') as string[]).map(city => cy.getElementById(nodeId.city(city)).data('tip'));
@@ -678,10 +795,11 @@ export class DesignerGraph {
       return { x1: tip.x - w / 2, x2: tip.x + w / 2, y1: tip.y - h, y2: tip.y };
     });
     const showLabel = new Set<string>();
+    const labelPx = LABEL_PX * this.textScale;
     markers.forEach((m) => {
       const tip = tips.get(m.id())!;
-      const lw = (m.data('label').length * LABEL_PX * 0.62) / z;
-      const box = { x1: tip.x - lw / 2, x2: tip.x + lw / 2, y1: tip.y + 2 / z, y2: tip.y + (LABEL_PX * 1.4 + 2) / z };
+      const lw = (m.data('label').length * labelPx * 0.62) / z;
+      const box = { x1: tip.x - lw / 2, x2: tip.x + lw / 2, y1: tip.y + 2 / z, y2: tip.y + (labelPx * 1.4 + 2) / z };
       const hits = (a: typeof box) =>
         labelBoxes.some((b) => a.x1 < b.x2 && a.x2 > b.x1 && a.y1 < b.y2 && a.y2 > b.y1);
       if (!hits(box)) showLabel.add(m.id());
@@ -696,7 +814,7 @@ export class DesignerGraph {
           height: h,
           // (An empty `label` would remove the override rather than hide it.)
           'text-opacity': showLabel.has(m.id()) ? 1 : 0,
-          'font-size': LABEL_PX / z,
+          'font-size': labelPx / z,
           'text-margin-y': 2 / z,
           'text-outline-width': 2 / z,
           'z-index': 100 - i,
@@ -739,6 +857,7 @@ export class DesignerGraph {
   }
 
   private place(n: NodeSingular, pos: { x: number; y: number }, animate: boolean) {
+    this.placedAt.set(n.id(), pos);
     if (animate) n.animate({ position: pos }, { duration: 250, easing: 'ease-in-out-cubic', queue: false });
     else n.position(pos);
   }
@@ -851,6 +970,37 @@ export class DesignerGraph {
       setClass(cy.elements('[kind = "grid"], [kind = "leader"]'), 'hidden', (el) =>
         cy.getElementById(nodeId.city(el.data('city'))).data('shown') === 0);
     });
+    this.updateCityLights();
+  }
+
+  /** One glow per busy map location, sized by the main brands shown there for the year and filters. */
+  private updateCityLights() {
+    const lights: SVGCircleElement[] = [];
+    for (const [location, hs] of housesByMapLocation()) {
+      const count = hs.filter((h) => !h.parentHouse && this.mapContext.has(h.id)).length;
+      if (count < CITY_LIGHT_MIN) continue;
+      const { x, y } = project(mapLocationCoordinates(location));
+      const light = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      light.setAttribute('cx', String(x));
+      light.setAttribute('cy', String(y));
+      light.setAttribute('fill', 'url(#city-light-glow)');
+      light.setAttribute('opacity', cityLightOpacity(count).toFixed(2));
+      light.dataset.radius = String(cityLightRadius(count));
+      lights.push(light);
+    }
+    // Smaller glows last, so a busy city's bright core never buries a neighbour's.
+    lights.sort((a, b) => Number(b.dataset.radius) - Number(a.dataset.radius));
+    this.cityLights.replaceChildren(this.cityLights.firstChild!, ...lights);
+    this.sizeCityLights();
+  }
+
+  /** Glows keep a fixed screen size when zoomed in and shrink with the map when zoomed out. */
+  private sizeCityLights() {
+    const z = this.cy.zoom();
+    const k = Math.sqrt(Math.min(1, z / CITY_LIGHT_ZOOM)) / z;
+    for (const light of this.cityLights.querySelectorAll('circle')) {
+      light.setAttribute('r', (Number(light.dataset.radius) * k).toFixed(2));
+    }
   }
 
   private clearPulses() {
@@ -912,12 +1062,20 @@ export class DesignerGraph {
     if (arrow) arrow.setAttribute('transform', `${arrow.getAttribute('data-at')} scale(${screen / this.cy.zoom()})`);
   }
 
+  /** A pulsing line's stroke and arrowhead fill, matching its canvas style in day or night colours. */
+  private traceColours(edge: EdgeSingular) {
+    const highlighted = edge.hasClass('highlight');
+    const stroke = edge.data('kind') === 'collaboration' ? this.night ? NIGHT_RED : '#cc0000'
+      : highlighted ? this.night ? NIGHT_BLUE : '#000080' : this.night ? '#a0a0a4' : '#808080';
+    return { stroke, fill: edge.data('concurrent') ? '#ffffff' : stroke };
+  }
+
   /** The line itself, in the pulse layer under the block, with the same colour, dash and arrowhead. */
   private drawTrace(edge: EdgeSingular, path: string, end: { x: number; y: number }, lastControl: { x: number; y: number }): { trace: SVGGElement; width: number } {
     const ns = 'http://www.w3.org/2000/svg';
     const collaboration = edge.data('kind') === 'collaboration';
     const highlighted = edge.hasClass('highlight');
-    const colour = collaboration ? '#cc0000' : highlighted ? '#000080' : '#808080';
+    const { stroke: colour, fill } = this.traceColours(edge);
     const width = highlighted ? 2 : 1;
     const trace = document.createElementNS(ns, 'g');
     trace.classList.add('pulse-trace');
@@ -934,7 +1092,7 @@ export class DesignerGraph {
       const arrow = document.createElementNS(ns, 'polygon');
       arrow.classList.add('pulse-arrow');
       arrow.setAttribute('points', '0,0 -9,-4.5 -9,4.5');
-      arrow.setAttribute('fill', edge.data('concurrent') ? '#ffffff' : colour);
+      arrow.setAttribute('fill', fill);
       arrow.setAttribute('stroke', colour);
       arrow.setAttribute('data-at', `translate(${end.x} ${end.y}) rotate(${angle})`);
       trace.append(arrow);
@@ -1081,6 +1239,9 @@ export class DesignerGraph {
     this.pulseTimer = setTimeout(() => this.playPulses(), 450);
 
     if (reveal && focus && focus.nonempty()) {
+      const target = (cy as unknown as { getFitViewport(eles: cytoscape.CollectionArgument, padding: number): { zoom: number; pan: { x: number; y: number } } | undefined })
+        .getFitViewport(focus, 80);
+      this.viewTarget = target ? { ...target, until: performance.now() + 500 } : null;
       cy.animate({ fit: { eles: focus, padding: 80 } }, { duration: 400 });
     }
   }

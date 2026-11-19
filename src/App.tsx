@@ -1,36 +1,45 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { allMoves, countryNames, designers, getDesigner, getGroup, getHouse, groups, houses, isBusinessLeadership, yearRange } from './data';
 import { matchesHouseFilters, type HouseFilters } from './data/tags';
-import type { ConnectionFilter, DesignerGraph } from './graph/graph';
+import type { ConnectionFilter, DesignerGraph, ScreenBox } from './graph/graph';
 import { setLocationMode, type LocationMode } from './graph/locations';
 import { ActiveFilters, FilterMenu, setFilterValue, type FilterGroup } from './ui/filters';
-import { SearchBox, type ListItem } from './ui/listbox';
+import { SearchBox, matchingItems, type ListItem } from './ui/listbox';
 import { MapView } from './ui/map-view';
 import { StartIcon } from './ui/start-icons';
 import { StartMenu } from './ui/start-menu';
 import { PanelContent, panelTitle, type Place, type Selection } from './ui/panel';
 import { DIRECTORY_RECT_KEY, PropertiesWindow } from './ui/side-panel';
-import { DIRECTORY, closeWindow, focusWindow, initialDesk, isPlace, isTool, isSelectionItem, STATISTICS, HELP, RUN, LIST_VIEW, tool, minimizeWindow, openItem, retainItems, sameItem, toggleTask, windowFor, windowType, closeWindows, minimizeWindows, restoreWindows, type Desk, type Item } from './ui/desktop';
+import { DIRECTORY, closeWindow, focusWindow, initialDesk, isPlace, isTool, isSelectionItem, STATISTICS, HELP, RUN, LIST_VIEW, SETTINGS, tool, minimizeWindow, anchorWindow, openItem, openItemAt, retainItems, sameItem, toggleTask, windowFor, windowType, closeWindows, minimizeWindows, restoreWindows, type Desk, type Item } from './ui/desktop';
 import { TaskGroup, type Task } from './ui/taskbar';
 import { YearTray } from './ui/year-tray';
 import { StatisticsContent } from './ui/statistics';
-import { HelpContent, MissingReportContent, RecycleBinContent } from './ui/tool-windows';
+import { HelpContent, MissingReportContent, RecycleBinContent, endedBrands, recycleBinSize } from './ui/tool-windows';
+import { SettingsContent, isCursorSize, isTextSize, textScale, type CityView, type CursorSize, type MapTheme, type TextSize } from './ui/settings';
 import { RunContent, type RunTarget } from './ui/run-dialog';
 import { ListViewContent, readLayout } from './ui/list-view';
 import { addRecent, readRecent, recentLabel, saveRecent, type RecentItem } from './ui/recent';
-import { DesktopIcon } from './ui/desktop-icon';
+import { DesktopIcons } from './ui/desktop-icon';
+import { MapWindowFrame } from './ui/map-window';
 import { readSharedView, sharedViewHash } from './ui/share-link';
 
 /** Tool windows' opening sizes: Statistics is wider than Properties so its bar tables have room. */
-const TOOL_SIZES = { stats: { width: 460, height: 640 }, recycle: { width: 380, height: 480 }, missing: { width: 420, height: 560 }, help: { width: 440, height: 560 }, run: { width: 400, height: 240 }, list: { width: 820, height: 560 } } as const;
+/** Place windows hold a fixed grid of icons, so they grow with the text size. */
+const scaleSize = (size: { width: number; height: number }, scale: number) => scale === 1 ? size
+  : { width: Math.round(size.width * scale), height: Math.round(size.height * scale) };
+const TOOL_SIZES = { stats: { width: 460, height: 640 }, recycle: { width: 380, height: 480 }, missing: { width: 420, height: 560 }, help: { width: 440, height: 560 }, run: { width: 400, height: 240 }, list: { width: 820, height: 560 }, settings: { width: 340, height: 610 } } as const;
 /** Run is a small dialog-like window, so it may be smaller than the Properties minimum. */
 const RUN_MIN_SIZE = { width: 320, height: 200 };
 /** Start menu's What's Missing report: a research aid, so development builds only. */
 const SHOW_MISSING_REPORT = import.meta.env.DEV;
-const RECYCLE_BIN_KEY = 'designer-map:recycle-bin-position';
-const STATISTICS_ICON_KEY = 'designer-map:statistics-icon-position';
-const LIST_VIEW_ICON_KEY = 'designer-map:list-view-icon-position';
+// Desktop icon positions on the desktop area (the old keys held positions inside the map window).
+const RECYCLE_BIN_KEY = 'designer-map:desktop-icon:recycle-bin';
+const STATISTICS_ICON_KEY = 'designer-map:desktop-icon:statistics';
+const LIST_VIEW_ICON_KEY = 'designer-map:desktop-icon:list-view';
 const LIST_VIEW_ICON = '/assets/excel.webp';
+const SETTINGS_ICON_KEY = 'designer-map:desktop-icon:settings';
+const SETTINGS_ICON = '/assets/settings.webp';
+const MAP_ICON = '/assets/ie4.webp';
 /** List View's sheet needs room for its menu bar, formula bar and a few columns. */
 const LIST_MIN_SIZE = { width: 360, height: 260 };
 import type { MenuAction } from './ui/context-menu';
@@ -42,7 +51,13 @@ const LINES_KEY = 'designer-map:show-lines';
 const COLLABORATIONS_KEY = 'designer-map:show-collaborations';
 const LOCATION_KEY = 'designer-map:location-mode';
 const CITY_VIEW_KEY = 'designer-map:city-view';
-type CityView = 'window' | 'map';
+const MAP_THEME_KEY = 'designer-map:map-theme';
+const TEXT_SIZE_KEY = 'designer-map:text-size';
+const CURSOR_SIZE_KEY = 'designer-map:cursor-size';
+const MAP_WINDOW_KEY = 'designer-map:map-window';
+const MAP_ICON_KEY = 'designer-map:desktop-icon:explorer';
+/** The map's own window: open, minimized to the taskbar, or closed (reopened from its desktop icon). */
+type MapWindow = { state: 'open' | 'minimized' | 'closed'; maximized: boolean };
 const movedCount = houses.filter((h) => h.origin).length;
 const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 const searchItems: ListItem<NonNullable<Selection>>[] = [
@@ -62,8 +77,21 @@ const yearRunItems: ListItem<RunTarget>[] = Array.from({ length: maxYear - minYe
 const RECENT_HINTS = { house: 'brand', designer: 'designer', group: 'group', city: 'city', country: 'country' } as const;
 
 /** Place windows are titled with the city or country, like an Explorer folder; others as Properties. */
-const TOOL_TITLES = { stats: 'Statistics', recycle: 'Recycle Bin', missing: "What's Missing", help: 'Help', run: 'Run', list: 'List View - Designer Map.xls' } as const;
+const TOOL_TITLES = { stats: 'Statistics', recycle: 'Recycle Bin', missing: "What's Missing", help: 'Help', run: 'Run', list: 'List View - Designer Map.xls', settings: 'Settings' } as const;
 const windowTitle = (item: Item) => isPlace(item) ? placeTitle(item) : isTool(item) ? TOOL_TITLES[item.id] : panelTitle(item);
+
+/** The desktop's shortcuts, shown as icons on the desktop and as Quick Launch buttons beside Start. */
+function desktopShortcuts(openMap: () => void, open: (item: Item) => void) {
+  const image = (src: string, className?: string) => (size: number) =>
+    <img className={className} src={src} alt="" width={size} height={size} draggable={false} />;
+  return [
+    { label: 'Explorer', icon: image(MAP_ICON, 'browser-icon'), storageKey: MAP_ICON_KEY, open: openMap },
+    { label: 'Recycle Bin', icon: image('/assets/bin.webp'), storageKey: RECYCLE_BIN_KEY, open: () => open(tool('recycle')) },
+    { label: 'Statistics', icon: (size: number) => <StartIcon name="chart" size={size} />, storageKey: STATISTICS_ICON_KEY, open: () => open(STATISTICS) },
+    { label: 'List View', icon: image(LIST_VIEW_ICON, 'xl-icon'), storageKey: LIST_VIEW_ICON_KEY, open: () => open(LIST_VIEW) },
+    { label: 'Settings', icon: image(SETTINGS_ICON), storageKey: SETTINGS_ICON_KEY, open: () => open(SETTINGS) },
+  ];
+}
 
 export function App() {
   const graph = useRef<DesignerGraph | null>(null);
@@ -75,12 +103,13 @@ export function App() {
   const [notice, setNotice] = useState<string | null>(null);
   const [playFrom, setPlayFrom] = useState<number | null>(null);
   const [search, setSearch] = useState('');
+  const [address, setAddress] = useState('');
   const [allExpanded, setAllExpanded] = useState(false);
   const [connectionFilter, setConnectionFilter] = useState<ConnectionFilter>('all');
   const [desk, setDesk] = useState<Desk>(initialDesk);
   const [recent, setRecent] = useState<readonly RecentItem[]>(readRecent);
   const [resets, setResets] = useState(0);
-  /** List View's View ▸ Full Screen (remembered with its layout): its window fills the map area. */
+  /** List View's View ▸ Full Screen (remembered with its layout): its window fills the desktop area. */
   const [listFullScreen, setListFullScreen] = useState(() => readLayout().fullScreen);
   const deskRef = useRef(desk);
   deskRef.current = desk;
@@ -89,6 +118,24 @@ export function App() {
   });
   const [showCollaborations, setShowCollaborations] = useState(() => {
     try { return localStorage.getItem(COLLABORATIONS_KEY) !== 'off'; } catch { return true; }
+  });
+  const [mapTheme, setMapTheme] = useState<MapTheme>(() => {
+    try { return localStorage.getItem(MAP_THEME_KEY) === 'night' ? 'night' : 'day'; } catch { return 'day'; }
+  });
+  const [mapWindow, setMapWindow] = useState<MapWindow>(() => {
+    try { return { state: 'open', maximized: localStorage.getItem(MAP_WINDOW_KEY) === 'maximized' }; } catch { return { state: 'open', maximized: false }; }
+  });
+  const mapContent = useRef<HTMLDivElement>(null);
+  const openMap = useCallback(() => setMapWindow((w) => w.state === 'open' ? w : { ...w, state: 'open' }), []);
+  const toggleMaximized = () => setMapWindow((w) => {
+    try { localStorage.setItem(MAP_WINDOW_KEY, w.maximized ? 'normal' : 'maximized'); } catch { /* storage unavailable */ }
+    return { ...w, maximized: !w.maximized };
+  });
+  const [textSize, setTextSize] = useState<TextSize>(() => {
+    try { const saved = localStorage.getItem(TEXT_SIZE_KEY); return isTextSize(saved) ? saved : 'normal'; } catch { return 'normal'; }
+  });
+  const [cursorSize, setCursorSize] = useState<CursorSize>(() => {
+    try { const saved = localStorage.getItem(CURSOR_SIZE_KEY); return isCursorSize(saved) ? saved : 'normal'; } catch { return 'normal'; }
   });
   const [locationMode, setMode] = useState<LocationMode>(() => {
     let mode: LocationMode = 'current';
@@ -114,9 +161,19 @@ export function App() {
   const selection = keepSelection ? requested : null;
 
   /** Select on the map and show the item in a Properties window (opening, focusing or reusing one). */
+  /** A brand window just opened or reused: placed beside its city once the graph has applied the selection. */
+  const pendingAnchor = useRef<{ key: string; id: string } | null>(null);
   const select = useCallback((value: Selection, reveal = false) => {
     setRequest((current) => ({ value, reveal, revision: current.revision + 1 }));
-    setDesk((current) => value ? openItem(current, value) : { ...current, active: current.active === DIRECTORY ? DIRECTORY : null });
+    setDesk((current) => {
+      if (!value) return { ...current, active: current.active === DIRECTORY ? DIRECTORY : null };
+      const next = openItem(current, value);
+      const opened = windowFor(next, next.active);
+      const before = opened && windowFor(current, opened.key);
+      // Only a new or reused window moves; focusing one that's already open leaves it where it is.
+      if (value.kind === 'house' && opened && (!before || before.revision !== opened.revision)) pendingAnchor.current = { key: opened.key, id: value.id };
+      return next;
+    });
   }, []);
   /** Highlight a window's item on the map without moving the view. */
   const showOnMap = useCallback((value: Selection) => {
@@ -134,6 +191,8 @@ export function App() {
   /** Apply a window change, then keep the map's selection in step with the active window. */
   const changeDesk = useCallback((change: (desk: Desk) => Desk, closing?: Item | readonly Item[]) => {
     const next = change(deskRef.current);
+    // Several changes in one event (opening a multiple icon selection) each build on the last.
+    deskRef.current = next;
     setDesk(next);
     const active = windowFor(next, next.active);
     // City windows aren't map selections, so focusing one leaves the map as it is.
@@ -151,10 +210,10 @@ export function App() {
   const cityViewRef = useRef(cityView);
   cityViewRef.current = cityView;
   useEffect(() => { try { localStorage.setItem(CITY_VIEW_KEY, cityView); } catch { /* storage unavailable */ } }, [cityView]);
-  const openPlace = useCallback((place: Place) => setDesk((current) => openItem(current, place)), []);
-  const openCity = useCallback((city: string) => {
+  const openPlace = useCallback((place: Place, anchor?: ScreenBox) => setDesk((current) => openItemAt(current, place, anchor)), []);
+  const openCity = useCallback((city: string, pin?: ScreenBox) => {
     if (cityViewRef.current === 'map') graph.current?.toggleCity(city);
-    else openPlace({ kind: 'city', id: city });
+    else openPlace({ kind: 'city', id: city }, pin);
   }, [openPlace]);
   const isVisibleItem = useCallback((item: Item) => item.kind === 'group' || isPlace(item) || isTool(item) || (item.kind === 'house'
     ? visibleIds.has(item.id) : !!getDesigner(item.id)?.career.some((t) => visibleIds.has(t.house))), [visibleIds]);
@@ -170,6 +229,10 @@ export function App() {
   useLayoutEffect(() => { graph.current?.setYear(visibleYear); }, [visibleYear, locationMode]);
   useLayoutEffect(() => {
     graph.current?.select(selection, request.reveal);
+    const pending = pendingAnchor.current;
+    pendingAnchor.current = null;
+    const box = pending && graph.current?.locationBox(pending.id);
+    if (pending && box) setDesk((current) => anchorWindow(current, pending.key, box));
   }, [selection, request, locationMode]);
   useEffect(() => { if (desk.windows.some((w) => !isVisibleItem(w.item))) setDesk((current) => retainItems(current, isVisibleItem)); }, [desk.windows, isVisibleItem]);
   useEffect(() => { if (!keepSelection) select(null); }, [keepSelection, select]);
@@ -181,6 +244,25 @@ export function App() {
     graph.current?.setShowCollaborations(showCollaborations);
     try { localStorage.setItem(COLLABORATIONS_KEY, showCollaborations ? 'on' : 'off'); } catch { /* storage unavailable */ }
   }, [showCollaborations, locationMode]);
+  useLayoutEffect(() => {
+    graph.current?.setNight(mapTheme === 'night');
+    // Night mode darkens the window chrome too (scripts/night-chrome.mjs derives those styles).
+    if (mapTheme === 'night') document.documentElement.dataset.theme = 'night';
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem(MAP_THEME_KEY, mapTheme); } catch { /* storage unavailable */ }
+  }, [mapTheme, locationMode]);
+  useLayoutEffect(() => {
+    graph.current?.setTextScale(textScale(textSize));
+    document.documentElement.style.setProperty('--text-zoom', String(textScale(textSize)));
+    try { localStorage.setItem(TEXT_SIZE_KEY, textSize); } catch { /* storage unavailable */ }
+  }, [textSize, locationMode]);
+  useLayoutEffect(() => {
+    if (cursorSize === 'normal') delete document.documentElement.dataset.cursorSize;
+    else document.documentElement.dataset.cursorSize = cursorSize;
+    try { localStorage.setItem(CURSOR_SIZE_KEY, cursorSize); } catch { /* storage unavailable */ }
+  }, [cursorSize]);
+  // A new map selection (search, Show on Map, links) brings the map window back; other windows live on the desktop without it.
+  useEffect(() => { if (request.revision) openMap(); }, [request.revision, openMap]);
   // Open a shared link's selection once the graph exists, and follow later hash edits (pasted links, back/forward).
   useEffect(() => {
     if (sharedView.selection) select(sharedView.selection, true);
@@ -229,6 +311,13 @@ export function App() {
   const availableSearchItems = useMemo(() => searchItems.filter((item) => item.value.kind === 'group' || (item.value.kind === 'house'
     ? visibleIds.has(item.value.id) : getDesigner(item.value.id)?.career.some((t) => visibleIds.has(t.house)
       && (visibleYear === Infinity || (t.start !== undefined && t.start <= visibleYear))))), [visibleIds, visibleYear]);
+  /** Explorer's Go button (or Enter with the suggestions closed): open the best match, exact names first. */
+  const goToAddress = () => {
+    const best = address.trim() && matchingItems(availableSearchItems, address, 1, true)[0];
+    if (!best) return;
+    setAddress(best.label);
+    select(best.value, true);
+  };
   const runItems = useMemo<ListItem<RunTarget>[]>(() => [
     ...availableSearchItems.map((item) => ({ ...item, value: { kind: 'select' as const, value: item.value } })),
     ...placeRunItems, ...yearRunItems,
@@ -257,6 +346,7 @@ export function App() {
     : selection?.kind === 'house' ? getHouse(selection.id)?.name : selection ? getDesigner(selection.id)?.name : undefined;
   const filterKey = `${visibleYear}:${JSON.stringify(filters)}`;
   const zIndex = (key: string) => 20 + desk.order.indexOf(key);
+  // Windows live on the desktop beside the map window, so they open and restore without it.
   const toggle = (key: string) => changeDesk((d) => toggleTask(d, key));
   const show = (key: string) => changeDesk((d) => focusWindow(d, key));
   /** Close several windows; the map selection clears if it belonged to one of them and no Properties window takes over. */
@@ -286,52 +376,67 @@ export function App() {
     ];
   };
 
-  return <div className="desktop"><div className="window main-window">
-    <div className="window-body"><div className="toolbar">
-      <ActiveFilters value={filters} onChange={changeFilters} count={visibleHouses.length} total={houses.length} />
-    </div>
-      <div className="content">
-        <DesktopIcon label="Recycle Bin" icon={<img src="/assets/bin.webp" alt="" width={32} height={32} draggable={false} />} storageKey={RECYCLE_BIN_KEY}
-          onOpen={() => changeDesk((d) => openItem(d, tool('recycle')))} />
-        <DesktopIcon label="Statistics" icon={<StartIcon name="chart" />} storageKey={STATISTICS_ICON_KEY} slot={1}
-          onOpen={() => changeDesk((d) => openItem(d, STATISTICS))} />
-        <DesktopIcon label="List View" icon={<img className="xl-icon" src={LIST_VIEW_ICON} alt="" width={32} height={32} draggable={false} />} storageKey={LIST_VIEW_ICON_KEY} slot={2}
-          onOpen={() => changeDesk((d) => openItem(d, LIST_VIEW))} />
-        <MapView key={locationMode} graphRef={graph} connectionFilter={connectionFilter} onSelect={select} onExpandChange={onExpandChange} onShowMore={showMore} onOpenCity={openCity} />
-        {desk.directoryOpen && <PropertiesWindow id="side-window" titleId="panel-title" bodyId="panel" title="Directory"
-          storageKey={DIRECTORY_RECT_KEY} scrollKey={visibleHouses} minimized={desk.directoryMinimized}
-          active={desk.active === DIRECTORY || desk.active === null} zIndex={zIndex(DIRECTORY)}
-          onFocus={() => changeDesk((d) => focusWindow(d, DIRECTORY))} onMinimize={() => changeDesk((d) => minimizeWindow(d, DIRECTORY))}
-          onClose={() => changeDesk((d) => closeWindow(d, DIRECTORY))}>
-          <PanelContent key={filterKey} selection={null} visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onTag={addTag} />
-        </PropertiesWindow>}
-        {desk.windows.map((w) => <PropertiesWindow key={w.key} id={w.key} titleId={`${w.key}-title`} bodyId={`${w.key}-body`}
-          title={windowTitle(w.item)} cascade={w.slot} align={isPlace(w.item) || isTool(w.item) ? 'left' : 'right'} className={isPlace(w.item) ? 'city-window' : isTool(w.item) && w.item.id === 'run' ? 'run-window' : isTool(w.item) && w.item.id === 'list' ? 'list-window' : undefined}
-          icon={isTool(w.item) && w.item.id === 'list' ? <img className="xl-icon" src={LIST_VIEW_ICON} alt="" width={16} height={16} /> : undefined}
-          preferredSize={isPlace(w.item) ? cityWindowSize(placeTileCount(w.item, visibleIds)) : isTool(w.item) ? TOOL_SIZES[w.item.id] : undefined}
-          minSize={isPlace(w.item) ? cityWindowSize(1) : isTool(w.item) && w.item.id === 'run' ? RUN_MIN_SIZE : isTool(w.item) && w.item.id === 'list' ? LIST_MIN_SIZE : undefined}
-          fitHeight={isSelectionItem(w.item)}
-          maximized={isTool(w.item) && w.item.id === 'list' && listFullScreen}
-          onMaximize={isTool(w.item) && w.item.id === 'list' ? () => setListFullScreen((on) => !on) : undefined}
-          scrollKey={w.revision} minimized={w.minimized} active={desk.active === w.key} zIndex={zIndex(w.key)}
-          onFocus={() => changeDesk((d) => focusWindow(d, w.key))} onMinimize={() => changeDesk((d) => minimizeWindow(d, w.key))}
-          onClose={() => changeDesk((d) => closeWindow(d, w.key), w.item)}>
-          {isPlace(w.item) ? <PlaceWindowContent place={w.item} visibleIds={visibleIds} onSelect={select}
-            onShowOnMap={revealOnMap} onOpenPlace={openPlace} onShowPlace={showPlaceOnMap} />
-            : isTool(w.item) ? w.item.id === 'stats' ? <StatisticsContent visibleHouses={visibleHouses} year={visibleYear} filtered={!!matchingIds} onSelect={select} onOpenPlace={openPlace} />
-              : w.item.id === 'recycle' ? <RecycleBinContent visibleHouses={visibleHouses} year={visibleYear} onSelect={select} />
-              : w.item.id === 'help' ? <HelpContent />
-              : w.item.id === 'list' ? <ListViewContent onSelect={select} onOpenPlace={openPlace} onShowOnMap={revealSelection} onShowPlace={showPlaceOnMap} fullScreen={listFullScreen} onFullScreen={setListFullScreen} onHelp={() => changeDesk((d) => openItem(d, HELP))} onClose={() => closeKeys([w.key])} />
-              : w.item.id === 'run' ? <RunContent items={runItems} onRun={run} onBrowse={openDirectory} onClose={() => closeKeys([w.key])} />
-              : <MissingReportContent onSelect={select} />
-            : <PanelContent key={`${w.revision}:${filterKey}`} selection={w.item} visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onTag={addTag} onOpenPlace={openPlace} />}
-        </PropertiesWindow>)}
+  const mapHidden = mapWindow.state !== 'open';
+  const iconBounds = useMapContentBounds(mapContent, mapWindow.maximized && !mapHidden);
+  const icons = desktopShortcuts(openMap, (item) => changeDesk((d) => openItem(d, item)));
+  return <div className={`desktop${mapWindow.maximized ? ' map-maximized' : ''}`}><div className="desktop-area">
+    {/* Over a full-screen map the icons sit on the map's top-left corner, above it and under the other windows. */}
+    <DesktopIcons icons={icons.map((icon) => ({ ...icon, icon: icon.icon(32) }))} className={iconBounds ? 'over-map' : undefined} style={iconBounds ?? undefined} />
+    <MapWindowFrame title="Explorer" icon={<img className="title-bar-icon" src={MAP_ICON} alt="" width={16} height={16} draggable={false} />}
+      hidden={mapHidden} maximized={mapWindow.maximized} onToggleMaximize={toggleMaximized}
+      onMinimize={() => setMapWindow((w) => ({ ...w, state: 'minimized' }))} onClose={() => setMapWindow((w) => ({ ...w, state: 'closed' }))}>
+      <div className="window-body">
+        <form className="address-bar" role="search" onSubmit={(event) => { event.preventDefault(); goToAddress(); }}>
+          <SearchBox items={availableSearchItems} value={address} onChange={setAddress} onPick={(item) => select(item.value, true)}
+            label="Address" inputId="address" placeholder="Brand, designer or group" previewAll={false} exactFirst dropButton
+            icon={<img src={MAP_ICON} alt="" width={16} height={16} draggable={false} />} />
+          <button type="submit" className="address-go"><StartIcon name="go" size={16} className="address-go-icon" />Go</button>
+        </form>
+        <div className="toolbar">
+          <ActiveFilters value={filters} onChange={changeFilters} count={visibleHouses.length} total={houses.length} />
+        </div>
+        <div className="content" ref={mapContent}>
+          <MapView key={locationMode} graphRef={graph} connectionFilter={connectionFilter} onSelect={select} onExpandChange={onExpandChange} onShowMore={showMore} onOpenCity={openCity} />
+        </div>
       </div>
-    </div>
-    <div className="status-bar"><p className="status-bar-field" id="status-counts" role="status">{notice ?? `${houses.length} houses · ${designers.length} designers · ${moveCount} moves`}</p>
-      <p className="status-bar-field" id="status-selection">{name ? `Selected: ${name}` : 'Nothing selected'}</p>
-      <p className="status-bar-field" id="status-year">{year >= maxYear ? 'Showing all years' : `Up to ${year}`}</p>
-    </div>
+      <div className="status-bar"><p className="status-bar-field" id="status-counts" role="status">{notice ?? `${houses.length} houses · ${designers.length} designers · ${moveCount} moves`}</p>
+        <p className="status-bar-field" id="status-selection">{name ? `Selected: ${name}` : 'Nothing selected'}</p>
+        <p className="status-bar-field" id="status-year">{year >= maxYear ? 'Showing all years' : `Up to ${year}`}</p>
+      </div>
+    </MapWindowFrame>
+    {desk.directoryOpen && <PropertiesWindow id="side-window" titleId="panel-title" bodyId="panel" title="Directory"
+      storageKey={DIRECTORY_RECT_KEY} scrollKey={visibleHouses} minimized={desk.directoryMinimized}
+      active={desk.active === DIRECTORY || desk.active === null} zIndex={zIndex(DIRECTORY)}
+      onFocus={() => changeDesk((d) => focusWindow(d, DIRECTORY))} onMinimize={() => changeDesk((d) => minimizeWindow(d, DIRECTORY))}
+      onClose={() => changeDesk((d) => closeWindow(d, DIRECTORY))}>
+      <PanelContent key={filterKey} selection={null} visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onTag={addTag} />
+    </PropertiesWindow>}
+    {desk.windows.map((w) => <PropertiesWindow key={w.key} id={w.key} titleId={`${w.key}-title`} bodyId={`${w.key}-body`}
+      title={windowTitle(w.item)} cascade={w.slot} anchor={w.anchor} align={isPlace(w.item) || isTool(w.item) ? 'left' : 'right'} className={isPlace(w.item) ? 'city-window' : isTool(w.item) && w.item.id === 'recycle' ? 'city-window recycle-window' : isTool(w.item) && w.item.id === 'run' ? 'run-window' : isTool(w.item) && w.item.id === 'list' ? 'list-window' : undefined}
+      icon={isTool(w.item) && w.item.id === 'list' ? <img className="xl-icon" src={LIST_VIEW_ICON} alt="" width={16} height={16} />
+        : isTool(w.item) && w.item.id === 'settings' ? <img src={SETTINGS_ICON} alt="" width={16} height={16} /> : undefined}
+      preferredSize={isPlace(w.item) ? scaleSize(cityWindowSize(placeTileCount(w.item, visibleIds)), textScale(textSize))
+        : isTool(w.item) && w.item.id === 'recycle' ? scaleSize(recycleBinSize(endedBrands(visibleHouses, visibleYear).length), textScale(textSize)) : isTool(w.item) ? TOOL_SIZES[w.item.id] : undefined}
+      minSize={isPlace(w.item) ? scaleSize(cityWindowSize(1), textScale(textSize))
+        : isTool(w.item) && w.item.id === 'recycle' ? scaleSize(recycleBinSize(1), textScale(textSize)) : isTool(w.item) && w.item.id === 'run' ? RUN_MIN_SIZE : isTool(w.item) && w.item.id === 'list' ? LIST_MIN_SIZE : undefined}
+      fitHeight={isSelectionItem(w.item)}
+      maximized={isTool(w.item) && w.item.id === 'list' && listFullScreen}
+      onMaximize={isTool(w.item) && w.item.id === 'list' ? () => setListFullScreen((on) => !on) : undefined}
+      scrollKey={w.revision} minimized={w.minimized} active={desk.active === w.key} zIndex={zIndex(w.key)}
+      onFocus={() => changeDesk((d) => focusWindow(d, w.key))} onMinimize={() => changeDesk((d) => minimizeWindow(d, w.key))}
+      onClose={() => changeDesk((d) => closeWindow(d, w.key), w.item)}>
+      {isPlace(w.item) ? <PlaceWindowContent place={w.item} visibleIds={visibleIds} onSelect={select}
+        onShowOnMap={revealOnMap} onOpenPlace={openPlace} onShowPlace={showPlaceOnMap} />
+        : isTool(w.item) ? w.item.id === 'stats' ? <StatisticsContent visibleHouses={visibleHouses} year={visibleYear} filtered={!!matchingIds} onSelect={select} onOpenPlace={openPlace} />
+          : w.item.id === 'recycle' ? <RecycleBinContent visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onShowOnMap={revealOnMap} />
+          : w.item.id === 'help' ? <HelpContent />
+          : w.item.id === 'list' ? <ListViewContent onSelect={select} onOpenPlace={openPlace} onShowOnMap={revealSelection} onShowPlace={showPlaceOnMap} fullScreen={listFullScreen} onFullScreen={setListFullScreen} onHelp={() => changeDesk((d) => openItem(d, HELP))} onClose={() => closeKeys([w.key])} />
+          : w.item.id === 'settings' ? <SettingsContent settings={{ mapTheme, textSize, cursorSize, locationMode, cityView, showLines, showCollaborations, connectionFilter }}
+            onChange={{ mapTheme: setMapTheme, textSize: setTextSize, cursorSize: setCursorSize, locationMode: changeLocationMode, cityView: setCityView, showLines: setShowLines, showCollaborations: setShowCollaborations, connectionFilter: setConnectionFilter }} />
+          : w.item.id === 'run' ? <RunContent items={runItems} onRun={run} onBrowse={openDirectory} onClose={() => closeKeys([w.key])} />
+          : <MissingReportContent onSelect={select} />
+        : <PanelContent key={`${w.revision}:${filterKey}`} selection={w.item} visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onTag={addTag} onOpenPlace={openPlace} onShowOnMap={revealSelection} />}
+    </PropertiesWindow>)}
   </div><div className="taskbar"><StartMenu>{(close) => <>
       <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
         <StartIcon name="documents" /><span className="start-label">Documents</span><span className="start-arrow" aria-hidden="true" />
@@ -353,6 +458,16 @@ export function App() {
           {([['current', 'Current base'], ['origin', 'Origin']] as const).map(([mode, label]) => <div className="field-row start-subitem" key={mode}>
             <input type="radio" id={`location-${mode}`} name="location-mode" checked={locationMode === mode} onChange={() => changeLocationMode(mode)} />
             <label htmlFor={`location-${mode}`}>{label}</label>
+          </div>)}
+        </fieldset>
+      </div>
+      <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
+        <StartIcon name="moon" /><span className="start-label">Map colours</span><span className="start-arrow" aria-hidden="true" />
+        <fieldset className="window start-submenu">
+          <legend className="visually-hidden">Map colours</legend>
+          {([['day', 'Day'], ['night', 'Night']] as const).map(([theme, label]) => <div className="field-row start-subitem" key={theme}>
+            <input type="radio" id={`map-theme-${theme}`} name="map-theme" checked={mapTheme === theme} onChange={() => setMapTheme(theme)} />
+            <label htmlFor={`map-theme-${theme}`}>{label}</label>
           </div>)}
         </fieldset>
       </div>
@@ -390,22 +505,51 @@ export function App() {
       {SHOW_MISSING_REPORT && <button className="start-item start-command" id="missing-report" onClick={() => { close(); changeDesk((d) => openItem(d, tool('missing'))); }}><StartIcon name="folder" /><span className="start-label">What's Missing</span></button>}
       <button className="start-item start-command" id="home" onClick={() => { close(); openDirectory(); }}><StartIcon name="folder" /><span className="start-label">Directory</span></button>
       <hr className="start-separator" />
+      <button className="start-item start-command" id="settings" onClick={() => { close(); changeDesk((d) => openItem(d, SETTINGS)); }}><img className="start-icon" src={SETTINGS_ICON} alt="" width={32} height={32} /><span className="start-label">Settings</span></button>
       <button className="start-item start-command" id="help" onClick={() => { close(); changeDesk((d) => openItem(d, HELP)); }}><StartIcon name="help" /><span className="start-label">Help</span></button>
       <button className="start-item start-command" id="run" onClick={() => { close(); changeDesk((d) => openItem(d, RUN)); }}><StartIcon name="run" /><span className="start-label">Run…</span></button>
       <hr className="start-separator" />
       <button className="start-item start-command" id="reset-view" onClick={() => { close(); resetView(); }}><StartIcon name="reset" /><span className="start-label">Reset View</span></button>
     </>}</StartMenu>
+    <div className="quick-launch" role="toolbar" aria-label="Quick Launch">
+      {icons.map((icon) => <button type="button" className="quick-launch-button" key={icon.label} aria-label={`Launch ${icon.label}`} title={icon.label}
+        onClick={icon.open}>{icon.icon(16)}</button>)}
+    </div>
     <div className="taskbar-search">
       <SearchBox items={availableSearchItems} value={search} onChange={setSearch} onPick={(item) => select(item.value, true)}
         placeholder="Search" previewAll={false} dropUp />
     </div>
-    <button className="task active">Designer Map</button>
+    {mapWindow.state !== 'closed' && <button className={`task map-task${mapHidden ? '' : ' active'}`} aria-pressed={!mapHidden} aria-controls="map-window"
+      onClick={() => setMapWindow((w) => ({ ...w, state: w.state === 'open' ? 'minimized' : 'open' }))}>
+      <img className="task-icon" src={MAP_ICON} alt="" width={16} height={16} draggable={false} /><span className="task-label">Explorer</span>
+    </button>}
     {desk.directoryOpen && <TaskGroup label="Directory" active={desk.active} onToggle={toggle} onShow={show}
       onClose={(key) => closeKeys([key])} windowActions={windowActions} groupActions={groupActions}
       tasks={[{ key: DIRECTORY, title: 'Directory', minimized: desk.directoryMinimized, controls: 'side-window' }]} />}
-    {([['Brands', 'brand'], ['Designers', 'designer'], ['Locations', 'place'], ['Statistics', 'stats'], ['List View', 'list'], ['Recycle Bin', 'recycle'], ["What's Missing", 'missing'], ['Help', 'help'], ['Run', 'run']] as const).map(([label, type]) => <TaskGroup key={label} label={label} active={desk.active}
+    {([['Brands', 'brand'], ['Designers', 'designer'], ['Locations', 'place'], ['Statistics', 'stats'], ['List View', 'list'], ['Recycle Bin', 'recycle'], ["What's Missing", 'missing'], ['Settings', 'settings'], ['Help', 'help'], ['Run', 'run']] as const).map(([label, type]) => <TaskGroup key={label} label={label} active={desk.active}
       onToggle={toggle} onShow={show} onClose={(key) => closeKeys([key])} windowActions={windowActions} groupActions={groupActions} tasks={desk.windows.filter((w) => windowType(w.item) === type)
         .map((w) => ({ key: w.key, title: windowTitle(w.item), minimized: w.minimized, controls: w.key }))} />)}<YearTray year={year} minYear={minYear} maxYear={maxYear} playing={playFrom !== null} onYear={setYear}
       onPlay={() => setPlayFrom((current) => current === null ? year >= maxYear ? minYear : year : null)} />
   </div></div>;
+}
+
+/** While `on`, the map content area's box relative to the desktop area (desktop icons are laid over it). */
+function useMapContentBounds(content: RefObject<HTMLDivElement | null>, on: boolean) {
+  const [bounds, setBounds] = useState<{ left: number; top: number; width: number; height: number } | null>(null);
+  useLayoutEffect(() => {
+    const element = content.current, area = element?.closest('.desktop-area');
+    if (!on || !element || !area) { setBounds(null); return; }
+    const measure = () => {
+      const box = element.getBoundingClientRect(), origin = area.getBoundingClientRect();
+      setBounds({ left: box.left - origin.left, top: box.top - origin.top, width: box.width, height: box.height });
+    };
+    measure();
+    if (typeof ResizeObserver === 'undefined') return;
+    // The toolbar's filter chips and the text size move the content's top; both resize it.
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    observer.observe(area);
+    return () => observer.disconnect();
+  }, [content, on]);
+  return bounds;
 }

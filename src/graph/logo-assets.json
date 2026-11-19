@@ -3359,6 +3359,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 21694
   },
+  "gr10k.png": {
+    "hash": "5f306f104e48055a",
+    "backgroundVersion": 2,
+    "file": "5f306f104e48055a.webp",
+    "ratio": 4.099099099099099,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5342
+  },
   "gramicci.png": {
     "hash": "a87cf4699a60b24d",
     "backgroundVersion": 2,
@@ -3606,6 +3614,14 @@
     "ratio": 6.516666666666667,
     "background": "rgb(255, 255, 255)",
     "bytes": 7578
+  },
+  "hereu.jpeg": {
+    "hash": "1cbfddcd9012a5be",
+    "backgroundVersion": 2,
+    "file": "1cbfddcd9012a5be.webp",
+    "ratio": 4.046511627906977,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 3648
   },
   "herill.png": {
     "hash": "1aabe05fb36ff6b7",
@@ -3958,6 +3974,14 @@
     "ratio": 5.12,
     "background": "#ffffff",
     "bytes": 2548
+  },
+  "james_perse.jpg": {
+    "hash": "990d77518e9cc99f",
+    "backgroundVersion": 2,
+    "file": "990d77518e9cc99f.webp",
+    "ratio": 6.951807228915663,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 7612
   },
   "jamiesons.png": {
     "hash": "1029a0fa55c4f75e",
@@ -4646,6 +4670,14 @@
     "ratio": 2.13953488372093,
     "background": "#ffffff",
     "bytes": 23977
+  },
+  "li_ning.svg": {
+    "hash": "5c812447e5aafd9e",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1.9968051118210863,
+    "background": "#ffffff",
+    "bytes": 9886
   },
   "liam_hodges.png": {
     "hash": "2d2d1d396ffe7ec7",
@@ -6167,6 +6199,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 3092
   },
+  "patrick_church.avif": {
+    "hash": "4cea699f7f303e62",
+    "backgroundVersion": 2,
+    "file": "4cea699f7f303e62.webp",
+    "ratio": 3.328,
+    "background": "#ffffff",
+    "bytes": 5450
+  },
   "patrik_ervell.png": {
     "hash": "587b28beed5b58a2",
     "backgroundVersion": 2,
@@ -6286,6 +6326,14 @@
     "ratio": 4.939130434782609,
     "background": "rgb(255, 255, 255)",
     "bytes": 7138
+  },
+  "philosophy.png": {
+    "hash": "854cf933385045d8",
+    "backgroundVersion": 2,
+    "file": "854cf933385045d8.webp",
+    "ratio": 2.5354330708661417,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5090
   },
   "phoebe_philo.webp": {
     "hash": "9be1b58860e0322f",
@@ -6551,6 +6599,14 @@
     "background": "#ffffff",
     "bytes": 9767
   },
+  "pyrex.jpeg": {
+    "hash": "be009fc5b97c079c",
+    "backgroundVersion": 2,
+    "file": "be009fc5b97c079c.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 8632
+  },
   "quiksilver.png": {
     "hash": "9f654dcdfac0fbef",
     "backgroundVersion": 2,
@@ -6654,6 +6710,14 @@
     "ratio": 0.9780564263322884,
     "background": "rgb(255, 255, 255)",
     "bytes": 4068
+  },
+  "random_identities.jpg": {
+    "hash": "cca00bbe1d377095",
+    "backgroundVersion": 2,
+    "file": "cca00bbe1d377095.webp",
+    "ratio": 1.0918918918918918,
+    "background": "rgb(236, 236, 238)",
+    "bytes": 8682
   },
   "rapha.png": {
     "hash": "71f3fcbba8da0865",
@@ -6782,6 +6846,14 @@
     "ratio": 0.8092,
     "background": "#ffffff",
     "bytes": 2445
+  },
+  "repetto.jpg": {
+    "hash": "ee0cb359948f0d5b",
+    "backgroundVersion": 2,
+    "file": "ee0cb359948f0d5b.webp",
+    "ratio": 3.0991253644314867,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 7860
   },
   "represent.jpg": {
     "hash": "5b41b9096a6f0ce7",
@@ -7118,6 +7190,14 @@
     "ratio": 7.96875,
     "background": "rgb(255, 255, 255)",
     "bytes": 5862
+  },
+  "santoni.png": {
+    "hash": "badbdb31d75f65d1",
+    "backgroundVersion": 2,
+    "file": "badbdb31d75f65d1.webp",
+    "ratio": 5,
+    "background": "#ffffff",
+    "bytes": 4000
   },
   "sasquatchfabrix.png": {
     "hash": "7d48c4fb8e609ebe",
@@ -8367,6 +8447,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 15492
   },
+  "undercoverism.png": {
+    "hash": "046be57ce98a548e",
+    "backgroundVersion": 2,
+    "file": "046be57ce98a548e.webp",
+    "ratio": 4.9491525423728815,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 4240
+  },
   "ungaro.png": {
     "hash": "80bfc392c5fc9b62",
     "backgroundVersion": 2,
@@ -8519,13 +8607,13 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 12216
   },
-  "versace.svg": {
-    "hash": "6320459d84a9e386",
+  "versace.png": {
+    "hash": "30beb936f81eb5ea",
     "backgroundVersion": 2,
-    "file": null,
-    "ratio": 1,
-    "background": "rgb(255, 255, 255)",
-    "bytes": 60762
+    "file": "30beb936f81eb5ea.webp",
+    "ratio": 0.7948051948051948,
+    "background": "#ffffff",
+    "bytes": 37842
   },
   "versace_jeans_couture.png": {
     "hash": "1d73dc2a03a55cac",

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode, type RefObject } from 'react';
 
 export const DIRECTORY_RECT_KEY = 'designer-map:properties-window';
 const MINIMIZED_KEY = 'designer-map:panel-minimized';
@@ -17,10 +17,10 @@ export interface Size { width: number; height: number }
 function read(key: string): string | null {
   try { return localStorage.getItem(key); } catch { return null; }
 }
-function write(key: string, value: string) {
+export function write(key: string, value: string) {
   try { localStorage.setItem(key, value); } catch { /* storage unavailable */ }
 }
-function storedRect(key: string | undefined): WindowRect | null {
+export function storedRect(key: string | undefined): WindowRect | null {
   if (!key) return null;
   try {
     const value = JSON.parse(read(key) ?? 'null') as Partial<WindowRect> | null;
@@ -52,7 +52,27 @@ export function defaultRect(area: Size, cascade = 0, align: 'left' | 'right' = '
   };
 }
 
-/** Keep the whole window, including its title bar, inside the map area. */
+/** Gap between an anchor (a city pin) and the window opened beside it. */
+const ANCHOR_GAP = 8;
+
+/**
+ * Beside an anchor box (in the area's coordinates): to its right, or to its
+ * left when the right side has no room, with the title bar level with the
+ * anchor's middle. `clampRect` then keeps it inside the area.
+ */
+export function anchoredRect(area: Size, anchor: { left: number; top: number; right: number; bottom: number }, preferred?: Size, min = MIN_SIZE): WindowRect {
+  const width = Math.min(preferred?.width ?? DEFAULT_PANEL_WIDTH, Math.max(min.width, area.width - 2 * MARGIN));
+  const height = Math.max(min.height, Math.min(area.height - 2 * MARGIN, preferred?.height ?? 420));
+  const right = anchor.right + ANCHOR_GAP;
+  const left = anchor.left - ANCHOR_GAP - width;
+  const x = right + width <= area.width - MARGIN || left < MARGIN && area.width - right >= anchor.left ? right : left;
+  const y = (anchor.top + anchor.bottom) / 2 - TITLE_BAR_MIDDLE;
+  return { x, y: Math.min(Math.max(y, MARGIN), Math.max(MARGIN, area.height - height - MARGIN)), width, height };
+}
+/** Roughly half a 98.css title bar plus the window border, so the title bar lines up with the anchor. */
+const TITLE_BAR_MIDDLE = 12;
+
+/** Keep the whole window, including its title bar, inside the desktop area. */
 export function clampRect(rect: WindowRect, area: Size, min = MIN_SIZE): WindowRect {
   const width = Math.round(Math.min(Math.max(rect.width, min.width), Math.max(min.width, area.width)));
   const height = Math.round(Math.min(Math.max(rect.height, min.height), Math.max(min.height, area.height)));
@@ -61,47 +81,101 @@ export function clampRect(rect: WindowRect, area: Size, min = MIN_SIZE): WindowR
   return { x, y, width, height };
 }
 
-/**
- * A Properties window floating over the full-size map like a Win98 window:
- * drag its title bar to move it, drag the corner grip to resize it, minimize
- * it to the taskbar or close it. Arrow keys move it from the focused title bar
- * or resize it from the focused grip; double-clicking the title bar restores
- * the default placement. Pressing anywhere in it brings it to the front.
- */
-export function PropertiesWindow({ id, titleId, bodyId, title, icon, minimized, maximized = false, onMaximize, active, zIndex, cascade = 0, align = 'right', preferredSize, minSize = MIN_SIZE, fitHeight = false, storageKey, scrollKey,
-  className, onMinimize, onClose, onFocus, children }: {
-  id: string; titleId: string; bodyId: string; title: string; minimized: boolean;
-  /** A 16px application icon before the title, like Win98's window menu icon. */
-  icon?: ReactNode;
-  /** Fill the whole map area, like a maximized Win98 window (no moving or resizing until restored). */
-  maximized?: boolean;
-  /** Shows the Maximize / Restore button; double-clicking the title bar toggles it too. */
-  onMaximize?: () => void; active: boolean; zIndex: number;
-  cascade?: number; align?: 'left' | 'right'; storageKey?: string; scrollKey: unknown; className?: string;
-  /** Default size before the user moves or resizes the window (still kept inside the map area). */
-  preferredSize?: Size;
-  /** Smallest size when opening or resizing; defaults to MIN_PANEL_WIDTH × MIN_PANEL_HEIGHT. */
-  minSize?: Size;
-  /** Open just tall enough for the content (up to the map area), tracking it until the user moves or resizes the window. */
-  fitHeight?: boolean;
-  onMinimize: () => void; onClose: () => void; onFocus: () => void; children: ReactNode;
-}) {
-  const win = useRef<HTMLDivElement>(null);
-  const body = useRef<HTMLDivElement>(null);
+/** The client size of an element's parent (the desktop area windows live in), tracked as it resizes. */
+export function useParentSize(element: RefObject<HTMLElement | null>): Size | null {
   const [area, setArea] = useState<Size | null>(null);
-  const [rect, setRect] = useState<WindowRect | null>(() => storedRect(storageKey));
-  const gesture = useRef<{ mode: 'move' | 'resize'; x: number; y: number; start: WindowRect } | null>(null);
-
   useLayoutEffect(() => {
-    const parent = win.current?.parentElement;
+    const parent = element.current?.parentElement;
     if (!parent) return;
-    const update = () => setArea(parent.clientWidth && parent.clientHeight ? { width: parent.clientWidth, height: parent.clientHeight } : null);
+    const update = () => setArea((current) => {
+      if (!parent.clientWidth || !parent.clientHeight) return null;
+      return current?.width === parent.clientWidth && current.height === parent.clientHeight ? current : { width: parent.clientWidth, height: parent.clientHeight };
+    });
     update();
     const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(update);
     observer?.observe(parent);
     window.addEventListener('resize', update);
     return () => { observer?.disconnect(); window.removeEventListener('resize', update); };
-  }, []);
+  }, [element]);
+  return area;
+}
+
+/**
+ * Win98 window gestures: drag the title bar to move, the corner grip to resize,
+ * or press arrow keys on either (Shift for bigger steps). `placed` is null while
+ * the window can't move (unmeasured or maximized); `update` receives the new rect.
+ */
+export function useWindowGestures(placed: WindowRect | null, update: (next: WindowRect) => void) {
+  const gesture = useRef<{ mode: 'move' | 'resize'; x: number; y: number; start: WindowRect } | null>(null);
+  const begin = (mode: 'move' | 'resize') => (event: PointerEvent<HTMLElement>) => {
+    if (event.button !== 0 || !placed || (event.target as Element).closest('button')) return;
+    event.preventDefault();
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    gesture.current = { mode, x: event.clientX, y: event.clientY, start: placed };
+  };
+  const move = (event: PointerEvent<HTMLElement>) => {
+    const current = gesture.current;
+    if (!current) return;
+    const dx = event.clientX - current.x;
+    const dy = event.clientY - current.y;
+    const { start } = current;
+    update(current.mode === 'move' ? { ...start, x: start.x + dx, y: start.y + dy }
+      : { ...start, width: start.width + dx, height: start.height + dy });
+  };
+  const end = () => { gesture.current = null; };
+  const arrows = (mode: 'move' | 'resize') => (event: KeyboardEvent<HTMLElement>) => {
+    if (!placed || event.target !== event.currentTarget) return;
+    const step = event.shiftKey ? KEY_STEP * 4 : KEY_STEP;
+    const delta = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[event.key];
+    if (!delta) return;
+    event.preventDefault();
+    const [dx, dy] = delta as [number, number];
+    update(mode === 'move' ? { ...placed, x: placed.x + dx, y: placed.y + dy }
+      : { ...placed, width: placed.width + dx, height: placed.height + dy });
+  };
+  return { begin, move, end, arrows };
+}
+
+/**
+ * A Properties window floating on the desktop like a Win98 window:
+ * drag its title bar to move it, drag the corner grip to resize it, minimize
+ * it to the taskbar or close it. Arrow keys move it from the focused title bar
+ * or resize it from the focused grip; double-clicking the title bar restores
+ * the default placement. Pressing anywhere in it brings it to the front.
+ */
+export function PropertiesWindow({ id, titleId, bodyId, title, icon, minimized, maximized = false, onMaximize, active, zIndex, cascade = 0, anchor, align = 'right', preferredSize, minSize = MIN_SIZE, fitHeight = false, storageKey, scrollKey,
+  className, onMinimize, onClose, onFocus, children }: {
+  id: string; titleId: string; bodyId: string; title: string; minimized: boolean;
+  /** A 16px application icon before the title, like Win98's window menu icon. */
+  icon?: ReactNode;
+  /** Fill the whole desktop area, like a maximized Win98 window (no moving or resizing until restored). */
+  maximized?: boolean;
+  /** Shows the Maximize / Restore button; double-clicking the title bar toggles it too. */
+  onMaximize?: () => void; active: boolean; zIndex: number;
+  cascade?: number; align?: 'left' | 'right'; storageKey?: string; scrollKey: unknown; className?: string;
+  /** Open beside this box (viewport pixels, e.g. the clicked city pin) instead of cascading. A new anchor moves the window there again. */
+  anchor?: { left: number; top: number; right: number; bottom: number };
+  /** Default size before the user moves or resizes the window (still kept inside the desktop area). */
+  preferredSize?: Size;
+  /** Smallest size when opening or resizing; defaults to MIN_PANEL_WIDTH × MIN_PANEL_HEIGHT. */
+  minSize?: Size;
+  /** Open just tall enough for the content (up to the desktop area), tracking it until the user moves or resizes the window. */
+  fitHeight?: boolean;
+  onMinimize: () => void; onClose: () => void; onFocus: () => void; children: ReactNode;
+}) {
+  const win = useRef<HTMLDivElement>(null);
+  const body = useRef<HTMLDivElement>(null);
+  const area = useParentSize(win);
+  const [rect, setRect] = useState<WindowRect | null>(() => storedRect(storageKey));
+  // The anchor in the desktop area's coordinates; a new anchor (another pin click) drops any manual position.
+  const [localAnchor, setLocalAnchor] = useState<WindowRect | null>(null);
+  useLayoutEffect(() => {
+    const parent = win.current?.parentElement;
+    if (!anchor || !parent) { setLocalAnchor(null); return; }
+    const origin = parent.getBoundingClientRect();
+    setLocalAnchor({ x: anchor.left - origin.left, y: anchor.top - origin.top, width: anchor.right - anchor.left, height: anchor.bottom - anchor.top });
+    setRect(null);
+  }, [anchor]);
   useEffect(() => { if (rect && storageKey) write(storageKey, JSON.stringify(rect)); }, [rect, storageKey]);
   useLayoutEffect(() => { if (body.current) body.current.scrollTop = 0; }, [scrollKey]);
 
@@ -137,35 +211,10 @@ export function PropertiesWindow({ id, titleId, bodyId, title, icon, minimized, 
 
   // Without a measured area (first paint, tests) CSS places the window at the right edge.
   const placed = area ? maximized ? { x: 0, y: 0, width: area.width, height: area.height }
-    : clampRect(rect ?? defaultRect(area, cascade, align, preferred, minSize), area, minSize) : null;
-  const update = (next: WindowRect) => { if (area) setRect(clampRect(next, area, minSize)); };
-
-  const begin = (mode: 'move' | 'resize') => (event: PointerEvent<HTMLElement>) => {
-    if (event.button !== 0 || !placed || maximized || (event.target as Element).closest('button')) return;
-    event.preventDefault();
-    event.currentTarget.setPointerCapture?.(event.pointerId);
-    gesture.current = { mode, x: event.clientX, y: event.clientY, start: placed };
-  };
-  const move = (event: PointerEvent<HTMLElement>) => {
-    const current = gesture.current;
-    if (!current) return;
-    const dx = event.clientX - current.x;
-    const dy = event.clientY - current.y;
-    const { start } = current;
-    update(current.mode === 'move' ? { ...start, x: start.x + dx, y: start.y + dy }
-      : { ...start, width: start.width + dx, height: start.height + dy });
-  };
-  const end = () => { gesture.current = null; };
-  const arrows = (mode: 'move' | 'resize') => (event: KeyboardEvent<HTMLElement>) => {
-    if (!placed || maximized || event.target !== event.currentTarget) return;
-    const step = event.shiftKey ? KEY_STEP * 4 : KEY_STEP;
-    const delta = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[event.key];
-    if (!delta) return;
-    event.preventDefault();
-    const [dx, dy] = delta as [number, number];
-    update(mode === 'move' ? { ...placed, x: placed.x + dx, y: placed.y + dy }
-      : { ...placed, width: placed.width + dx, height: placed.height + dy });
-  };
+    : clampRect(rect ?? (localAnchor
+      ? anchoredRect(area, { left: localAnchor.x, top: localAnchor.y, right: localAnchor.x + localAnchor.width, bottom: localAnchor.y + localAnchor.height }, preferred, minSize)
+      : defaultRect(area, cascade, align, preferred, minSize)), area, minSize) : null;
+  const { begin, move, end, arrows } = useWindowGestures(maximized ? null : placed, (next) => { if (area) setRect(clampRect(next, area, minSize)); });
 
   return <div ref={win} className={`window side-window${maximized ? ' maximized' : ''}${className ? ` ${className}` : ''}`} id={id} role="dialog" aria-labelledby={titleId} hidden={minimized}
     data-placed={placed ? 'true' : undefined} data-active={active ? 'true' : undefined}

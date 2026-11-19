@@ -11,7 +11,6 @@ export function MapView({ graphRef, connectionFilter, onSelect, onExpandChange, 
   /** Clicking a city pin opens that city's window. */
   onOpenCity: (city: string) => void;
 }) {
-  const [connectionLabel, setConnectionLabel] = useState<string | null>(null);
   const host = useRef<HTMLDivElement>(null);
   const [menu, setMenu] = useState<{ x: number; y: number; house?: string } | null>(null);
   const closeMenu = useCallback((restoreFocus = false) => {
@@ -19,7 +18,7 @@ export function MapView({ graphRef, connectionFilter, onSelect, onExpandChange, 
     if (restoreFocus) host.current?.focus({ preventScroll: true });
   }, []);
   useLayoutEffect(() => {
-    const graph = new DesignerGraph(host.current!, { onSelect, onExpandChange, onOpenCity, onConnectionHover: setConnectionLabel });
+    const graph = new DesignerGraph(host.current!, { onSelect, onExpandChange, onOpenCity });
     graphRef.current = graph;
     const close = () => closeMenu();
     graph.cy.on('viewport', close);
@@ -39,7 +38,6 @@ export function MapView({ graphRef, connectionFilter, onSelect, onExpandChange, 
   useLayoutEffect(() => { graphRef.current?.setConnectionFilter(connectionFilter); }, [connectionFilter, graphRef]);
 
   return <><div className="map-workspace">
-    <div className="connection-details sunken-panel" role="status">{connectionLabel ?? 'Hover a connection for details. Designer arrows show career direction.'}</div>
     <div id="graph" ref={host} className="graph-pane" tabIndex={0} aria-label="Graph of fashion houses and designers"
     onContextMenuCapture={(event) => {
       event.preventDefault();

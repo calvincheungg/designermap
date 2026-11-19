@@ -1,3 +1,4 @@
+import type { ScreenBox } from '../graph/graph';
 import type { Place, Selection } from './panel';
 
 /** Brand and group Properties windows open at once, besides the Directory. */
@@ -8,14 +9,15 @@ export const MAX_DESIGNER_WINDOWS = 10;
 export const MAX_LOCATION_WINDOWS = 10;
 export const DIRECTORY = 'directory';
 
-/** Single-instance tool windows: Statistics, the Recycle Bin of ended brands, the What's Missing report, Help, Run and the List View sheet. */
-export type ToolId = 'stats' | 'recycle' | 'missing' | 'help' | 'run' | 'list';
+/** Single-instance tool windows: Statistics, the Recycle Bin of ended brands, the What's Missing report, Help, Run, the List View sheet and Settings. */
+export type ToolId = 'stats' | 'recycle' | 'missing' | 'help' | 'run' | 'list' | 'settings';
 export type ToolItem = { kind: 'tool'; id: ToolId };
 export const tool = (id: ToolId): ToolItem => ({ kind: 'tool', id });
 export const STATISTICS = tool('stats');
 export const HELP = tool('help');
 export const RUN = tool('run');
 export const LIST_VIEW = tool('list');
+export const SETTINGS = tool('settings');
 /** A map selection shown in Properties, a city's brand grid, or a tool window. */
 export type Item = NonNullable<Selection> | Place | ToolItem;
 /** City and country windows: grids of brands, not map selections. */
@@ -36,6 +38,8 @@ export interface PropertyWindow {
   revision: number;
   /** Cascade position (1–3, designers 4–6), kept while the window stays open. */
   slot: number;
+  /** What the window was opened from (a city pin, in viewport pixels): it opens beside it instead of cascading. */
+  anchor?: ScreenBox;
 }
 export interface Desk {
   windows: PropertyWindow[];
@@ -75,7 +79,10 @@ export function focusWindow(desk: Desk, key: string): Desk {
  * three of that kind (Properties or city) already open, the least recently
  * used window of the same kind is reused.
  */
-export function openItem(desk: Desk, item: Item): Desk {
+export const openItem = (desk: Desk, item: Item): Desk => openItemAt(desk, item);
+
+/** `openItem`, placing a newly opened (or reused) window beside `anchor` instead of cascading it. */
+export function openItemAt(desk: Desk, item: Item, anchor?: ScreenBox): Desk {
   const existing = desk.windows.find((w) => sameItem(w.item, item));
   if (existing) return focusWindow(desk, existing.key);
   const peers = desk.windows.filter((w) => sameCategory(w.item, item));
@@ -84,13 +91,18 @@ export function openItem(desk: Desk, item: Item): Desk {
     const first = firstSlot(item);
     const slot = Array.from({ length: limitFor(item) }, (_, i) => first + i).find((n) => !used.has(n)) ?? first + peers.length;
     const key = `props-${desk.nextKey}`;
-    return focusWindow({ ...desk, nextKey: desk.nextKey + 1, windows: [...desk.windows, { key, item, minimized: false, revision: 0, slot }], order: [...desk.order, key] }, key);
+    return focusWindow({ ...desk, nextKey: desk.nextKey + 1, windows: [...desk.windows, { key, item, minimized: false, revision: 0, slot, anchor }], order: [...desk.order, key] }, key);
   }
   const reuse = desk.order.find((k) => peers.some((w) => w.key === k))!;
   return focusWindow({
     ...desk,
-    windows: desk.windows.map((w) => w.key === reuse ? { ...w, item, minimized: false, revision: w.revision + 1 } : w),
+    windows: desk.windows.map((w) => w.key === reuse ? { ...w, item, minimized: false, revision: w.revision + 1, anchor } : w),
   }, reuse);
+}
+
+/** Place an open window beside `anchor` (viewport pixels), e.g. once the map knows where a brand's city is. */
+export function anchorWindow(desk: Desk, key: string, anchor: ScreenBox): Desk {
+  return windowFor(desk, key) ? { ...desk, windows: desk.windows.map((w) => w.key === key ? { ...w, anchor } : w) } : desk;
 }
 
 /** The topmost open, unminimized window after `key` leaves the stack. */

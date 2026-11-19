@@ -6,6 +6,43 @@ const palette: Record<string, string> = {
 };
 
 const icons = {
+  /** Explorer's address-bar Go button: a green arrow pointing right. */
+  go: [
+    '................',
+    '................',
+    '........k.......',
+    '........kk......',
+    '........klk.....',
+    '.kkkkkkkkllk....',
+    '.klllllllllk....',
+    '.kllllllllllk...',
+    '.klllllllllk....',
+    '.kkkkkkkkllk....',
+    '........klk.....',
+    '........kk......',
+    '........k.......',
+    '................',
+    '................',
+    '................',
+  ],
+  moon: [
+    '................',
+    '.....nnnnn......',
+    '...nnyyynn......',
+    '..nyyyynn.......',
+    '..nyyyn.........',
+    '.nyyyyn.....w...',
+    '.nyyyn.....www..',
+    '.nyyyn......w...',
+    '.nyyyn..........',
+    '.nyyyyn.........',
+    '..nyyyynn....nn.',
+    '..nyyyyyynnnnyn.',
+    '...nnyyyyyyyyn..',
+    '.....nnnnnnnn...',
+    '................',
+    '................',
+  ],
   documents: [
     '................',
     '...kkkkkkkk.....',
@@ -211,9 +248,9 @@ export type StartIconName = keyof typeof icons | 'collapse';
 /** Collapse all: the Expand icon's plus with its vertical bar removed. */
 const collapse = icons.expand.map((row, y) => (y === 5 || y === 6 || y === 8 || y === 9) ? row.replace('wkw', 'www') : row);
 
-export function StartIcon({ name }: { name: StartIconName }) {
+export function StartIcon({ name, size = 32, className = 'start-icon' }: { name: StartIconName; size?: number; className?: string }) {
   const rows = name === 'collapse' ? collapse : icons[name];
-  return <svg className="start-icon" width="32" height="32" viewBox="0 0 16 16" shapeRendering="crispEdges" aria-hidden="true">
+  return <svg className={className} width={size} height={size} viewBox="0 0 16 16" shapeRendering="crispEdges" aria-hidden="true">
     {rows.flatMap((row, y) => [...row].map((pixel, x) => pixel === '.' ? null
       : <rect key={`${x},${y}`} x={x} y={y} width="1" height="1" fill={palette[pixel]} />))}
   </svg>;

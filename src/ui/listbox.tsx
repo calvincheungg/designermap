@@ -1,4 +1,4 @@
-import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 /** Styled list and arrow keep the opened menu consistent across operating systems. */
@@ -93,7 +93,7 @@ export function matchingItems<T>(items: readonly ListItem<T>[], query: string, l
 }
 
 export function SearchBox<T>({ items, value, onChange, onPick, label = 'Find:', inputId = 'search', placeholder = 'House, person or group', limit = 60,
-  previewAll = true, dropUp = false, exactFirst = false }: {
+  previewAll = true, dropUp = false, exactFirst = false, icon, dropButton = false }: {
   items: readonly ListItem<T>[]; value: string; onChange: (value: string) => void; onPick: (item: ListItem<T>) => void;
   label?: string; inputId?: string; placeholder?: string;
   /** List every item while the box is empty; false shows suggestions only once the user types. */
@@ -104,14 +104,20 @@ export function SearchBox<T>({ items, value, onChange, onPick, label = 'Find:', 
   limit?: number;
   /** List exact name matches first (see matchingItems). */
   exactFirst?: boolean;
+  /** Small icon drawn inside the box, left of the text (like a browser's address bar). */
+  icon?: ReactNode;
+  /** A drop-down arrow button that lists every option, even while the box is empty. */
+  dropButton?: boolean;
 }) {
   const [focused, setOpen] = useState(false);
-  const open = focused && (previewAll || !!value.trim());
+  const [listAll, setListAll] = useState(false);
+  const open = focused && (previewAll || listAll || !!value.trim());
   const [active, setActive] = useState(0);
   const input = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLUListElement>(null);
   const id = useId();
-  const matches = useMemo(() => matchingItems(items, value, limit, exactFirst), [items, value, limit, exactFirst]);
+  const query = listAll ? '' : value;
+  const matches = useMemo(() => matchingItems(items, query, limit, exactFirst), [items, query, limit, exactFirst]);
   const activeIndex = matches.length ? Math.min(active, matches.length - 1) : -1;
   useEffect(() => { setActive(0); }, [items, value]);
   useLayoutEffect(() => {
@@ -120,11 +126,12 @@ export function SearchBox<T>({ items, value, onChange, onPick, label = 'Find:', 
   function pick(item: ListItem<T>) {
     onChange(item.label); setOpen(false); onPick(item); input.current?.blur();
   }
-  return <div className="field-row"><label htmlFor={inputId}>{label}</label><div className="w98-combo">
+  return <div className="field-row"><label htmlFor={inputId}>{label}</label><div className={`w98-combo${icon ? ' has-icon' : ''}${dropButton ? ' has-drop' : ''}`}>
+    {icon && <span className="w98-combo-icon" aria-hidden="true">{icon}</span>}
     <input id={inputId} ref={input} type="text" placeholder={placeholder} role="combobox" autoComplete="off"
       aria-autocomplete="list" aria-controls={id} aria-expanded={open} aria-activedescendant={open && activeIndex >= 0 ? `${id}-${activeIndex}` : undefined}
-      value={value} onChange={(event) => { onChange(event.target.value); setActive(0); setOpen(true); }}
-      onFocus={(event) => { event.target.select(); setActive(0); setOpen(true); }} onBlur={() => setOpen(false)}
+      value={value} onChange={(event) => { onChange(event.target.value); setListAll(false); setActive(0); setOpen(true); }}
+      onFocus={(event) => { event.target.select(); setActive(0); setOpen(true); }} onBlur={() => { setOpen(false); setListAll(false); }}
       onKeyDown={(event) => {
         if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
           event.preventDefault();
@@ -134,6 +141,12 @@ export function SearchBox<T>({ items, value, onChange, onPick, label = 'Find:', 
           event.preventDefault(); pick(matches[activeIndex]);
         } else if (event.key === 'Escape') setOpen(false);
       }} />
+    {dropButton && <button type="button" className="w98-combo-drop" tabIndex={-1} aria-label="Show all" aria-controls={id} aria-expanded={open}
+      onMouseDown={(event) => {
+        event.preventDefault();
+        if (open) { setOpen(false); setListAll(false); input.current?.blur(); return; }
+        setListAll(true); setActive(0); input.current?.focus(); setOpen(true);
+      }} />}
     <ul id={id} ref={list} className={`w98-listbox${dropUp ? ' drop-up' : ''}`} role="listbox" hidden={!open} style={{ minWidth: input.current?.offsetWidth }}>
       {matches.length ? matches.map((item, index) => <li key={`${item.hint}:${item.label}`} id={`${id}-${index}`} role="option" aria-selected={index === activeIndex}
         className={index === activeIndex ? 'active' : undefined} onMouseDown={(event) => { event.preventDefault(); pick(item); }} onMouseMove={() => setActive(index)}>

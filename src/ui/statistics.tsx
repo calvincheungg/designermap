@@ -325,23 +325,32 @@ function YearReleases({ year, releases, breakdown, house }: {
 
 /**
  * Brands by collaboration releases and distinct partner brands, side by side.
- * Clicking either column heading sorts by it (ties fall back to the other column).
+ * Clicking either column heading sorts by it, high to low; clicking it again
+ * flips to low to high, leaving out brands with none (ties fall back to the
+ * other column, then the name).
  */
 function CollaborationsSection({ releases, partners, house, controls }: {
   releases: Map<string, number>; partners: Map<string, number>;
   house: (id: string) => ReactNode; controls?: ReactNode;
 }) {
-  const [sort, setSort] = useState<'releases' | 'partners'>('releases');
+  const [sort, setSort] = useState<{ key: 'releases' | 'partners'; ascending: boolean }>({ key: 'releases', ascending: false });
   const rows = useMemo(() => {
-    const [first, second] = sort === 'releases' ? [releases, partners] : [partners, releases];
-    return [...releases.keys()].sort((a, b) =>
-      (first.get(b) ?? 0) - (first.get(a) ?? 0) || (second.get(b) ?? 0) - (second.get(a) ?? 0) || houseName(a).localeCompare(houseName(b)));
+    const [first, second] = sort.key === 'releases' ? [releases, partners] : [partners, releases];
+    const direction = sort.ascending ? -1 : 1;
+    // Low to high skips brands with nothing in the sorted column, so it starts at 1.
+    return [...releases.keys()].filter((id) => !sort.ascending || (first.get(id) ?? 0) > 0).sort((a, b) =>
+      direction * ((first.get(b) ?? 0) - (first.get(a) ?? 0) || (second.get(b) ?? 0) - (second.get(a) ?? 0))
+      || houseName(a).localeCompare(houseName(b)));
   }, [releases, partners, sort]);
-  const heading = (key: typeof sort, text: string) => <th className="stats-count" aria-sort={sort === key ? 'descending' : 'none'}>
-    <button type="button" className="stats-sort" onClick={() => setSort(key)}>{text}{sort === key ? ' ▼' : ''}</button>
-  </th>;
+  const heading = (key: typeof sort.key, text: string) => {
+    const active = sort.key === key;
+    return <th className="stats-count" aria-sort={active ? (sort.ascending ? 'ascending' : 'descending') : 'none'}>
+      <button type="button" className="stats-sort" title={active && !sort.ascending ? 'Sort low to high' : 'Sort high to low'}
+        onClick={() => setSort({ key, ascending: active && !sort.ascending })}>{text}{active ? (sort.ascending ? ' ▲' : ' ▼') : ''}</button>
+    </th>;
+  };
   return <LimitedSection title="Most collaborations" controls={controls}>{(limit) => rows.length
-    ? <RowLimitedPanel rows={STATS_VISIBLE_ROWS} className="stats-table"><table aria-label={`Brands by number of ${sort === 'releases' ? 'collaborations' : 'distinct partner brands'}`}>
+    ? <RowLimitedPanel rows={STATS_VISIBLE_ROWS} className="stats-table"><table aria-label={`Brands by number of ${sort.key === 'releases' ? 'collaborations' : 'distinct partner brands'}`}>
       <thead><tr><th className="stats-rank">#</th><th className="stats-label">Brand</th>{heading('releases', 'Releases')}{heading('partners', 'Partners')}</tr></thead>
       <tbody>{rows.slice(0, limit).map((id, index) => <tr key={id}>
         <td className="stats-rank">{index + 1}</td>

@@ -336,6 +336,10 @@ export const cities = {
   'Lafayette, Louisiana': [30.2241, -92.0198],
   Bury: [53.5933, -2.2966],
   Düsseldorf: [51.2277, 6.7735],
+  Yecla: [38.6136, -1.1147],
+  Dallas: [32.7767, -96.797],
+  'San Antonio': [29.4241, -98.4936],
+  'El Paso': [31.7619, -106.485],
 } satisfies Record<string, LatLng>;
 
 export type CityName = keyof typeof cities;
@@ -477,6 +481,9 @@ export const cityRegions: Partial<Record<CityName, { country: CountryCode; regio
   Yonkers: { country: CountryCode.UnitedStates, region: 'New York' },
   'Cambridge, Massachusetts': { country: CountryCode.UnitedStates, region: 'Massachusetts' },
   'Lafayette, Louisiana': { country: CountryCode.UnitedStates, region: 'Louisiana' },
+  Dallas: { country: CountryCode.UnitedStates, region: 'Texas' },
+  'San Antonio': { country: CountryCode.UnitedStates, region: 'Texas' },
+  'El Paso': { country: CountryCode.UnitedStates, region: 'Texas' },
 };
 
 /** Human-readable location; never use this label as a map key. */

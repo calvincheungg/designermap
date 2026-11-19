@@ -21,6 +21,8 @@ export interface Actions {
   onTag: (group: keyof HouseFilters, value: string) => void;
   /** Open a city or country window; places show as plain text without it. */
   onOpenPlace?: (place: Place) => void;
+  /** Select and frame an item on the map (the brand logo); the logo is a plain image without it. */
+  onShowOnMap?: (selection: NonNullable<Selection>) => void;
 }
 
 /** A city or country name that opens its window of brands. */
@@ -201,7 +203,7 @@ function CollaborationRow({ house, projects, onSelect }: {
   </tr>;
 }
 
-function HouseProfile({ house, year, onSelect, onTag, onOpenPlace }: { house: House; year: number } & Actions) {
+function HouseProfile({ house, year, onSelect, onTag, onOpenPlace, onShowOnMap }: { house: House; year: number } & Actions) {
   const collaborations = collaborationsOf(house.id).filter((project) => project.year <= year).toReversed();
   const partnerships = Map.groupBy(collaborations, (project) => project.houses.filter((id) => id !== house.id).toSorted().join('|'));
   const parent = parentHouseOf(house.id);
@@ -225,7 +227,10 @@ function HouseProfile({ house, year, onSelect, onTag, onOpenPlace }: { house: Ho
     ['product', 'Primary Products', house.tags.product],
   ];
   return <>
-    <div className="identity"><HouseLogo key={`${house.id}:${house.logo}`} house={house} /><div><h2>{house.name}</h2><Fields rows={[
+    <div className="identity">{onShowOnMap
+      ? <button type="button" className="logo-button" title="Show on Map" aria-label={`Show ${house.name} on the map`}
+        onClick={() => onShowOnMap({ kind: 'house', id: house.id })}><HouseLogo key={`${house.id}:${house.logo}`} house={house} /></button>
+      : <HouseLogo key={`${house.id}:${house.logo}`} house={house} />}<div><h2>{house.name}</h2><Fields rows={[
       ['Founded', house.founded !== undefined ? <>{house.founded}{house.closed !== undefined && <><span className="field-separator"> | </span><strong>Ended:</strong> {house.closed}</>}</> : undefined],
       ['Closed', house.founded === undefined ? house.closed : undefined],
       ['Founder', founderLinks.length ? <>{founderLinks.map((link, index) => <Fragment key={index}>{index > 0 && ', '}{link}</Fragment>)}</> : undefined],
@@ -247,7 +252,7 @@ function HouseProfile({ house, year, onSelect, onTag, onOpenPlace }: { house: Ho
     <ProfileSection title={`Creative directors (${directors.length})`}>{directors.length ? <TenureTable list={directors} onSelect={onSelect} /> : <p className="hint">No creative directors recorded.</p>}</ProfileSection>
     {!!business.length && <fieldset><legend>Business leadership</legend><TenureTable list={business} business onSelect={onSelect} /></fieldset>}
     {!!team.length && <ProfileSection title={`Other roles (${team.length})`} defaultOpen={false}><TenureTable list={team} supporting onSelect={onSelect} /></ProfileSection>}
-    <ProfileSection title={`Collaboration history (${partnerships.size})`}>
+    <ProfileSection title={`Collaboration history (${collaborations.length}\u00a0\u00a0|\u00a0\u00a0Unique: ${partnerships.size})`}>
       {collaborations.length ? <>
         <RowLimitedPanel rows={COLLABORATION_ROWS}><table className="interactive">
         <thead><tr><th>Year</th><th>With</th><th></th></tr></thead>
@@ -306,12 +311,12 @@ export function panelTitle(selection: Selection): string {
   return name ?? 'Not found';
 }
 
-export function PanelContent({ selection, visibleHouses = houses, year = Infinity, onSelect, onTag, onOpenPlace }: {
+export function PanelContent({ selection, visibleHouses = houses, year = Infinity, onSelect, onTag, onOpenPlace, onShowOnMap }: {
   selection: Selection; visibleHouses?: readonly House[]; year?: number;
 } & Actions) {
   if (selection?.kind === 'house') {
     const house = getHouse(selection.id);
-    return house ? <HouseProfile key={house.id} house={house} year={year} onSelect={onSelect} onTag={onTag} onOpenPlace={onOpenPlace} /> : <p>No house with id “{selection.id}”.</p>;
+    return house ? <HouseProfile key={house.id} house={house} year={year} onSelect={onSelect} onTag={onTag} onOpenPlace={onOpenPlace} onShowOnMap={onShowOnMap} /> : <p>No house with id “{selection.id}”.</p>;
   }
   if (selection?.kind === 'designer') return <DesignerProfile id={selection.id} onSelect={onSelect} />;
   if (selection?.kind === 'group') return <GroupProfile id={selection.id} onSelect={onSelect} />;

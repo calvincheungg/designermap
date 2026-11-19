@@ -1,32 +1,112 @@
-import { useMemo, type ReactNode } from 'react';
-import { designers, getHouse, houses } from '../data';
+import { useCallback, useMemo, useState, type MouseEvent, type ReactNode } from 'react';
+import { countryNames, designers, getHouse, houses } from '../data';
 import { missingOriginCandidates } from '../data/validate';
 import { minesweeperColour } from '../graph/minesweeper';
 import type { House } from '../types';
-import { EntityLink, ProfileSection, type Actions } from './panel';
+import { BrandIcon, cityWindowSize, useStoredChoice } from './city-window';
+import { ContextMenu, type MenuAction } from './context-menu';
+import { SelectBox } from './listbox';
+import { EntityLink, ProfileSection, type Actions, type Selection } from './panel';
 
 const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 
+/** The bin's header (icon, title, hint) is this much taller than a place window's Find row. */
+const BIN_HEADER_EXTRA = 14;
+/** Four icons wide like a place window, just tall enough for `count` files up to four rows. */
+export const recycleBinSize = (count: number) => {
+  const size = cityWindowSize(count);
+  return { width: size.width, height: size.height + BIN_HEADER_EXTRA };
+};
+
+/** Brands that have ended (closed or paused) by `year`, newest first, then by name. */
+export function endedBrands(visibleHouses: readonly House[], year: number): House[] {
+  return visibleHouses.filter((house) => house.closed !== undefined && house.closed <= year)
+    .sort((a, b) => b.closed! - a.closed! || collator.compare(a.name, b.name));
+}
+
+type BinView = 'icons' | 'details';
+type BinSort = 'deleted' | 'name' | 'location';
+const BIN_VIEWS: readonly (readonly [BinView, string])[] = [['icons', 'Large Icons'], ['details', 'Details']];
+const BIN_SORTS: readonly (readonly [BinSort, string])[] = [['name', 'Name'], ['location', 'Original Location'], ['deleted', 'Date Deleted']];
+const BIN_VIEW_KEY = 'designer-map:recycle-view';
+const BIN_SORT_KEY = 'designer-map:recycle-sort';
+/** Where a brand "was deleted from": its city and country, as Win98's Original Location column. */
+const originalLocation = (house: House) => `${house.city}, ${countryNames[house.country]}`;
+
 /**
- * The Recycle Bin: brands that have ended (closed or paused) by the selected
- * year, within the tag filters, most recent first. Names open their Properties.
+ * The Recycle Bin, as Win98's Explorer folder: every brand that has ended
+ * (closed or paused) by the selected year, within the tag filters, is a file.
+ * Large Icons shows them four wide like a place window; Details has Win98's
+ * Name / Original Location / Date Deleted columns. Clicking a file opens its
+ * Properties; right-click for Properties or Show on Map.
  */
-export function RecycleBinContent({ visibleHouses, year, onSelect }: {
-  visibleHouses: readonly House[]; year: number; onSelect: Actions['onSelect'];
+export function RecycleBinContent({ visibleHouses, year, onSelect, onShowOnMap }: {
+  visibleHouses: readonly House[]; year: number; onSelect: (selection: Selection, reveal?: boolean) => void;
+  /** Select a brand on the map without opening its Properties. */
+  onShowOnMap: (houseId: string) => void;
 }) {
-  const ended = useMemo(() => visibleHouses.filter((house) => house.closed !== undefined && house.closed <= year)
-    .sort((a, b) => b.closed! - a.closed! || collator.compare(a.name, b.name)), [visibleHouses, year]);
-  return <>
-    <h2>Recycle Bin</h2>
-    <p className="hint">{ended.length.toLocaleString()} {ended.length === 1 ? 'brand has' : 'brands have'} ended or paused{year === Infinity ? '' : ` by ${year}`}.</p>
-    {ended.length ? <div className="sunken-panel"><table className="interactive" aria-label="Ended brands">
-      <thead><tr><th>Brand</th><th>Founded</th><th>Ended</th></tr></thead>
-      <tbody>{ended.map((house) => <tr key={house.id}>
-        <td><EntityLink kind="house" id={house.id} onSelect={onSelect}>{house.name}</EntityLink></td>
-        <td>{house.founded ?? '—'}</td><td>{house.closed}</td>
-      </tr>)}</tbody>
-    </table></div> : <p className="hint">The Recycle Bin is empty.</p>}
-  </>;
+  const [view, setView] = useStoredChoice(BIN_VIEW_KEY, BIN_VIEWS, 'icons');
+  const [sort, setSort] = useStoredChoice(BIN_SORT_KEY, BIN_SORTS, 'deleted');
+  const [menu, setMenu] = useState<{ x: number; y: number; house: House } | null>(null);
+  const closeMenu = useCallback(() => setMenu(null), []);
+  const ended = useMemo(() => {
+    const list = endedBrands(visibleHouses, year);
+    if (sort === 'name') return [...list].sort((a, b) => collator.compare(a.name, b.name));
+    if (sort === 'location') return [...list].sort((a, b) => collator.compare(originalLocation(a), originalLocation(b)) || collator.compare(a.name, b.name));
+    return list;
+  }, [visibleHouses, year, sort]);
+  const open = (id: string) => onSelect({ kind: 'house', id }, true);
+  const openMenu = (house: House) => (event: MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    const rect = event.currentTarget.getBoundingClientRect();
+    const keyboard = event.clientX === 0 && event.clientY === 0;
+    setMenu({ x: keyboard ? rect.left + rect.width / 2 : event.clientX, y: keyboard ? rect.top + rect.height / 2 : event.clientY, house });
+  };
+  const actions = (house: House): MenuAction[] => [
+    { label: 'Properties', primary: true, run: () => open(house.id) },
+    { label: 'Show on Map', run: () => onShowOnMap(house.id) },
+  ];
+  const header = (key: BinSort, text: string) => <th key={key} aria-sort={sort === key ? (key === 'deleted' ? 'descending' : 'ascending') : undefined}>
+    <button type="button" className="city-sort" onClick={() => setSort(key)}>{text}{sort === key ? key === 'deleted' ? ' ▼' : ' ▲' : ''}</button>
+  </th>;
+  const label = 'Ended brands';
+
+  return <div className="city-window-content">
+    <div className="bin-header">
+      <img src="/assets/bin.webp" alt="" width={32} height={32} draggable={false} />
+      <div>
+        <h2>Recycle Bin</h2>
+        <p className="hint">Brands that have ended or paused{year === Infinity ? '' : ` by ${year}`}.</p>
+      </div>
+    </div>
+    <div className="city-toolbar">
+      <SelectBox label="View" className="city-choice" values={BIN_VIEWS.map(([key]) => key)} value={view} onChange={setView}
+        text={(value) => BIN_VIEWS.find(([key]) => key === value)![1]} />
+      <SelectBox label="Arrange icons" className="city-choice" values={BIN_SORTS.map(([key]) => key)} value={sort} onChange={setSort}
+        text={(value) => `By ${BIN_SORTS.find(([key]) => key === value)![1]}`} />
+    </div>
+    {!ended.length ? <p className="hint city-empty">The Recycle Bin is empty.</p>
+      : view === 'details'
+        ? <div className="city-details sunken-panel"><table className="interactive" aria-label={label}>
+          <thead><tr>{BIN_SORTS.map(([key, text]) => header(key, text))}</tr></thead>
+          <tbody>{ended.map((house) => <tr key={house.id} onClick={() => open(house.id)} onContextMenu={openMenu(house)}>
+            <td><button type="button" className="city-row-name" onClick={(event) => { event.stopPropagation(); open(house.id); }}>{house.name}</button></td>
+            <td>{originalLocation(house)}</td>
+            <td>{house.closed}</td>
+          </tr>)}</tbody>
+        </table></div>
+        : <ul className="city-grid sunken-panel" aria-label={label}>
+          {ended.map((house) => <li key={house.id}>
+            <button type="button" className="city-icon" title={`${house.name}\nOriginal location: ${originalLocation(house)}\nDate deleted: ${house.closed}`}
+              onClick={() => open(house.id)} onContextMenu={openMenu(house)}>
+              <BrandIcon house={house} />
+              <span className="city-icon-name">{house.name}</span>
+            </button>
+          </li>)}
+        </ul>}
+    <p className="status-bar-field city-count">{ended.length.toLocaleString()} object{ended.length === 1 ? '' : 's'}</p>
+    {menu && <ContextMenu x={menu.x} y={menu.y} label={`${menu.house.name} actions`} actions={actions(menu.house)} onClose={closeMenu} />}
+  </div>;
 }
 
 function BrandList({ list, onSelect, detail }: { list: readonly House[]; onSelect: Actions['onSelect']; detail?: (house: House) => ReactNode }) {
@@ -85,6 +165,7 @@ export function HelpContent() {
         <li>Click a brand to select it: the map shows its connections and its Properties window opens.</li>
         <li>Use the clock in the taskbar to pick a year, or press Play to watch the map grow over time.</li>
         <li>Start ▸ List View shows every brand, group, designer, career role, collaboration and location in a spreadsheet, one sheet tab each. Right-click a cell to filter by it, drag or shift-click to select and copy a range, try Insert ▸ Chart and the PivotTable tab, and use File ▸ Save As CSV to export. Type in its formula bar to search. Its sorting, filters and search only change that list, never the map.</li>
+        <li>Start ▸ Map colours (or the Settings icon) switches the map between Day and Night. Settings also sets the text size and holds the other display options.</li>
         <li>Start ▸ Documents lists what you opened recently. Start ▸ Reset View clears everything and starts again.</li>
       </ul>
     </ProfileSection>

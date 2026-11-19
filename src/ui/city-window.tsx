@@ -68,7 +68,7 @@ export function cityWindowSize(count: number) {
 }
 
 /** The map's icon: a logo inside the grey Win98 frame, or the (already framed) initials square. */
-function BrandIcon({ house }: { house: House }) {
+export function BrandIcon({ house }: { house: House }) {
   const logo = mapLogoUrl(house);
   if (!logo) return <span className="city-icon-frame plain"><img src={initialsIcon(house)} alt="" draggable={false} /></span>;
   return <span className="city-icon-frame">
@@ -89,7 +89,7 @@ const SORT_VALUES = SORTS.map(([value]) => value);
 const TIERS: readonly string[] = Object.values(MarketPositioning);
 
 /** One remembered choice shared by every place window (a per-viewer convenience). */
-function useStoredChoice<T extends string>(key: string, options: readonly (readonly [T, string])[], fallback: T) {
+export function useStoredChoice<T extends string>(key: string, options: readonly (readonly [T, string])[], fallback: T) {
   const [value, setValue] = useState<T>(() => {
     try {
       const stored = localStorage.getItem(key);

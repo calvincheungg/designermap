@@ -91,6 +91,22 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
+describe('night mode', () => {
+  it('marks the map pane itself, which the night map CSS targets, and restyles labels', () => {
+    graph.destroy();
+    const pane = document.createElement('div');
+    graph = new DesignerGraph(pane, { onSelect });
+    const house = graph.cy.nodes('[kind = "house"]').first();
+    expect(house.style('color')).toBe('rgb(0,0,0)');
+    graph.setNight(true);
+    expect(pane.classList.contains('night')).toBe(true);
+    expect(house.style('color')).toBe('rgb(255,255,255)');
+    graph.setNight(false);
+    expect(pane.classList.contains('night')).toBe(false);
+    expect(house.style('color')).toBe('rgb(0,0,0)');
+  });
+});
+
 describe('regional cluster interaction', () => {
   const clusters = () => graph.cy.nodes('[kind = "marker"][?isCluster]');
   const settleZoom = (zoom: number) => {
@@ -750,7 +766,7 @@ describe('connection presentation', () => {
     graph = new DesignerGraph(document.createElement('div'), { onSelect, onOpenCity });
     const marker = graph.cy.nodes('[kind = "marker"][!isCluster]').filter((node) => node.data('city') === 'Paris')[0]!;
     marker.emit('tap');
-    expect(onOpenCity).toHaveBeenCalledWith('Paris');
+    expect(onOpenCity).toHaveBeenCalledWith('Paris', undefined);
     expect(graph.allExpanded).toBe(false);
     expect(houseNode('connected').hasClass('collapsed')).toBe(true);
   });

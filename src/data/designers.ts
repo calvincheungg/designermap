@@ -17800,7 +17800,10 @@ export const designers = {
   neimaKhaila: {
     name: 'Neima Khaila',
     nationality: 'American',
-    career: [{ house: 'pinkDolphin', role: 'Other', roleDetail: 'Co-founder and CEO, joined after launch for logistics and marketing' }],
+    career: [
+      { house: 'pinkDolphin', role: 'Other', roleDetail: 'Co-founder and CEO, joined after launch for logistics and marketing' },
+      { house: 'skylrk', role: 'Other', roleDetail: 'Co-founder and business partner', start: 2023, notes: 'Reported as co-founder (FashionUnited, Complex) and business partner (People, citing GQ); Bieber holds creative control.', sources: ['https://fashionunited.com/news/fashion/justin-bieber-launches-clothing-brand-skylrk/2025071167108', 'https://www.aol.com/justin-bieber-launches-fashion-brand-184352374.html'] },
+    ],
   },
   shepMurray: {
     name: 'Shep Murray',
@@ -18775,6 +18778,82 @@ export const designers = {
     career: [{ house: 'patrickChurch', role: 'Founder', roleDetail: 'Founder, artist and designer', start: 2018, end: null }],
     notes: 'British-born artist based in New York, who began by hand-painting vintage leather jackets in 2017 before launching his label.',
     sources: ['https://www.out.com/fashion/2017/10/23/meet-patrick-church-british-artist-hand-painting-vintage-fashion', 'https://www.kaltblut-magazine.com/patrick-church-i-tried-london-debut/'],
+  },
+  justinBieber: {
+    name: 'Justin Bieber',
+    nationality: 'Canadian',
+    career: [
+      { house: 'drewHouse', role: 'Founder', roleDetail: 'Co-founder', start: 2018, end: 2025, notes: 'Publicly announced in April 2025 that he was no longer involved.', sources: ['https://www.nbclosangeles.com/entertainment/entertainment-news/justin-bieber-exits-his-drew-house-fashion-brand-6-years-after-launch/3676394/'] },
+      { house: 'skylrk', role: 'Founder', roleDetail: 'Founder and owner, with creative control', start: 2023, end: null, sources: ['https://fashionunited.com/news/fashion/justin-bieber-launches-clothing-brand-skylrk/2025071167108', 'https://www.aol.com/justin-bieber-launches-fashion-brand-184352374.html'] },
+    ],
+    notes: 'Canadian singer.',
+  },
+  ryanGood: {
+    name: 'Ryan Good',
+    nationality: 'American',
+    career: [{ house: 'drewHouse', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2018, notes: 'Bieber’s former stylist; Bieber asked him to creative-direct the brand. Current role after Bieber’s 2025 exit is unconfirmed.', sources: ['https://www.nbclosangeles.com/entertainment/entertainment-news/justin-bieber-exits-his-drew-house-fashion-brand-6-years-after-launch/3676394/'] }],
+  },
+  finnRushTaylor: {
+    name: 'Finn Rush-Taylor',
+    career: [
+      { house: 'adidas', role: 'Other', roleDetail: 'Designer', notes: 'Dates unconfirmed.', sources: ['https://fashionunited.com/news/fashion/justin-bieber-launches-clothing-brand-skylrk/2025071167108'] },
+      { house: 'puma', role: 'Other', roleDetail: 'Designer', notes: 'Dates unconfirmed.', sources: ['https://fashionunited.com/news/fashion/justin-bieber-launches-clothing-brand-skylrk/2025071167108'] },
+      { house: 'crocs', role: 'Other', roleDetail: 'Designer', notes: 'Dates unconfirmed.', sources: ['https://fashionunited.com/news/fashion/justin-bieber-launches-clothing-brand-skylrk/2025071167108'] },
+      { house: 'skylrk', role: 'Head Designer', roleDetail: 'Head designer / design lead', start: 2022, notes: 'People reports his LinkedIn lists SKYLRK from October 2022, before the brand’s 2023 establishment.', sources: ['https://www.aol.com/justin-bieber-launches-fashion-brand-184352374.html', 'https://fashionunited.com/news/fashion/justin-bieber-launches-clothing-brand-skylrk/2025071167108'] },
+    ],
+    notes: 'Former competitive footballer known for 3D-printed footwear design.',
+  },
+  andreasSteiner: {
+    name: 'Andreas Steiner',
+    nationality: 'Italian',
+    career: [
+      { house: 'prada', role: 'Other', roleDetail: 'Menswear designer' },
+      { house: 'miuMiu', role: 'Other', roleDetail: 'Womenswear design lead' },
+      { house: 'louisVuitton', role: 'Other', roleDetail: 'Senior designer', start: 2015, end: 2017, approximate: true, notes: 'Described as a two-year stint that ended when he left in 2017.' },
+      { house: 'rier', role: 'Founder', roleDetail: 'Founder and designer', start: 2019, end: null },
+    ],
+    notes: 'South Tyrolean designer who studied fashion design in Milan, with an exchange in London. 2021 LVMH Prize semi-finalist.',
+    sources: ['https://rierofficial.com/pages/info', 'https://anothermag.com/fashion-beauty/14680/rier-brand-tyrolean-alpine-wear-andreas-steiner-interview', 'https://www.highsnobiety.com/p/rier-2022-brand-designer-interview'],
+  },
+  mattThomas: {
+    name: 'Matt Thomas',
+    notes: 'Also credited as Matthew Thomas.',
+    career: [{ house: 'highsAndLows', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2005 }],
+  },
+  simonWood: {
+    name: 'Simon Wood',
+    notes: 'Known as Woody.',
+    career: [{ house: 'sneakerFreaker', role: 'Founder', roleDetail: 'Founder and editor', start: 2002, end: null }],
+  },
+  pedroOrtuno: {
+    name: 'Pedro Ortuño',
+    nationality: 'Spanish',
+    career: [{ house: 'newRock', role: 'Founder', start: 1980, sources: ['https://newrock.com/en/pages/heritage-history'] }],
+    notes: 'Second generation of the Ortuño shoemaking family of Yecla; the official history credits his leadership with creating New Rock and its Comfort Plus sole. End of personal involvement unconfirmed; the third generation now runs the company.',
+  },
+  samLucchese: {
+    name: 'Sam Lucchese',
+    nationality: 'Italian',
+    career: [{ house: 'lucchese', role: 'Founder', start: 1883, end: 1929, sources: ['https://lucchese.com/pages/timeline'] }],
+    notes: 'Born Salvatore Lucchese in Palermo, Sicily, in 1868, into a shoemaking family; emigrated to Texas in 1882 and opened the San Antonio shop with his brother Joseph in 1883. Died in 1929; some accounts say his son Cosimo took over after a stroke in 1923.',
+  },
+  josephLucchese: {
+    name: 'Joseph Lucchese',
+    nationality: 'Italian',
+    career: [{ house: 'lucchese', role: 'Founder', start: 1883, sources: ['https://lucchese.com/pages/timeline'] }],
+    notes: 'Sicilian-born brother of Salvatore Lucchese, with whom he emigrated to Texas in 1882 and opened the first San Antonio boot shop. End of involvement unconfirmed.',
+  },
+  akaarAmin: {
+    name: 'Akaar Amin',
+    nationality: 'Dutch',
+    career: [{ house: 'lackOfGuidance', role: 'Founder', roleDetail: 'Co-founder', start: 2016, end: null, sources: ['https://hypebeast.com/2021/10/lack-of-guidance-football-fashion-feature-interview'] }],
+    notes: 'Former graphic designer whose artwork on blank T-shirts started Lack of Guidance.',
+  },
+  rensVanStrien: {
+    name: 'Rens van Strien',
+    nationality: 'Dutch',
+    career: [{ house: 'lackOfGuidance', role: 'Founder', roleDetail: 'Co-founder', start: 2016, sources: ['https://hypebeast.com/2021/10/lack-of-guidance-football-fashion-feature-interview'] }],
+    notes: 'Co-founded Lack of Guidance with Akaar Amin; current involvement unconfirmed.',
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 

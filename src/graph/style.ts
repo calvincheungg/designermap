@@ -6,6 +6,10 @@ const COLLAB_RED = '#cc0000';
 
 /** Cytoscape stylesheet, styled like Windows 98 desktop icons and group boxes. */
 export const graphStyle: StylesheetJson = [
+  // No grey press circle on the background, or grey overlay on pressed nodes/edges, while dragging.
+  // (Cytoscape's Core typing wrongly requires every core property.)
+  { selector: 'core', style: { 'active-bg-opacity': 0 } } as StylesheetJson[number],
+  { selector: ':active', style: { 'overlay-opacity': 0 } },
   {
     selector: 'node',
     style: {
@@ -189,4 +193,37 @@ export const graphStyle: StylesheetJson = [
   // A pulsing line is redrawn under its block in the pulse layer; keep the canvas copy for hover only.
   { selector: 'edge.traced', style: { 'line-opacity': 0 } },
   { selector: '.hidden, .collapsed, .lines-off, .selection-hidden, .clustered', style: { display: 'none' } },
+];
+
+/** Night map colours: brighter lines and outlines, light labels on the dark map. */
+export const NIGHT_BLUE = '#8080ff';
+export const NIGHT_RED = '#ff5050';
+
+/** Appended to graphStyle while the map is in night mode (DesignerGraph.setNight). */
+export const nightStyle: StylesheetJson = [
+  {
+    selector: 'node[kind = "house"]',
+    style: { color: '#ffffff', 'text-outline-color': '#000000', 'text-outline-width': 1 },
+  },
+  { selector: 'edge[kind = "leader"]', style: { 'line-color': '#a6caf0' } },
+  { selector: 'edge', style: { 'line-color': '#a0a0a4', 'text-background-color': '#000000', color: '#ffffff' } },
+  { selector: 'edge[kind = "move"]', style: { 'target-arrow-color': '#a0a0a4' } },
+  { selector: 'node.highlight, node:selected', style: { 'text-outline-width': 0 } },
+  {
+    selector: 'node.highlight[kind = "house"], node.focus, node.move-partner[kind = "house"], node.move-partner.collab-partner[kind = "house"]',
+    style: { 'border-color': NIGHT_BLUE },
+  },
+  { selector: 'node.collab-partner[kind = "house"]', style: { 'border-color': NIGHT_RED } },
+  { selector: 'node.move-partner.collab-partner[kind = "house"]', style: { 'outline-color': NIGHT_RED } },
+  { selector: 'edge.highlight', style: { 'line-color': NIGHT_BLUE, 'target-arrow-color': NIGHT_BLUE } },
+  {
+    selector: 'edge[kind = "collaboration"], edge.highlight[kind = "collaboration"]',
+    style: { 'line-color': NIGHT_RED, 'target-arrow-color': NIGHT_RED },
+  },
+];
+
+/** Larger brand names for the Settings window's text size (1 = the stylesheet's 11px). */
+export const textStyle = (scale: number): StylesheetJson => scale === 1 ? [] : [
+  { selector: 'node[kind = "house"]', style: { 'font-size': 11 * scale, 'text-margin-y': 4 * scale } },
+  { selector: 'edge', style: { 'font-size': 11 * scale } },
 ];

@@ -10,7 +10,8 @@ const mocks = vi.hoisted(() => ({ instances: [] as {
   setYear: ReturnType<typeof vi.fn>; setShowMoves: ReturnType<typeof vi.fn>;
   setShowCollaborations: ReturnType<typeof vi.fn>; setConnectionFilter: ReturnType<typeof vi.fn>;
   setAllExpanded: ReturnType<typeof vi.fn>; fit: ReturnType<typeof vi.fn>; destroy: ReturnType<typeof vi.fn>; houseAt: ReturnType<typeof vi.fn>;
-  showCities: ReturnType<typeof vi.fn>;
+  showCities: ReturnType<typeof vi.fn>; setNight: ReturnType<typeof vi.fn>; setTextScale: ReturnType<typeof vi.fn>;
+  locationBox: ReturnType<typeof vi.fn>;
 }[] }));
 vi.mock('./graph/graph', () => ({
   DesignerGraph: class {
@@ -22,9 +23,12 @@ vi.mock('./graph/graph', () => ({
     setShowMoves = vi.fn();
     setShowCollaborations = vi.fn();
     setConnectionFilter = vi.fn();
+    setNight = vi.fn();
+    setTextScale = vi.fn();
     houseAt = vi.fn((): string | undefined => 'dior');
     fit = vi.fn();
     showCities = vi.fn();
+    locationBox = vi.fn((): { left: number; top: number; right: number; bottom: number } | undefined => undefined);
     refreshStyle = vi.fn();
     destroy = vi.fn();
     setAllExpanded = vi.fn((open: boolean) => {
@@ -80,7 +84,7 @@ describe('React app graph integration', () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
-    await user.type(screen.getByRole('combobox'), 'elliott.hill');
+    await user.type(screen.getByRole('combobox', { name: 'Find:' }), 'elliott.hill');
     await user.click(screen.getByRole('option', { name: 'Elliott Hill leader' }));
     expect(screen.getByRole('heading', { name: 'Elliott Hill' })).toBeTruthy();
     expect(graph.select).toHaveBeenLastCalledWith({ kind: 'designer', id: 'elliottHill' }, true);
@@ -90,7 +94,7 @@ describe('React app graph integration', () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
-    await user.type(screen.getByRole('combobox'), ' g.STAR / raw ');
+    await user.type(screen.getByRole('combobox', { name: 'Find:' }), ' g.STAR / raw ');
     await user.click(screen.getByRole('option', { name: 'G-STAR house' }));
     expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'gStar' }, true);
     const founder = document.querySelector('.identity [data-select="designer:josVanTilburg"]');
@@ -104,7 +108,7 @@ describe('React app graph integration', () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
-    await user.type(screen.getByRole('combobox'), 'WHP Global');
+    await user.type(screen.getByRole('combobox', { name: 'Find:' }), 'WHP Global');
     await user.click(screen.getByRole('option', { name: 'WHP Global group' }));
     expect(screen.getByRole('heading', { name: 'WHP Global' })).toBeTruthy();
     expect(graph.select).toHaveBeenLastCalledWith({ kind: 'group', id: GroupId.WHPGlobal }, true);
@@ -121,7 +125,7 @@ describe('React app graph integration', () => {
     expect(mocks.instances).toHaveLength(2);
     expect(mocks.instances[0]!.destroy).toHaveBeenCalledOnce();
     const graph = mocks.instances[1]!;
-    await user.type(screen.getByRole('combobox'), 'dior');
+    await user.type(screen.getByRole('combobox', { name: 'Find:' }), 'dior');
     await user.click(screen.getByRole('option', { name: 'Dior house' }));
     expect(screen.getByRole('heading', { name: 'Dior' })).toBeTruthy();
     expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
@@ -196,6 +200,26 @@ describe('React app graph integration', () => {
     expect(screen.queryByRole('dialog', { name: 'Year' })).toBeNull();
   });
 
+  it('opens brands from the Explorer address bar with Go, Enter or its drop-down', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    const bar = within(screen.getByRole('search'));
+    const address = bar.getByRole('combobox', { name: 'Address' });
+    // Go opens the best match, exact names first.
+    await user.type(address, 'dior');
+    await user.keyboard('{Escape}');
+    await user.click(bar.getByRole('button', { name: 'Go' }));
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    expect((address as HTMLInputElement).value).toBe('Dior');
+    // The arrow lists every item, even with text in the box; picking one opens it.
+    await user.click(bar.getByRole('button', { name: 'Show all' }));
+    expect(address.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getAllByRole('option').length).toBeGreaterThan(10);
+    await user.click(bar.getByRole('button', { name: 'Show all' }));
+    expect(address.getAttribute('aria-expanded')).toBe('false');
+  });
+
   it('opens the List View sheet, whose filters leave the map alone', async () => {
     const user = userEvent.setup();
     render(<App />);
@@ -219,6 +243,132 @@ describe('React app graph integration', () => {
     await user.click(within(sheet).getByRole('button', { name: 'Restore List View - Designer Map.xls' }));
     expect(sheet.className).not.toContain('maximized');
     localStorage.clear();
+  });
+
+  it('puts the map in its own window that minimizes, maximizes, closes and reopens', async () => {
+    const user = userEvent.setup();
+    localStorage.removeItem('designer-map:map-window');
+    render(<App />);
+    const map = document.getElementById('map-window')!;
+    const taskbar = document.querySelector<HTMLElement>('.taskbar')!;
+    const task = () => within(taskbar).queryByRole('button', { name: 'Explorer' });
+    expect(within(map).getByText('Explorer')).toBeTruthy();
+    // Minimize: hidden, and the taskbar button restores it.
+    await user.click(within(map).getByRole('button', { name: 'Minimize' }));
+    expect(map.getAttribute('aria-hidden')).toBe('true');
+    await user.click(task()!);
+    expect(map.hasAttribute('aria-hidden')).toBe(false);
+    // Maximize fills the desktop and is remembered; the button becomes Restore.
+    await user.click(within(map).getByRole('button', { name: 'Maximize' }));
+    expect(document.querySelector('.desktop')!.classList.contains('map-maximized')).toBe(true);
+    expect(localStorage.getItem('designer-map:map-window')).toBe('maximized');
+    await user.click(within(map).getByRole('button', { name: 'Restore' }));
+    expect(document.querySelector('.desktop')!.classList.contains('map-maximized')).toBe(false);
+    // Close removes the taskbar button; the desktop icon reopens it.
+    await user.click(within(map).getByRole('button', { name: 'Close' }));
+    expect(task()).toBeNull();
+    await user.click(screen.getByTitle('Open Explorer (drag to move)'));
+    expect(map.hasAttribute('aria-hidden')).toBe(false);
+    // Windows live on the desktop beside the map: opening one leaves a minimized map minimized.
+    await user.click(within(map).getByRole('button', { name: 'Minimize' }));
+    await openStart(user);
+    await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'Statistics' }));
+    const stats = screen.getByRole('dialog', { name: 'Statistics' });
+    expect(map.getAttribute('aria-hidden')).toBe('true');
+    expect(stats.parentElement).toBe(map.parentElement);
+    expect(map.contains(stats)).toBe(false);
+    // Quick Launch, between Start and Search, opens the same shortcuts as the desktop icons.
+    const quickLaunch = within(within(taskbar).getByRole('toolbar', { name: 'Quick Launch' }));
+    expect(quickLaunch.getAllByRole('button').map((button) => button.getAttribute('aria-label')))
+      .toEqual(['Launch Explorer', 'Launch Recycle Bin', 'Launch Statistics', 'Launch List View', 'Launch Settings']);
+    await user.click(quickLaunch.getByRole('button', { name: 'Launch Explorer' }));
+    expect(map.hasAttribute('aria-hidden')).toBe(false);
+    await user.click(quickLaunch.getByRole('button', { name: 'Launch Recycle Bin' }));
+    expect(screen.getByRole('dialog', { name: 'Recycle Bin' })).toBeTruthy();
+    localStorage.removeItem('designer-map:map-window');
+  });
+
+  it('moves and resizes the map window on the desktop, remembering its rect', async () => {
+    localStorage.removeItem('designer-map:map-window-rect');
+    const width = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(1000);
+    const height = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(600);
+    try {
+      render(<App />);
+      const map = document.getElementById('map-window')!;
+      const rect = () => [map.style.left, map.style.top, map.style.width, map.style.height];
+      // By default it sits right of the desktop icon column.
+      expect(rect()).toEqual(['96px', '12px', '892px', '576px']);
+      const titleBar = screen.getByLabelText('Move Explorer window');
+      fireEvent.pointerDown(titleBar, { button: 0, clientX: 500, clientY: 20, pointerId: 1 });
+      fireEvent.pointerMove(titleBar, { clientX: 400, clientY: 20, pointerId: 1 });
+      fireEvent.pointerUp(titleBar, { pointerId: 1 });
+      expect(rect()).toEqual(['0px', '12px', '892px', '576px']);
+      const grip = screen.getByRole('separator', { name: 'Resize Explorer' });
+      fireEvent.pointerDown(grip, { button: 0, clientX: 890, clientY: 580, pointerId: 1 });
+      fireEvent.pointerMove(grip, { clientX: 490, clientY: 280, pointerId: 1 });
+      fireEvent.pointerUp(grip, { pointerId: 1 });
+      expect(rect()).toEqual(['0px', '12px', '492px', '276px']);
+      expect(JSON.parse(localStorage.getItem('designer-map:map-window-rect')!)).toEqual({ x: 0, y: 12, width: 492, height: 276 });
+      // Maximized fills the desktop area, without a grip.
+      await userEvent.setup().click(within(map).getByRole('button', { name: 'Maximize' }));
+      expect(rect()).toEqual(['0px', '0px', '1000px', '600px']);
+      expect(within(map).queryByRole('separator')).toBeNull();
+      await userEvent.setup().click(within(map).getByRole('button', { name: 'Restore' }));
+      expect(rect()).toEqual(['0px', '12px', '492px', '276px']);
+    } finally {
+      width.mockRestore(); height.mockRestore();
+      localStorage.removeItem('designer-map:map-window-rect');
+      localStorage.removeItem('designer-map:map-window');
+    }
+  });
+
+  it('gives desktop icons a Win98 right-click menu with selection', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const icon = screen.getByTitle('Open Settings (drag to move)');
+    await user.pointer({ keys: '[MouseRight]', target: icon });
+    const menu = screen.getByRole('menu', { name: 'Icon Actions' });
+    expect(icon.classList.contains('selected')).toBe(true);
+    await user.click(within(menu).getByRole('menuitem', { name: 'Select All' }));
+    expect(screen.getByTitle('Open Recycle Bin (drag to move)').classList.contains('selected')).toBe(true);
+    await user.pointer({ keys: '[MouseRight]', target: icon });
+    await user.click(within(screen.getByRole('menu', { name: 'Icon Actions' })).getByRole('menuitem', { name: 'Open' }));
+    // Open on a multiple selection opens every selected icon, as in Win98.
+    expect(screen.getByRole('dialog', { name: 'Settings' })).toBeTruthy();
+    expect(screen.getByRole('dialog', { name: 'Statistics' })).toBeTruthy();
+  });
+
+  it('switches the map to night colours from Settings or the Start menu, and remembers it', async () => {
+    const user = userEvent.setup();
+    localStorage.removeItem('designer-map:map-theme');
+    const { unmount } = render(<App />);
+    const graph = mocks.instances.at(-1)!;
+    expect(graph.setNight).toHaveBeenLastCalledWith(false);
+    await user.click(screen.getByTitle('Open Settings (drag to move)'));
+    const settings = screen.getByRole('dialog', { name: 'Settings' });
+    await user.click(within(settings).getByRole('radio', { name: 'Night' }));
+    expect(graph.setNight).toHaveBeenLastCalledWith(true);
+    expect(localStorage.getItem('designer-map:map-theme')).toBe('night');
+    // Text size scales the map labels and, through --text-zoom, the window contents.
+    await user.selectOptions(within(settings).getByRole('combobox', { name: 'Font size:' }), 'large');
+    expect(graph.setTextScale).toHaveBeenLastCalledWith(1.25);
+    expect(document.documentElement.style.getPropertyValue('--text-zoom')).toBe('1.25');
+    expect(localStorage.getItem('designer-map:text-size')).toBe('large');
+    await user.selectOptions(within(settings).getByRole('combobox', { name: 'Font size:' }), 'normal');
+    // The Settings checkboxes drive the same options as the Start menu.
+    await user.click(within(settings).getByRole('checkbox', { name: 'Show move lines' }));
+    expect(graph.setShowMoves).toHaveBeenLastCalledWith(false);
+    await user.click(within(settings).getByRole('checkbox', { name: 'Show move lines' }));
+    await openStart(user);
+    const start = screen.getByRole('dialog', { name: 'Start menu' });
+    expect(within(start).getByRole('radio', { name: 'Night' })).toHaveProperty('checked', true);
+    await user.click(within(start).getByRole('radio', { name: 'Day' }));
+    expect(graph.setNight).toHaveBeenLastCalledWith(false);
+    await user.click(within(start).getByRole('radio', { name: 'Night' }));
+    unmount();
+    render(<App />);
+    expect(mocks.instances.at(-1)!.setNight).toHaveBeenLastCalledWith(true);
+    localStorage.removeItem('designer-map:map-theme');
   });
 
   it('opens one Statistics window from the Start menu, following the filters', async () => {
@@ -293,12 +443,26 @@ describe('React app graph integration', () => {
   it('opens the Recycle Bin of ended brands from its desktop icon, and the What\'s Missing report in development', async () => {
     const user = userEvent.setup();
     render(<App />);
-    await user.click(screen.getByRole('button', { name: /Recycle Bin/ }));
+    await user.click(screen.getByTitle('Open Recycle Bin (drag to move)'));
     const bin = screen.getByRole('dialog', { name: 'Recycle Bin' });
-    const ended = within(within(bin).getByRole('table', { name: 'Ended brands' })).getAllByRole('row').slice(1);
-    expect(ended.length).toBeGreaterThan(5);
+    // A Win98 folder: the ended brands are file icons, newest deletion first.
+    const files = within(within(bin).getByRole('list', { name: 'Ended brands' })).getAllByRole('button');
+    expect(files.length).toBeGreaterThan(5);
+    expect(within(bin).getByText(`${files.length.toLocaleString()} objects`)).toBeTruthy();
+    // Details has Win98's Name / Original Location / Date Deleted columns, in the same order.
+    await user.click(within(bin).getByRole('combobox', { name: 'View' }));
+    await user.click(screen.getByRole('option', { name: 'Details' }));
+    const table = within(bin).getByRole('table', { name: 'Ended brands' });
+    expect(within(table).getAllByRole('columnheader').map((th) => th.textContent)).toEqual(['Name', 'Original Location', 'Date Deleted ▼']);
+    const ended = within(table).getAllByRole('row').slice(1);
+    expect(ended.map((row) => within(row).getAllByRole('cell')[0]!.textContent)).toEqual(files.map((file) => file.textContent));
     const years = ended.map((row) => Number(row.lastElementChild!.textContent));
     expect(years).toEqual([...years].sort((a, b) => b - a));
+    await user.click(within(table).getByRole('button', { name: 'Name' }));
+    const names = within(table).getAllByRole('row').slice(1).map((row) => within(row).getAllByRole('cell')[0]!.textContent!);
+    expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b, 'en', { sensitivity: 'base', numeric: true })));
+    await user.click(within(bin).getByRole('combobox', { name: 'View' }));
+    await user.click(screen.getByRole('option', { name: 'Large Icons' }));
     await openStart(user);
     await user.click(screen.getByRole('button', { name: "What's Missing" }));
     expect(within(screen.getByRole('dialog', { name: "What's Missing" })).getByRole('button', { name: /^No founder or creative director \(\d+\)$/ })).toBeTruthy();
@@ -512,8 +676,11 @@ describe('Multiple Properties windows', () => {
     await pick(user, 'chanel', 'Chanel house');
     await pick(user, 'prada', 'Prada house');
     expect(titles()).toEqual(['Directory', 'Dior', 'Chanel', 'Prada']);
-    // Picking an open item focuses its window instead of opening another.
+    // Each new brand window asks the map where its city is, to open beside it.
+    expect(graph.locationBox.mock.calls.map(([id]) => id)).toEqual(['dior', 'chanel', 'prada']);
+    // Picking an open item focuses its window instead of opening another, and leaves it where it is.
     await pick(user, 'dior', 'Dior house');
+    expect(graph.locationBox).toHaveBeenCalledTimes(3);
     expect(screen.getAllByRole('dialog')).toHaveLength(4);
     expect(screen.getByRole('dialog', { name: 'Dior' }).hasAttribute('data-active')).toBe(true);
     // The taskbar collapses them into one button whose menu lists each window.
