@@ -316,10 +316,13 @@ export class DesignerGraph {
       const ids = new Set(sel.kind === 'house' ? [sel.id]
         : sel.kind === 'group' ? housesInGroup(sel.id).map((house) => house.id)
         : careerOf(sel.id).map((t) => t.house));
+      // The selected brand, its ancestry and direct labels (not connection partners).
+      const family = new Set<string>();
       if (sel.kind === 'house') {
         // Direct children open with their parent. Nested labels open one level at a time.
         for (const house of houses) if (house.parentHouse === sel.id) ids.add(house.id);
         for (const id of ids) for (const ancestor of mapHousePath(id)) this.revealedLabels.add(ancestor);
+        for (const id of ids) family.add(id);
         // Read the underlying moves: collapsed endpoints currently point at pins.
         for (const move of !this.showMoves || this.connectionFilter === 'collaborations' ? [] : allMoves()) {
           if (move.year > this.year || !this.matchesHouse(move.from.house) || !this.matchesHouse(move.to.house)) continue;
@@ -333,7 +336,6 @@ export class DesignerGraph {
               if (!this.matchesHouse(partner)) continue;
               ids.add(partner);
               if (partner !== sel.id) this.connectionPartners.add(partner);
-              for (const ancestor of mapHousePath(partner)) this.revealedLabels.add(ancestor);
             }
           }
         }
@@ -341,14 +343,16 @@ export class DesignerGraph {
       for (const id of ids) {
         const house = getHouse(id);
         if (!house || !context.has(id) || (house.founded ?? -Infinity) > this.year) continue;
-        if (sel.kind === 'designer') for (const ancestor of mapHousePath(id)) this.revealedLabels.add(ancestor);
+        // A partner label opens on its own; its parent shows only if it is involved too.
+        const path = sel.kind === 'house' && !family.has(id) ? [id] : mapHousePath(id);
+        if (sel.kind !== 'group') for (const ancestor of path) this.revealedLabels.add(ancestor);
         const city = mapLocationForHouse(id);
         if (!this.expanded.has(city)) {
           this.expanded.add(city);
           this.autoRevealed.set(city, new Set());
           relayout = true;
         }
-        for (const ancestor of mapHousePath(id)) this.autoRevealed.get(city)?.add(ancestor);
+        for (const ancestor of path) this.autoRevealed.get(city)?.add(ancestor);
       }
       if (this.revealedLabels.size) relayout = true;
     }
@@ -369,6 +373,26 @@ export class DesignerGraph {
     else this.expanded.add(city);
     this.relayoutMap(true);
     this.notifyExpand();
+  }
+
+  /** A place window's Show on Map: open these map locations' full grids (other open cities stay) and frame them. */
+  showCities(cities: Iterable<string>) {
+    const locations = new Set([...cities].map((city) => mapLocationForCity(city)).filter((city) => this.allCities.includes(city)));
+    if (!locations.size) return;
+    for (const city of locations) {
+      this.autoRevealed.delete(city);
+      this.expanded.add(city);
+    }
+    this.relayoutMap(false);
+    this.notifyExpand();
+    const cy = this.cy;
+    const focus = cy.nodes('[kind = "marker"]').filter((node) => locations.has(node.data('city')))
+      .union(cy.nodes('[kind = "house"]').filter((node) => locations.has(node.data('mapLocation')) && !node.hasClass('collapsed')))
+      .filter((node) => node.visible());
+    if (focus.empty()) return;
+    cy.stop(true, false);
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) cy.fit(focus, 80);
+    else cy.animate({ fit: { eles: focus, padding: 80 } }, { duration: 400 });
   }
 
   setAllExpanded(open: boolean) {
@@ -1040,6 +1064,15 @@ export class DesignerGraph {
         || !this.showMoves || this.connectionFilter === 'collaborations' || !shown.has(e));
       setClass(cy.edges('[kind = "collaboration"]'), 'lines-off', (e) => sel?.kind !== 'house'
         || !this.showCollaborations || this.connectionFilter === 'designers' || !shown.has(e));
+      // Border the selected brand's partners like the lines that reach them.
+      const lines = sel?.kind === 'house' ? self.connectedEdges().not('.lines-off, .hidden') : cy.collection();
+      const partners = (kind: string) => lines.filter((e) => e.data('kind') === kind)
+        .connectedNodes('[kind = "house"]').not(self);
+      const movePartners = partners('move');
+      const collabPartners = partners('collaboration');
+      const houses = cy.nodes('[kind = "house"]');
+      setClass(houses, 'move-partner', (n) => movePartners.has(n));
+      setClass(houses, 'collab-partner', (n) => collabPartners.has(n));
       focus = shown;
     });
 

@@ -128,7 +128,13 @@ html, body {
   border-right: 4px solid transparent;
   border-top: 4px solid #000;
 }
-.w98-select-options { position: fixed; }
+.w98-select-text { display: grid; min-width: 0; }
+.w98-select-text > span { grid-area: 1 / 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.w98-select-text > .w98-select-sizer { visibility: hidden; }
+.w98-select-sizer::before { content: attr(data-text); }
+.w98-select-arrow { flex: none; }
+/* As wide as its longest option (never narrower than the button), so nothing scrolls sideways. */
+.w98-select-options { position: fixed; width: max-content; overflow-x: hidden; }
 .w98-select-options li { line-height: 20px; }
 .year-row input[type='range'] { width: 180px; }
 .year-row output { min-width: 3.5em; font-variant-numeric: tabular-nums; }
@@ -323,7 +329,7 @@ html, body {
   min-height: 0;
   margin: 0;
   /* A scrollbar's width (16px) between the tiles and the border. The right side is the
-     scrollbar's own reserved gutter, so a scrollbar never squeezes a row of three to two.
+     scrollbar's own reserved gutter, so a scrollbar never squeezes a row of four to three.
      city-window.tsx cityWindowSize matches. */
   padding: 16px 0 16px 16px;
   scrollbar-gutter: stable;
@@ -355,6 +361,21 @@ html, body {
 }
 .city-icon:not(:disabled):active { box-shadow: none; text-shadow: none; }
 .city-search { flex: none; position: relative; z-index: 1; }
+/* View / Sort / Show on Map row under Find. city-window.tsx CHROME.height includes it. */
+.city-toolbar { flex: none; display: flex; gap: 4px; align-items: center; }
+.city-toolbar .city-choice { flex: 1; min-width: 0; }
+.city-toolbar .city-map { flex: none; min-width: 0; min-height: 26px; padding: 0 8px; }
+/* Details view: an Explorer-style table in the same sunken frame; headers sort. */
+.city-details { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; background: #fff; }
+.city-details table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.city-details thead th { position: sticky; top: 0; z-index: 1; padding: 0; }
+.city-details td { padding: 1px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0; }
+.city-details td:first-child { width: 50%; }
+.city-details tbody tr { cursor: default; }
+.city-details .city-sort { width: 100%; min-width: 0; min-height: 0; padding: 1px 4px; text-align: left; font-size: 12px; }
+.city-details .city-row-name { min-width: 0; min-height: 0; padding: 0; border: 0; box-shadow: none; background: none; color: inherit; font: inherit; text-align: left; cursor: default; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.city-details .city-row-name:focus { outline: 1px dotted currentColor; }
+.city-details .city-details-heading th { padding: 6px 4px 2px; text-align: left; font-weight: normal; background: var(--face); border-top: 1px solid #808080; box-shadow: inset 0 1px #fff; position: static; }
 .city-search .w98-combo { flex: 1; min-width: 0; }
 .city-search input { width: 100%; }
 /* The map icon's grey Win98 frame (icons.ts FRAME): dark/white outer edge, grey/light inner edge. */
@@ -425,8 +446,10 @@ html, body {
 .side-window .sunken-panel { width: 100%; max-height: 50vh; }
 /* Statistics window (ui/statistics.tsx): count tables with navy bars scaled to the largest row. */
 .side-window .stats-table table { width: 100%; }
-.side-window .stats-table .stats-count { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.side-window .stats-table .stats-bar-cell { width: 40%; vertical-align: middle; }
+.side-window .stats-table .stats-count { width: 1%; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.side-window .stats-table .stats-bar-cell { width: 22%; vertical-align: middle; }
+/* Names stay on one line and take the leftover width; long ones end in "…" (full name on hover). */
+.side-window .stats-table .stats-label { max-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .stats-bar { display: block; height: 10px; min-width: 2px; background: var(--navy); box-shadow: inset -1px -1px #000040, inset 1px 1px #4040c0; }
 /* Row-limited tables (brand collaborations, panel.tsx RowLimitedPanel) scroll by wheel/touch without a scrollbar. */
 .side-window .sunken-panel.row-limited { scrollbar-width: none; overscroll-behavior: contain; }
@@ -779,4 +802,323 @@ table.fields .field-separator { margin: 0 8px; }
   .main-window > .window-body { overflow-y: auto; }
   .content { flex-shrink: 0; min-height: 420px; }
 }
-.side-window .stats-limit { margin-bottom: 6px; }
+.side-window .stats-limit { margin-bottom: 6px; flex-wrap: wrap; }
+/* Statistics: "Include retailer collaborations" checkbox beside the Most collaborations "Show" picker. */
+.side-window .stats-retailers { display: inline-flex; align-items: center; margin-left: 12px; }
+/* Sortable column headings (statistics.tsx CollaborationsSection): the whole heading is the button. */
+.side-window .stats-sort { all: unset; display: block; width: 100%; text-align: right; cursor: pointer; white-space: nowrap; }
+.side-window .stats-sort:focus-visible { outline: 1px dotted #000; outline-offset: -2px; }
+.side-window .stats-table .stats-rank { width: 1%; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; color: #404040; }
+/* Collaborations by year (statistics.tsx YearChart): one navy column per year on a white plot. */
+.side-window .stats-chart { display: flex; gap: 4px; height: 140px; padding: 6px 6px 4px; background: #fff; overflow: hidden; }
+.stats-chart-scale { display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 14px; font-variant-numeric: tabular-nums; text-align: right; }
+.stats-chart-plot { position: relative; flex: 1; display: flex; align-items: stretch; gap: 1px; min-width: 0; border-left: 1px solid #808080; }
+.stats-chart-col { all: unset; flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
+button.stats-chart-col:not([aria-disabled]) { cursor: pointer; }
+button.stats-chart-col:focus-visible .stats-chart-track { outline: 1px dotted #000; }
+/* The year whose releases are listed below the chart. */
+.stats-chart-col.selected .stats-chart-track { background: #dfdfdf; }
+.stats-chart-col.selected .stats-chart-year { font-weight: bold; }
+.side-window .stats-year-heading { margin: 6px 0 4px; }
+.stats-tip-row { display: flex; align-items: center; }
+.stats-swatch { display: inline-block; flex: none; width: 9px; height: 9px; margin-right: 4px; border: 1px solid #000; vertical-align: -1px; }
+/* Colour key under a stacked Collaborations by year chart. */
+.side-window .stats-legend { display: flex; flex-wrap: wrap; gap: 2px 12px; margin: 4px 0 0; padding: 0; list-style: none; }
+.side-window .stats-legend li { display: flex; align-items: center; cursor: default; }
+.stats-legend-count { margin-left: 4px; color: #404040; font-variant-numeric: tabular-nums; }
+.stats-chart-track { flex: 1; display: flex; align-items: flex-end; border-bottom: 1px solid #808080; }
+.stats-chart-col.hover .stats-chart-bar { filter: brightness(1.6); }
+/* Collapsed run of empty years: a break mark on the axis. */
+.stats-chart-gap .stats-chart-track { align-items: flex-end; justify-content: center; }
+.stats-chart-break { font-size: 11px; line-height: 9px; color: #808080; transform: translateY(5px); background: #fff; }
+/* Hover readout: Win98 tooltip with the exact count, kept inside the plot. */
+.stats-chart-tip { position: absolute; top: 0; display: flex; flex-direction: column; padding: 1px 4px; background: #ffffe1; border: 1px solid #000; color: #000; white-space: nowrap; pointer-events: none; font-variant-numeric: tabular-nums; z-index: 1; }
+.stats-chart-tip.center { transform: translateX(-50%); }
+.stats-chart-tip.end { transform: translateX(-100%); }
+.stats-chart-bar { display: flex; flex-direction: column-reverse; width: 100%; }
+/* One coloured part of a stacked bar (statistics.tsx SEGMENTS), with a slight bevel. */
+.stats-chart-seg { display: block; flex: none; width: 100%; box-shadow: inset -1px 0 rgb(0 0 0 / 0.45), inset 1px 0 rgb(255 255 255 / 0.25); }
+.stats-chart-year { height: 13px; position: relative; left: 50%; width: 0; display: flex; justify-content: center; font-size: 10px; line-height: 13px; white-space: nowrap; }
+
+/* ---------- List View (ui/list-view.tsx): an Excel 2000 worksheet of every brand ---------- */
+.title-bar-icon { display: flex; flex: none; margin: 0 3px 0 1px; }
+.title-bar-icon img { display: block; width: 16px; height: 16px; }
+.title-bar-icon + .title-bar-text { margin-right: auto; }
+/* The Excel icon is a downscaled photo, not pixel art, so smooth it. */
+img.xl-icon, .desktop-icon-image img.xl-icon { image-rendering: auto; }
+.side-window.list-window > .window-body { display: flex; flex-direction: column; min-height: 0; overflow: hidden; margin: 0 3px 3px; }
+.xl { position: relative; display: flex; flex-direction: column; flex: 1; min-height: 0; font-size: 12px; }
+.side-window .xl table { font-size: 13px; }
+
+.xl-menubar { display: flex; flex: none; padding: 1px 0; }
+.xl-menubar button {
+  min-width: 0; min-height: 0; padding: 2px 7px; border: 0; background: none; box-shadow: none; font-size: 12px; color: #000;
+}
+.xl-menubar button:hover { box-shadow: inset -1px -1px #808080, inset 1px 1px #fff; }
+.xl-menubar button.open, .xl-menubar button:active { box-shadow: inset 1px 1px #808080, inset -1px -1px #fff; }
+.xl-menubar button:focus { outline: none; }
+.xl-menubar button:focus-visible { outline: 1px dotted #000; outline-offset: -3px; }
+
+/* Office 2000 toolbars: an etched band with a raised grip, flat buttons that rise on hover. */
+.xl-toolbar {
+  display: flex; flex: none; align-items: center; gap: 1px; min-height: 26px; padding: 1px 3px 1px 10px; position: relative;
+  border-top: 1px solid #808080; box-shadow: inset 0 1px #fff, inset 0 -1px #808080, 0 1px #fff;
+}
+.xl-toolbar::before { content: ''; position: absolute; left: 3px; top: 3px; bottom: 3px; width: 3px; box-shadow: inset -1px -1px #808080, inset 1px 1px #fff; }
+.xl-tool {
+  display: grid; place-items: center; min-width: 0; min-height: 0; width: 23px; height: 22px; padding: 0;
+  border: 0; background: none; box-shadow: none;
+}
+.xl-tool:not(:disabled):hover { box-shadow: inset -1px -1px #808080, inset 1px 1px #fff; }
+.xl-tool:not(:disabled):active, .xl-tool[aria-pressed='true'] { box-shadow: inset 1px 1px #808080, inset -1px -1px #fff; }
+.xl-tool[aria-pressed='true'] { background: repeating-conic-gradient(#fff 0 25%, #c0c0c0 0 50%) 0 0 / 2px 2px; }
+.xl-tool:disabled svg { filter: grayscale(1) opacity(0.45); }
+.xl-tool:focus { outline: none; }
+.xl-tool:focus-visible { outline: 1px dotted #000; outline-offset: -3px; }
+.xl-tool-separator { width: 2px; height: 18px; margin: 0 3px; box-shadow: inset 1px 0 #808080, inset -1px 0 #fff; }
+.xl-filter-summary { margin-left: 6px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #000080; }
+
+.xl-formula-bar { display: flex; flex: none; align-items: center; gap: 3px; padding: 3px 2px; }
+.xl .xl-formula-bar input { height: 20px; font: 13px Arial, Helvetica, sans-serif; }
+.xl .xl-name-box { flex: none; width: 78px; }
+.xl-equals {
+  flex: none; display: grid; place-items: center; width: 22px; height: 20px;
+  font: bold 14px Arial, sans-serif; box-shadow: inset -1px -1px #808080, inset 1px 1px #fff;
+}
+.xl .xl-formula { flex: 1; min-width: 0; }
+.xl .xl-formula::placeholder { color: #808080; font-style: italic; }
+.xl .xl-formula.searching { color: #000080; }
+/* While searching, Excel's editing buttons: a red Cancel and a green Enter. */
+.xl-formula-button {
+  flex: none; display: grid; place-items: center; min-width: 0; min-height: 0; width: 22px; height: 20px; padding: 0;
+  border: 0; background: none; font: bold 13px Arial, sans-serif; box-shadow: none;
+}
+.xl-formula-button:hover { box-shadow: inset -1px -1px #808080, inset 1px 1px #fff; }
+.xl-formula-button:active { box-shadow: inset 1px 1px #808080, inset -1px -1px #fff; }
+.xl-formula-button.cancel { color: #c00000; }
+.xl-formula-button.enter { color: #008000; }
+
+.xl-grid {
+  flex: 1; min-height: 0; overflow: auto; background: #fff; overscroll-behavior: contain;
+  /* A sunken border, not padding: the frozen header rows stick to the very top, so nothing scrolls past above them. */
+  border: 2px solid; border-color: #808080 #dfdfdf #dfdfdf #808080;
+}
+.xl-grid:focus { outline: none; }
+.xl-sheet { border-collapse: separate; border-spacing: 0; table-layout: fixed; font-family: Arial, Helvetica, sans-serif; }
+.xl-sheet th, .xl-sheet td {
+  height: 17px; max-height: 17px; padding: 0 3px; box-sizing: border-box; line-height: 16px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; font-weight: normal;
+  border-right: 1px solid #c0c0c0; border-bottom: 1px solid #c0c0c0;
+}
+.xl-grid.no-gridlines td, .xl-grid.no-gridlines .xl-fields th:not(.xl-row-number) { border-color: transparent; }
+/* Column letters and row numbers: raised grey buttons; the frozen field row and row numbers stay put. */
+.xl-letters th, .xl-row-number, .xl-corner {
+  background: #c0c0c0; color: #000; text-align: center; padding: 0; border: 0;
+  box-shadow: inset -1px -1px #808080, inset 1px 1px #fff; font: 12px Arial, Helvetica, sans-serif; line-height: 17px;
+}
+.xl-letters th { position: sticky; top: 0; z-index: 2; overflow: visible; }
+/* Drag a column letter's right border to resize the column; double-click restores its width. */
+.xl-col-resize { position: absolute; top: 0; right: -4px; bottom: 0; width: 8px; z-index: 1; cursor: col-resize; touch-action: none; }
+.xl-col-resize:hover::after { content: ''; position: absolute; top: 0; bottom: 0; left: 3px; width: 1px; background: #000; }
+.xl-fields th { position: sticky; top: 17px; z-index: 2; background: #fff; font-weight: bold; padding-right: 19px; }
+.xl-row-number { position: sticky; left: 0; z-index: 1; }
+.xl-fields .xl-row-number { z-index: 3; padding-right: 0; font-weight: normal; background: #c0c0c0; }
+.xl-corner { position: sticky; left: 0; top: 0; z-index: 3; }
+.xl-letters th.current, .xl-row-number.current { font-weight: bold; background: #d4d0c8; }
+/* Excel marks the rows an AutoFilter leaves with blue row numbers. */
+.xl-row-number.filtered { color: #0000ff; }
+.xl-sheet td { background: #fff; }
+.xl-sheet td.numeric { text-align: right; }
+.xl-sheet td a { color: #0000ff; }
+/* The active cell: a heavy black border with the fill handle at its corner. */
+.xl-sheet td.active, .xl-fields th.active { box-shadow: inset 0 0 0 2px #000; }
+.xl-sheet td.active::after, .xl-fields th.active::after {
+  content: ''; position: absolute; right: 0; bottom: 0; width: 5px; height: 5px; background: #000; box-shadow: -1px -1px #fff;
+}
+.xl-sheet td { position: relative; }
+/* AutoFilter arrow: a small raised button at the field cell's right; blue once its column is filtered. */
+.xl-filter-button, .xl-cell-dropdown {
+  position: absolute; right: 1px; top: 1px; min-width: 0; min-height: 0; width: 15px; height: 14px; padding: 0;
+  background: #c0c0c0; box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+}
+.xl-filter-button::before, .xl-cell-dropdown::before {
+  content: ''; position: absolute; left: 4px; top: 5px; border: 3.5px solid transparent; border-top: 4px solid #000; border-bottom: 0;
+}
+.xl-filter-button.filtered::before { border-top-color: #0000ff; }
+.xl-filter-button:active, .xl-filter-button.open, .xl-cell-dropdown:active, .xl-cell-dropdown.xl-dropdown-open { box-shadow: inset 1px 1px #0a0a0a, inset -1px -1px #fff, inset 2px 2px #808080, inset -2px -2px #dfdfdf; }
+/* A cell with its own drop-down list (a location's brands): room for the arrow at its right. */
+.xl-sheet td.has-menu { padding-right: 19px; }
+.xl-empty { position: sticky; left: 48px; margin: 10px 0 0 48px; color: #808080; font-family: Arial, sans-serif; }
+
+.xl-autofilter {
+  position: fixed; z-index: 2100; margin: 0; padding: 0; list-style: none; box-sizing: border-box;
+  max-width: 320px; max-height: calc(16px * 14 + 2px); overflow-y: auto; overflow-x: hidden;
+  background: #fff; border: 1px solid #000; font: 13px Arial, Helvetica, sans-serif; outline: none;
+}
+.xl-autofilter li { padding: 0 6px 0 3px; line-height: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: default; }
+.xl-autofilter li.focused { background: var(--navy); color: #fff; }
+
+/* Sheet tabs: the navigation arrows and slanted tabs under the grid; the active one is white and raised. */
+.xl-sheet-tabs { display: flex; flex: none; align-items: flex-start; height: 20px; padding-left: 2px; overflow: hidden; }
+.xl-tab-nav { display: flex; flex: none; gap: 1px; padding-top: 2px; }
+.xl-tab-nav button {
+  display: grid; place-items: center; min-width: 0; min-height: 0; width: 16px; height: 15px; padding: 0;
+  font-size: 7px; color: #000; box-shadow: inset -1px -1px #808080, inset 1px 1px #fff;
+}
+.xl-tab-nav button:disabled { color: #808080; }
+.xl-tabs { display: flex; min-width: 0; margin-left: 6px; }
+.xl-tab {
+  min-width: 0; min-height: 0; margin-left: -6px; padding: 1px 16px 2px; background: #c0c0c0; color: #000;
+  font: 12px Arial, sans-serif; border: 1px solid #000; border-top: 0; box-shadow: none;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 7px) 100%, 7px 100%);
+}
+.xl-tab:first-child { margin-left: 0; }
+.xl-tab.active { position: relative; z-index: 1; background: #fff; font-weight: bold; }
+.xl-tab:focus { outline: none; }
+.xl-tab:focus-visible { text-decoration: underline dotted; }
+.xl-status { flex: none; margin: 0; }
+.xl-status .status-bar-field:first-child { flex: 3; }
+.xl-status .xl-num { flex: none; width: 40px; text-align: center; }
+
+.xl-dialog-backdrop { position: absolute; inset: 0; z-index: 10; }
+.xl-dialog { position: absolute; left: 50%; top: 40%; transform: translate(-50%, -50%); width: min(420px, calc(100% - 16px)); box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff, 3px 3px 0 rgb(0 0 0 / 0.35); }
+.xl-dialog-body { display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+.xl-dialog-body p { margin: 0; }
+.xl-dialog-body .field-row { gap: 6px; }
+.xl-dialog-body select { flex: none; }
+.xl-dialog-body input[type='text'] { flex: 1; min-width: 0; }
+.xl-dialog-buttons { display: flex; justify-content: flex-end; gap: 6px; }
+
+@media (max-width: 760px) {
+  .side-window.list-window .xl-grid { min-height: 260px; }
+}
+.map-context-menu .menu-check { display: inline-block; width: 16px; margin-left: -6px; }
+
+/* List View: Window ▸ Freeze Panes pins the first shown column beside the row numbers, with Excel's black freeze line. */
+.xl-sheet .xl-frozen { position: sticky; left: 40px; z-index: 1; border-right: 1px solid #000; }
+.xl-sheet .xl-letters .xl-frozen, .xl-sheet .xl-fields .xl-frozen { z-index: 3; }
+.xl-sheet .xl-letters th.xl-frozen { box-shadow: inset -1px -1px #808080, inset 1px 1px #fff; }
+.xl-sheet td.xl-frozen.active { box-shadow: inset 0 0 0 2px #000; }
+/* A hidden column leaves a heavier line where it was, as in Excel. */
+.xl-sheet .after-hidden { border-left: 2px solid #808080; }
+.xl-sheet .xl-letters th.after-hidden { box-shadow: inset -1px -1px #808080, inset 1px 1px #fff, inset 2px 0 #404040; }
+/* Format ▸ Grey Out Ended Brands. */
+/* Format ▸ Grey Out Ended Brands: ended rows get a grey cell fill (Excel's 25% grey), gridlines kept. */
+.xl-grid.grey-ended tr.ended td { background: #c0c0c0; border-color: #a0a0a0; }
+.xl-zoom { height: 21px; margin-left: 2px; font-size: 12px; }
+.xl-dialog-body .xl-join { gap: 14px; margin: 4px 0 4px 8px; }
+.xl-dialog-body .xl-sort-key { display: flex; align-items: center; gap: 10px; }
+.xl-dialog-body .xl-sort-key select { flex: 1; }
+.xl-sort-direction { display: flex; flex-direction: column; gap: 2px; }
+.xl-dialog-body input[type='number'] { width: 64px; }
+/* The top-left corner box covers both header rows' scrolled cells and the frozen column's. */
+.xl-sheet .xl-letters th.xl-corner { z-index: 5; }
+.xl-sheet .xl-fields th.xl-row-number { z-index: 4; }
+
+/* A maximized window (List View's View ▸ Full Screen) fills the map area, without the drop shadow or a move cursor. */
+.side-window.maximized { box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff; }
+.side-window.maximized > .title-bar { cursor: default; }
+/* The status bar's zoom field: click or right-click for the slider. */
+.xl-status .xl-num { padding: 0; }
+.xl-zoom-status {
+  all: unset; display: block; width: 100%; box-sizing: border-box; padding: 0 3px; text-align: center; cursor: default;
+}
+.xl-zoom-status:hover, .xl-zoom-status.xl-dropdown-open { background: #d4d0c8; }
+.xl-zoom-status:focus-visible { outline: 1px dotted #000; outline-offset: -2px; }
+.xl-zoom-slider { position: fixed; z-index: 2100; width: 200px; }
+.xl-zoom-slider-body { display: flex; flex-direction: column; gap: 4px; padding: 6px 8px 8px; font-size: 12px; }
+.xl-zoom-slider-value { margin-bottom: 4px; text-align: center; font-weight: bold; }
+.xl-zoom-slider input[type='range'] { width: 100%; margin: 0; }
+.xl-zoom-slider-scale { display: flex; justify-content: space-between; color: #404040; font-size: 11px; }
+.xl-zoom-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 2px; }
+.xl-zoom-presets button { min-width: 0; min-height: 20px; padding: 0; font-size: 11px; }
+.xl-zoom-presets button[aria-pressed='true'] { box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px grey; }
+
+/* List View range selection: a navy tint over the range; the active cell stays white inside its black border. */
+.xl-sheet td.in-range, .xl-sheet .xl-fields th.in-range, .xl-grid.grey-ended tr.ended td.in-range { background: #c6c6ec; }
+.xl-sheet .xl-corner { cursor: default; }
+.xl-sheet .xl-letters th:not(.xl-corner), .xl-sheet tbody .xl-row-number { cursor: default; }
+.xl-status .xl-autocalc { flex: 2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Insert ▸ Chart…: an Excel 2000 chart object over the sheet — grey plot area, periwinkle bars, yellow chart tips. */
+.xl-chart {
+  position: absolute; z-index: 8; right: 18px; bottom: 44px; width: min(460px, calc(100% - 24px)); max-height: calc(100% - 24px);
+  display: flex; flex-direction: column;
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff, 3px 3px 0 rgb(0 0 0 / 0.35);
+}
+.xl-chart > .title-bar { cursor: move; touch-action: none; user-select: none; }
+.xl-chart-body { display: flex; flex-direction: column; gap: 4px; min-height: 0; overflow: auto; margin: 4px; font-size: 12px; }
+.xl-chart-options { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.xl-chart-options label { display: inline-flex; align-items: center; gap: 4px; }
+.xl-chart-title { margin: 4px 0 0; font: bold 13px Arial, Helvetica, sans-serif; text-align: center; }
+.xl-chart-subtitle { margin: 0; color: #404040; text-align: center; font-size: 11px; }
+.xl-chart-plot { position: relative; padding: 8px 10px 6px; background: #c0c0c0; border: 1px solid #808080; font: 11px Arial, Helvetica, sans-serif; }
+.xl-chart-empty { margin: 20px; text-align: center; color: #404040; }
+.xl-gridline { position: absolute; top: 0; bottom: 0; width: 1px; background: #808080; pointer-events: none; }
+.xl-gridline.horizontal { left: 0; right: 0; top: auto; bottom: auto; width: auto; height: 1px; }
+.xl-bars { display: flex; flex-direction: column; }
+.xl-bar-row {
+  all: unset; display: flex; align-items: center; gap: 6px; height: 18px; cursor: pointer;
+}
+.xl-bar-row.other { cursor: default; }
+.xl-bar-row:hover .xl-bar-fill, .xl-bar-row:focus-visible .xl-bar-fill { background: #ccccff; }
+.xl-bar-row:focus-visible { outline: 1px dotted #000; }
+.xl-bar-label { flex: none; width: 118px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+.xl-bar-track { position: relative; flex: 1; height: 100%; margin-right: 34px; }
+.xl-bar-fill { position: absolute; top: 3px; bottom: 3px; left: 0; min-width: 1px; background: #9999ff; border: 1px solid #000; box-sizing: border-box; }
+.xl-bar-row.other .xl-bar-fill { background: #dcdcdc; }
+.xl-bar-value { position: absolute; top: 2px; margin-left: 4px; white-space: nowrap; }
+.xl-bar-axis { display: flex; gap: 6px; height: 14px; margin-top: 2px; border-top: 1px solid #000; }
+.xl-bar-axis .xl-bar-track span { position: absolute; transform: translateX(-50%); top: 1px; }
+.xl-columns { display: flex; gap: 4px; height: 210px; }
+.xl-column-axis { position: relative; flex: none; width: 28px; height: calc(100% - 60px); }
+.xl-column-axis span { position: absolute; right: 0; transform: translateY(50%); line-height: 1; }
+.xl-column-area { position: relative; flex: 1; display: flex; gap: 3px; min-width: 0; }
+.xl-column-grid { position: absolute; top: 0; left: 0; right: 0; height: calc(100% - 60px); pointer-events: none; }
+.xl-column { all: unset; flex: 1; min-width: 0; display: flex; flex-direction: column; cursor: pointer; }
+.xl-column.other { cursor: default; }
+.xl-column-track { position: relative; height: calc(100% - 60px); border-bottom: 1px solid #000; }
+.xl-column-fill { position: absolute; bottom: 0; left: 15%; right: 15%; min-height: 1px; background: #9999ff; border: 1px solid #000; border-bottom: 0; box-sizing: border-box; }
+.xl-column.other .xl-column-fill { background: #dcdcdc; }
+.xl-column:hover .xl-column-fill, .xl-column:focus-visible .xl-column-fill { background: #ccccff; }
+.xl-column:focus-visible { outline: 1px dotted #000; }
+.xl-column-value { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); padding-bottom: 1px; white-space: nowrap; }
+.xl-column-label { height: 58px; overflow: hidden; writing-mode: vertical-rl; transform: rotate(180deg); text-align: right; white-space: nowrap; text-overflow: ellipsis; align-self: center; padding-top: 2px; }
+.xl-chart-tip { position: absolute; z-index: 1; max-width: 260px; padding: 1px 4px; background: #ffffe1; border: 1px solid #000; pointer-events: none; white-space: nowrap; }
+.xl-chart .field-row { margin: 0; }
+
+/* The PivotTable sheet: Excel 2000's report layout, with grey field buttons and bold Grand Totals. */
+.xl-pivot { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.xl-pivot-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; padding: 4px 4px 5px; }
+.xl-pivot-toolbar label { display: inline-flex; align-items: center; gap: 4px; }
+.xl-pivot-toolbar .field-row { margin: 0; }
+.xl-pivot-scroll {
+  flex: 1; min-height: 0; overflow: auto; background: #fff; overscroll-behavior: contain;
+  border: 2px solid; border-color: #808080 #dfdfdf #dfdfdf #808080;
+}
+.xl-pivot-scroll:focus { outline: none; }
+.xl-pivot-table { border-collapse: separate; border-spacing: 0; margin: 8px; font: 13px Arial, Helvetica, sans-serif; }
+.side-window .xl .xl-pivot-table { font-size: 13px; }
+.xl-pivot-table th, .xl-pivot-table td {
+  height: 17px; padding: 0 6px; border-right: 1px solid #c0c0c0; border-bottom: 1px solid #c0c0c0; white-space: nowrap; text-align: left; font-weight: normal;
+}
+.xl-pivot-table thead th, .xl-pivot-table tbody th { position: sticky; background: #fff; }
+.xl-pivot-table thead tr:first-child th { top: 0; z-index: 2; }
+.xl-pivot-table thead tr:nth-child(2) th { top: 18px; z-index: 2; border-bottom: 1px solid #000; }
+.xl-pivot-table tbody th, .xl-pivot-table tfoot th { left: 0; z-index: 1; }
+.xl-pivot-table thead tr th:first-child { left: 0; z-index: 3; }
+.xl-pivot-table tfoot th { position: sticky; background: #fff; }
+.xl-pivot-table .xl-pivot-data { font-weight: bold; }
+.xl-pivot-table td { text-align: right; min-width: 40px; }
+.xl-pivot-table .xl-pivot-total, .xl-pivot-table tfoot td, .xl-pivot-table tfoot th { font-weight: bold; }
+.xl-pivot-table td.xl-pivot-total, .xl-pivot-table th.xl-pivot-total { border-left: 1px solid #000; }
+.xl-pivot-table tfoot td, .xl-pivot-table tfoot th { border-top: 1px solid #000; }
+.xl-pivot-table .blank { color: #808080; font-style: italic; }
+.xl-pivot-button {
+  display: inline-block; padding: 0 6px; background: #c0c0c0; font-weight: bold;
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+}
+.xl-pivot-count { all: unset; display: block; width: 100%; text-align: right; color: #0000ff; cursor: pointer; }
+.xl-pivot-count:hover { text-decoration: underline; }
+.xl-pivot-count:focus-visible { outline: 1px dotted #000; }
+.xl-chart-other { margin: 0; color: #404040; font-size: 11px; text-align: center; }

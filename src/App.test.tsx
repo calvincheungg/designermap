@@ -10,6 +10,7 @@ const mocks = vi.hoisted(() => ({ instances: [] as {
   setYear: ReturnType<typeof vi.fn>; setShowMoves: ReturnType<typeof vi.fn>;
   setShowCollaborations: ReturnType<typeof vi.fn>; setConnectionFilter: ReturnType<typeof vi.fn>;
   setAllExpanded: ReturnType<typeof vi.fn>; fit: ReturnType<typeof vi.fn>; destroy: ReturnType<typeof vi.fn>; houseAt: ReturnType<typeof vi.fn>;
+  showCities: ReturnType<typeof vi.fn>;
 }[] }));
 vi.mock('./graph/graph', () => ({
   DesignerGraph: class {
@@ -23,6 +24,7 @@ vi.mock('./graph/graph', () => ({
     setConnectionFilter = vi.fn();
     houseAt = vi.fn((): string | undefined => 'dior');
     fit = vi.fn();
+    showCities = vi.fn();
     refreshStyle = vi.fn();
     destroy = vi.fn();
     setAllExpanded = vi.fn((open: boolean) => {
@@ -194,6 +196,31 @@ describe('React app graph integration', () => {
     expect(screen.queryByRole('dialog', { name: 'Year' })).toBeNull();
   });
 
+  it('opens the List View sheet, whose filters leave the map alone', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    await openStart(user);
+    await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'List View' }));
+    const sheet = screen.getByRole('dialog', { name: 'List View - Designer Map.xls' });
+    expect(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('button', { name: 'List View - Designer Map.xls' })).toBeTruthy();
+    const filterCalls = graph.setHouseFilter.mock.calls.length;
+    await user.click(within(sheet).getByRole('button', { name: 'Filter Market' }));
+    await user.click(screen.getByRole('option', { name: 'High Luxury' }));
+    expect(within(sheet).getByRole('status').textContent).toMatch(/records found/);
+    expect(graph.setHouseFilter.mock.calls.length).toBe(filterCalls);
+    expect(screen.queryByRole('group', { name: 'Selected Filters' })).toBeNull();
+    // Maximize (or View ▸ Full Screen) fills the map area; Restore puts it back.
+    await user.click(within(sheet).getByRole('button', { name: 'Maximize List View - Designer Map.xls' }));
+    expect(sheet.className).toContain('maximized');
+    await user.click(within(sheet).getByRole('menuitem', { name: 'View' }));
+    expect(screen.getByRole('menuitemcheckbox', { name: 'Full Screen' }).getAttribute('aria-checked')).toBe('true');
+    await user.keyboard('{Escape}');
+    await user.click(within(sheet).getByRole('button', { name: 'Restore List View - Designer Map.xls' }));
+    expect(sheet.className).not.toContain('maximized');
+    localStorage.clear();
+  });
+
   it('opens one Statistics window from the Start menu, following the filters', async () => {
     const user = userEvent.setup();
     render(<App />);
@@ -219,6 +246,35 @@ describe('React app graph integration', () => {
     openYear();
     fireEvent.change(screen.getByRole('slider'), { target: { value: '1900' } });
     expect(within(screen.getByRole('dialog', { name: 'Statistics' })).getByText('For brands founded by 1900.')).toBeTruthy();
+  });
+
+  it('leaves retailer collaborations out of the collaboration and pairing tables when unchecked, and remembers it', async () => {
+    const user = userEvent.setup();
+    const { collaborations, houses } = await import('./data');
+    const { BrandCategory } = await import('./data/tags');
+    const retailers = new Set(Object.values(houses).filter((house) => house.tags.brandCategory.includes(BrandCategory.Retailer)).map((house) => house.name));
+    expect(retailers.size).toBeGreaterThan(0);
+    render(<App />);
+    await openStart(user);
+    await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'Statistics' }));
+    const stats = screen.getByRole('dialog', { name: 'Statistics' });
+    const table = (name: string) => within(stats).getByRole('table', { name });
+    const releaseTotal = () => within(table('Brands by number of collaborations')).getAllByRole('row').slice(1)
+      .reduce((sum, row) => sum + Number((row as HTMLTableRowElement).cells[2]!.textContent!.replace(/,/g, '')), 0);
+    const pairBrands = () => within(table('Brand pairs with the most collaborations')).getAllByRole('link').map((link) => link.textContent!);
+    const pairsBefore = table('Brand pairs with the most collaborations').textContent;
+    const before = releaseTotal();
+    const [collabToggle, pairToggle] = within(stats).getAllByRole('checkbox', { name: 'Include retailer collaborations' }) as HTMLInputElement[];
+    expect(collabToggle!.checked && pairToggle!.checked).toBe(true);
+    await user.click(collabToggle!);
+    // The overview total and the pairings table keep every release; the ranking drops retailer releases.
+    expect(within(stats).getByText(collaborations.length.toLocaleString())).toBeTruthy();
+    expect(releaseTotal()).toBeLessThan(before);
+    expect(table('Brand pairs with the most collaborations').textContent).toBe(pairsBefore);
+    expect(localStorage.getItem('designer-map:stats-retailer-collabs')).toBe('off');
+    await user.click(pairToggle!);
+    expect(pairBrands().some((name) => retailers.has(name))).toBe(false);
+    expect(localStorage.getItem('designer-map:stats-retailer-pairs')).toBe('off');
   });
 
   it('opens a shared link\'s brand and year, and keeps the address bar in step', () => {
@@ -535,10 +591,10 @@ describe('City windows', () => {
     const paris = screen.getByRole('dialog', { name: 'Paris' });
     const grid = within(paris).getByRole('list', { name: 'Brands in Paris' });
     expect(grid.querySelectorAll('.city-icon-frame').length).toBe(within(grid).getAllByRole('button').length);
-    const find = within(paris).getByRole('combobox');
+    const find = within(paris).getByRole('combobox', { name: 'Find:' });
     await user.click(find);
     // The dropdown lists every brand here, not just the first page.
-    const options = within(paris).getAllByRole('option');
+    const options = within(within(paris).getByRole('listbox')).getAllByRole('option');
     expect(options.length).toBe(within(grid).getAllByRole('button').length);
     expect(options.length).toBeGreaterThan(60);
     await user.type(find, 'louis v');
@@ -550,18 +606,18 @@ describe('City windows', () => {
     expect(within(screen.getByRole('list', { name: 'Brands in Paris' })).getAllByRole('button').length).toBeGreaterThan(60);
   });
 
-  it('opens city windows three icons wide, just tall enough for their brands up to four rows', () => {
+  it('opens city windows four icons wide, just tall enough for their brands up to four rows', () => {
     const one = cityWindowSize(1);
-    const three = cityWindowSize(3);
-    const six = cityWindowSize(6);
-    const twelve = cityWindowSize(12);
+    const four = cityWindowSize(4);
+    const eight = cityWindowSize(8);
     const sixteen = cityWindowSize(16);
-    expect(one).toEqual(three);
-    expect(six.width).toBe(one.width);
-    expect(six.height).toBeGreaterThan(one.height);
-    expect(twelve.height).toBe(sixteen.height);
+    const twenty = cityWindowSize(20);
+    expect(one).toEqual(four);
+    expect(eight.width).toBe(one.width);
+    expect(eight.height).toBeGreaterThan(one.height);
+    expect(sixteen.height).toBe(twenty.height);
     // The scrollbar's gutter is always reserved, so scrolling windows keep the same width.
-    expect(sixteen.width).toBe(twelve.width);
+    expect(twenty.width).toBe(sixteen.width);
     expect(cityWindowSize(200)).toEqual(sixteen);
     // A one-brand window isn't widened to the Properties window minimum.
     const area = { width: 1400, height: 900 };
@@ -608,6 +664,73 @@ describe('City windows', () => {
     expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
     await user.click(within(france).getByRole('button', { name: 'Chanel' }));
     expect(screen.getByRole('dialog', { name: 'Chanel' })).toBeTruthy();
+  });
+
+  it('switches a place window to a Details table, sorts it and remembers both choices', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    openCity('Paris');
+    const paris = screen.getByRole('dialog', { name: 'Paris' });
+    await user.click(within(paris).getByRole('combobox', { name: 'Sort by' }));
+    await user.click(screen.getByRole('option', { name: 'By Founded' }));
+    const icons = within(within(paris).getByRole('list', { name: 'Brands in Paris' })).getAllByRole('button').map((b) => b.textContent);
+    await user.click(within(paris).getByRole('combobox', { name: 'View' }));
+    await user.click(screen.getByRole('option', { name: 'Details' }));
+    const table = within(paris).getByRole('table', { name: 'Brands in Paris' });
+    const rows = within(table).getAllByRole('row').filter((row) => within(row).queryAllByRole('cell').length);
+    expect(rows.map((row) => within(row).getAllByRole('cell')[0]!.textContent)).toEqual(icons);
+    // Each section sorts on its own; check the brands based here (before the "Founded here" divider).
+    const based = within(table).getAllByRole('row').slice(1);
+    const divider = based.findIndex((row) => !within(row).queryAllByRole('cell').length);
+    const years = (divider < 0 ? based : based.slice(0, divider)).map((row) => Number(within(row).getAllByRole('cell')[1]!.textContent)).filter(Number.isFinite);
+    expect(years).toEqual([...years].sort((a, b) => a - b));
+    // Column headers sort too: Tier runs from High Luxury down.
+    await user.click(within(table).getByRole('button', { name: 'Tier' }));
+    const tiers = within(table).getAllByRole('row').filter((row) => within(row).queryAllByRole('cell').length).map((row) => within(row).getAllByRole('cell')[2]!.textContent);
+    expect(tiers[0]).toBe('High Luxury');
+    await user.click(within(table).getByRole('button', { name: 'Dior' }));
+    expect(screen.getByRole('dialog', { name: 'Dior' })).toBeTruthy();
+    expect([localStorage.getItem('designer-map:place-view'), localStorage.getItem('designer-map:place-sort')]).toEqual(['details', 'tier']);
+  });
+
+  it('right-clicks a brand in a place window to open it, show it on the map or open its location', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    openCity('Paris');
+    const grid = () => within(screen.getByRole('dialog', { name: 'Paris' })).getByRole('list', { name: 'Brands in Paris' });
+    fireEvent.contextMenu(within(grid()).getByRole('button', { name: 'Dior' }), { clientX: 50, clientY: 50 });
+    let menu = screen.getByRole('menu', { name: 'Dior actions' });
+    expect(within(menu).getAllByRole('menuitem').map((item) => item.textContent)).toEqual(['Open', 'Show on Map', 'Open France']);
+    await user.click(within(menu).getByRole('menuitem', { name: 'Show on Map' }));
+    // Selected and revealed on the map, without a Properties window.
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    expect(screen.queryByRole('dialog', { name: 'Dior' })).toBeNull();
+    fireEvent.contextMenu(within(grid()).getByRole('button', { name: 'Dior' }), { clientX: 50, clientY: 50 });
+    menu = screen.getByRole('menu', { name: 'Dior actions' });
+    await user.click(within(menu).getByRole('menuitem', { name: 'Open France' }));
+    expect(screen.getByRole('dialog', { name: 'France' })).toBeTruthy();
+    const france = within(screen.getByRole('dialog', { name: 'France' })).getByRole('list', { name: 'Brands in France' });
+    fireEvent.contextMenu(within(france).getByRole('button', { name: 'Dior' }), { clientX: 50, clientY: 50 });
+    expect(within(screen.getByRole('menu', { name: 'Dior actions' })).getAllByRole('menuitem').map((item) => item.textContent))
+      .toEqual(['Open', 'Show on Map', 'Open Paris']);
+    await user.click(within(screen.getByRole('menu', { name: 'Dior actions' })).getByRole('menuitem', { name: 'Open' }));
+    expect(screen.getByRole('dialog', { name: 'Dior' })).toBeTruthy();
+  });
+
+  it('shows a place\'s brands on the map from its window', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    openCity('Paris');
+    await user.click(within(screen.getByRole('dialog', { name: 'Paris' })).getByRole('button', { name: 'Show on Map' }));
+    expect(graph.showCities).toHaveBeenLastCalledWith(['Paris']);
+    await user.click(within(screen.getByRole('dialog', { name: 'Paris' })).getByRole('button', { name: 'Dior' }));
+    await user.click(within(screen.getByRole('dialog', { name: 'Dior' })).getByRole('link', { name: 'France' }));
+    await user.click(within(screen.getByRole('dialog', { name: 'France' })).getByRole('button', { name: 'Show on Map' }));
+    const cities = graph.showCities.mock.lastCall![0] as string[];
+    expect(cities).toContain('Paris');
+    expect(new Set(cities).size).toBe(cities.length);
   });
 
   it('opens each city once, focusing an open city instead of repeating it', () => {

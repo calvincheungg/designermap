@@ -2,6 +2,7 @@ import type { StylesheetJson } from 'cytoscape';
 
 const FONT = '"Pixelated MS Sans Serif", Arial, sans-serif';
 const NAVY = '#000080';
+const COLLAB_RED = '#cc0000';
 
 /** Cytoscape stylesheet, styled like Windows 98 desktop icons and group boxes. */
 export const graphStyle: StylesheetJson = [
@@ -142,6 +143,27 @@ export const graphStyle: StylesheetJson = [
   {
     selector: 'node.focus',
     style: { 'border-width': 2, 'border-color': NAVY, 'border-style': 'dashed' },
+  },
+  // A selected brand's partners take the border of the line that reaches them.
+  {
+    selector: 'node.move-partner[kind = "house"]',
+    style: { 'border-width': 2, 'border-color': NAVY, 'border-style': 'solid' },
+  },
+  {
+    selector: 'node.collab-partner[kind = "house"]',
+    style: { 'border-width': 2, 'border-color': COLLAB_RED, 'border-style': 'dashed' },
+  },
+  {
+    // Linked both ways: navy border with a red dashed outline around it.
+    selector: 'node.move-partner.collab-partner[kind = "house"]',
+    style: {
+      'border-color': NAVY,
+      'border-style': 'solid',
+      'outline-width': 2,
+      'outline-color': COLLAB_RED,
+      'outline-style': 'dashed',
+      'outline-offset': 1,
+    },
   },
   {
     selector: 'edge.highlight',

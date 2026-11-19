@@ -151,13 +151,26 @@ work in this order to keep searches cheap:
      points to it), which pages normally and ends in a 404. Tell each agent to
      compare page 2 with page 1 and switch to `/tags/` if they match, and to
      report which URL scheme it used.
-     Split the page range across two or three parallel `web-fetch` agents
-     (for example 1–25, 26–60, 61+), and have each report the last page that
-     existed and its oldest article date, so you can confirm the crawl reached
-     the end. If an agent stops early, resume it with SendMessage or start
-     another one for the remaining pages. Ask each agent for one line per
-     collaboration, `partner(s) | year | title snippet`, with
-     retailer/store exclusives flagged.
+     **Crawl one brand at a time, with one agent at a time**, fetching pages
+     sequentially. Parallel agents trip Hypebeast's rate limit. Give each agent
+     about 12 pages (agents stop at 15 turns), and have it report each page's
+     date range, the last page that existed and its oldest article date, so you
+     can confirm the crawl reached the end. Then start the next agent at the
+     following page. If an agent stops early, resume it with SendMessage. Ask
+     each agent for one line per collaboration, `partner(s) | year | title
+     snippet`, with retailer/store exclusives flagged.
+     **Empty HTTP 202 responses are a throttle, not missing pages.** A page
+     that really doesn't exist returns 404. When pages come back as 202 with an
+     empty body, switch to the **all-caps tag archive**,
+     `https://hypebeast.com/tags/<SLUG IN CAPITALS>/page/N` (for example
+     `/tags/STUSSY/`, `/tags/PUMA/`). It often still serves pages that
+     `/brands/`, `/tags/<slug>/` and `/tags/<Slug>/` block. Its page numbers
+     are offset from `/brands/`, so match pages by article dates; tell the
+     agent the oldest date already read. Authorise one retry per empty page
+     (agents won't retry a 202 unless told to), and stop after two
+     consecutive empty pages. If every scheme returns 202s, stop for a few
+     hours rather than retrying, record the gap in the research log (step 6),
+     and cover the missing years with the web searches below.
    - Run archive-crawl `web-fetch` agents with `model: "haiku"`; use
      `model: "sonnet"` for history and career fact-checks.
    - **Second list source:** for Japanese brands, also read the Fashion Press
@@ -193,6 +206,19 @@ work in this order to keep searches cheap:
    `complete` (whether the crawl reached the archive's last page), and the
    `lastPage` and `oldestYear` the crawl reported. After an incremental crawl,
    update only `date`, keeping the earlier `lastPage` and `oldestYear`.
+   **Unfinished crawls** get `complete: false`, `lastPage` and `oldestYear`
+   for the furthest page read, and one comment line directly above the
+   entry, in this format:
+   `// Read to page 87 (Oct 2012). Still empty: 75–80 (2013) and 88+ (end not yet found).`
+   Name the URL scheme only when it isn't `/brands/` (`Read /tags/STUSSY/ to
+   page 151 (Jul 2009). …`), and append `; web searches only` when you
+   covered the gaps with searches instead. When you resume, rewrite that one
+   line in place to list only what is still missing; delete it once the crawl
+   is complete. Don't record gaps that were filled, untried URLs or other
+   history in these comments.
+   Edit only the entries for brands you searched. Leave every other entry,
+   comment and line order untouched; add a new key at its alphabetical
+   position instead of re-sorting or rewriting the file.
    Then run `npm run check && npm test` once after all brands are added.
 7. In the summary, say which angles were searched and how far the archive
    crawl reached (last page, oldest year), so gaps are visible. List partners

@@ -446,7 +446,7 @@ describe('brand selection on the map', () => {
     expect(routes('labelDesigner')[0]!.source).toBe(nodeId.house('family'));
   });
 
-  it('reveals nested-label context and connected parents when their main brand is filtered out', () => {
+  it('reveals nested-label context, and connected labels without their uninvolved parents', () => {
     graph.setHouseFilter(new Set(['nestedLabel']));
     graph.select({ kind: 'house', id: 'family' });
     expect(openHouses()).toEqual(['family', 'label']);
@@ -454,8 +454,8 @@ describe('brand selection on the map', () => {
     expect(openHouses()).toEqual(['family', 'label', 'nestedLabel']);
     graph.setHouseFilter(new Set(['label', 'manual']));
     graph.select({ kind: 'house', id: 'manual' });
-    expect(openHouses()).toEqual(['family', 'manual']);
-    expect(routes('labelDesigner')[0]!.source).toBe(nodeId.house('family'));
+    expect(openHouses()).toEqual(['label', 'manual']);
+    expect(routes('labelDesigner')[0]!.source).toBe(nodeId.house('label'));
   });
 
   it('opens an individual city without expanding neighbouring cities', () => {

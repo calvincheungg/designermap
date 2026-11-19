@@ -84,6 +84,7 @@ export function HelpContent() {
         <li>Click a city pin to see its brands. Choose whether cities open in windows or on the map under Start ▸ Open cities.</li>
         <li>Click a brand to select it: the map shows its connections and its Properties window opens.</li>
         <li>Use the clock in the taskbar to pick a year, or press Play to watch the map grow over time.</li>
+        <li>Start ▸ List View shows every brand, group, designer, career role, collaboration and location in a spreadsheet, one sheet tab each. Right-click a cell to filter by it, drag or shift-click to select and copy a range, try Insert ▸ Chart and the PivotTable tab, and use File ▸ Save As CSV to export. Type in its formula bar to search. Its sorting, filters and search only change that list, never the map.</li>
         <li>Start ▸ Documents lists what you opened recently. Start ▸ Reset View clears everything and starts again.</li>
       </ul>
     </ProfileSection>

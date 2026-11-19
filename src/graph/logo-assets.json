@@ -7,6 +7,14 @@
     "background": "rgb(229, 25, 15)",
     "bytes": 7192
   },
+  "10_corso_como.webp": {
+    "hash": "c128adaedd49c234",
+    "backgroundVersion": 2,
+    "file": "c128adaedd49c234.webp",
+    "ratio": 1.910828025477707,
+    "background": "rgb(242, 242, 242)",
+    "bytes": 3100
+  },
   "10deep.webp": {
     "hash": "cd8172ab40ac7db3",
     "backgroundVersion": 2,
@@ -54,6 +62,14 @@
     "ratio": 4.141176470588236,
     "background": "rgb(250, 250, 250)",
     "bytes": 6254
+  },
+  "40oz_nyc.png": {
+    "hash": "bba433ea6571d597",
+    "backgroundVersion": 2,
+    "file": "bba433ea6571d597.webp",
+    "ratio": 0.96,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 2772
   },
   "424.png": {
     "hash": "058d6fb73b82d608",
@@ -103,6 +119,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 6046
   },
+  "a_beams.webp": {
+    "hash": "f1991420c099386d",
+    "backgroundVersion": 2,
+    "file": "f1991420c099386d.webp",
+    "ratio": 1.7777777777777777,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 32788
+  },
   "a_cold_wall.jpg": {
     "hash": "4931732a95a86f18",
     "backgroundVersion": 2,
@@ -119,6 +143,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 2776
   },
+  "a_ma_maniere.png": {
+    "hash": "2c668fe17b8bd072",
+    "backgroundVersion": 2,
+    "file": "2c668fe17b8bd072.webp",
+    "ratio": 4.395604395604396,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 6482
+  },
   "a_society.png": {
     "hash": "f89a4285d0e213ce",
     "backgroundVersion": 2,
@@ -126,6 +158,14 @@
     "ratio": 5.696969696969697,
     "background": "rgb(255, 255, 255)",
     "bytes": 4418
+  },
+  "aape.jpg": {
+    "hash": "567e55a397533bff",
+    "backgroundVersion": 2,
+    "file": "567e55a397533bff.webp",
+    "ratio": 1.351010101010101,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 17700
   },
   "aaron_esh.webp": {
     "hash": "5ed4d1d5595fa7c2",
@@ -206,6 +246,14 @@
     "ratio": 4.7155172413793105,
     "background": "rgb(255, 255, 255)",
     "bytes": 7276
+  },
+  "afew.jpg": {
+    "hash": "f7fd2b0af1570cee",
+    "backgroundVersion": 2,
+    "file": "f7fd2b0af1570cee.webp",
+    "ratio": 3.7096774193548385,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 3574
   },
   "affliction.jpeg": {
     "hash": "718384abd5717840",
@@ -551,6 +599,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 2252
   },
+  "apocable.png": {
+    "hash": "17719a4946049294",
+    "backgroundVersion": 2,
+    "file": "17719a4946049294.webp",
+    "ratio": 0.885593220338983,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 4164
+  },
   "apresse.svg": {
     "hash": "1d88f24ec4a7ce83",
     "backgroundVersion": 2,
@@ -607,13 +663,29 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 2394
   },
-  "armani.jpg": {
-    "hash": "ca4904f74181cdab",
+  "armani_ea7.png": {
+    "hash": "d8928e0f6eb87909",
     "backgroundVersion": 2,
-    "file": "ca4904f74181cdab.webp",
-    "ratio": 1.8220640569395017,
+    "file": "d8928e0f6eb87909.webp",
+    "ratio": 1.7826086956521738,
     "background": "rgb(255, 255, 255)",
-    "bytes": 7400
+    "bytes": 6292
+  },
+  "armani_exchange.webp": {
+    "hash": "3c42c70135dceb48",
+    "backgroundVersion": 2,
+    "file": "3c42c70135dceb48.webp",
+    "ratio": 2.272727272727273,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 2586
+  },
+  "armani_prive.svg": {
+    "hash": "4f172f8cbd18f471",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 2.959537572254335,
+    "background": "#ffffff",
+    "bytes": 8678
   },
   "artist_proof.png": {
     "hash": "302abe5c39005373",
@@ -678,6 +750,14 @@
     "ratio": 0.77734375,
     "background": "rgb(255, 255, 255)",
     "bytes": 22134
+  },
+  "atmos.png": {
+    "hash": "fdc6aa633a9b6760",
+    "backgroundVersion": 2,
+    "file": "fdc6aa633a9b6760.webp",
+    "ratio": 4.289256198347108,
+    "background": "#ffffff",
+    "bytes": 8332
   },
   "aton.png": {
     "hash": "43c8cc40ce881d20",
@@ -751,6 +831,14 @@
     "background": "#ffffff",
     "bytes": 2504
   },
+  "baby_milo.webp": {
+    "hash": "aa676813f3b1b2ec",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 8824
+  },
   "babylon.png": {
     "hash": "5285bce831ae80e6",
     "backgroundVersion": 2,
@@ -766,6 +854,14 @@
     "ratio": 2.8131868131868134,
     "background": "rgb(255, 255, 255)",
     "bytes": 7992
+  },
+  "bait.jpg": {
+    "hash": "b9901db08112120e",
+    "backgroundVersion": 2,
+    "file": "b9901db08112120e.webp",
+    "ratio": 1.8843537414965987,
+    "background": "rgb(254, 254, 254)",
+    "bytes": 12628
   },
   "baklava.webp": {
     "hash": "07c690a07c42b341",
@@ -895,6 +991,46 @@
     "background": "#ffffff",
     "bytes": 5406
   },
+  "beams_boy.svg": {
+    "hash": "2c1662482e4467eb",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1,
+    "background": "#ffffff",
+    "bytes": 3340
+  },
+  "beams_f.png": {
+    "hash": "1fb67da16f5de866",
+    "backgroundVersion": 2,
+    "file": "1fb67da16f5de866.webp",
+    "ratio": 3.17877094972067,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 7398
+  },
+  "beams_japan.png": {
+    "hash": "845272bd74444650",
+    "backgroundVersion": 2,
+    "file": "845272bd74444650.webp",
+    "ratio": 0.7725490196078432,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 3904
+  },
+  "beams_lights.jpeg": {
+    "hash": "e0e699568b115d4e",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1.7962962962962963,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 9874
+  },
+  "beams_plus.png": {
+    "hash": "84ff783c8cd2bfd8",
+    "backgroundVersion": 2,
+    "file": "84ff783c8cd2bfd8.webp",
+    "ratio": 4.301075268817204,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5260
+  },
   "beautiful_people.jpeg": {
     "hash": "cc66e8275c2cf266",
     "backgroundVersion": 2,
@@ -902,6 +1038,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 3988
+  },
+  "beauty_and_youth.png": {
+    "hash": "a33b9ccb19f2704d",
+    "backgroundVersion": 2,
+    "file": "a33b9ccb19f2704d.webp",
+    "ratio": 1.3645833333333333,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 7846
   },
   "bed_jw_ford.webp": {
     "hash": "5c6a6cb06fd3050b",
@@ -1022,6 +1166,14 @@
     "ratio": 1.5609756097560976,
     "background": "#ffffff",
     "bytes": 12508
+  },
+  "billy_reid.png": {
+    "hash": "0548d58e08c4e1c8",
+    "backgroundVersion": 2,
+    "file": "0548d58e08c4e1c8.webp",
+    "ratio": 2.6965174129353233,
+    "background": "#ffffff",
+    "bytes": 7078
   },
   "birdwell.png": {
     "hash": "8665e69dd50f3fc7",
@@ -1167,6 +1319,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 8650
   },
+  "boss.webp": {
+    "hash": "180b7db73f8fa17f",
+    "backgroundVersion": 2,
+    "file": "180b7db73f8fa17f.webp",
+    "ratio": 2.6853146853146854,
+    "background": "#ffffff",
+    "bytes": 4684
+  },
   "bottega_veneta.jpg": {
     "hash": "b88f12d76b4c105f",
     "backgroundVersion": 2,
@@ -1271,6 +1431,14 @@
     "background": "#ffffff",
     "bytes": 3864
   },
+  "bstn.png": {
+    "hash": "309a706cab43d587",
+    "backgroundVersion": 2,
+    "file": "309a706cab43d587.webp",
+    "ratio": 2.0314465408805034,
+    "background": "rgb(25, 24, 30)",
+    "bytes": 4648
+  },
   "bstroy.jpeg": {
     "hash": "b980c6ce01b096b9",
     "backgroundVersion": 2,
@@ -1286,6 +1454,14 @@
     "ratio": 2.890845070422535,
     "background": "#ffffff",
     "bytes": 6640
+  },
+  "buffalo.png": {
+    "hash": "e42b801cc22aafb6",
+    "backgroundVersion": 2,
+    "file": "e42b801cc22aafb6.webp",
+    "ratio": 1.2406639004149378,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 13286
   },
   "bulgari.svg": {
     "hash": "0e472cc466481288",
@@ -1374,6 +1550,14 @@
     "ratio": 1.0219560878243512,
     "background": "#ffffff",
     "bytes": 7594
+  },
+  "camper.png": {
+    "hash": "967a99cadb642043",
+    "backgroundVersion": 2,
+    "file": "967a99cadb642043.webp",
+    "ratio": 1.9842271293375395,
+    "background": "rgb(234, 86, 96)",
+    "bytes": 7636
   },
   "camperlab.jpeg": {
     "hash": "774eb5ee4f058375",
@@ -1535,6 +1719,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 6068
   },
+  "cdg_homme.jpg": {
+    "hash": "51441b0091591095",
+    "backgroundVersion": 2,
+    "file": "51441b0091591095.webp",
+    "ratio": 1.5081967213114753,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 14748
+  },
   "cdg_homme_deux.png": {
     "hash": "5f5e10ca58bdf607",
     "backgroundVersion": 2,
@@ -1550,6 +1742,14 @@
     "ratio": 2.111111111111111,
     "background": "rgb(255, 255, 255)",
     "bytes": 4330
+  },
+  "cdg_parfums.png": {
+    "hash": "4a25040e22e0ef38",
+    "backgroundVersion": 2,
+    "file": "4a25040e22e0ef38.webp",
+    "ratio": 4.838709677419355,
+    "background": "#ffffff",
+    "bytes": 5486
   },
   "cdg_play.avif": {
     "hash": "4381f780dbbdcffb",
@@ -1671,6 +1871,14 @@
     "background": "#ffffff",
     "bytes": 6326
   },
+  "chopard.png": {
+    "hash": "e125cc0456f4067b",
+    "backgroundVersion": 2,
+    "file": "e125cc0456f4067b.webp",
+    "ratio": 1.7777777777777777,
+    "background": "#ffffff",
+    "bytes": 6010
+  },
   "chopova_lowena.jpeg": {
     "hash": "351ac169e3e7a006",
     "backgroundVersion": 2,
@@ -1686,6 +1894,14 @@
     "ratio": 1.3333333333333333,
     "background": "rgb(255, 255, 255)",
     "bytes": 8320
+  },
+  "christian_dada.jpeg": {
+    "hash": "d7ee357e9540ccfc",
+    "backgroundVersion": 2,
+    "file": "d7ee357e9540ccfc.webp",
+    "ratio": 6.706666666666667,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 10072
   },
   "christian_louboutin.svg": {
     "hash": "8a51e0207873f1a1",
@@ -1839,6 +2055,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 3976
   },
+  "concepts.png": {
+    "hash": "d41efe87fde74772",
+    "backgroundVersion": 2,
+    "file": "d41efe87fde74772.webp",
+    "ratio": 0.9503722084367245,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 14298
+  },
   "converse.svg": {
     "hash": "9da3436b746ba8d9",
     "backgroundVersion": 2,
@@ -1846,6 +2070,22 @@
     "ratio": 1.4880952380952381,
     "background": "#ffffff",
     "bytes": 5575
+  },
+  "coogi.webp": {
+    "hash": "846af5b62db4a43a",
+    "backgroundVersion": 2,
+    "file": "846af5b62db4a43a.webp",
+    "ratio": 1.910828025477707,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5018
+  },
+  "copenhagen_studios.png": {
+    "hash": "8945a79cac890b48",
+    "backgroundVersion": 2,
+    "file": "8945a79cac890b48.webp",
+    "ratio": 3,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 4590
   },
   "coperni.webp": {
     "hash": "e39bc523f3e7e3d8",
@@ -1894,6 +2134,14 @@
     "ratio": 5.291005291005291,
     "background": "#ffffff",
     "bytes": 4748
+  },
+  "cottweiler.jpg": {
+    "hash": "8cfc8e99dc26e2ce",
+    "backgroundVersion": 2,
+    "file": "8cfc8e99dc26e2ce.webp",
+    "ratio": 3.9722222222222223,
+    "background": "rgb(1, 1, 1)",
+    "bytes": 2760
   },
   "county_of_milan.svg": {
     "hash": "848093eb1b8403c8",
@@ -2062,6 +2310,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 17786
+  },
+  "diaspora_skateboards.jpeg": {
+    "hash": "7441471c22976abd",
+    "backgroundVersion": 2,
+    "file": "7441471c22976abd.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 31156
   },
   "dickies.svg": {
     "hash": "1efe2812368cc853",
@@ -2383,6 +2639,22 @@
     "background": "#ffffff",
     "bytes": 5286
   },
+  "emporio_armani.jpg": {
+    "hash": "ca4904f74181cdab",
+    "backgroundVersion": 2,
+    "file": "ca4904f74181cdab.webp",
+    "ratio": 1.8220640569395017,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 7400
+  },
+  "end.png": {
+    "hash": "508a2bc8760ea4ac",
+    "backgroundVersion": 2,
+    "file": "508a2bc8760ea4ac.webp",
+    "ratio": 1.8,
+    "background": "#ffffff",
+    "bytes": 3474
+  },
   "enfin_leve.png": {
     "hash": "e6872663f51c1a90",
     "backgroundVersion": 2,
@@ -2527,6 +2799,22 @@
     "background": "rgb(0, 0, 0)",
     "bytes": 7696
   },
+  "ewing.webp": {
+    "hash": "e2082ae31c53a0d2",
+    "backgroundVersion": 2,
+    "file": "e2082ae31c53a0d2.webp",
+    "ratio": 1.2083333333333333,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 20962
+  },
+  "extra_butter.png": {
+    "hash": "32dbaa77ad6ed34c",
+    "backgroundVersion": 2,
+    "file": "32dbaa77ad6ed34c.webp",
+    "ratio": 1.667883211678832,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 14164
+  },
   "eye_junya.png": {
     "hash": "0ae450b1dd9ca085",
     "backgroundVersion": 2,
@@ -2558,6 +2846,14 @@
     "ratio": 1.621082621082621,
     "background": "rgb(255, 255, 255)",
     "bytes": 7484
+  },
+  "faherty.jpg": {
+    "hash": "8b553d2eb6d83e5e",
+    "backgroundVersion": 2,
+    "file": "8b553d2eb6d83e5e.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 15798
   },
   "faith_connexion.webp": {
     "hash": "82e01690c7680079",
@@ -2703,6 +2999,22 @@
     "background": "#ffffff",
     "bytes": 8560
   },
+  "foot_the_coacher.jpeg": {
+    "hash": "32b9ffbe5617dd03",
+    "backgroundVersion": 2,
+    "file": "32b9ffbe5617dd03.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 14808
+  },
+  "footpatrol.png": {
+    "hash": "e05508fe220fe201",
+    "backgroundVersion": 2,
+    "file": "e05508fe220fe201.webp",
+    "ratio": 8.883928571428571,
+    "background": "#ffffff",
+    "bytes": 2536
+  },
   "forever_21.png": {
     "hash": "ffc358839e603270",
     "backgroundVersion": 2,
@@ -2735,6 +3047,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 2708
   },
+  "fp_movement.png": {
+    "hash": "6ead78ca162e480b",
+    "backgroundVersion": 2,
+    "file": "6ead78ca162e480b.webp",
+    "ratio": 4,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5502
+  },
   "fr2.png": {
     "hash": "ab42e3e1faf96c48",
     "backgroundVersion": 2,
@@ -2750,6 +3070,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 14080
+  },
+  "freaks_store.jpeg": {
+    "hash": "2d91153a3e19fe83",
+    "backgroundVersion": 2,
+    "file": "2d91153a3e19fe83.webp",
+    "ratio": 5.774193548387097,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 7558
   },
   "fred_perry.png": {
     "hash": "197ce9d8eb208c5c",
@@ -2782,6 +3110,14 @@
     "ratio": 2.7346938775510203,
     "background": "#ffffff",
     "bytes": 4302
+  },
+  "fubu.webp": {
+    "hash": "7b18e8ffcc0544be",
+    "backgroundVersion": 2,
+    "file": "7b18e8ffcc0544be.webp",
+    "ratio": 1.910828025477707,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 1898
   },
   "fugazi.png": {
     "hash": "8804c4e6529c0be1",
@@ -2903,6 +3239,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 2682
   },
+  "gh_bass.png": {
+    "hash": "fba1c9586e771d25",
+    "backgroundVersion": 2,
+    "file": "fba1c9586e771d25.webp",
+    "ratio": 1.9361702127659575,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 13220
+  },
   "gimaguas.png": {
     "hash": "c20327156d16278f",
     "backgroundVersion": 2,
@@ -2911,6 +3255,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 4598
   },
+  "giorgio_armani.jpg": {
+    "hash": "65d9eeba9bbda0dd",
+    "backgroundVersion": 2,
+    "file": "65d9eeba9bbda0dd.webp",
+    "ratio": 2.0294117647058822,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 8686
+  },
   "girls_dont_cry.jpg": {
     "hash": "c10e8ddb7523245d",
     "backgroundVersion": 2,
@@ -2918,6 +3270,14 @@
     "ratio": 0.9002932551319648,
     "background": "rgb(248, 248, 248)",
     "bytes": 36246
+  },
+  "gitman_bros.jpeg": {
+    "hash": "35362d68b147b4e9",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5934
   },
   "givenchy.png": {
     "hash": "17c76ae59100332a",
@@ -3014,6 +3374,14 @@
     "ratio": 5.049180327868853,
     "background": "rgb(255, 255, 255)",
     "bytes": 11294
+  },
+  "green_label_relaxing.png": {
+    "hash": "6e0f3da692a7328f",
+    "backgroundVersion": 2,
+    "file": "6e0f3da692a7328f.webp",
+    "ratio": 1.7966101694915255,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5050
   },
   "greg_lauren.webp": {
     "hash": "9c92b5e0dc8d638d",
@@ -3151,6 +3519,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 2852
   },
+  "hbx.png": {
+    "hash": "331189b70cb1f2d2",
+    "backgroundVersion": 2,
+    "file": "331189b70cb1f2d2.webp",
+    "ratio": 2.6315789473684212,
+    "background": "#ffffff",
+    "bytes": 2708
+  },
   "head_porter.png": {
     "hash": "f569dee239607d1c",
     "backgroundVersion": 2,
@@ -3182,6 +3558,14 @@
     "ratio": 5.075,
     "background": "rgb(255, 255, 255)",
     "bytes": 2814
+  },
+  "hellstar.png": {
+    "hash": "b98474e3023dd3a4",
+    "backgroundVersion": 2,
+    "file": "b98474e3023dd3a4.webp",
+    "ratio": 0.9822335025380711,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 15822
   },
   "helly_hansen.png": {
     "hash": "bfd9498c90d39313",
@@ -3303,6 +3687,22 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 20508
   },
+  "holzweiler.svg": {
+    "hash": "aaef541d1284a947",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 8.187134502923977,
+    "background": "#ffffff",
+    "bytes": 7014
+  },
+  "homme_plisse.jpg": {
+    "hash": "fc1bb837aac22b80",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1.0858369098712446,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 9974
+  },
   "honor_the_gift.png": {
     "hash": "0587d95e10df7428",
     "backgroundVersion": 2,
@@ -3318,6 +3718,14 @@
     "ratio": 1.2605790645879733,
     "background": "rgb(255, 255, 255)",
     "bytes": 16948
+  },
+  "huckberry.jpg": {
+    "hash": "9b2e1d3310ae6cd4",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1.1774193548387097,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 12484
   },
   "huf.png": {
     "hash": "f7ee1ac9469c186d",
@@ -3335,6 +3743,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 6964
   },
+  "hugo.png": {
+    "hash": "d057c36cf3c3e7d4",
+    "backgroundVersion": 2,
+    "file": "d057c36cf3c3e7d4.webp",
+    "ratio": 1,
+    "background": "#ffffff",
+    "bytes": 4590
+  },
   "hugo_boss.png": {
     "hash": "39f4752cd7dd9edf",
     "backgroundVersion": 2,
@@ -3350,6 +3766,14 @@
     "ratio": 1.3994708994708995,
     "background": "rgb(255, 255, 255)",
     "bytes": 10522
+  },
+  "hummel.svg": {
+    "hash": "faf49b224e3321a7",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1.1511111111111112,
+    "background": "#ffffff",
+    "bytes": 7709
   },
   "hunter.png": {
     "hash": "9416fa37eaf4ab53",
@@ -3430,6 +3854,14 @@
     "ratio": 1.0694444444444444,
     "background": "rgb(242, 243, 248)",
     "bytes": 56684
+  },
+  "im_men.jpeg": {
+    "hash": "7431a61b9984f2e5",
+    "backgroundVersion": 2,
+    "file": "7431a61b9984f2e5.webp",
+    "ratio": 0.7545126353790613,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 14444
   },
   "independent_truck.webp": {
     "hash": "1b3f8293f6e8d0db",
@@ -3671,6 +4103,14 @@
     "background": "#ffffff",
     "bytes": 9604
   },
+  "john_undercover.jpg": {
+    "hash": "29195901fd250aac",
+    "backgroundVersion": 2,
+    "file": "29195901fd250aac.webp",
+    "ratio": 1,
+    "background": "rgb(254, 237, 243)",
+    "bytes": 16136
+  },
   "johnvarvatos.png": {
     "hash": "1acd82a4c1ce765a",
     "backgroundVersion": 2,
@@ -3694,6 +4134,14 @@
     "ratio": 1.7777777777777777,
     "background": "#ffffff",
     "bytes": 7812
+  },
+  "juice.webp": {
+    "hash": "3280e1df927cb517",
+    "backgroundVersion": 2,
+    "file": "3280e1df927cb517.webp",
+    "ratio": 2.253731343283582,
+    "background": "#ffffff",
+    "bytes": 6562
   },
   "juicy_couture.png": {
     "hash": "5d313aad84ea4df9",
@@ -3919,13 +4367,21 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 3888
   },
-  "kidill.png": {
-    "hash": "7622b4561e1cfab2",
+  "kicks_lab.png": {
+    "hash": "fd21513434ed8d40",
     "backgroundVersion": 2,
-    "file": "7622b4561e1cfab2.webp",
-    "ratio": 3.6216216216216215,
-    "background": "rgb(35, 24, 21)",
-    "bytes": 2794
+    "file": "fd21513434ed8d40.webp",
+    "ratio": 6.3478260869565215,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 4990
+  },
+  "kidill.jpg": {
+    "hash": "d5b362f3b97afe83",
+    "backgroundVersion": 2,
+    "file": "d5b362f3b97afe83.webp",
+    "ratio": 2.966292134831461,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 8986
   },
   "kids_love_gaite.jpg": {
     "hash": "c7a07451274e6362",
@@ -4079,6 +4535,14 @@
     "background": "#ffffff",
     "bytes": 2170
   },
+  "lakai.png": {
+    "hash": "e001929d20e91187",
+    "backgroundVersion": 2,
+    "file": "e001929d20e91187.webp",
+    "ratio": 1.8285714285714285,
+    "background": "#ffffff",
+    "bytes": 13362
+  },
   "lanvin.png": {
     "hash": "687a64c587bab3cb",
     "backgroundVersion": 2,
@@ -4094,6 +4558,14 @@
     "ratio": 1.910828025477707,
     "background": "rgb(255, 255, 255)",
     "bytes": 3180
+  },
+  "lauren.jpg": {
+    "hash": "d34371d7f0991bd6",
+    "backgroundVersion": 2,
+    "file": "d34371d7f0991bd6.webp",
+    "ratio": 1.7990196078431373,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 10194
   },
   "lazy_oaf.jpeg": {
     "hash": "a459307d5ff4e620",
@@ -4223,6 +4695,14 @@
     "background": "#ffffff",
     "bytes": 3508
   },
+  "livestock.jpeg": {
+    "hash": "946a3241a7326f43",
+    "backgroundVersion": 2,
+    "file": "946a3241a7326f43.webp",
+    "ratio": 6.253731343283582,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 6666
+  },
   "llbean.webp": {
     "hash": "15e1c313aaf48fdc",
     "backgroundVersion": 2,
@@ -4254,6 +4734,14 @@
     "ratio": 4.612612612612613,
     "background": "#ffffff",
     "bytes": 5372
+  },
+  "lotto.svg": {
+    "hash": "5ca0a659734bf007",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 4.047430830039525,
+    "background": "#ffffff",
+    "bytes": 3811
   },
   "louis_vuitton.webp": {
     "hash": "23fde9504230dce7",
@@ -4527,6 +5015,14 @@
     "background": "#ffffff",
     "bytes": 4812
   },
+  "marmot.png": {
+    "hash": "07b8900ec9f5e106",
+    "backgroundVersion": 2,
+    "file": "07b8900ec9f5e106.webp",
+    "ratio": 4.988571428571428,
+    "background": "#ffffff",
+    "bytes": 10374
+  },
   "marni.png": {
     "hash": "ca1187d060009939",
     "backgroundVersion": 2,
@@ -4534,6 +5030,14 @@
     "ratio": 4,
     "background": "#ffffff",
     "bytes": 2318
+  },
+  "marsell.png": {
+    "hash": "873ccee0510200eb",
+    "backgroundVersion": 2,
+    "file": "873ccee0510200eb.webp",
+    "ratio": 2.859848484848485,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5922
   },
   "martine_rose.png": {
     "hash": "8f01711e888e5e89",
@@ -4567,6 +5071,14 @@
     "background": "#ffffff",
     "bytes": 16572
   },
+  "mastermind_world.png": {
+    "hash": "155e7063dc4b9e9a",
+    "backgroundVersion": 2,
+    "file": "155e7063dc4b9e9a.webp",
+    "ratio": 5.5,
+    "background": "rgb(0, 0, 0)",
+    "bytes": 4610
+  },
   "masterpiece.jpeg": {
     "hash": "46f2b4878203b7af",
     "backgroundVersion": 2,
@@ -4598,6 +5110,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 3248
+  },
+  "max_and_co.png": {
+    "hash": "11a663fc8f6dc2c1",
+    "backgroundVersion": 2,
+    "file": "11a663fc8f6dc2c1.webp",
+    "ratio": 3.7142857142857144,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5884
   },
   "max_mara.png": {
     "hash": "b1c21c45806c78f7",
@@ -4631,6 +5151,14 @@
     "background": "#ffffff",
     "bytes": 16962
   },
+  "mcq.png": {
+    "hash": "19252f2991e4e0d7",
+    "backgroundVersion": 2,
+    "file": "19252f2991e4e0d7.webp",
+    "ratio": 0.9672131147540983,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 9312
+  },
   "merrell.svg": {
     "hash": "8d4f1aa75f4bba67",
     "backgroundVersion": 2,
@@ -4654,6 +5182,14 @@
     "ratio": 9.523809523809524,
     "background": "rgb(255, 255, 255)",
     "bytes": 2796
+  },
+  "mhl.jpeg": {
+    "hash": "810d2aed7f3b0e7c",
+    "backgroundVersion": 2,
+    "file": "810d2aed7f3b0e7c.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 7950
   },
   "michael_kors.webp": {
     "hash": "8e533b2b00e83238",
@@ -4734,6 +5270,14 @@
     "ratio": 2.0317460317460316,
     "background": "#ffffff",
     "bytes": 7548
+  },
+  "mita.jpeg": {
+    "hash": "2b76873e1d7ee093",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5728
   },
   "mitchell_and_ness.png": {
     "hash": "769d4080901234c7",
@@ -5079,6 +5623,14 @@
     "background": "#ffffff",
     "bytes": 9360
   },
+  "nexus_vii.jpeg": {
+    "hash": "0e747495e616dce7",
+    "backgroundVersion": 2,
+    "file": "0e747495e616dce7.webp",
+    "ratio": 4.514285714285714,
+    "background": "rgb(254, 255, 255)",
+    "bytes": 11134
+  },
   "nicholas_daley.webp": {
     "hash": "128116744a55ca2a",
     "backgroundVersion": 2,
@@ -5119,6 +5671,14 @@
     "background": "#ffffff",
     "bytes": 2248
   },
+  "no_faith.jpeg": {
+    "hash": "18b4fc5aeb58fa96",
+    "backgroundVersion": 2,
+    "file": "18b4fc5aeb58fa96.webp",
+    "ratio": 0.8712121212121212,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 30106
+  },
   "noah.jpeg": {
     "hash": "e6761da3c679bed3",
     "backgroundVersion": 2,
@@ -5142,6 +5702,22 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 6140
+  },
+  "nom_de_guerre.png": {
+    "hash": "20ff93974ab7e282",
+    "backgroundVersion": 2,
+    "file": "20ff93974ab7e282.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 4038
+  },
+  "nomarhythm_textile.jpeg": {
+    "hash": "a1373f674d976d3e",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 0.7365269461077845,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 6861
   },
   "nomen_nescio.png": {
     "hash": "9cefb7b17ea91387",
@@ -5182,6 +5758,14 @@
     "ratio": 1,
     "background": "#ffffff",
     "bytes": 3288
+  },
+  "notre.png": {
+    "hash": "2c7633917afbc9f3",
+    "backgroundVersion": 2,
+    "file": "2c7633917afbc9f3.webp",
+    "ratio": 4,
+    "background": "#ffffff",
+    "bytes": 3978
   },
   "nudie_jeans.jpg": {
     "hash": "a30b67dcbb82d697",
@@ -5230,6 +5814,14 @@
     "ratio": 1.7777777777777777,
     "background": "#ffffff",
     "bytes": 3730
+  },
+  "officine_creative.png": {
+    "hash": "07a6f55826275fb0",
+    "backgroundVersion": 2,
+    "file": "07a6f55826275fb0.webp",
+    "ratio": 1.9408099688473521,
+    "background": "rgb(252, 254, 255)",
+    "bytes": 6804
   },
   "officine_generale.jpeg": {
     "hash": "a067781dbcde812f",
@@ -5375,6 +5967,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 3310
   },
+  "our_legacy_workshop.jpeg": {
+    "hash": "13ce7660ea0b9195",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1.0044642857142858,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 9056
+  },
   "outdoor_research.jpeg": {
     "hash": "b4bf543b31a2f2ad",
     "backgroundVersion": 2,
@@ -5406,6 +6006,14 @@
     "ratio": 0.859375,
     "background": "#ffffff",
     "bytes": 19738
+  },
+  "packer.png": {
+    "hash": "f29755e32423a7db",
+    "backgroundVersion": 2,
+    "file": "f29755e32423a7db.webp",
+    "ratio": 4.166666666666667,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 10940
   },
   "padmore_barnes.png": {
     "hash": "5d9626bbb9f736cc",
@@ -5486,6 +6094,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 10628
+  },
+  "pam.png": {
+    "hash": "62019fcbef94c45d",
+    "backgroundVersion": 2,
+    "file": "62019fcbef94c45d.webp",
+    "ratio": 1.9748427672955975,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5824
   },
   "pangaia.webp": {
     "hash": "f4b5e21b34e09e87",
@@ -5607,6 +6223,22 @@
     "background": "#ffffff",
     "bytes": 20776
   },
+  "penfield.webp": {
+    "hash": "8cf7be86b6fc25da",
+    "backgroundVersion": 2,
+    "file": "8cf7be86b6fc25da.webp",
+    "ratio": 2.73972602739726,
+    "background": "#ffffff",
+    "bytes": 11174
+  },
+  "perfect_moment.jpeg": {
+    "hash": "ce10229d3b7e8485",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5902
+  },
   "pero.png": {
     "hash": "34a326cd3dc1348c",
     "backgroundVersion": 2,
@@ -5703,6 +6335,14 @@
     "background": "rgb(4, 6, 8)",
     "bytes": 9456
   },
+  "pleats_please.png": {
+    "hash": "212a42cf91e12714",
+    "backgroundVersion": 2,
+    "file": "212a42cf91e12714.webp",
+    "ratio": 1,
+    "background": "#ffffff",
+    "bytes": 6982
+  },
   "polene.webp": {
     "hash": "f9c99c10b1df2dd4",
     "backgroundVersion": 2,
@@ -5710,6 +6350,14 @@
     "ratio": 1.910828025477707,
     "background": "rgb(255, 255, 255)",
     "bytes": 2386
+  },
+  "polo.jpeg": {
+    "hash": "bda9388ac692f731",
+    "backgroundVersion": 2,
+    "file": "bda9388ac692f731.webp",
+    "ratio": 0.5109090909090909,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 10070
   },
   "ponder_er.png": {
     "hash": "6a948c53e3cbaade",
@@ -5734,6 +6382,14 @@
     "ratio": 1.4612794612794613,
     "background": "rgb(255, 255, 255)",
     "bytes": 7934
+  },
+  "ppaco.png": {
+    "hash": "db3246bcfd71e284",
+    "backgroundVersion": 2,
+    "file": "db3246bcfd71e284.webp",
+    "ratio": 3.4285714285714284,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 2552
   },
   "prada.jpg": {
     "hash": "f863b939358056bc",
@@ -5807,6 +6463,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 12660
   },
+  "ps_paul_smith.jpeg": {
+    "hash": "bf081d421c20365a",
+    "backgroundVersion": 2,
+    "file": "bf081d421c20365a.webp",
+    "ratio": 0.9933333333333333,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 18848
+  },
   "psychobunny.jpeg": {
     "hash": "f79df9db7600381a",
     "backgroundVersion": 2,
@@ -5822,6 +6486,14 @@
     "ratio": 3.3980582524271843,
     "background": "rgb(255, 255, 255)",
     "bytes": 8852
+  },
+  "publish.jpeg": {
+    "hash": "87f79477851d3fff",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 3862
   },
   "pull_and_bear.png": {
     "hash": "679c91e28237661f",
@@ -5854,6 +6526,14 @@
     "ratio": 1,
     "background": "rgb(0, 0, 0)",
     "bytes": 2024
+  },
+  "purple_label.jpeg": {
+    "hash": "5bd4234634b1a189",
+    "backgroundVersion": 2,
+    "file": "5bd4234634b1a189.webp",
+    "ratio": 2.9197080291970803,
+    "background": "rgb(95, 61, 112)",
+    "bytes": 27732
   },
   "pyer_moss.avif": {
     "hash": "9c30bbd1ec7d9802",
@@ -5959,6 +6639,22 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 5252
   },
+  "ralph_lauren_collection.png": {
+    "hash": "ce5cc3ede16d158b",
+    "backgroundVersion": 2,
+    "file": "ce5cc3ede16d158b.webp",
+    "ratio": 4.624277456647399,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 4932
+  },
+  "ramidus.png": {
+    "hash": "c9d7df1db791f377",
+    "backgroundVersion": 2,
+    "file": "c9d7df1db791f377.webp",
+    "ratio": 0.9780564263322884,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 4068
+  },
   "rapha.png": {
     "hash": "71f3fcbba8da0865",
     "backgroundVersion": 2,
@@ -5982,6 +6678,14 @@
     "ratio": 2.4265402843601898,
     "background": "rgb(8, 77, 44)",
     "bytes": 8424
+  },
+  "ray_beams.png": {
+    "hash": "808d6866e19b782d",
+    "backgroundVersion": 2,
+    "file": "808d6866e19b782d.webp",
+    "ratio": 1.5830985915492957,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 6722
   },
   "rayban.jpg": {
     "hash": "b0edd8d01ca9dc41",
@@ -6095,6 +6799,14 @@
     "background": "#ffffff",
     "bytes": 21988
   },
+  "revenge.png": {
+    "hash": "d9d5ffffff62a8f8",
+    "backgroundVersion": 2,
+    "file": "d9d5ffffff62a8f8.webp",
+    "ratio": 1,
+    "background": "#ffffff",
+    "bytes": 7404
+  },
   "rhude.png": {
     "hash": "6412d6c5599acfa5",
     "backgroundVersion": 2,
@@ -6142,6 +6854,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 14404
+  },
+  "rlx.jpg": {
+    "hash": "b360808819c4e505",
+    "backgroundVersion": 2,
+    "file": "b360808819c4e505.webp",
+    "ratio": 2.0202020202020203,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 22620
   },
   "roa.png": {
     "hash": "b42c7dce311f1a13",
@@ -6199,6 +6919,22 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 2682
   },
+  "rocky_mountain_featherbed.jpeg": {
+    "hash": "dfdac4b68c64ae68",
+    "backgroundVersion": 2,
+    "file": "dfdac4b68c64ae68.webp",
+    "ratio": 1.7628205128205128,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 42882
+  },
+  "rokh.png": {
+    "hash": "a5969644645f6cac",
+    "backgroundVersion": 2,
+    "file": "a5969644645f6cac.webp",
+    "ratio": 1.5065502183406114,
+    "background": "#ffffff",
+    "bytes": 11092
+  },
   "rolf_ekroth.jpg": {
     "hash": "9e71666b3abf47b2",
     "backgroundVersion": 2,
@@ -6254,6 +6990,14 @@
     "ratio": 1.7142857142857142,
     "background": "rgb(255, 255, 255)",
     "bytes": 7712
+  },
+  "rsvp_gallery.jpeg": {
+    "hash": "715a7ecb8b62494d",
+    "backgroundVersion": 2,
+    "file": "715a7ecb8b62494d.webp",
+    "ratio": 2.123529411764706,
+    "background": "rgb(139, 213, 186)",
+    "bytes": 23142
   },
   "rudsak.png": {
     "hash": "67a5bbca1ee326a0",
@@ -6311,6 +7055,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 2414
   },
+  "saint_alfred.jpeg": {
+    "hash": "606c8ff1da13ab61",
+    "backgroundVersion": 2,
+    "file": "606c8ff1da13ab61.webp",
+    "ratio": 0.740909090909091,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 12488
+  },
   "saint_laurent.jpg": {
     "hash": "f4324d4af2cee4f2",
     "backgroundVersion": 2,
@@ -6350,6 +7102,14 @@
     "ratio": 1.193717277486911,
     "background": "rgb(255, 255, 255)",
     "bytes": 10398
+  },
+  "sandro.jpg": {
+    "hash": "dcfaafc0072230a3",
+    "backgroundVersion": 2,
+    "file": "dcfaafc0072230a3.webp",
+    "ratio": 5.1688073394495415,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 3086
   },
   "sandy_liang.jpg": {
     "hash": "41dfb660bb473460",
@@ -6535,6 +7295,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 2790
   },
+  "size.png": {
+    "hash": "bd777b97cb32058a",
+    "backgroundVersion": 2,
+    "file": "bd777b97cb32058a.webp",
+    "ratio": 2.5714285714285716,
+    "background": "#ffffff",
+    "bytes": 6464
+  },
   "skechers.jpeg": {
     "hash": "092d7ae913522b33",
     "backgroundVersion": 2,
@@ -6575,6 +7343,22 @@
     "background": "#ffffff",
     "bytes": 17439
   },
+  "sneaker_politics.png": {
+    "hash": "c3ea3d5038b6cd98",
+    "backgroundVersion": 2,
+    "file": "c3ea3d5038b6cd98.webp",
+    "ratio": 1.9865494050698396,
+    "background": "#ffffff",
+    "bytes": 8308
+  },
+  "sneakersnstuff.png": {
+    "hash": "5f5d0701de6d0f5d",
+    "backgroundVersion": 2,
+    "file": "5f5d0701de6d0f5d.webp",
+    "ratio": 1.812071330589849,
+    "background": "#ffffff",
+    "bytes": 10600
+  },
   "snowpeak.jpg": {
     "hash": "5168957f105759f5",
     "backgroundVersion": 2,
@@ -6599,6 +7383,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 15650
   },
+  "social_status.webp": {
+    "hash": "eea813110490d235",
+    "backgroundVersion": 2,
+    "file": "eea813110490d235.webp",
+    "ratio": 2.130434782608696,
+    "background": "#ffffff",
+    "bytes": 3988
+  },
   "sofie_dhoore.png": {
     "hash": "13819a365eb337e7",
     "backgroundVersion": 2,
@@ -6606,6 +7398,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 3354
+  },
+  "solebox.png": {
+    "hash": "5d0223a3947b145c",
+    "backgroundVersion": 2,
+    "file": "5d0223a3947b145c.webp",
+    "ratio": 4.387527839643653,
+    "background": "#ffffff",
+    "bytes": 3910
   },
   "solid_homme.png": {
     "hash": "43ddaf7ab1ae9892",
@@ -6711,6 +7511,14 @@
     "background": "#ffffff",
     "bytes": 19930
   },
+  "sportmax.svg": {
+    "hash": "e5120515efb0ecfa",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 4.2976190476190474,
+    "background": "#ffffff",
+    "bytes": 13228
+  },
   "sporty_and_rich.webp": {
     "hash": "1ac36fa05ddf9547",
     "backgroundVersion": 2,
@@ -6734,6 +7542,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 7178
+  },
+  "ssense.webp": {
+    "hash": "5c968400c3f8b786",
+    "backgroundVersion": 2,
+    "file": "5c968400c3f8b786.webp",
+    "ratio": 4.904214559386973,
+    "background": "#ffffff",
+    "bytes": 1948
   },
   "ssstein.jpg": {
     "hash": "8ba03c4b778e8197",
@@ -6831,6 +7647,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 28666
   },
+  "stone_island_marina.png": {
+    "hash": "6eae3fe2372a9fd8",
+    "backgroundVersion": 2,
+    "file": "6eae3fe2372a9fd8.webp",
+    "ratio": 3.897810218978102,
+    "background": "rgb(40, 38, 46)",
+    "bytes": 26990
+  },
   "story_mfg.jpg": {
     "hash": "6da03e45d67ba44f",
     "backgroundVersion": 2,
@@ -6910,6 +7734,14 @@
     "ratio": 2.875,
     "background": "rgb(255, 255, 255)",
     "bytes": 2136
+  },
+  "sue_undercover.png": {
+    "hash": "da6dbcc76dfcb6d7",
+    "backgroundVersion": 2,
+    "file": "da6dbcc76dfcb6d7.webp",
+    "ratio": 3.3333333333333335,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 3514
   },
   "sugarcane.avif": {
     "hash": "8092c4d4bda2569d",
@@ -7095,6 +7927,14 @@
     "background": "rgb(0, 0, 0)",
     "bytes": 2676
   },
+  "ten_c.png": {
+    "hash": "ccc951057add2274",
+    "backgroundVersion": 2,
+    "file": "ccc951057add2274.webp",
+    "ratio": 4.148936170212766,
+    "background": "#ffffff",
+    "bytes": 5764
+  },
   "teva.webp": {
     "hash": "c2bb83722217cc1a",
     "backgroundVersion": 2,
@@ -7118,6 +7958,14 @@
     "ratio": 1.8709677419354838,
     "background": "#ffffff",
     "bytes": 10360
+  },
+  "the_fourness.jpg": {
+    "hash": "468de8a07eb9cf9c",
+    "backgroundVersion": 2,
+    "file": "468de8a07eb9cf9c.webp",
+    "ratio": 1.75,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 5656
   },
   "the_hundreds.jpg": {
     "hash": "9d057833272e5adc",
@@ -7151,6 +7999,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 5912
   },
+  "the_real_mccoys.png": {
+    "hash": "13d5ac8bd203364c",
+    "backgroundVersion": 2,
+    "file": "13d5ac8bd203364c.webp",
+    "ratio": 1.2878787878787878,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 10578
+  },
   "the_row.png": {
     "hash": "72bace759546fae1",
     "backgroundVersion": 2,
@@ -7158,6 +8014,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 1786
+  },
+  "the_shepherd_undercover.jpeg": {
+    "hash": "ae48be9ba73307d7",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 0.7938931297709924,
+    "background": "rgb(28, 39, 31)",
+    "bytes": 10477
   },
   "the_soloist.jpeg": {
     "hash": "9b5d30d69e5d01a3",
@@ -7303,6 +8167,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 5210
   },
+  "tokito.png": {
+    "hash": "940f9d7c8985e238",
+    "backgroundVersion": 2,
+    "file": "940f9d7c8985e238.webp",
+    "ratio": 1,
+    "background": "rgb(0, 0, 0)",
+    "bytes": 1262
+  },
   "tokyo_james.png": {
     "hash": "eda443e9f60c2192",
     "backgroundVersion": 2,
@@ -7391,6 +8263,14 @@
     "background": "#ffffff",
     "bytes": 4626
   },
+  "trapstar.jpeg": {
+    "hash": "8227238e3aac08b1",
+    "backgroundVersion": 2,
+    "file": "8227238e3aac08b1.webp",
+    "ratio": 2.6995515695067263,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 10006
+  },
   "trickers.avif": {
     "hash": "b208191e6adba693",
     "backgroundVersion": 2,
@@ -7399,6 +8279,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 6008
   },
+  "tripp_nyc.webp": {
+    "hash": "380f51ec33b0a535",
+    "backgroundVersion": 2,
+    "file": "380f51ec33b0a535.webp",
+    "ratio": 2.054441260744986,
+    "background": "#ffffff",
+    "bytes": 8576
+  },
   "true_religion.png": {
     "hash": "115c361909c82051",
     "backgroundVersion": 2,
@@ -7406,6 +8294,22 @@
     "ratio": 1.7777777777777777,
     "background": "#ffffff",
     "bytes": 24332
+  },
+  "tss.png": {
+    "hash": "afb4da23d2d2970b",
+    "backgroundVersion": 2,
+    "file": "afb4da23d2d2970b.webp",
+    "ratio": 1.7826086956521738,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 964
+  },
+  "tumi.png": {
+    "hash": "8a30342015759dc4",
+    "backgroundVersion": 2,
+    "file": "8a30342015759dc4.webp",
+    "ratio": 1.6,
+    "background": "#ffffff",
+    "bytes": 4204
   },
   "two_jeys.png": {
     "hash": "3c484346d037f032",
@@ -7543,6 +8447,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 3736
   },
+  "vandythepink.png": {
+    "hash": "81c4b452a0647458",
+    "backgroundVersion": 2,
+    "file": "81c4b452a0647458.webp",
+    "ratio": 9.945155393053016,
+    "background": "#ffffff",
+    "bytes": 4076
+  },
   "vanquish.avif": {
     "hash": "517ba49de3c85d27",
     "backgroundVersion": 2,
@@ -7614,6 +8526,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 60762
+  },
+  "versace_jeans_couture.png": {
+    "hash": "1d73dc2a03a55cac",
+    "backgroundVersion": 2,
+    "file": "1d73dc2a03a55cac.webp",
+    "ratio": 1.7777777777777777,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 7114
   },
   "vessi.jpeg": {
     "hash": "c74bb630d799f9ea",
@@ -7823,6 +8743,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 5184
   },
+  "weekend_max_mara.webp": {
+    "hash": "b698fbe9a9ad9100",
+    "backgroundVersion": 2,
+    "file": "b698fbe9a9ad9100.webp",
+    "ratio": 2.968460111317254,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 2420
+  },
   "wesco.jpg": {
     "hash": "6c161f2dfad6885c",
     "backgroundVersion": 2,
@@ -7854,6 +8782,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 43392
+  },
+  "whiz_limited.png": {
+    "hash": "e3cb63a62cb31711",
+    "backgroundVersion": 2,
+    "file": "e3cb63a62cb31711.webp",
+    "ratio": 1.15,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 4048
   },
   "who_decides_war.jpeg": {
     "hash": "cec3464af9de8134",
@@ -8054,6 +8990,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 13590
+  },
+  "ys.jpg": {
+    "hash": "c856fb9c7d3169d9",
+    "backgroundVersion": 2,
+    "file": "c856fb9c7d3169d9.webp",
+    "ratio": 1.2682926829268293,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 8932
   },
   "yuketen.jpeg": {
     "hash": "a600cc5a8d762718",

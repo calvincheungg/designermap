@@ -115,6 +115,9 @@ export const cities = {
   Milwaukee: [43.0389, -87.9065],
   Wilton: [44.5928, -70.2284],
   Boulder: [40.015, -105.2705],
+  'Grand Junction': [39.0639, -108.5506],
+  'Santa Rosa': [38.4405, -122.7144],
+  'Rohnert Park': [38.3396, -122.7011],
   Stratham: [43.0237, -70.9137],
   Quarona: [45.7586, 8.2655],
   'Costa Mesa': [33.6411, -117.9187],
@@ -224,6 +227,8 @@ export const cities = {
   Oyabe: [36.6754, 136.8686],
   Seoul: [37.5665, 126.978],
   Shanghai: [31.2304, 121.4737],
+  Beijing: [39.9042, 116.4074],
+  Corridonia: [43.2477, 13.5086],
   Goleta: [34.4358, -119.8276],
   'Linz am Rhein': [50.5667, 7.2833],
   Northampton: [52.2405, -0.9027],
@@ -323,6 +328,14 @@ export const cities = {
   Englewood: [40.8929, -73.9726],
   'Florence, Alabama': [34.7998, -87.6773],
   Sunderland: [54.9069, -1.3838],
+  Atlanta: [33.749, -84.388],
+  'Diamond Bar': [34.0286, -117.8103],
+  Teaneck: [40.8976, -74.016],
+  Yonkers: [40.9312, -73.8988],
+  'Cambridge, Massachusetts': [42.3736, -71.1097],
+  'Lafayette, Louisiana': [30.2241, -92.0198],
+  Bury: [53.5933, -2.2966],
+  Düsseldorf: [51.2277, 6.7735],
 } satisfies Record<string, LatLng>;
 
 export type CityName = keyof typeof cities;
@@ -406,6 +419,9 @@ export const cityRegions: Partial<Record<CityName, { country: CountryCode; regio
   Milwaukee: { country: CountryCode.UnitedStates, region: 'Wisconsin' },
   Wilton: { country: CountryCode.UnitedStates, region: 'Maine' },
   Boulder: { country: CountryCode.UnitedStates, region: 'Colorado' },
+  'Grand Junction': { country: CountryCode.UnitedStates, region: 'Colorado' },
+  'Santa Rosa': { country: CountryCode.UnitedStates, region: 'California' },
+  'Rohnert Park': { country: CountryCode.UnitedStates, region: 'California' },
   Stratham: { country: CountryCode.UnitedStates, region: 'New Hampshire' },
   'Costa Mesa': { country: CountryCode.UnitedStates, region: 'California' },
   'San Clemente': { country: CountryCode.UnitedStates, region: 'California' },
@@ -455,6 +471,12 @@ export const cityRegions: Partial<Record<CityName, { country: CountryCode; regio
   Stamford: { country: CountryCode.UnitedStates, region: 'Connecticut' },
   "Martha's Vineyard": { country: CountryCode.UnitedStates, region: 'Massachusetts' },
   'Florence, Alabama': { country: CountryCode.UnitedStates, region: 'Alabama' },
+  Atlanta: { country: CountryCode.UnitedStates, region: 'Georgia' },
+  'Diamond Bar': { country: CountryCode.UnitedStates, region: 'California' },
+  Teaneck: { country: CountryCode.UnitedStates, region: 'New Jersey' },
+  Yonkers: { country: CountryCode.UnitedStates, region: 'New York' },
+  'Cambridge, Massachusetts': { country: CountryCode.UnitedStates, region: 'Massachusetts' },
+  'Lafayette, Louisiana': { country: CountryCode.UnitedStates, region: 'Louisiana' },
 };
 
 /** Human-readable location; never use this label as a map key. */

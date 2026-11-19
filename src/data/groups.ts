@@ -112,6 +112,7 @@ export enum GroupId {
   Lanvin = 'lanvin',
   Aeffe = 'aeffe',
   Mayhoola = 'mayhoola',
+  SMCP = 'smcp',
   MaxMara = 'maxMara',
   Zegna = 'zegna',
   Capri = 'capri',
@@ -169,6 +170,7 @@ export enum GroupId {
   JapanBlue = 'japanBlue',
   WHPGlobal = 'whpGlobal',
   ACON = 'acon',
+  NewellBrands = 'newellBrands',
 }
 
 /** Group profiles. Brand membership lives only in houses.ts (parentGroup). */
@@ -740,6 +742,12 @@ export const groups = {
     description: 'A Qatar-based investment company focused on local and international investments, including fashion.',
     website: 'https://www.mayhoola.com/',
   },
+  [GroupId.SMCP]: {
+    name: 'SMCP',
+    description: 'A Paris-based group of accessible-luxury fashion brands: Sandro, Maje, Claudie Pierlot and Fursac.',
+    website: 'https://www.smcp.com/en/',
+    notes: 'Listed on Euronext Paris since 2017. A sale of up to 51.2% of its shares, formerly linked to European TopSoho and Shandong Ruyi, began in November 2025.',
+  },
   [GroupId.MaxMara]: {
     name: 'Max Mara Fashion Group',
     description: 'A fashion group built around Max Mara and a family of clothing labels with distinct identities.',
@@ -1096,5 +1104,11 @@ export const groups = {
     description: 'Chinese sportswear company that acquired K-Swiss and Palladium in 2019 and sold their parent KP Global to the Ding family in November 2024.',
     website: 'https://www.xtep.com.hk/en/ir/overview.php',
     notes: 'Acquisition: https://www.sgieurope.com/xtep-will-buy-the-parent-of-k-swiss-and-palladium/67444.article.',
+  },
+  [GroupId.NewellBrands]: {
+    name: 'Newell Brands',
+    description: 'An American consumer goods company whose outdoor and recreation brands include Marmot and Coleman.',
+    website: 'https://www.newellbrands.com/our-brands',
+    notes: 'Acquired Marmot with Jarden in April 2016 and kept it when it sold the former Jarden winter sports brands in 2017.',
   },
 } satisfies Record<GroupId, GroupData>;

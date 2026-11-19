@@ -49,6 +49,7 @@ src/ui/run-dialog.tsx Start ▸ Run… box: open a brand, designer, group, city,
 src/ui/recent.ts      Start ▸ Documents: recently opened items (localStorage)
 src/ui/desktop-icon.tsx draggable Win98 desktop icon (Recycle Bin, public/assets/bin.webp)
 src/ui/share-link.ts  shareable view in the URL hash: #brand=…&year=…&<filter>=a,b
+src/ui/list-view.tsx   List View window: Excel 2000-style workbook (sheets in list-view-data.ts, dialogs, chart, pivot)
 src/ui/statistics.tsx  Statistics window (Start menu): filtered totals, tiers, countries, cities, top lists
 src/ui/city-window.tsx place windows: scrollable Large Icons grid of a city's or country's main brands
 src/ui/map-view.tsx   React lifecycle boundary for DesignerGraph and its context menu
@@ -141,8 +142,10 @@ Key rules:
     Tapping the selected brand
     again clears selection and restores that city's full grid. Other manually
     opened cities stay intact. Changing or clearing
-    the selection replaces these automatic reveals. Only the selected brand gets
-    an outline; connected brands retain their normal borders. Selecting a designer
+    the selection replaces these automatic reveals. The selected brand gets the
+    navy focus outline; its visible partners get the border of the line reaching
+    them (`move-partner`: solid navy, `collab-partner`: dashed red; both = navy
+    border plus a red dashed `outline`), set in `applySelection`. Selecting a designer
     opens their career cities and highlights their houses and moves.
     Opening a group profile reveals its member brands from `housesInGroup` and
     frames them on the map, without expanding their designer connections or
@@ -271,6 +274,9 @@ Key rules:
   rather than its cheapest entry product, most expensive piece or a collaboration.
   Group ownership, age and the Couture tag do not automatically determine tier;
   couture remains a separate brand/product classification.
+- Brand category `Retailer` marks a brand that is also a store stocking other
+  brands (DSM, Union LA, Bodega, Kith, BEAMS). It sits alongside the brand's
+  other categories. Don't add it to retail chains that sell only their own labels.
 - **Exclude one-off collaborations from career tenures and career-move connections.**
   Store brand collaborations separately in `src/data/collaborations.ts`, keyed
   by a stable project/release ID, with `houses` (at least two distinct house IDs)
@@ -306,7 +312,9 @@ Key rules:
   labels share their root house’s pin and grid, with only main houses counted in
   pins or shown on city expansion. Selecting a house reveals its direct labels;
   selecting a nested label reveals its ancestry and its own direct labels.
-  Search and designer selection can reveal a specific label directly. Year/tag
+  Search and designer selection can reveal a specific label directly. A selected
+  brand's move or collaboration partner that is a label opens on its own, without
+  its parent unless the parent is itself involved. Year/tag
   filters retain a parent as navigation context when only its labels match.
   Hidden-label career arrows attach to the nearest visible ancestor, while the
   underlying career and actual house locations remain unchanged.
@@ -347,10 +355,20 @@ Key rules:
   within the year/tag filters as Win98 desktop icons in the map's grey frame;
   clicking one opens its Properties. A Find box (the shared `SearchBox`, with
   `limit={Infinity}` so its dropdown lists every brand) narrows the grid as you type.
-  A city window is always `CITY_GRID_COLUMNS` (3) icons wide and just tall
+  A city window is always `CITY_GRID_COLUMNS` (4) icons wide and just tall
   enough for its brands, up to `CITY_GRID_ROWS` (4) rows (`cityWindowSize`);
-  larger places scroll inside an always-reserved scrollbar gutter (`scrollbar-gutter: stable`), so rows of three never wrap. Tiles sit
+  larger places scroll inside an always-reserved scrollbar gutter (`scrollbar-gutter: stable`), so rows of four never wrap. Tiles sit
   close together with a scrollbar's width (16px) of padding to the grid border.
+  Under Find, a toolbar holds View (Large Icons / Details), Sort by (Name /
+  Founded oldest first / Tier from High Luxury down; `sortPlaceBrands`, unknowns
+  last, ties by name; each section sorts on its own) and Show on Map, which calls
+  `DesignerGraph.showCities` to open the place's map locations as full grids
+  (other open cities stay) and frame them. View and Sort are shared by every
+  place window and remembered as `designer-map:place-view` / `designer-map:place-sort`.
+  Details is a table (Name, Founded, Tier) whose headers also sort. Right-clicking
+  a brand (icon or row) opens a `ContextMenu`: Open (Properties), Show on Map
+  (selects and reveals it without opening Properties) and Open <city>/<country>
+  for its base, omitting the place the window already shows.
   Place windows pass `minSize={cityWindowSize(1)}` instead of the Properties minimum. They don't change the map selection, cascade from the left edge,
   and up to `MAX_LOCATION_WINDOWS` stay open, the least recently used reused.
   Country windows (`Place` kind `country`) list a country's main brands the same
@@ -397,6 +415,53 @@ Key rules:
     (Start menu, `import.meta.env.DEV` only) lists research gaps across all brands:
     nobody linked, likely missing origins (`missingOriginCandidates`), and no
     founding year, logo, website or Instagram.
+  - List View (`desktop.ts LIST_VIEW`, tool type `list`): an Excel 2000 workbook ("Designer Map.xls"),
+    opened from the Start menu or its desktop icon (`slot` 2, `designer-map:list-view-icon-position`;
+    icon `public/assets/excel.webp`, cropped from `excel.jpg`). `ui/list-view-data.ts` holds the sheets
+    and sheet operations (no React), `ui/list-view-dialogs.tsx` the pop-ups, `ui/list-view.tsx` the window.
+    - Sheets (`SHEETS`, each a `defineSheet` of columns with `values`, a default `width` and optional
+      per-value `links` / in-cell `menu`, `year` for decade grouping): Brands (incl. Website, Instagram,
+      Current creative director, Creative directors, Collaborations and Sublabels — creative counts exclude
+      `Other` and business roles; the last two have in-cell lists), Groups, Designers, Careers
+      (one row per tenure), Collaborations (one row per release, newest first; no names or notes) and
+      Locations (Brands = count of brands based there with a drop-down listing them all, Alt+↓).
+      Tabs, arrows or Ctrl+PgUp/PgDn switch. Sort, filters, search, active cell, widths and hidden
+      columns are kept per sheet.
+    - Menus File (Save As CSV… of the shown rows/columns), Edit, View (formula bar, gridlines, Full
+      Screen, zoom presets 50–200%),
+      Format (AutoFit, Hide/Unhide columns, Reset widths, Grey Out Ended Brands: grey cell fill),
+      Data (Sort… with Sort by / Then by / Then by, AutoFilter, Show All), Window (Freeze Panes: pins
+      the first shown column, on by default), Help. Toolbar: Save, Sort ↑/↓, AutoFilter, Show All, Zoom.
+    - AutoFilter drop-downs: (All), (Top 10...) on number columns (top/bottom, items/percent, ties
+      kept), (Custom...) with two conditions joined by And/Or, values from rows the other columns
+      leave, (Blanks)/(NonBlanks). Blue row numbers while narrowed; "N of M records found".
+    - The formula bar shows the active cell and doubles as the sheet's search (`searchSheet`; ✕ clears).
+    - Range selection: shift-click, drag, Shift+arrows, column letters, row numbers, the corner box or
+      Ctrl+A. The status bar's AutoCalculate shows Count, plus Sum/Average/Min/Max over number columns
+      (`rangeStats`); Ctrl+C copies the range as tab-separated text (`rangeTsv`) for pasting into a spreadsheet.
+    - Insert ▸ Chart… / the Chart Wizard button (`list-view-chart.tsx`): a draggable chart object over
+      the sheet counting the listed rows by one column (bar or column, top N with the rest noted under
+      the plot, by count or column order, decades for year columns). It follows filters and search live;
+      clicking a bar filters the sheet. Excel 2000 look: grey plot, periwinkle bars, yellow chart tips.
+    - The PivotTable tab (`list-view-pivot.tsx`, `pivotTable`): Count of any sheet's records by a row and an
+      optional column field, Grand Totals counting records once, rows by total or label, decades, and
+      optionally only the rows the source sheet lists. Clicking a count opens the source sheet filtered to
+      exactly those records. Data ▸ PivotTable Report… starts one from the active column.
+    - Right-click a cell: Open, Show on Map (no Properties), Copy, Filter by "value", Sort. Right-click
+      a column letter or field: Sort, AutoFit, Hide/Unhide, Clear Filter. Hidden columns keep letters.
+    - Columns open at their default widths. Drag a letter's right border to resize (min
+      `MIN_COLUMN_WIDTH`); double-click it to AutoFit to the widest entry (`autoFitWidth`, canvas-measured).
+    - The layout is remembered per browser (`designer-map:list-view`, `readLayout` validates it against
+      the current columns): active sheet, each sheet's sort, widths and hidden columns, zoom and the
+      View/Window/Format toggles, Full Screen and the PivotTable layout. Filters, search, ranges and
+      charts are not remembered.
+    - Zoom: toolbar box (presets plus any custom value), View menu, or click / right-click the status
+      bar's zoom field for a slider (`ZOOM_MIN` 25 – `ZOOM_MAX` 200, steps of 5).
+    - Full Screen (View menu, the title bar's Maximize/Restore button, or double-clicking the title
+      bar): App's `listFullScreen` passes `maximized` to `PropertiesWindow`, which then fills the map
+      area and can't be moved or resized until restored. Other windows can opt in with `onMaximize`.
+    **All of it is local to the workbook**: it ignores the map's year/tag filters and never changes
+    them. Rows are virtualised (17px rows, scaled by zoom).
   - Share links: the URL hash holds the selection, year and tag filters
     (`share-link.ts`); it's read at startup and on `hashchange`, rewritten with
     `history.replaceState` as the view changes (not during Play), so the address
@@ -410,7 +475,17 @@ Key rules:
   - One Statistics window (`desktop.ts STATISTICS`, window type `stats`), opened
     from the Start menu or its desktop icon. It follows the year/tag filters, isn't a map selection
     (`isSelectionItem` excludes it with place windows), and its names open the
-    matching brand, designer, city or country window.
+    matching brand, designer, city or country window. The Most collaborations
+    and Most frequent pairings tables each have an "Include retailer collaborations"
+    checkbox beside their Show picker (`designer-map:stats-retailer-collabs` /
+    `designer-map:stats-retailer-pairs`, on by default) that drops releases with a
+    `Retailer`-category participant (`involvesRetailer`) from that table only; the
+    overview total, Collaborations by year, the map and Properties keep every release.
+    Collaborations by year (`YearSection`): empty runs over `CHART_GAP_YEARS` (10) collapse
+    into one `≈` column; hover shows exact counts; clicking a column lists that year's releases.
+    "Colour by" (`designer-map:stats-year-breakdown`) stacks bars by partner type
+    (`partnerType`: luxury × streetwear, then retailer, then sportswear, else other) or
+    first-time vs repeat pairing (`pairingKind`, against every recorded release, not the filters).
   - On phones only the active window shows, stacked under the map.
   Right-clicking a brand offers "Show More", which opens (or restores) its window.
 - Selecting a brand rings its same-city move/collaboration partners around it

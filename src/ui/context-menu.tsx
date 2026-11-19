@@ -9,6 +9,8 @@ export interface MenuAction {
   separator?: boolean;
   /** Bold, like Win98's default menu command. */
   primary?: boolean;
+  /** A toggle: shows a check mark when on, like Win98's View menu. */
+  checked?: boolean;
 }
 /** A Win98 pop-up menu at (x, y); with `above`, its bottom edge sits at y (for taskbar menus). */
 export function ContextMenu({ x, y, actions, onClose, label = 'Map Actions', above = false }: {
@@ -50,8 +52,9 @@ export function ContextMenu({ x, y, actions, onClose, label = 'Map Actions', abo
     }}>
     {actions.map((action) => [
       action.separator ? <hr key={`${action.label}-separator`} className="menu-separator" /> : null,
-      <button type="button" role="menuitem" key={action.label} disabled={action.disabled} className={action.primary ? 'primary' : undefined}
-        onClick={() => { onClose(true); action.run(); }}>{action.label}</button>,
+      <button type="button" role={action.checked === undefined ? 'menuitem' : 'menuitemcheckbox'} aria-checked={action.checked} key={action.label}
+        disabled={action.disabled} className={action.primary ? 'primary' : undefined}
+        onClick={() => { onClose(true); action.run(); }}>{action.checked !== undefined && <span className="menu-check" aria-hidden="true">{action.checked ? '✓' : ''}</span>}{action.label}</button>,
     ])}
   </div>, document.body);
 }

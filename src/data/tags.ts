@@ -24,6 +24,8 @@ export enum BrandCategory {
   Couture = 'Couture',
   Footwear = 'Footwear',
   Accessories = 'Accessories',
+  /** Also a retail store stocking other brands (for example, sneakers and outside labels). */
+  Retailer = 'Retailer',
 }
 
 export enum Aesthetic {

@@ -8,13 +8,14 @@ export const MAX_DESIGNER_WINDOWS = 10;
 export const MAX_LOCATION_WINDOWS = 10;
 export const DIRECTORY = 'directory';
 
-/** Single-instance tool windows: Statistics, the Recycle Bin of ended brands, the What's Missing report, Help and Run. */
-export type ToolId = 'stats' | 'recycle' | 'missing' | 'help' | 'run';
+/** Single-instance tool windows: Statistics, the Recycle Bin of ended brands, the What's Missing report, Help, Run and the List View sheet. */
+export type ToolId = 'stats' | 'recycle' | 'missing' | 'help' | 'run' | 'list';
 export type ToolItem = { kind: 'tool'; id: ToolId };
 export const tool = (id: ToolId): ToolItem => ({ kind: 'tool', id });
 export const STATISTICS = tool('stats');
 export const HELP = tool('help');
 export const RUN = tool('run');
+export const LIST_VIEW = tool('list');
 /** A map selection shown in Properties, a city's brand grid, or a tool window. */
 export type Item = NonNullable<Selection> | Place | ToolItem;
 /** City and country windows: grids of brands, not map selections. */

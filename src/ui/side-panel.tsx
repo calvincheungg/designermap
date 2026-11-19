@@ -68,9 +68,15 @@ export function clampRect(rect: WindowRect, area: Size, min = MIN_SIZE): WindowR
  * or resize it from the focused grip; double-clicking the title bar restores
  * the default placement. Pressing anywhere in it brings it to the front.
  */
-export function PropertiesWindow({ id, titleId, bodyId, title, minimized, active, zIndex, cascade = 0, align = 'right', preferredSize, minSize = MIN_SIZE, fitHeight = false, storageKey, scrollKey,
+export function PropertiesWindow({ id, titleId, bodyId, title, icon, minimized, maximized = false, onMaximize, active, zIndex, cascade = 0, align = 'right', preferredSize, minSize = MIN_SIZE, fitHeight = false, storageKey, scrollKey,
   className, onMinimize, onClose, onFocus, children }: {
-  id: string; titleId: string; bodyId: string; title: string; minimized: boolean; active: boolean; zIndex: number;
+  id: string; titleId: string; bodyId: string; title: string; minimized: boolean;
+  /** A 16px application icon before the title, like Win98's window menu icon. */
+  icon?: ReactNode;
+  /** Fill the whole map area, like a maximized Win98 window (no moving or resizing until restored). */
+  maximized?: boolean;
+  /** Shows the Maximize / Restore button; double-clicking the title bar toggles it too. */
+  onMaximize?: () => void; active: boolean; zIndex: number;
   cascade?: number; align?: 'left' | 'right'; storageKey?: string; scrollKey: unknown; className?: string;
   /** Default size before the user moves or resizes the window (still kept inside the map area). */
   preferredSize?: Size;
@@ -130,11 +136,12 @@ export function PropertiesWindow({ id, titleId, bodyId, title, minimized, active
   const preferred = fitHeight && fitted ? { width: preferredSize?.width ?? DEFAULT_PANEL_WIDTH, height: fitted } : preferredSize;
 
   // Without a measured area (first paint, tests) CSS places the window at the right edge.
-  const placed = area ? clampRect(rect ?? defaultRect(area, cascade, align, preferred, minSize), area, minSize) : null;
+  const placed = area ? maximized ? { x: 0, y: 0, width: area.width, height: area.height }
+    : clampRect(rect ?? defaultRect(area, cascade, align, preferred, minSize), area, minSize) : null;
   const update = (next: WindowRect) => { if (area) setRect(clampRect(next, area, minSize)); };
 
   const begin = (mode: 'move' | 'resize') => (event: PointerEvent<HTMLElement>) => {
-    if (event.button !== 0 || !placed || (event.target as Element).closest('button')) return;
+    if (event.button !== 0 || !placed || maximized || (event.target as Element).closest('button')) return;
     event.preventDefault();
     event.currentTarget.setPointerCapture?.(event.pointerId);
     gesture.current = { mode, x: event.clientX, y: event.clientY, start: placed };
@@ -150,7 +157,7 @@ export function PropertiesWindow({ id, titleId, bodyId, title, minimized, active
   };
   const end = () => { gesture.current = null; };
   const arrows = (mode: 'move' | 'resize') => (event: KeyboardEvent<HTMLElement>) => {
-    if (!placed || event.target !== event.currentTarget) return;
+    if (!placed || maximized || event.target !== event.currentTarget) return;
     const step = event.shiftKey ? KEY_STEP * 4 : KEY_STEP;
     const delta = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[event.key];
     if (!delta) return;
@@ -160,21 +167,27 @@ export function PropertiesWindow({ id, titleId, bodyId, title, minimized, active
       : { ...placed, width: placed.width + dx, height: placed.height + dy });
   };
 
-  return <div ref={win} className={`window side-window${className ? ` ${className}` : ''}`} id={id} role="dialog" aria-labelledby={titleId} hidden={minimized}
+  return <div ref={win} className={`window side-window${maximized ? ' maximized' : ''}${className ? ` ${className}` : ''}`} id={id} role="dialog" aria-labelledby={titleId} hidden={minimized}
     data-placed={placed ? 'true' : undefined} data-active={active ? 'true' : undefined}
     onPointerDownCapture={() => { if (!active) onFocus(); }} onFocusCapture={() => { if (!active) onFocus(); }}
     style={{ zIndex, ...(placed ? { left: placed.x, top: placed.y, width: placed.width, height: placed.height } : {}) }}>
     <div className={`title-bar${active ? '' : ' inactive'}`} tabIndex={0} aria-label={`Move ${title} window`}
       onPointerDown={begin('move')} onPointerMove={move} onPointerUp={end} onPointerCancel={end}
-      onKeyDown={arrows('move')} onDoubleClick={(event) => { if (!(event.target as Element).closest('button')) setRect(null); }}>
+      onKeyDown={arrows('move')} onDoubleClick={(event) => {
+        if ((event.target as Element).closest('button')) return;
+        if (onMaximize) onMaximize(); else setRect(null);
+      }}>
+      {icon && <span className="title-bar-icon" aria-hidden="true">{icon}</span>}
       <div className="title-bar-text" id={titleId}>{title}</div>
       <div className="title-bar-controls">
         <button className="minimize" aria-label={`Minimize ${title}`} title="Minimize" onClick={onMinimize} />
+        {onMaximize && <button className={maximized ? 'restore' : 'maximize'} aria-label={`${maximized ? 'Restore' : 'Maximize'} ${title}`}
+          title={maximized ? 'Restore' : 'Maximize'} onClick={onMaximize} />}
         <button className="close" aria-label={`Close ${title}`} title="Close" onClick={onClose} />
       </div>
     </div>
     <div className="window-body" id={bodyId} ref={body}>{children}</div>
-    <div className="resize-grip" role="separator" aria-label={`Resize ${title}`} tabIndex={0}
-      onPointerDown={begin('resize')} onPointerMove={move} onPointerUp={end} onPointerCancel={end} onKeyDown={arrows('resize')} />
+    {!maximized && <div className="resize-grip" role="separator" aria-label={`Resize ${title}`} tabIndex={0}
+      onPointerDown={begin('resize')} onPointerMove={move} onPointerUp={end} onPointerCancel={end} onKeyDown={arrows('resize')} />}
   </div>;
 }
