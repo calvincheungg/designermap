@@ -405,6 +405,28 @@ describe('ListViewContent', () => {
     expect(screen.getByRole('menuitemcheckbox', { name: 'Zoom 200%' }).getAttribute('aria-checked')).toBe('true');
   });
 
+  it('asks for a file name before Save As CSV, keeping the .csv extension', async () => {
+    render(<ListViewContent onSelect={() => {}} onOpenPlace={() => {}} onHelp={() => {}} onClose={() => {}} />);
+    const user = userEvent.setup();
+    const downloads: string[] = [];
+    const create = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:sheet');
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) { downloads.push(this.download); });
+    try {
+      await user.click(screen.getByRole('button', { name: 'Save As CSV' }));
+      const save = within(screen.getByRole('dialog', { name: 'Save As' }));
+      expect((save.getByRole('textbox', { name: 'File name:' }) as HTMLInputElement).value).toBe('Designer Map - Brands');
+      expect(save.getByLabelText('Extension').textContent).toBe('.csv');
+      await user.click(save.getByRole('button', { name: 'Cancel' }));
+      expect(downloads).toEqual([]);
+      await user.click(screen.getByRole('menuitem', { name: 'File' }));
+      await user.click(screen.getByRole('menuitem', { name: 'Save As CSV…' }));
+      const again = within(screen.getByRole('dialog', { name: 'Save As' }));
+      await user.clear(again.getByRole('textbox', { name: 'File name:' }));
+      await user.type(again.getByRole('textbox', { name: 'File name:' }), 'Luxury brands{Enter}');
+      expect(downloads).toEqual(['Luxury brands.csv']);
+    } finally { create.mockRestore(); click.mockRestore(); }
+  });
+
   it('toggles Full Screen from the View menu', async () => {
     const onFullScreen = vi.fn();
     render(<ListViewContent onSelect={() => {}} onOpenPlace={() => {}} onHelp={() => {}} onClose={() => {}} onFullScreen={onFullScreen} />);

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent } from 'react';
 import { ContextMenu, type MenuAction } from './context-menu';
+import { SaveAsDialog } from './save-as-dialog';
 import { ChartWindow, type ChartOptions } from './list-view-chart';
 import { DEFAULT_PIVOT, PivotView, validPivot, type PivotOptions } from './list-view-pivot';
 import { CustomFilterDialog, DropList, FunnelIcon, SaveIcon, SortDialog, SortIcon, TopTenDialog, ZoomSlider, type ListEntry } from './list-view-dialogs';
@@ -115,7 +116,7 @@ function ChartIcon() {
 /** AutoCalculate numbers, at most two decimals, like Excel's status bar. */
 /** Years stay as 1990, not 1,990. */
 const statNumber = (value: number) => value.toLocaleString(undefined, { maximumFractionDigits: 2, useGrouping: Math.abs(value) >= 10000 });
-type DialogState = { kind: 'custom' | 'top'; col: number } | { kind: 'sort' } | null;
+type DialogState = { kind: 'custom' | 'top'; col: number } | { kind: 'sort' } | { kind: 'save' } | null;
 
 function CellContent({ row, col, onSelect, onOpenPlace }: { row: SheetRow; col: number; onSelect: Actions['onSelect']; onOpenPlace: NonNullable<Actions['onOpenPlace']> }) {
   const values = row.cells[col]!, links = row.links[col];
@@ -349,7 +350,9 @@ export function ListViewContent({ onSelect, onOpenPlace, onShowOnMap, onShowPlac
   /** Copy the range as tab-separated text (field names first when the range covers row 1), or the active cell. */
   const copySelection = () => copy(multi ? rangeTsv(sheet, rangeRows, rangeCols, rowSpan[0] < 0) : activeText);
   const openChart = () => setChart({ column: columns[col]!.id, type: 'bar', top: 10, sort: 'count', decades: !!columns[col]!.year });
-  const saveCsv = () => download(`Designer Map - ${sheet.name}.csv`, `﻿${sheetCsv(sheet, shown, shownCols)}`, 'text/csv;charset=utf-8');
+  /** File ▸ Save As CSV… asks for a file name first (the .csv extension is fixed). */
+  const saveCsv = () => setDialog({ kind: 'save' });
+  const writeCsv = (name: string) => download(name, `﻿${sheetCsv(sheet, shown, shownCols)}`, 'text/csv;charset=utf-8');
 
   /* ---------- columns: resize, AutoFit, hide ---------- */
   const setWidth = (target: number, width: number | undefined) => update((current) => {
@@ -714,6 +717,9 @@ export function ListViewContent({ onSelect, onOpenPlace, onShowOnMap, onShowPlac
       onCancel={() => { setDialog(null); grid.current?.focus(); }} />}
     {dialog?.kind === 'top' && <TopTenDialog column={columns[dialog.col]!} initial={filters[columns[dialog.col]!.id]}
       onApply={(filter) => { setColumnFilter(dialog.col, filter); setDialog(null); grid.current?.focus(); }}
+      onCancel={() => { setDialog(null); grid.current?.focus(); }} />}
+    {dialog?.kind === 'save' && <SaveAsDialog defaultName={`Designer Map - ${sheet.name}`} extension="csv" typeLabel="CSV (Comma delimited) (*.csv)"
+      onSave={(name) => { writeCsv(name); setDialog(null); grid.current?.focus(); }}
       onCancel={() => { setDialog(null); grid.current?.focus(); }} />}
     {dialog?.kind === 'sort' && <SortDialog columns={columns} sort={sort}
       onApply={(next) => { update(() => ({ sort: next.length ? next : sheet.defaultSort })); setDialog(null); grid.current?.focus(); }}

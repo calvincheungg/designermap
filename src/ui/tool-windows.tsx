@@ -161,17 +161,27 @@ export function HelpContent() {
     <ProfileSection title="Getting around">
       <ul className="help-list">
         <li>Drag to pan and scroll or pinch to zoom. Search in the taskbar, or use Start ▸ Run… to open anything by name.</li>
-        <li>Click a city pin to see its brands. Choose whether cities open in windows or on the map under Start ▸ Open cities.</li>
+        <li>Click a city pin to see its brands. Choose whether cities open in windows or on the map under Settings ▸ Clicking a city pin opens it.</li>
         <li>Click a brand to select it: the map shows its connections and its Properties window opens.</li>
         <li>Use the clock in the taskbar to pick a year, or press Play to watch the map grow over time.</li>
         <li>Start ▸ List View shows every brand, group, designer, career role, collaboration and location in a spreadsheet, one sheet tab each. Right-click a cell to filter by it, drag or shift-click to select and copy a range, try Insert ▸ Chart and the PivotTable tab, and use File ▸ Save As CSV to export. Type in its formula bar to search. Its sorting, filters and search only change that list, never the map.</li>
-        <li>Start ▸ Map colours (or the Settings icon) switches the map between Day and Night. Settings also sets the text size and holds the other display options.</li>
+        <li>Settings ▸ Map colours switches the map between Day and Night. Settings also sets the text size and holds the other display options.</li>
+        <li>My Computer browses everything as folders: Locations (C:) by continent, country and city (states and provinces in the USA and Canada), Brands (D:) by market position, Groups (E:) and Designers (F:) A–Z. Backspace goes up a folder.</li>
+        <li>Notepad keeps a note in this browser. Press F5 in it to insert the time and date, or use File ▸ Save As… to download it.</li>
         <li>Start ▸ Documents lists what you opened recently. Start ▸ Reset View clears everything and starts again.</li>
+      </ul>
+    </ProfileSection>
+    <ProfileSection title="Windows and the desktop">
+      <ul className="help-list">
+        <li>Every window can be maximized: press its Maximize button or double-click its title bar.</li>
+        <li>Right-click the desktop to arrange its icons by name or type, line them up, or start a new text document.</li>
+        <li>Keyboard: Alt+Tab switches windows, Alt+F4 closes the active one, Ctrl+Esc opens the Start menu and F1 opens this Help.</li>
       </ul>
     </ProfileSection>
     <ProfileSection title="Map pins">
       <table className="help-legend"><tbody>
         <tr><td><span className="help-pin" /></td><td>A city. Larger fashion cities always keep their own pin.</td></tr>
+        <tr><td><span className="help-pin top" /></td><td>One of the ten cities with the most brands.</td></tr>
         <tr><td><span className="help-pin cluster" /></td><td>A group of nearby smaller cities, with their brand count. Click to zoom in.</td></tr>
         <tr><td><span className="help-pin open" /></td><td>An open city, with its brands shown on the map.</td></tr>
       </tbody></table>
@@ -190,7 +200,7 @@ export function HelpContent() {
         <li>Market positioning runs High Luxury → Luxury → Premium → Mid-market → Budget. These are editorial tiers, not rankings.</li>
         <li>Brands that have closed or paused show an Ended year and appear in the Recycle Bin.</li>
         <li>Other roles are design-team positions; they don't count as creative direction.</li>
-        <li>Start ▸ Show brands at ▸ Origin moves brands to the city where they were founded.</li>
+        <li>Settings ▸ Show brands at ▸ Origin moves brands to the city where they were founded.</li>
       </ul>
     </ProfileSection>
     <ProfileSection title="Sharing">

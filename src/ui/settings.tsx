@@ -13,6 +13,11 @@ export const CURSOR_SIZES = [['normal', 'Normal'], ['large', 'Large (2x)'], ['ex
 export type CursorSize = typeof CURSOR_SIZES[number][0];
 export const isCursorSize = (value: unknown): value is CursorSize => CURSOR_SIZES.some(([id]) => id === value);
 
+/** Notepad's font sizes in px (its Set Font… list and Settings ▸ Notepad); 16 by default. */
+export const NOTEPAD_FONT_SIZES = [12, 14, 16, 18, 20, 24, 28, 32] as const;
+export const DEFAULT_NOTEPAD_FONT_SIZE = 16;
+export const isNotepadFontSize = (value: unknown): value is number => NOTEPAD_FONT_SIZES.some((size) => size === value);
+
 export interface MapSettings {
   mapTheme: MapTheme;
   textSize: TextSize;
@@ -22,6 +27,7 @@ export interface MapSettings {
   showLines: boolean;
   showCollaborations: boolean;
   connectionFilter: ConnectionFilter;
+  notepadFontSize: number;
 }
 
 type Change = { [K in keyof MapSettings]: (value: MapSettings[K]) => void };
@@ -66,6 +72,16 @@ export function SettingsContent({ settings, onChange }: { settings: MapSettings;
           {CURSOR_SIZES.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
         </select>
       </div>
+    </fieldset>
+    <fieldset>
+      <legend>Notepad</legend>
+      <div className="field-row">
+        <label htmlFor="settings-notepad-size">Notepad font size:</label>
+        <select id="settings-notepad-size" value={settings.notepadFontSize} onChange={(event) => onChange.notepadFontSize(Number(event.target.value))}>
+          {NOTEPAD_FONT_SIZES.map((size) => <option key={size} value={size}>{size}{size === DEFAULT_NOTEPAD_FONT_SIZE ? ' (default)' : ''}</option>)}
+        </select>
+      </div>
+      <p className="settings-sample notepad-sample" style={{ fontSize: settings.notepadFontSize }}>AaBbYyZz 123</p>
     </fieldset>
     <fieldset>
       <legend>Show brands at</legend>

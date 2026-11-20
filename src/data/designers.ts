@@ -465,7 +465,10 @@ export const designers = {
   },
   veroniqueBranquinho: {
     "name": "Véronique Branquinho",
+    born: 1973,
+    nationality: 'Belgian',
     "career": [
+      { house: 'veroniqueBranquinhoLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 1997, end: 2017, notes: 'Label stopped 2009–2012.' },
       {
         "house": "delvaux",
         "role": "Artistic Director",
@@ -473,7 +476,6 @@ export const designers = {
         "end": 2011
       }
     ],
-    "notes": "Also founded an eponymous fashion label, which is not currently represented in the dataset.",
     "sources": [
       "https://fashionunited.be/v1/columns/veronique-branquinho-verlaat-delvaux/201108025295"
     ]
@@ -2327,6 +2329,35 @@ export const designers = {
     notes: 'DJ, event producer and arts organizer who co-founded Bodega with Jay Gordon and Dan Natola. Also directed its Fourth Wall Project gallery; the gallery is not a separate clothing label.',
     sources: ['https://bdgastore.com/pages/about', 'https://www.rowdtla.com/collective/bodega', 'https://bostonhassle.com/compass-ketchup-bodega-2/'],
   },
+  rodneySmith: {
+    name: 'Rodney Smith',
+    nationality: 'American',
+    career: [
+      { house: 'zooYork', role: 'Founder', roleDetail: 'Co-founder', start: 1993 },
+      { house: 'zooYork', role: 'Co-Creative Director', roleDetail: 'With Eli Morgan Gesner and Adam Schatz, providing design direction to licensees', start: 2019 },
+    ],
+    notes: 'New York skateboarder who founded the skateboard company SHUT before starting Zoo York.',
+    sources: ['https://en.wikipedia.org/wiki/Rodney_Smith_(skateboarder)', 'https://fashionunited.com/news/people/zoo-york-taps-original-brand-founders-as-new-creative-directors/2019090329750'],
+  },
+  eliMorganGesner: {
+    name: 'Eli Morgan Gesner',
+    nationality: 'American',
+    career: [
+      { house: 'zooYork', role: 'Founder', roleDetail: 'Co-founder and design director', start: 1993 },
+      { house: 'zooYork', role: 'Co-Creative Director', roleDetail: 'With Rodney Smith and Adam Schatz, providing design direction to licensees', start: 2019 },
+    ],
+    notes: 'Former professional skateboarder and one of the original clothing designers at Phat Farm. Later directed the documentary Concrete Jungle and the film Condemned.',
+    sources: ['https://www.huckmag.com/article/zoo-york-co-founder-eli-morgan-gesner-truth-success', 'https://fashionunited.com/news/people/zoo-york-taps-original-brand-founders-as-new-creative-directors/2019090329750'],
+  },
+  adamSchatz: {
+    name: 'Adam Schatz',
+    nationality: 'American',
+    career: [
+      { house: 'zooYork', role: 'Founder', roleDetail: 'Co-founder', start: 1993 },
+      { house: 'zooYork', role: 'Co-Creative Director', roleDetail: 'With Rodney Smith and Eli Morgan Gesner, providing design direction to licensees', start: 2019 },
+    ],
+    sources: ['https://en.wikipedia.org/wiki/Zoo_York_(company)', 'https://fashionunited.com/news/people/zoo-york-taps-original-brand-founders-as-new-creative-directors/2019090329750'],
+  },
   marcEcko: {
     name: 'Marc Ecko',
     nationality: 'American',
@@ -2693,8 +2724,11 @@ export const designers = {
   },
   miaKappelgaard: {
     name: 'Mia Kappelgaard',
-    career: [{ house: 'samsoeSamsoe', role: 'Creative Director', end: 2020, notes: 'Previously led womenswear; exact start and title-change dates unconfirmed.' }],
-    notes: 'Joined Baum und Pferdgarten as senior designer in March 2020 after eight years at Samsøe Samsøe. Baum und Pferdgarten is not separately represented.',
+    career: [
+      { house: 'samsoeSamsoe', role: 'Creative Director', end: 2020, notes: 'Previously led womenswear; exact start and title-change dates unconfirmed.' },
+      { house: 'baumUndPferdgarten', role: 'Other', roleDetail: 'Senior designer', start: 2020, sources: ['https://branchebladettoj.dk/brancheprofil/dansk-modebrand-henter-erfaren-designer/'] },
+    ],
+    notes: 'Joined Baum und Pferdgarten as senior designer in March 2020 after eight years at Samsøe Samsøe.',
     sources: ['https://branchebladettoj.dk/brancheprofil/dansk-modebrand-henter-erfaren-designer/', 'https://elle.dk/interioer/bolig/paa-besoeg-hos-chefdesigner-mia-kappelgaard/'],
   },
   gitteWetter: {
@@ -3001,7 +3035,12 @@ export const designers = {
   anthonyVaccarello: {
     name: 'Anthony Vaccarello',
     nationality: 'Belgian',
-    career: [{ house: 'saintLaurent', role: 'Creative Director', start: 2016, end: null }],
+    career: [
+      { house: 'fendi', role: 'Other', roleDetail: 'Fur designer under Karl Lagerfeld', start: 2006, end: 2008 },
+      { house: 'anthonyVaccarelloLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2008, end: 2016 },
+      { house: 'versace', role: 'Other', roleDetail: 'Creative director of the Versus Versace line', start: 2015, end: 2016, approximate: true, notes: 'Designed a Versus capsule in 2014 before taking the line over.' },
+      { house: 'saintLaurent', role: 'Creative Director', start: 2016, end: null },
+    ],
   },
   phoebePhilo: {
     name: 'Phoebe Philo',
@@ -3610,6 +3649,7 @@ export const designers = {
     died: 2021,
     nationality: 'Israeli',
     career: [
+      { house: 'guyLaroche', role: 'Creative Director', start: 1996, end: 1998, approximate: true },
       { house: 'saintLaurent', role: 'Womenswear Director', roleDetail: 'YSL Rive Gauche', start: 1998, end: 1999 },
       { house: 'lanvin', role: 'Artistic Director', start: 2001, end: 2015 },
     ],
@@ -7481,8 +7521,13 @@ export const designers = {
   meryllRogge: {
     name: 'Meryll Rogge',
     nationality: 'Belgian',
-    career: [{ house: 'marni', role: 'Creative Director', start: 2025, end: null }],
-    notes: 'Previously at Dries Van Noten; won the 2025 ANDAM Fashion Award.',
+    career: [
+      { house: 'marcJacobs', role: 'Other', roleDetail: 'Womenswear designer', notes: 'About seven years in New York.' },
+      { house: 'driesVanNoten', role: 'Other', roleDetail: 'Womenswear design, later head of women’s design' },
+      { house: 'meryllRoggeLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2020, end: null },
+      { house: 'marni', role: 'Creative Director', start: 2025, end: null },
+    ],
+    notes: 'Royal Academy of Fine Arts Antwerp graduate; won the 2025 ANDAM Fashion Award.',
   },
   marioGrauso: {
     name: 'Mario Grauso',
@@ -7729,6 +7774,538 @@ export const designers = {
     nationality: 'Chinese',
     career: [{ house: 'angelChen', role: 'Founder', roleDetail: 'Founder, designer', start: 2014, end: null }],
     notes: 'Also known as Chen Anqi. Central Saint Martins graduate; on Netflix’s Next in Fashion (2020).',
+  },
+  michaelMaher: {
+    name: 'Michael Maher',
+    career: [
+      { house: 'taylorStitch', role: 'Founder', roleDetail: 'Co-founder, CEO', start: 2008, end: null },
+    ],
+  },
+  barrettPurdum: {
+    name: 'Barrett Purdum',
+    career: [
+      { house: 'taylorStitch', role: 'Founder', roleDetail: 'Co-founder', start: 2008 },
+    ],
+    notes: 'Later left the company; departure year unknown.',
+  },
+  mikeArmenta: {
+    name: 'Mike Armenta',
+    career: [
+      { house: 'taylorStitch', role: 'Founder', roleDetail: 'Co-founder', start: 2008 },
+    ],
+    notes: 'Some sources spell the surname Armenia.',
+  },
+  mikeNatenshon: {
+    name: 'Mike Natenshon',
+    career: [
+      { house: 'marineLayer', role: 'Founder', roleDetail: 'Founder, CEO', start: 2009, end: null },
+    ],
+  },
+  adamLynch: {
+    name: 'Adam Lynch',
+    career: [
+      { house: 'marineLayer', role: 'Founder', roleDetail: 'Co-founder, COO', start: 2009, end: null },
+    ],
+    notes: 'High-school friend of Mike Natenshon.',
+  },
+  turkHarput: {
+    name: 'Turk Harput',
+    career: [
+      { house: 'harputs', role: 'Founder', roleDetail: 'Founder', start: 1978 },
+    ],
+  },
+  gusHarput: {
+    name: 'Gus Harput',
+    career: [
+      { house: 'harputs', role: 'Head of House', roleDetail: 'Owner; co-designer of Harputs OWN' },
+    ],
+    notes: 'Son of Turk Harput; runs the family store and co-designs Harputs OWN with Jessica Tracy and Jan Warnock.',
+  },
+  jessicaTracy: {
+    name: 'Jessica Tracy',
+    career: [
+      { house: 'harputs', role: 'Other', roleDetail: 'Designer, Harputs OWN', start: 2009, approximate: true },
+    ],
+  },
+  janWarnock: {
+    name: 'Jan Warnock',
+    career: [
+      { house: 'harputs', role: 'Other', roleDetail: 'Designer, Harputs OWN', start: 2009, approximate: true },
+    ],
+    notes: 'Also designs under her own name.',
+  },
+  mannyMashouf: {
+    name: 'Manny Mashouf',
+    nationality: 'Iranian-American',
+    career: [
+      { house: 'bebe', role: 'Founder', roleDetail: 'Founder', start: 1976 },
+    ],
+    notes: 'Iranian-American businessman; long-time CEO of bebe stores, inc.',
+  },
+  nathanJenden: {
+    name: 'Nathan Jenden',
+    career: [
+      { house: 'bebe', role: 'Creative Director', start: 2017 },
+    ],
+    notes: 'Previously creative director at Diane von Furstenberg and designer of his own label. Appointed at bebe when Global Brands Group took over its e-commerce and international business.',
+  },
+  sidGupta: {
+    name: 'Sid Gupta',
+    career: [
+      { house: 'quince', role: 'Founder', roleDetail: 'Co-founder, CEO', start: 2018, end: null },
+    ],
+    notes: 'Previously ran the candy retailer Lolli & Pops.',
+  },
+  sourabhMahajan: {
+    name: 'Sourabh Mahajan',
+    career: [
+      { house: 'quince', role: 'Founder', roleDetail: 'Co-founder, CTO', start: 2018 },
+    ],
+  },
+  zunuMittal: {
+    name: 'Zunu Mittal',
+    career: [
+      { house: 'quince', role: 'Founder', roleDetail: 'Co-founder', start: 2018 },
+    ],
+  },
+  beckyMortimer: {
+    name: 'Becky Mortimer',
+    career: [
+      { house: 'quince', role: 'Founder', roleDetail: 'Co-founder', start: 2018, end: 2021 },
+    ],
+  },
+  kentUyehara: {
+    name: 'Kent Uyehara',
+    career: [
+      { house: 'ftc', role: 'Founder', roleDetail: 'Founder, owner', start: 1986 },
+    ],
+    notes: 'Son of the Free Trade Center owner; began ordering skateboards on his father’s retail licence.',
+  },
+  pietParra: {
+    name: 'Piet Parra',
+    nationality: 'Dutch',
+    career: [
+      { house: 'parra', role: 'Founder', roleDetail: 'Founder, designer', start: 2000, end: null },
+    ],
+    notes: 'Born Pieter Janssen; Dutch artist, illustrator and musician who moved to Amsterdam in 1998. Former pro and later art director for the Dutch skateboard brand Colorblind; also runs the skateboard brand Tired.',
+  },
+  stevieWilliams: {
+    name: 'Stevie Williams',
+    born: 1979,
+    nationality: 'American',
+    career: [
+      { house: 'dgk', role: 'Founder', roleDetail: 'Founder, owner', start: 2002, end: null },
+    ],
+    notes: 'Philadelphia pro skateboarder who came up at Love Park. Earlier co-owned Gold Wheels with Eli Soto and formed the Kayo Corp distribution company with Troy Morgan; later founded Asphalt Yacht Club (2013).',
+  },
+  bartKyzar: {
+    name: 'Bart Kyzar',
+    career: [
+      { house: 'missionWorkshop', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
+    ],
+    notes: 'Co-founded Chrome bags in the mid-1990s and sold it before starting Mission Workshop.',
+  },
+  markFalvai: {
+    name: 'Mark Falvai',
+    career: [
+      { house: 'missionWorkshop', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
+    ],
+    notes: 'Co-founded Chrome bags in the mid-1990s with Doug Hudson and sold it before starting Mission Workshop.',
+  },
+  ryanGarshell: {
+    name: 'Ryan Garshell',
+    career: [
+      { house: 'gx1000', role: 'Founder', roleDetail: 'Founder; skate filmmaker', start: 2008, end: null, approximate: true },
+      { house: 'thrasher', role: 'Other', roleDetail: 'In-house filmmaker' },
+    ],
+  },
+  stephenMcClintock: {
+    name: 'Stephen McClintock',
+    career: [
+      { house: 'gx1000', role: 'Other', roleDetail: 'Co-owner; design and production', start: 2014, end: null, approximate: true },
+    ],
+    notes: 'Longtime friend of Ryan Garshell who suggested making GX1000 merch.',
+  },
+  guyLarocheDesigner: {
+    name: 'Guy Laroche',
+    born: 1921,
+    died: 1989,
+    nationality: 'French',
+    career: [
+      { house: 'guyLaroche', role: 'Founder', roleDetail: 'Founder, couturier', start: 1957, end: 1989 },
+    ],
+  },
+  angeloTarlazzi: {
+    name: 'Angelo Tarlazzi',
+    nationality: 'Italian',
+    career: [
+      { house: 'guyLaroche', role: 'Creative Director', roleDetail: 'Haute couture', start: 1989, end: 1993, approximate: true },
+    ],
+  },
+  michelKlein: {
+    name: 'Michel Klein',
+    nationality: 'French',
+    career: [
+      { house: 'guyLaroche', role: 'Creative Director', start: 1993, end: 1996, approximate: true, notes: 'Sources differ on whether he left in 1996 or 1997.' },
+    ],
+  },
+  herveLLeroux: {
+    name: 'Hervé L. Leroux',
+    nationality: 'French',
+    career: [
+      { house: 'guyLaroche', role: 'Artistic Director', start: 2004, end: 2007, approximate: true },
+    ],
+    notes: 'Founded Hervé Léger, which is not yet in this dataset, and later worked as Hervé L. Leroux.',
+  },
+  marcelMarongiu: {
+    name: 'Marcel Marongiu',
+    career: [
+      { house: 'guyLaroche', role: 'Artistic Director', start: 2007, end: 2014, approximate: true, notes: 'Appointed November 2007; the end year is uncertain (2014 or 2015).' },
+    ],
+  },
+  adamAndrascik: {
+    name: 'Adam Andrascik',
+    career: [
+      { house: 'guyLaroche', role: 'Artistic Director', start: 2015, end: 2017, approximate: true },
+    ],
+  },
+  richardRene: {
+    name: 'Richard René',
+    career: [
+      { house: 'guyLaroche', role: 'Artistic Director', start: 2017 },
+    ],
+    notes: 'First Guy Laroche show was Spring/Summer 2018, in September 2017; end year unknown.',
+  },
+  mathildeCastelloBranco: {
+    name: 'Mathilde Castello Branco',
+    career: [
+      { house: 'guyLaroche', role: 'Creative Director', roleDetail: 'Senior creative director', start: 2025, end: null },
+    ],
+    notes: 'Previously at Azzaro (2011–2012) and Weill (from 2017), neither yet in this dataset.',
+  },
+  anneFontaineDesigner: {
+    name: 'Anne Fontaine',
+    nationality: 'French',
+    career: [
+      { house: 'anneFontaine', role: 'Founder', roleDetail: 'Founder, designer', start: 1993 },
+    ],
+  },
+  ariZlotkin: {
+    name: 'Ari Zlotkin',
+    career: [
+      { house: 'anneFontaine', role: 'Founder', roleDetail: 'Co-founder', start: 1993 },
+    ],
+    notes: 'Husband of Anne Fontaine; his family made shirts for couture houses.',
+  },
+  barbaraBui: {
+    name: 'Barbara Bui',
+    nationality: 'French',
+    career: [
+      { house: 'barbaraBui', role: 'Founder', roleDetail: 'Founder, designer', start: 1987, end: null },
+    ],
+    notes: 'Opened the Kabuki boutique in 1983 before launching her own label.',
+  },
+  williamHalimi: {
+    name: 'William Halimi',
+    career: [
+      { house: 'barbaraBui', role: 'CEO', roleDetail: 'Chairman and CEO (PDG)', end: null },
+    ],
+    notes: 'Partner of Barbara Bui.',
+  },
+  sergeCajfinger: {
+    name: 'Serge Cajfinger',
+    nationality: 'French',
+    career: [
+      { house: 'pauleKa', role: 'Founder', roleDetail: 'Founder, creative director', start: 1987, end: 2014 },
+      { house: 'pauleKa', role: 'Other', roleDetail: 'Returned to supervise collections', start: 2017 },
+    ],
+  },
+  alithiaSpuriZampetti: {
+    name: 'Alithia Spuri-Zampetti',
+    career: [
+      { house: 'valentino', role: 'Other', roleDetail: 'Design team' },
+      { house: 'bottegaVeneta', role: 'Other', roleDetail: 'Design team' },
+      { house: 'lanvin', role: 'Other', roleDetail: "Head of women's ready-to-wear", start: 2009, end: 2015, approximate: true },
+      { house: 'pauleKa', role: 'Creative Director', start: 2015, end: 2017, approximate: true },
+    ],
+  },
+  maximeSimoens: {
+    name: 'Maxime Simoëns',
+    nationality: 'French',
+    career: [
+      { house: 'pauleKa', role: 'Artistic Director', start: 2019 },
+    ],
+    notes: 'Founded his own label and was artistic director of Azzaro (2017–2019), neither yet in this dataset.',
+  },
+  julesValenduc: {
+    name: 'Jules Valenduc',
+    career: [
+      { house: 'pauleKa', role: 'Artistic Director', start: 2022, approximate: true },
+    ],
+    notes: 'Named as artistic director in a March 2022 interview.',
+  },
+  zuhairMuradDesigner: {
+    name: 'Zuhair Murad',
+    nationality: 'Lebanese',
+    career: [
+      { house: 'zuhairMurad', role: 'Founder', roleDetail: 'Founder, artistic director', start: 1997, end: null },
+    ],
+  },
+  judithMilgrom: {
+    name: 'Judith Milgrom',
+    nationality: 'French',
+    career: [
+      { house: 'maje', role: 'Founder', start: 1998, end: null },
+      { house: 'maje', role: 'Creative Director', roleDetail: 'Artistic director', start: 1998, end: null },
+    ],
+    notes: 'Sister of Sandro founder Évelyne Chétrite; a deputy CEO of SMCP.',
+  },
+  barbaraBoccara: {
+    name: 'Barbara Boccara',
+    career: [
+      { house: 'baSh', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2003, end: null },
+    ],
+  },
+  sharonKrief: {
+    name: 'Sharon Krief',
+    career: [
+      { house: 'baSh', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2003, end: null },
+    ],
+  },
+  danArrouas: {
+    name: 'Dan Arrouas',
+    career: [
+      { house: 'baSh', role: 'Founder', roleDetail: 'Co-founder', start: 2003 },
+      { house: 'baSh', role: 'CEO', end: null },
+    ],
+  },
+  arikBitton: {
+    name: 'Arik Bitton',
+    career: [
+      { house: 'iro', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2005 },
+    ],
+  },
+  laurentBitton: {
+    name: 'Laurent Bitton',
+    career: [
+      { house: 'iro', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2005 },
+    ],
+  },
+  nicolasRohaut: {
+    name: 'Nicolas Rohaut',
+    career: [
+      { house: 'dior', role: 'Other', roleDetail: 'Design team' },
+      { house: 'rabanne', role: 'Other', roleDetail: 'Design team under Julien Dossena', sources: ['https://fashionunited.com/news/people/iro-appoints-first-ever-creative-director-nicolas-rohaut/2025021364472'] },
+      { house: 'lanvin', role: 'Other', roleDetail: 'Head of design' },
+      { house: 'iro', role: 'Artistic Director', start: 2025, end: null },
+    ],
+  },
+  alphonseLancel: {
+    name: 'Alphonse Lancel',
+    career: [
+      { house: 'lancel', role: 'Founder', start: 1876 },
+    ],
+  },
+  angeleLancel: {
+    name: 'Angèle Lancel',
+    career: [
+      { house: 'lancel', role: 'Founder', start: 1876 },
+    ],
+  },
+  lorenzaCarpaneto: {
+    name: 'Lorenza Carpaneto',
+    career: [
+      { house: 'dolceGabbana', role: 'Other', roleDetail: 'Shoes and leather goods development' },
+      { house: 'lancel', role: 'Creative Director', start: 2006 },
+    ],
+    notes: 'Previously responsible for all collections at Hogan, which is not yet in this dataset.',
+  },
+  leonelloBorghi: {
+    name: 'Leonello Borghi',
+    career: [
+      { house: 'lancel', role: 'Artistic Director', start: 2010, approximate: true, notes: 'Documented in the role from 2010 to 2012.' },
+    ],
+  },
+  barbaraFusillo: {
+    name: 'Barbara Fusillo',
+    career: [
+      { house: 'miuMiu', role: 'Other', roleDetail: 'Leather accessories' },
+      { house: 'marcJacobs', role: 'Other', roleDetail: 'Design team' },
+      { house: 'lancel', role: 'Head Designer', roleDetail: 'Head of style', start: 2017 },
+    ],
+  },
+  valeriaVigorelli: {
+    name: 'Valeria Vigorelli',
+    career: [
+      { house: 'lancel', role: 'Artistic Director', roleDetail: 'Artistic director, creative studio', end: null },
+    ],
+  },
+  pierreHardy: {
+    name: 'Pierre Hardy',
+    born: 1956,
+    nationality: 'French',
+    career: [
+      { house: 'dior', role: 'Other', roleDetail: 'Shoe designer', start: 1987, end: 1990 },
+      { house: 'hermes', role: 'Other', roleDetail: 'Creative director, shoes', start: 1990, end: null },
+      { house: 'hermes', role: 'Other', roleDetail: 'Creative director, fine jewellery', start: 2001, end: null },
+      { house: 'balenciaga', role: 'Other', roleDetail: "Women's shoes", start: 2001, end: 2012 },
+      { house: 'pierreHardy', role: 'Founder', roleDetail: 'Founder, creative director', start: 1999, end: null },
+    ],
+  },
+  kevinKimIise: {
+    name: 'Kevin Kim',
+    career: [
+      { house: 'iise', role: 'Founder', roleDetail: 'Co-founder, creative director', start: 2013, approximate: true },
+    ],
+    notes: 'Korean-American; brother of Terrence Kim.',
+  },
+  terrenceKimIise: {
+    name: 'Terrence Kim',
+    career: [
+      { house: 'iise', role: 'Founder', roleDetail: 'Co-founder; business and marketing', start: 2013, approximate: true },
+      { house: 'iise', role: 'CEO' },
+    ],
+    notes: 'Korean-American; brother of Kevin Kim. Also spelled Terence.',
+  },
+  jeongJiyeon: {
+    name: 'Jeong Ji-yeon',
+    career: [
+      { house: 'recto', role: 'Founder', start: 2015, approximate: true },
+    ],
+    notes: '정지연; also romanized Jung Ji-yeon. Previously ran the Seoul concept store Product Seoul.',
+  },
+  jeongBaekseok: {
+    name: 'Jeong Baek-seok',
+    career: [
+      { house: 'recto', role: 'Creative Director' },
+    ],
+    notes: '정백석; also written Paiksuk Chung.',
+  },
+  shinKyuyong: {
+    name: 'Shin Kyu-yong',
+    career: [
+      { house: 'blindness', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2013 },
+    ],
+    notes: '신규용. Born 1988.',
+  },
+  parkJisun: {
+    name: 'Park Ji-sun',
+    career: [
+      { house: 'blindness', role: 'Founder', roleDetail: 'Co-founder, designer (joined 2015)', start: 2015 },
+    ],
+    notes: '박지선. Born 1988; studied furniture design at Hongik University.',
+  },
+  kangDongjun: {
+    name: 'Kang Dong-jun',
+    career: [
+      { house: 'dgnak', role: 'Founder', roleDetail: 'Founder, creative director', start: 2006 },
+    ],
+    notes: '강동준. Studied at Parsons School of Design.',
+  },
+  anJonghyuk: {
+    name: 'An Jong-hyuk',
+    career: [
+      { house: 'frizmworks', role: 'Founder', start: 2010 },
+    ],
+  },
+  jonathanChoe: {
+    name: 'Jonathan Choe',
+    career: [
+      { house: 'fffpostalservice', role: 'Founder', roleDetail: 'Founder, creative director', start: 2019, end: null, approximate: true },
+    ],
+  },
+  jongsooLee: {
+    name: 'Jongsoo Lee',
+    career: [
+      { house: 'documentSeoul', role: 'Founder', roleDetail: 'Founder, designer', start: 2014 },
+    ],
+  },
+  guJaemo: {
+    name: 'Gu Jae-mo',
+    career: [
+      { house: 'acmeDeLaVie', role: 'Founder', roleDetail: 'Co-founder, co-CEO', start: 2017 },
+    ],
+    notes: '구재모; twin brother of Gu Jin-mo. Previously imported luxury goods into Korea.',
+  },
+  guJinmo: {
+    name: 'Gu Jin-mo',
+    career: [
+      { house: 'acmeDeLaVie', role: 'Founder', roleDetail: 'Co-founder, co-CEO', start: 2017 },
+    ],
+    notes: '구진모; twin brother of Gu Jae-mo.',
+  },
+  parkHwamok: {
+    name: 'Park Hwa-mok',
+    career: [
+      { house: 'mardiMercredi', role: 'Founder', roleDetail: 'Co-founder, CEO; creative lead', start: 2018, end: null },
+    ],
+    notes: '박화목. Previously ran the street label PEACE PEACE.',
+  },
+  leeSuhyeon: {
+    name: 'Lee Su-hyeon',
+    career: [
+      { house: 'mardiMercredi', role: 'Founder', roleDetail: 'Co-founder', start: 2018 },
+    ],
+    notes: '이수현. Reportedly worked at Handsome and as a Balenciaga merchandiser.',
+  },
+  kangTaesun: {
+    name: 'Kang Tae-sun',
+    career: [
+      { house: 'blackyak', role: 'Founder', roleDetail: 'Founder, chairman', start: 1973, end: null },
+    ],
+    notes: '강태선.',
+  },
+  leeMyoungshin: {
+    name: 'Lee Myoung-shin',
+    career: [
+      { house: 'lowClassic', role: 'Founder', roleDetail: 'Co-founder, CEO', start: 2009, end: null },
+      { house: 'lowClassic', role: 'Creative Director', start: 2009, end: 2024 },
+    ],
+    notes: '이명신.',
+  },
+  hwangHyungji: {
+    name: 'Hwang Hyung-ji',
+    career: [
+      { house: 'lowClassic', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
+    ],
+    notes: '황형지.',
+  },
+  parkJinseon: {
+    name: 'Park Jin-seon',
+    career: [
+      { house: 'lowClassic', role: 'Founder', roleDetail: 'Co-founder; director', start: 2009 },
+    ],
+    notes: '박진선.',
+  },
+  kimSeyeon: {
+    name: 'Kim Se-yeon',
+    career: [
+      { house: 'lowClassic', role: 'Creative Director', roleDetail: 'Main line', end: null },
+    ],
+    notes: '김세연. Left and later returned to the brand.',
+  },
+  kimDasom: {
+    name: 'Kim Da-som',
+    career: [
+      { house: 'lowClassic', role: 'Creative Director', roleDetail: 'Lc diffusion line', end: null },
+    ],
+    notes: '김다솜. Left and later returned; also led the Locle line.',
+  },
+  parkSeunggun: {
+    name: 'Park Seung-gun',
+    career: [
+      { house: 'pushbutton', role: 'Founder', roleDetail: 'Founder, creative director', start: 2003, end: null, approximate: true },
+    ],
+    notes: '박승건. A singer before fashion. Creative director of Stylenanda and 3CE from 2021, neither yet in this dataset.',
+  },
+  carolineHuDesigner: {
+    name: 'Caroline Hu',
+    nationality: 'Chinese',
+    career: [
+      { house: 'dkny', role: 'Other', roleDetail: 'Design team', notes: 'Worked on the DKNY design team before G-III acquired the brand (per her 2021 Tatler interview).' },
+      { house: 'carolineHu', role: 'Founder', roleDetail: 'Founder, designer', start: 2018, end: null },
+    ],
+    notes: 'Born in Shenzhen. BA womenswear at Central Saint Martins; MFA Fashion Design and Society at Parsons (2017), under Shelley Fox.',
   },
   ziggyChenDesigner: {
     name: 'Ziggy Chen',
@@ -13472,6 +14049,7 @@ export const designers = {
         roleDetail: 'Creative director of premium products',
       },
       { house: 'rsvpGallery', role: 'Founder', roleDetail: 'Co-founder and co-owner', start: 2009, end: null, sources: ['https://www.complex.com/style/a/mike-destefano/don-c-rsvp-gallery-agolde-interview'] },
+      { house: 'justDon', role: 'Founder', roleDetail: 'Founder, designer', start: 2011, end: null, sources: ['https://www.complex.com/style/2015/07/don-c-reveals-history-of-just-dons-snapbacks'] },
     ],
     notes: 'Don Crawley, founder of Just Don; also a creative strategy and design adviser to the Chicago Bulls. His premium-products appointment is a sustained role, distinct from individual collaborations.',
   },
@@ -13862,6 +14440,7 @@ export const designers = {
         start: 2001,
         roleDetail: 'Co-chief creative officer',
       },
+      { house: 'kanuk', role: 'President', end: null, notes: 'Named president in Kanuk’s Pitti Uomo exhibitor profile; start year unconfirmed.', sources: ['https://uomo.pittimmagine.com/en/exhibitors/K/kanuk'] },
     ],
     sources: ['https://www.forbes.com/sites/josephdeacetis/2020/01/26/meet-mackage-an-outerwear-brand-that-never-spares-the-necessities-of-performance-for-style/', 'https://www.forbes.com/sites/sharonedelson/2022/12/20/former-mackage-co-creative-directors-got-women-covered-with-new-knitwear-brand/'],
     notes: 'Helped build Mackage before leaving to launch Dodiee in 2022. The 2020 joint interview dates her arrival to 2001; other accounts use 2000. Departure is established, but its exact year is not fixed here.',
@@ -14548,8 +15127,10 @@ export const designers = {
   },
   nickMartire: {
     name: 'Nick Martire',
-    career: [{ house: 'norda', role: 'Founder', roleDetail: 'Co-founder', start: 2020, end: null, sources: ['https://nordarun.com/blogs/stories/the-founders', 'https://hypebeast.com/2022/10/norda-001-trail-running-sneaker-release-dates-interview', 'https://www.linkedin.com/posts/norda-run_perpetual-forward-motion-norda-founders-activity-7448372317560254464-m6ez'] }],
-    notes: 'Previously worked at Aldo, including as vice president; that company is not currently in the house dataset.',
+    career: [
+      { house: 'norda', role: 'Founder', roleDetail: 'Co-founder', start: 2020, end: null, sources: ['https://nordarun.com/blogs/stories/the-founders', 'https://hypebeast.com/2022/10/norda-001-trail-running-sneaker-release-dates-interview', 'https://www.linkedin.com/posts/norda-run_perpetual-forward-motion-norda-founders-activity-7448372317560254464-m6ez'] },
+      { house: 'aldo', role: 'Other', roleDetail: 'Roles up to vice president', notes: 'Worked at Aldo before norda; exact dates unconfirmed.', sources: ['https://hypebeast.com/2022/10/norda-001-trail-running-sneaker-release-dates-interview'] },
+    ],
     sources: ['https://hypebeast.com/2022/10/norda-001-trail-running-sneaker-release-dates-interview'],
   },
   willaMartire: {
@@ -14560,9 +15141,10 @@ export const designers = {
     name: 'Louis-Martin Tremblay',
     career: [
       { house: 'aimeLeonDore', role: 'Other', roleDetail: 'Footwear design consultant', notes: 'Worked with Teddy Santis through his design practice before norda; exact dates unconfirmed.', sources: ['https://hypebeast.com/2022/10/norda-001-trail-running-sneaker-release-dates-interview'] },
+      { house: 'aldo', role: 'Other', roleDetail: 'Design consultant', notes: 'Consulted for Aldo before norda; exact dates unconfirmed.', sources: ['https://hypebeast.com/2022/10/norda-001-trail-running-sneaker-release-dates-interview'] },
       { house: 'norda', role: 'Head Designer', roleDetail: 'Head of design', end: null, notes: 'Joined the original launch team as a partner; current scope is confirmed by the 2026 creative-director announcement. Exact appointment date unconfirmed.', sources: ['https://nordarun.com/blogs/stories/the-founders', 'https://www.linkedin.com/posts/norda-run_perpetual-forward-motion-norda-founders-activity-7448372317560254464-m6ez'] },
     ],
-    notes: 'Founded Atelier LMTL and previously consulted for Aldo, neither currently a house in this dataset.',
+    notes: 'Founded Atelier LMTL, not currently a house in this dataset.',
   },
   gerardCleal: {
     name: 'Gerard Cleal',
@@ -16689,6 +17271,133 @@ export const designers = {
     notes: 'Royal College of Art graduate who established her own label after graduating in 2010. Based her studio in Copenhagen and showed menswear in London. Paused the label in 2021 and launched the separate womenswear brand STEL with Anders Freund in 2024; STEL is not separately represented.',
     sources: ['https://fashionista.com/2017/09/astrid-andersen-interview', 'https://www.highsnobiety.com/p/astrid-andersen-stel-interview/'],
   },
+  /* ---------- Saks Potts, (di)vision, Stine Goya, Baum und Pferdgarten, LINDBERG, Andersen-Andersen, Forét, Another Aspect, the garment ---------- */
+  cathrineSaks: {
+    name: 'Cathrine Saks',
+    nationality: 'Danish',
+    career: [{ house: 'saksPotts', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2014, end: 2025 }],
+    notes: 'Studied fashion design and tailoring; founded the label with her childhood friend Barbara Potts.',
+    sources: ['https://fashionunited.com/news/fashion/saks-potts-to-close-label-in-2025/2024112863143', 'https://marieclaire.com/fashion/saks-potts-founders-interview'],
+  },
+  barbaraPotts: {
+    name: 'Barbara Potts',
+    nationality: 'Danish',
+    career: [{ house: 'saksPotts', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2014, end: 2025 }],
+    notes: 'Studied art history at the University of Copenhagen while launching the label with Cathrine Saks.',
+    sources: ['https://fashionunited.com/news/fashion/saks-potts-to-close-label-in-2025/2024112863143', 'https://marieclaire.com/fashion/saks-potts-founders-interview'],
+  },
+  simonWick: {
+    name: 'Simon Wick',
+    nationality: 'Danish',
+    career: [{ house: 'division', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2018, end: 2024 }],
+    notes: 'Co-founded (di)vision with his sister Nanna and announced its relaunch with her in November 2026. Later became creative director of the Danish sportswear brand 7 Days Active (exact year unconfirmed), staying on as a (di)vision owner and creative consultant; 7 Days Active is not represented in the dataset.',
+    sources: ['https://www.voguescandinavia.com/articles/simon-wick-7-days-active-creative-director', 'https://nakedcph.com/blogs/news/close-up-with-division-founders-nanna-and-simon-wick', 'https://di-vsn.com'],
+  },
+  nannaWick: {
+    name: 'Nanna Wick',
+    nationality: 'Danish',
+    career: [{ house: 'division', role: 'Founder', roleDetail: 'Co-founder', start: 2018, end: 2024 }],
+    notes: 'Co-founded (di)vision with her brother Simon and announced its relaunch with him in November 2026.',
+    sources: ['https://nakedcph.com/blogs/news/close-up-with-division-founders-nanna-and-simon-wick', 'https://di-vsn.com'],
+  },
+  stineGoya: {
+    name: 'Stine Goya',
+    nationality: 'Danish',
+    career: [{ house: 'stineGoya', role: 'Founder', roleDetail: 'Founder and creative director', start: 2006, end: null }],
+    notes: 'Worked as a model, stylist and fashion editor at the Danish magazine Cover before launching her label.',
+    sources: ['https://se.stinegoya.com/pages/about', 'https://de.stinegoya.com/pages/aw25-show', 'https://www.sheerluxe.com/fashion/meet-designer-stine-goya'],
+  },
+  rikkeBaumgarten: {
+    name: 'Rikke Baumgarten',
+    nationality: 'Danish',
+    career: [{ house: 'baumUndPferdgarten', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 1999, end: null }],
+    notes: 'Graduated from the Royal Danish Academy of Design before co-founding the label with Helle Hestehave.',
+    sources: ['https://baumundpferdgarten.com/pages/about-us', 'https://www.whowhatwear.com/baum-und-pferdgarten-interview'],
+  },
+  helleHestehave: {
+    name: 'Helle Hestehave',
+    nationality: 'Danish',
+    career: [{ house: 'baumUndPferdgarten', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 1999, end: null }],
+    notes: 'Graduated from the Royal Danish Academy of Design before co-founding the label with Rikke Baumgarten.',
+    sources: ['https://baumundpferdgarten.com/pages/about-us', 'https://www.whowhatwear.com/baum-und-pferdgarten-interview'],
+  },
+  poulJornLindberg: {
+    name: 'Poul-Jørn Lindberg',
+    nationality: 'Danish',
+    career: [{ house: 'lindberg', role: 'Founder', roleDetail: 'Co-founder; designer of the Air Titanium frame', start: 1986 }],
+    notes: 'Optometrist who opened an optical shop in Aarhus in 1969. Developed the first Air Titanium prototype in 1983 with architect Hans Dissing and invented the screwless spiral hinge.',
+    sources: ['https://cdn.lindberg.com/en/brand/heritage', 'https://wallpaper.com/fashion-beauty/the-timeless-design-behind-lindberg-eyewear'],
+  },
+  henrikLindberg: {
+    name: 'Henrik Lindberg',
+    nationality: 'Danish',
+    career: [{ house: 'lindberg', role: 'Founder', roleDetail: 'Co-founder', start: 1986 }],
+    notes: 'Architect; son of Poul-Jørn Lindberg, with whom he founded the brand.',
+    sources: ['https://cdn.lindberg.com/en/brand/heritage', 'https://en.wikipedia.org/wiki/Lindberg_(eyewear)'],
+  },
+  cathrineLundgrenAndersen: {
+    name: 'Cathrine Lundgren-Andersen',
+    nationality: 'Danish',
+    career: [{ house: 'andersenAndersen', role: 'Founder', roleDetail: 'Co-founder', start: 2009 }],
+    notes: 'A sailor who founded the family company with her husband, Peter Kjær-Andersen.',
+    sources: ['https://andersen-andersen.com', 'https://www.trunkclothiers.com/blogs/journal/andersen-andersen-brand-bio'],
+  },
+  peterKjaerAndersen: {
+    name: 'Peter Kjær-Andersen',
+    born: 1964,
+    died: 2018,
+    nationality: 'Danish',
+    career: [{ house: 'andersenAndersen', role: 'Founder', roleDetail: 'Co-founder', start: 2009, end: 2018 }],
+    notes: 'A sailor who founded the family company with his wife, Cathrine Lundgren-Andersen.',
+    sources: ['https://andersen-andersen.com', 'https://www.norsestore.com/blog/339-peter-kjaer-andersen'],
+  },
+  jeppeMeier: {
+    name: 'Jeppe Meier',
+    nationality: 'Danish',
+    career: [{ house: 'foret', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null }],
+    notes: 'Grew up in Ringsted with co-founder Jesper Finderup; previously worked in fashion and advertising.',
+    sources: ['https://www.foretstudio.dk/pages/about', 'https://www.opumo.com/magazine/design-duos-jeppe-jesper-of-foret-clothing/'],
+  },
+  jesperFinderup: {
+    name: 'Jesper Finderup',
+    nationality: 'Danish',
+    career: [{ house: 'foret', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null }],
+    notes: 'Grew up in Ringsted with co-founder Jeppe Meier; previously worked in fashion and advertising.',
+    sources: ['https://www.foretstudio.dk/pages/about', 'https://www.opumo.com/magazine/design-duos-jeppe-jesper-of-foret-clothing/'],
+  },
+  danielBrondt: {
+    name: 'Daniel Brøndt',
+    nationality: 'Danish',
+    career: [{ house: 'anotherAspect', role: 'Founder', roleDetail: 'Co-founder; brand direction', start: 2019, end: null }],
+    notes: 'Worked at the Copenhagen menswear store Goods before co-founding the label.',
+    sources: ['https://aol.com/five-fits-another-aspect-co-160100708.html', 'https://monocle.com/radio/shows/the-entrepreneurs/eureka-312/'],
+  },
+  andersPoulsen: {
+    name: 'Anders Poulsen',
+    nationality: 'Danish',
+    career: [{ house: 'anotherAspect', role: 'Founder', roleDetail: 'Co-founder', start: 2019, end: null }],
+    sources: ['https://monocle.com/radio/shows/the-entrepreneurs/eureka-312/', 'https://afurastore.com/news/in-conversation-with-daniel-anders-and-nicolaj-from-another-aspect'],
+  },
+  nicolajThomsen: {
+    name: 'Nicolaj Thomsen',
+    nationality: 'Danish',
+    career: [{ house: 'anotherAspect', role: 'Founder', roleDetail: 'Co-founder', start: 2019, end: null }],
+    notes: 'Former professional footballer.',
+    sources: ['https://www.kinfolk.com/stories/what-are-you-working-on-10', 'https://monocle.com/radio/shows/the-entrepreneurs/eureka-312/'],
+  },
+  charlotteEskildsen: {
+    name: 'Charlotte Eskildsen',
+    nationality: 'Danish',
+    career: [{ house: 'theGarment', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2020, end: null }],
+    notes: 'Founded the Copenhagen label Designers Remix in 2002 with her husband Niels Eskildsen and served as its creative director; Designers Remix is not represented in the dataset.',
+    sources: ['https://www.thegarment.com', 'https://en.wikipedia.org/wiki/Charlotte_Eskildsen', 'https://corporate.zalando.com/en/node/10471'],
+  },
+  sophiaRoe: {
+    name: 'Sophia Roe',
+    career: [{ house: 'theGarment', role: 'Founder', roleDetail: 'Co-founder', start: 2020 }],
+    notes: 'Fashion influencer.',
+    sources: ['https://www.modaoperandi.com/designer/the-garment', 'https://corporate.zalando.com/en/node/10471'],
+  },
   alanBlond: {
     name: 'Alan Blond',
     career: [
@@ -16972,8 +17681,11 @@ export const designers = {
     name: 'Kobi Halperin',
     nationality: 'Israeli',
     career: [
+      { house: 'kennethCole', role: 'Other', roleDetail: 'Executive creative director', notes: 'About three years; sources disagree on whether this came before or after Elie Tahari.' },
+      { house: 'kobiHalperinLabel', role: 'Founder', roleDetail: 'Founder, creative director', start: 2015, end: null },
       { house: 'ungaro', role: 'Artistic Director', start: 2021, notes: 'Appointed from the resort 2021 collection. Current status unconfirmed.', sources: ['https://cfda.com/news/kobi-halperin-to-design-ungaro/'] },
     ],
+    notes: 'Studied at Shenkar College in Israel before moving to New York; earlier executive creative director at Elie Tahari (about 13 years).',
   },
   charlotteKnowles: {
     name: 'Charlotte Knowles',
@@ -17591,6 +18303,7 @@ export const designers = {
       { house: 'ungaro', role: 'Other', roleDetail: 'Apprentice' },
       { house: 'dior', role: 'Other', roleDetail: 'Jewellery and accessories designer' },
       { house: 'pyrenex', role: 'Artistic Director', roleDetail: 'Premium line', start: 2009, end: 2011 },
+      { house: 'alexisMabille', role: 'Founder', roleDetail: 'Founder, designer', start: 2005, end: null },
     ],
     sources: ['https://notjustalabel.com/alexis-mabille', 'https://www.vogue.fr/mode/la-revue-de-la-mode/diaporama/lactu-mode-de-la-semaine-du-07-10-2013/11386'],
   },
@@ -17600,6 +18313,7 @@ export const designers = {
       { house: 'mugler', role: 'Other', roleDetail: 'Atelier assistant' },
       { house: 'jeanPaulGaultier', role: 'Other', roleDetail: 'Couture studio director' },
       { house: 'pyrenex', role: 'Artistic Director', roleDetail: 'Premium line', start: 2012 },
+      { house: 'alexandreVauthier', role: 'Founder', roleDetail: 'Founder, designer', start: 2009, end: 2025, notes: 'Left after Revolve took control; he remains a minority shareholder.' },
     ],
     sources: ['https://fashionweekdaily.com/alexandre-vauthier-joins-the-couture-calendar/', 'https://www.ladepeche.fr/article/2012/09/22/1445945-agen-alexandre-vauthier-signe-une-collection-chez-pyrenex.html'],
   },
@@ -18854,6 +19568,551 @@ export const designers = {
     nationality: 'Dutch',
     career: [{ house: 'lackOfGuidance', role: 'Founder', roleDetail: 'Co-founder', start: 2016, sources: ['https://hypebeast.com/2021/10/lack-of-guidance-football-fashion-feature-interview'] }],
     notes: 'Co-founded Lack of Guidance with Akaar Amin; current involvement unconfirmed.',
+  },
+  xanderZhouDesigner: {
+    name: 'Xander Zhou',
+    nationality: 'Chinese',
+    career: [{ house: 'xanderZhou', role: 'Founder', roleDetail: 'Founder, head designer', start: 2007, end: null, sources: ['https://www.ssense.com/en-ae/men/designers/xander-zhou'] }],
+    notes: 'Studied design in China, then fashion in The Hague. First Chinese designer to show at London Fashion Week Men’s; also menswear fashion director of T Magazine China.',
+  },
+  shangguanZhe: {
+    name: 'Shangguan Zhe',
+    nationality: 'Chinese',
+    career: [{ house: 'sankuanz', role: 'Founder', roleDetail: 'Founder, designer', start: 2008, end: null, sources: ['https://www.lvmhprize.com/en/sankuanz'] }],
+    notes: 'Graduated in visual communication and advertising from Xiamen University in 2007 and set up his own label immediately afterwards.',
+  },
+  amberPeng: {
+    name: 'Amber Peng',
+    nationality: 'Chinese',
+    career: [{ house: 'aaSpectrum', role: 'Founder', roleDetail: 'Co-founder', start: 2015, sources: ['https://www.numeroberlin.de/2024/12/a-a-spectrum-in-conversation-with-the-fashion-brands-co-founder-and-design-director/'] }],
+  },
+  yingZeng: {
+    name: 'Ying Zeng',
+    nationality: 'Chinese',
+    career: [{ house: 'aaSpectrum', role: 'Founder', roleDetail: 'Co-founder', start: 2015, end: null, sources: ['https://www.numeroberlin.de/2024/12/a-a-spectrum-in-conversation-with-the-fashion-brands-co-founder-and-design-director/'] }],
+    notes: 'Also spelt Ying Zheng.',
+  },
+  kevinTallon: {
+    name: 'Kevin Tallon',
+    nationality: 'Swiss',
+    career: [
+      { house: 'maharishi', role: 'Other', roleDetail: 'Designer (role unconfirmed)', sources: ['https://fashionunited.com/news/fashion/a-a-spectrum-when-european-design-meets-chinese-expertise/2026072273574'] },
+      { house: 'kappa', role: 'Other', roleDetail: 'Kappa China (role unconfirmed)', sources: ['https://fuckingyoung.es/inside-a-a-spectrums-new-era-with-creative-director-kevin-tallon/'] },
+      { house: 'aaSpectrum', role: 'Creative Director', roleDetail: 'Design director / creative director', start: 2019, end: null, sources: ['https://fashionunited.com/news/fashion/a-a-spectrum-when-european-design-meets-chinese-expertise/2026072273574', 'https://fuckingyoung.es/inside-a-a-spectrums-new-era-with-creative-director-kevin-tallon/'] },
+    ],
+    notes: 'Born in Geneva to an English father and Swiss mother; Central Saint Martins graduate. Began at Katharine Hamnett, developed the fashion unit of CSM’s Design Laboratory, spent about ten years in Beijing and ran his own project Capital Nord. Joined A. A. Spectrum as a consultant in 2019.',
+  },
+  gMing: {
+    name: 'G Ming',
+    nationality: 'Chinese',
+    career: [{ house: 'soulgoods', role: 'Founder', roleDetail: 'Co-founder', start: 2016, sources: ['https://www.sneakerfreaker.com/features/wu-yue-home-is-where-the-soul-is-soulgoods-nike-homescape-interview'] }],
+    notes: 'Came up with the SOULGOODS name.',
+  },
+  wuYue: {
+    name: 'Wu Yue',
+    nationality: 'Chinese',
+    career: [{ house: 'soulgoods', role: 'Founder', roleDetail: 'Co-founder, creative director', start: 2016, end: null, sources: ['https://www.sneakerfreaker.com/features/wu-yue-home-is-where-the-soul-is-soulgoods-nike-homescape-interview'] }],
+    notes: 'Artist born in Beijing and raised in Paris.',
+  },
+  chenPengDesigner: {
+    name: 'Chen Peng',
+    nationality: 'Chinese',
+    career: [{ house: 'chenPeng', role: 'Founder', roleDetail: 'Founder, designer', start: 2015, end: null, sources: ['https://jingdaily.com/profiles/chen-peng'] }],
+    notes: 'Born into a family of ceramic artisans in Jingdezhen, Jiangxi; MA in Menswear from London College of Fashion. YU Prize winner and LVMH Prize semi-finalist; chief costume designer for the Beijing 2022 Winter Olympics opening ceremony and visiting creative director at ANTA.',
+  },
+  shimoZhou: {
+    name: 'Shimo Zhou',
+    nationality: 'Chinese',
+    career: [
+      { house: 'alexanderMcQueen', role: 'Other', roleDetail: 'Worked at the house (role unconfirmed)', sources: ['https://radii.co/article/china-designers-staffonly'] },
+      { house: 'tomFord', role: 'Other', roleDetail: 'Worked at the house (role unconfirmed)', sources: ['https://radii.co/article/china-designers-staffonly'] },
+      { house: 'staffonly', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2015, end: null, sources: ['https://fuckingyoung.es/staffonly-little-chat-une-yea-shimo-zhou/'] },
+    ],
+    notes: 'Also spelt Shimo Zou. Menswear graduate of London College of Fashion.',
+  },
+  uneYea: {
+    name: 'Une Yea',
+    nationality: 'Chinese',
+    career: [{ house: 'staffonly', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2015, end: null, sources: ['https://fuckingyoung.es/staffonly-little-chat-une-yea-shimo-zhou/'] }],
+    notes: 'Also given as Wen Ya. MA in Accessory Design from the Royal College of Art.',
+  },
+  siyunHuangDesigner: {
+    name: 'Siyun Huang',
+    nationality: 'Chinese',
+    career: [{ house: 'siyunHuang', role: 'Founder', roleDetail: 'Founder, designer', start: 2022, end: null, sources: ['https://londonfashionweek.co.uk/designers/siyun-huang'] }],
+    notes: 'BA from the Central Academy of Fine Arts, Beijing, and MA Fashion Design & Technology (Womenswear) from London College of Fashion; also a fashion lecturer and digital fashion artist.',
+  },
+  nguyenCongTri: {
+    name: 'Nguyễn Công Trí',
+    born: 1978,
+    nationality: 'Vietnamese',
+    career: [{ house: 'congTri', role: 'Founder', roleDetail: 'Founder, designer', end: null, sources: ['https://e.vnexpress.net/news/life/rice-fields-and-rihanna-the-vietnamese-couturier-with-a-celeb-clientele-4406541.html'] }],
+    notes: 'Known as Cong Tri. Born in Da Nang; studied industrial arts and began by sketching CD covers for Vietnamese musicians. First Vietnamese member of the Asian Couture Federation (2014). The label’s founding year is unconfirmed: sources give 2001, 2002 and 2009.',
+  },
+  duyTran: {
+    name: 'Duy Tran',
+    nationality: 'Vietnamese',
+    career: [{ house: 'fanciClub', role: 'Founder', roleDetail: 'Founder, designer', start: 2018, end: null, sources: ['https://maps-magazine.squarespace.com/maps-talk/2023/9/12/vol184fanci-club'] }],
+    notes: 'Dropped out of fashion school and started by upcycling secondhand clothing.',
+  },
+  tomTrandt: {
+    name: 'Tom Trandt',
+    nationality: 'Vietnamese',
+    career: [{ house: 'moiDien', role: 'Founder', roleDetail: 'Founder, designer', start: 2016, end: null, sources: ['https://vietnamnews.vn/life-style/1783776/emerging-brand-moi-dien-opens-2026-vn-int-l-fashion-week.html'] }],
+    notes: 'Real name Trần Minh Đạo. Born and raised in Ho Chi Minh City; graduated in fashion design from Parsons School of Design in 2016.',
+  },
+  lamGiaKhang: {
+    name: 'Lâm Gia Khang',
+    nationality: 'Vietnamese',
+    career: [{ house: 'giaStudios', role: 'Founder', roleDetail: 'Founder, creative director', start: 2018, end: null, sources: ['https://vietcetera.com/amp/en/lam-gia-khang-on-the-hard-work-behind-his-gia-studios'] }],
+    notes: 'Fourth-generation tailor. Studied at the London College for Design and Fashion, Hanoi; assistant to designer Đỗ Mạnh Cường; competed on Project Runway Vietnam (2013). Ran his eponymous LAM GIA KHANG womenswear label from 2014 (Elle Vietnam Designer of the Year 2015) before launching GIA Studios.',
+  },
+  phanHuyDesigner: {
+    name: 'Phan Huy',
+    nationality: 'Vietnamese',
+    career: [{ house: 'phanHuy', role: 'Founder', roleDetail: 'Co-founder, creative director', start: 2023, end: null, sources: ['https://www.tatlerasia.com/people/phan-huy'] }],
+    notes: 'Full name Phan Nguyễn Nguyên Huy. Grew up in Nha Trang; his graduation collection at Ho Chi Minh City University went viral. Aged 27 at his January 2026 Paris couture debut, the youngest designer on the official calendar.',
+  },
+  stevenDoan: {
+    name: 'Steven Đoàn',
+    nationality: 'Vietnamese',
+    career: [{ house: 'phanHuy', role: 'Founder', roleDetail: 'Co-founder, chief executive', start: 2023, end: null, sources: ['https://fashionunited.com/news/fashion/phan-huy-the-fashion-prodigy-putting-vietnam-on-the-map/2026012970310'] }],
+    notes: 'Former model and London stylist; sets PHAN HUY’s collection themes, runway stories and production strategy.',
+  },
+  vuThao: {
+    name: 'Vũ Thảo',
+    nationality: 'Vietnamese',
+    career: [{ house: 'kilomet109', role: 'Founder', roleDetail: 'Founder, designer', start: 2012, end: null, sources: ['https://vietnam.vnanet.vn/english/print/kilomet-109-a-fashion-brand-imprinted-by-culture-305574.html'] }],
+    notes: 'Also written Thao Vu. From Thái Bình; a former magazine journalist who wrote about craft communities, then trained at the London College for Design and Fashion, Hanoi. British Council Young Creative Entrepreneur (Design/Fashion) award, 2014.',
+  },
+  louisGrenier: {
+    name: 'Louis Grenier',
+    career: [{ house: 'kanuk', role: 'Founder', start: 1974, end: 2015, notes: 'Sold the company in 2015.', sources: ['https://www.pressreader.com/canada/montreal-gazette/20151031/281487865217506'] }],
+  },
+  bertrandCesvet: {
+    name: 'Bertrand Cesvet',
+    career: [
+      { house: 'kanuk', role: 'Other', roleDetail: 'Chief creative executive; led the 2024 investor group', start: 2024, end: null, sources: ['https://www.businesswire.com/news/home/20240507949482/en/Kanuk-Changes-Hands'] },
+      { house: 'psychoBunny', role: 'Other', roleDetail: 'Chief creative executive', end: null, notes: 'Holding the title in May 2024; start year unconfirmed.', sources: ['https://www.businesswire.com/news/home/20240507949482/en/Kanuk-Changes-Hands'] },
+    ],
+    notes: 'Advertising and brand strategist known for repositioning brands such as Adidas, Absolut and Cirque du Soleil.',
+  },
+  mauriceBenisti: {
+    name: 'Maurice Benisti',
+    career: [{ house: 'pointZero', role: 'Founder', start: 1979, end: null, notes: 'Runs the company with Nicole Benisti.', sources: ['https://pointzero.ca/pages/our-history-notre-histoire'] }],
+  },
+  ethanSong: {
+    name: 'Ethan Song',
+    career: [
+      { house: 'frankAndOak', role: 'Founder', roleDetail: 'Co-founder, CEO', start: 2012, sources: ['https://www.cafawards.ca/?p=724', 'https://encyclomodeqc.musee-mccord-stewart.ca/en/entry/frank-oak/'] },
+      { house: 'frankAndOak', role: 'Creative Director', start: 2012, notes: 'Listed as co-founder, CEO and creative director; end of role unconfirmed after the 2025 sale.', sources: ['https://www.cafawards.ca/?p=724'] },
+    ],
+    notes: 'Childhood friend of Hicham Ratnani; the pair first ran the made-to-measure menswear site Modasuite from 2010.',
+  },
+  hichamRatnani: {
+    name: 'Hicham Ratnani',
+    career: [{ house: 'frankAndOak', role: 'Founder', roleDetail: 'Co-founder; COO, later CCO', start: 2012, sources: ['https://www.cafawards.ca/?p=724', 'https://strategyonline.ca/?p=175391'] }],
+  },
+  pennyShuster: {
+    name: 'Penny Shuster',
+    career: [{ house: 'laCanadienne', role: 'Founder', roleDetail: 'Co-founder with Giovanni Lamanuzzi', start: 1987, approximate: true, notes: 'The brand gives 1987; the McCord Stewart Museum dates the launch to 1991.', sources: ['https://encyclomodeqc.musee-mccord-stewart.ca/en/entry/la-canadienne/'] }],
+    notes: 'Daughter of Michael Shuster, who opened the family’s Montreal boot factory in 1961.',
+  },
+  giovanniLamanuzzi: {
+    name: 'Giovanni Lamanuzzi',
+    career: [{ house: 'laCanadienne', role: 'Founder', roleDetail: 'Co-founder with Penny Shuster', start: 1987, approximate: true, sources: ['https://encyclomodeqc.musee-mccord-stewart.ca/en/entry/la-canadienne/'] }],
+  },
+  olegMoroz: {
+    name: 'Oleg Moroz',
+    nationality: 'Ukrainian',
+    career: [{ house: 'riotDivision', role: 'Founder', roleDetail: 'Founder, designer', start: 2010, end: null, sources: ['https://riotdivision.tech/pages/about', 'https://www.kaltblut-magazine.com/in-conversation-with-oleh-moroz-founder-of-riotdivision/'] }],
+    notes: 'Also spelled Oleh Moroz. Served in the Armed Forces of Ukraine after the 2022 invasion.',
+  },
+  myriamBelzileMaguire: {
+    name: 'Myriam Belzile-Maguire',
+    career: [{ house: 'maguire', role: 'Founder', roleDetail: 'Co-founder; leads design and product', start: 2017, end: null, sources: ['https://maguireshoes.com/blogs/about/our-story', 'https://www.canada.ca/en/economic-development-quebec-regions/blog/success-stories/a-dancing-duet-the-belzile-maguire-sisters-set-out-to-conquer-the-world-of-shoes.html'] }],
+    notes: 'Raised in Quebec City; sister of Romy Belzile-Maguire.',
+  },
+  romyBelzileMaguire: {
+    name: 'Romy Belzile-Maguire',
+    career: [{ house: 'maguire', role: 'Founder', roleDetail: 'Co-founder; leads operations and marketing', start: 2017, end: null, sources: ['https://maguireshoes.com/blogs/about/our-story', 'https://www.canada.ca/en/economic-development-quebec-regions/blog/success-stories/a-dancing-duet-the-belzile-maguire-sisters-set-out-to-conquer-the-world-of-shoes.html'] }],
+    notes: 'Raised in Quebec City; sister of Myriam Belzile-Maguire.',
+  },
+  zachMacklovitch: {
+    name: 'Zach Macklovitch',
+    career: [{ house: 'saintwoods', role: 'Founder', roleDetail: 'Co-founder', start: 2006, notes: 'HBX credits both founders with the 2006 start; a speaker biography dates his partnership to 2012.', sources: ['https://hbx.com/brands/saintwoods', 'https://havana-club.com/en/panelists/zach-macklovitch'] }],
+    notes: 'Also spelled Zack. Has worked with Vice, SSENSE and Highsnobiety; the Saintwoods partners also run the Montreal restaurant SUWU, club École Privée and bar Apt. 200.',
+  },
+  nathanGannage: {
+    name: 'Nathan Gannage',
+    career: [{ house: 'saintwoods', role: 'Founder', roleDetail: 'Co-founder', start: 2006, sources: ['https://hbx.com/brands/saintwoods', 'https://coveteur.com/2019/10/30/saintwoods-clothing-brand-born-out-of-throwing-parties'] }],
+  },
+  anneMarieLaflamme: {
+    name: 'Anne-Marie Laflamme',
+    career: [{ house: 'atelierB', role: 'Founder', roleDetail: 'Co-founder, designer; leads communications and marketing', start: 2009, end: null, sources: ['https://encyclomodeqc.musee-mccord-stewart.ca/en/?p=2043', 'https://www.concordia.ca/finearts/art-volt/mentorship/mentors/past-mentors/anne-marie-laflamme-catherine-metivier.html'] }],
+    notes: 'Studied fashion design at Cégep Marie-Victorin and UQAM’s École supérieure de mode.',
+  },
+  catherineMetivier: {
+    name: 'Catherine Métivier',
+    career: [{ house: 'atelierB', role: 'Founder', roleDetail: 'Co-founder, designer; leads production', start: 2009, end: null, sources: ['https://encyclomodeqc.musee-mccord-stewart.ca/en/?p=2043', 'https://www.concordia.ca/finearts/art-volt/mentorship/mentors/past-mentors/anne-marie-laflamme-catherine-metivier.html'] }],
+    notes: 'Studied fashion design at Cégep Marie-Victorin and UQAM’s École supérieure de mode.',
+  },
+  setizTaheri: {
+    name: 'Setiz Taheri',
+    career: [{ house: 'atelierNewRegime', role: 'Founder', roleDetail: 'Co-founder', start: 2009, sources: ['https://encyclomodeqc.musee-mccord-stewart.ca/en/entry/atelier-new-regime/'] }],
+  },
+  kokuAwuye: {
+    name: 'Koku Awuye',
+    career: [
+      { house: 'atelierNewRegime', role: 'Founder', roleDetail: 'Co-founder with his brother Gildas Awuye and Setiz Taheri', start: 2009, sources: ['https://encyclomodeqc.musee-mccord-stewart.ca/en/entry/atelier-new-regime/'] },
+      { house: 'atelierNewRegime', role: 'Creative Director', notes: 'Described as creative director in Fashion Magazine coverage; dates unconfirmed.', sources: ['https://fashionmagazine.com/style/atelier-new-regime-drop/'] },
+    ],
+  },
+  gildasAwuye: {
+    name: 'Gildas Awuye',
+    career: [{ house: 'atelierNewRegime', role: 'Founder', roleDetail: 'Co-founder', start: 2009, sources: ['https://encyclomodeqc.musee-mccord-stewart.ca/en/entry/atelier-new-regime/'] }],
+  },
+  marcAndreGarand: {
+    name: 'Marc-André Garand',
+    career: [{ house: 'ecoleDePensee', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null, sources: ['https://sharpmagazine.com/2024/05/03/ecole-de-pensee-montreal-menswear-interview/'] }],
+  },
+  williamLessard: {
+    name: 'William Lessard',
+    career: [{ house: 'ecoleDePensee', role: 'Founder', roleDetail: 'Co-founder; oversees production', start: 2014, end: null, sources: ['https://sharpmagazine.com/2024/05/03/ecole-de-pensee-montreal-menswear-interview/'] }],
+  },
+  julienGauthier: {
+    name: 'Julien Gauthier',
+    career: [{ house: 'ecoleDePensee', role: 'Creative Director', roleDetail: 'Leads design and creative direction', end: null, notes: 'Joined after the founding; start year unconfirmed. Current as of the 2024 interview.', sources: ['https://sharpmagazine.com/2024/05/03/ecole-de-pensee-montreal-menswear-interview/'] }],
+  },
+  aldoBensadoun: {
+    name: 'Aldo Bensadoun',
+    career: [{ house: 'aldo', role: 'Founder', roleDetail: 'Founder; CEO until 2017, then executive chairman', start: 1972, end: null, sources: ['https://www.aldoshoes.com/ca/en/about-us/history', 'https://en.wikipedia.org/wiki/Aldo_Bensadoun', 'https://fashionunited.com/news/people/aldo-names-new-chief-executive/2017030614954'] }],
+    notes: 'Worked at Yellow Shoes before starting ALDO as a shoe concession in Le Château. His son David Bensadoun became CEO in 2017.',
+  },
+  glennChamandy: {
+    name: 'Glenn Chamandy',
+    career: [{ house: 'gildan', role: 'Founder', roleDetail: 'Co-founder; longtime CEO', start: 1984, end: null, sources: ['https://gildancorp.com/en/company/our-story/', 'https://en.wikipedia.org/wiki/Gildan'] }],
+    notes: 'Grandson of Joseph Chamandy, who founded the family’s Montreal children’s-wear business, Harley Inc., in 1946.',
+  },
+  gregChamandy: {
+    name: 'Greg Chamandy',
+    career: [{ house: 'gildan', role: 'Founder', roleDetail: 'Co-founder', start: 1984, end: 2004, notes: 'Left the company in 2004.', sources: ['https://gildancorp.com/en/company/our-story/', 'https://en.wikipedia.org/wiki/Gildan'] }],
+    notes: 'Grandson of Joseph Chamandy, who founded Harley Inc. in 1946.',
+  },
+  jackVictor: {
+    name: 'Jack Victor',
+    nationality: 'Romanian-Canadian',
+    career: [{ house: 'jackVictor', role: 'Founder', start: 1913, notes: 'The company gives 1913; the McCord Stewart Museum dates his arrival in Quebec and door-to-door selling to 1907.', sources: ['https://encyclomodeqc.musee-mccord-stewart.ca/en/entry/jack-victor/', 'https://www.jackvictor.com/pages/our-world'] }],
+    notes: 'Romanian immigrant; the company is still run by his family, with grandson Alan Victor as CEO.',
+  },
+  kunihikoMorinaga: {
+    name: 'Kunihiko Morinaga',
+    born: 1980,
+    nationality: 'Japanese',
+    career: [{ house: 'anrealage', role: 'Founder', roleDetail: 'Founder, designer', start: 2003, end: null, sources: ['https://www.fhcm.paris/en/house/anrealage', 'https://www.lvmhprize.com/en/anrealage'] }],
+    notes: 'Born in Tokyo; studied at Waseda University and Vantan Design Institute. Won the Gen Art Avant Garde award in New York (2005) and the Mainichi Fashion Grand Prix for best new designer (2011); LVMH Prize finalist in 2019.',
+  },
+  janJanVanEssche: {
+    name: 'Jan-Jan Van Essche',
+    nationality: 'Belgian',
+    career: [
+      { house: 'lee', role: 'Other', roleDetail: 'Designer (commercial role)', notes: 'One of a few short commercial jobs, including a children’s brand, between graduating and launching his label; exact dates unconfirmed.', sources: ['https://www.flandersdistrictofcreativity.be/en/magazine/jan-jan-van-essche'] },
+      { house: 'janJanVanEssche', role: 'Founder', roleDetail: 'Founder, designer', start: 2010, end: null, sources: ['https://www.janjanvanessche.com/about', 'https://www.flandersdistrictofcreativity.be/en/magazine/jan-jan-van-essche'] },
+    ],
+    notes: 'Born in Antwerp; graduated from the fashion department of the Royal Academy of Fine Arts Antwerp in 2003. First worked for his father, a film and TV set builder. Runs Atelier Solarshop with his partner, Piëtro Celestina. Jury Prize, Belgian Fashion Awards 2023.',
+  },
+  simonHogeman: {
+    name: 'Simon Hogeman',
+    nationality: 'Swedish',
+    career: [{ house: 'tresBien', role: 'Founder', roleDetail: 'Co-founder', start: 2006 }],
+    notes: 'Co-founded Très Bien with his brother Hannes Hogeman, Björn Lindén and Jakob Törnberg.',
+    sources: ['https://www.businessoffashion.com/articles/retail/tres-bien-expands-winning-blend-streetwear-fashion/', 'https://hypebeast.com/the-hypebeast-hundred-2015/hannes-and-simon-hogeman'],
+  },
+  hannesHogeman: {
+    name: 'Hannes Hogeman',
+    nationality: 'Swedish',
+    career: [{ house: 'tresBien', role: 'Founder', roleDetail: 'Co-founder', start: 2006 }],
+    notes: 'Co-founded Très Bien with his brother Simon Hogeman, Björn Lindén and Jakob Törnberg.',
+    sources: ['https://www.businessoffashion.com/articles/retail/tres-bien-expands-winning-blend-streetwear-fashion/', 'https://hypebeast.com/the-hypebeast-hundred-2015/hannes-and-simon-hogeman'],
+  },
+  bjornLinden: {
+    name: 'Björn Lindén',
+    nationality: 'Swedish',
+    career: [{ house: 'tresBien', role: 'Founder', roleDetail: 'Co-founder', start: 2006 }],
+    notes: 'Childhood friend of the Hogeman brothers and one of Très Bien’s four co-founders.',
+    sources: ['https://www.businessoffashion.com/articles/retail/tres-bien-expands-winning-blend-streetwear-fashion/'],
+  },
+  jakobTornberg: {
+    name: 'Jakob Törnberg',
+    nationality: 'Swedish',
+    career: [{ house: 'tresBien', role: 'Founder', roleDetail: 'Co-founder', start: 2006 }],
+    notes: 'Childhood friend of the Hogeman brothers and one of Très Bien’s four co-founders.',
+    sources: ['https://www.businessoffashion.com/articles/retail/tres-bien-expands-winning-blend-streetwear-fashion/'],
+  },
+  barneyPressman: {
+    name: 'Barney Pressman',
+    nationality: 'American',
+    career: [{ house: 'barneysNewYork', role: 'Founder', start: 1923 }],
+    notes: 'Opened the first Barneys, a discount menswear shop at Seventh Avenue and West 17th Street, in 1923, reportedly financed by pawning his wife’s engagement ring. His son Fred Pressman later led the store’s turn to designer fashion.',
+    sources: ['https://en.wikipedia.org/wiki/Barneys_New_York'],
+  },
+  tomChapman: {
+    name: 'Tom Chapman',
+    nationality: 'British',
+    career: [{ house: 'matchesFashion', role: 'Founder', roleDetail: 'Co-founder', start: 1987, end: 2017 }],
+    notes: 'Opened the first Matches boutique in Wimbledon Village with his wife, Ruth Chapman; the couple stepped down as joint chief executives in 2017, when Apax Partners bought a majority stake.',
+    sources: ['https://en.wikipedia.org/wiki/Matches_Fashion', 'https://uk.fashionnetwork.com/news/Matches-founders-step-down-as-ceos,549420.html'],
+  },
+  ruthChapman: {
+    name: 'Ruth Chapman',
+    nationality: 'British',
+    career: [{ house: 'matchesFashion', role: 'Founder', roleDetail: 'Co-founder', start: 1987, end: 2017 }],
+    notes: 'Opened the first Matches boutique in Wimbledon Village with her husband, Tom Chapman; the couple stepped down as joint chief executives in 2017, when Apax Partners bought a majority stake.',
+    sources: ['https://en.wikipedia.org/wiki/Ruth_Chapman', 'https://uk.fashionnetwork.com/news/Matches-founders-step-down-as-ceos,549420.html'],
+  },
+  natashaZinkoDesigner: {
+    name: 'Natasha Zinko',
+    nationality: 'Ukrainian',
+    career: [{ house: 'natashaZinko', role: 'Founder', roleDetail: 'Founder, designer', start: 2011, end: null }],
+    notes: 'Born in Odesa; earned a law degree in Ukraine before moving to London in 2006 to study at Chelsea College of Arts, then Central Saint Martins.',
+    sources: ['https://londonfashionweek.co.uk/designers/natasha-zinko', 'https://hypebae.com/2023/3/natasha-zinko-behind-the-atelier-sustainable-fashion-jewelry-upcycling-line-studio-interview'],
+  },
+  danielBenz: {
+    name: 'Daniel Benz',
+    nationality: 'German',
+    career: [{ house: 'asphaltgold', role: 'Founder', start: 2008 }],
+    notes: 'Opened the first Asphaltgold store on Friedensplatz, Darmstadt, in 2008.',
+    sources: ['https://asphaltgold.com/en/pages/uber-uns'],
+  },
+  tomSachs: {
+    name: 'Tom Sachs',
+    nationality: 'American',
+    career: [{ house: 'tomSachsStudio', role: 'Founder', roleDetail: 'Artist, studio founder' }],
+    notes: 'New York sculptor known for handmade bricolage versions of modern icons and space-programme installations. His NikeCraft footwear and apparel are collaborations, not employment.',
+    sources: ['https://en.wikipedia.org/wiki/Tom_Sachs'],
+  },
+  pontusAlv: {
+    name: 'Pontus Alv',
+    nationality: 'Swedish',
+    career: [{ house: 'polarSkateCo', role: 'Founder', roleDetail: 'Founder, art director', start: 2011 }],
+    notes: 'Malmö professional skateboarder and filmmaker; draws Polar’s graphics himself.',
+    sources: ['https://hypebeast.com/people/pontus-alv'],
+  },
+  isabelleGuedon: {
+    name: 'Isabelle Guédon',
+    nationality: 'French',
+    career: [{ house: 'adieu', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2012 }],
+    notes: 'Textile designer; co-founded Adieu with Benjamin Caron.',
+    sources: ['https://adieu-paris.com/fr/content/4-biographie', 'https://thestandardstore.com.au/blogs/news/adieu'],
+  },
+  benjaminCaron: {
+    name: 'Benjamin Caron',
+    nationality: 'French',
+    career: [{ house: 'adieu', role: 'Founder', roleDetail: 'Co-founder, shoemaker', start: 2012 }],
+    notes: 'Shoemaker who made handmade creepers in the late 1990s, sold at the Paris shop Absynthe, before co-founding Adieu with Isabelle Guédon.',
+    sources: ['https://adieu-paris.com/fr/content/4-biographie', 'https://thestandardstore.com.au/blogs/news/adieu'],
+  },
+  guillaumePhilibert: {
+    name: 'Guillaume Philibert',
+    nationality: 'Dutch',
+    career: [{ house: 'fillingPieces', role: 'Founder', roleDetail: 'Founder, designer', start: 2009, end: null }],
+    notes: 'Grew up in Amsterdam in a Surinamese family and studied architectural design at the Hogeschool van Amsterdam until 2011.',
+    sources: ['https://fillingpieces.com/pages/about-us', 'https://hypebeast.com/people/guillaume-philibert'],
+  },
+  /* ---------- Belgian labels (Nov 2026 batch) ---------- */
+  marinaYee: {
+    name: 'Marina Yee',
+    born: 1958,
+    died: 2025,
+    nationality: 'Belgian',
+    career: [{ house: 'marinaYeeLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2018, end: 2025 }],
+    notes: 'Antwerp Six member. After graduating from the Antwerp Royal Academy in 1981 she designed for the manufacturers Bassetti and Gruno & Chardin, ran her label Marie (1986–1990), then taught for many years before returning in 2018.',
+  },
+  rafaelAdriaensens: {
+    name: 'Rafael Adriaensens',
+    career: [{ house: 'marinaYeeLabel', role: 'Other', roleDetail: 'Co-founder of the M.Y. Collection', start: 2021, approximate: true }],
+    notes: 'Marina Yee’s business partner and curator of her archive.',
+  },
+  dirkVanSaene: {
+    name: 'Dirk Van Saene',
+    born: 1959,
+    nationality: 'Belgian',
+    career: [{ house: 'dirkVanSaene', role: 'Founder', roleDetail: 'Founder, designer', start: 1981 }],
+    notes: 'Antwerp Six member; Royal Academy of Fine Arts Antwerp graduate (1981). Also a painter and ceramicist, and partner of Walter Van Beirendonck.',
+  },
+  janOlyslager: {
+    name: 'Jan Olyslager',
+    nationality: 'Belgian',
+    career: [{ house: 'howlin', role: 'Founder', roleDetail: 'Co-founder', start: 2009 }],
+  },
+  patrickOlyslager: {
+    name: 'Patrick Olyslager',
+    nationality: 'Belgian',
+    career: [{ house: 'howlin', role: 'Founder', roleDetail: 'Co-founder', start: 2009 }],
+  },
+  vincentHaverbeke: {
+    name: 'Vincent Haverbeke',
+    nationality: 'Belgian',
+    career: [{ house: 'kipling', role: 'Founder', roleDetail: 'Co-founder', start: 1987 }],
+  },
+  xavierKegels: {
+    name: 'Xavier Kegels',
+    nationality: 'Belgian',
+    career: [{ house: 'kipling', role: 'Founder', roleDetail: 'Co-founder', start: 1987 }],
+    notes: 'Later founded the bag brand Hedgren. Father of designer Julie Kegels.',
+  },
+  paulVanDeVelde: {
+    name: 'Paul Van De Velde',
+    nationality: 'Belgian',
+    career: [{ house: 'kipling', role: 'Founder', roleDetail: 'Co-founder', start: 1987 }],
+  },
+  florentinaLeitner: {
+    name: 'Florentina Leitner',
+    nationality: 'Austrian',
+    career: [
+      { house: 'driesVanNoten', role: 'Other', roleDetail: 'Womenswear design team' },
+      { house: 'florentinaLeitnerLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2021, end: null },
+    ],
+    notes: 'Royal Academy of Fine Arts Antwerp master’s graduate (2020); Belgium’s Emerging Fashion Designer award, 2022.',
+  },
+  julieKegels: {
+    name: 'Julie Kegels',
+    nationality: 'Belgian',
+    career: [
+      { house: 'meryllRoggeLabel', role: 'Other', roleDetail: 'Intern' },
+      { house: 'alaia', role: 'Other', roleDetail: 'Intern under Pieter Mulier' },
+      { house: 'julieKegelsLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2024, end: null },
+    ],
+    notes: 'Royal Academy of Fine Arts Antwerp graduate; LVMH Prize finalist 2025 and winner 2026. Daughter of Kipling co-founder Xavier Kegels.',
+  },
+  anVandevorst: {
+    name: 'An Vandevorst',
+    nationality: 'Belgian',
+    career: [
+      { house: 'driesVanNoten', role: 'Other', roleDetail: 'Assistant to Dries Van Noten', notes: 'About six years.' },
+      { house: 'afVandevorst', role: 'Founder', roleDetail: 'Co-founder, designer', start: 1997, end: 2020 },
+    ],
+  },
+  filipArickx: {
+    name: 'Filip Arickx',
+    nationality: 'Belgian',
+    career: [
+      { house: 'bikkembergs', role: 'Other', roleDetail: 'Assistant to Dirk Bikkembergs' },
+      { house: 'afVandevorst', role: 'Founder', roleDetail: 'Co-founder, designer', start: 1997, end: 2020 },
+    ],
+  },
+  robHarmsen: {
+    name: 'Rob Harmsen',
+    nationality: 'Belgian',
+    career: [{ house: 'eatDust', role: 'Founder', roleDetail: 'Co-founder', start: 2010 }],
+  },
+  keithHioco: {
+    name: 'Keith Hioco',
+    career: [
+      { house: 'gStar', role: 'Other', roleDetail: 'Denim designer', sources: ['https://fashionunited.com/companies/eat-dust'] },
+      { house: 'rafSimonsLabel', role: 'Other', roleDetail: 'Senior designer', sources: ['https://fashionunited.com/companies/eat-dust'] },
+      { house: 'eatDust', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2010 },
+    ],
+    notes: 'Royal Academy of Fine Arts Antwerp graduate.',
+  },
+  steveMadden: {
+    name: 'Steve Madden',
+    born: 1958,
+    nationality: 'American',
+    career: [{ house: 'steveMadden', role: 'Founder', roleDetail: 'Founder; Creative & Design Chief', start: 1990, end: null }],
+    notes: 'Left the CEO role in 2000 after securities-fraud charges and served a prison sentence before returning to lead design.',
+  },
+  ohadSeroya: {
+    name: 'Ohad Seroya',
+    nationality: 'Israeli',
+    career: [{ house: 'retrofete', role: 'Founder', roleDetail: 'Co-founder, creative director', start: 2018, end: null }],
+    notes: 'Raised in Israel; worked at the Diesel store in Tel Aviv as a teenager and ran his own Tel Aviv boutique before moving to New York, where he opened the Mint showroom. Also runs the label Seroya.',
+  },
+  aviadKlin: {
+    name: 'Aviad Klin',
+    career: [{ house: 'retrofete', role: 'Founder', roleDetail: 'Co-founder', start: 2018 }],
+    notes: 'Husband of Ohad Seroya.',
+  },
+  yvesSalomon: {
+    name: 'Yves Salomon',
+    nationality: 'French',
+    career: [{ house: 'yvesSalomon', role: 'Founder', roleDetail: 'Founder, designer', start: 1980 }],
+    notes: 'Third generation of a Paris furrier family; began as a leather trader and set up a workshop making furs for other designers before launching his own label.',
+  },
+  thomasSalomon: {
+    name: 'Thomas Salomon',
+    nationality: 'French',
+    career: [{ house: 'yvesSalomon', role: 'Managing Director', roleDetail: 'General manager, fourth generation', notes: 'Joined the family business around 2000.' }],
+  },
+  kennethCole: {
+    name: 'Kenneth Cole',
+    born: 1954,
+    nationality: 'American',
+    career: [{ house: 'kennethCole', role: 'Founder', roleDetail: 'Founder; executive chairman and chief creative officer', start: 1982, end: null }],
+    notes: 'Worked at his father’s El-Bee Shoe Company before founding his own. Also chairs the Mental Health Coalition.',
+  },
+  emilyCole: {
+    name: 'Emily Cole',
+    nationality: 'American',
+    career: [{ house: 'kennethCole', role: 'Creative Director', roleDetail: 'EVP, chief product officer and creative director', start: 2025, end: null }],
+    notes: 'Daughter of Kenneth Cole.',
+  },
+  jedBerger: {
+    name: 'Jed Berger',
+    nationality: 'American',
+    career: [{ house: 'kennethCole', role: 'CEO', roleDetail: 'CEO and president, Kenneth Cole Productions', start: 2025, end: null }],
+  },
+  walidAlDamirji: {
+    name: 'Walid al Damirji',
+    nationality: 'British-Iraqi',
+    career: [{ house: 'byWalid', role: 'Founder', roleDetail: 'Founder, designer', start: 2011, end: null }],
+    notes: 'Formerly creative director of Joseph (London) in the early 2000s. Grandson of the owner of one of Iraq’s largest textile factories; collects the antique textiles his label is made from.',
+  },
+  leithTestoni: {
+    name: 'Leith Testoni',
+    nationality: 'Australian',
+    career: [{ house: 'zanerobe', role: 'Founder', roleDetail: 'Co-founder', start: 2002 }],
+    notes: 'Worked in IT/finance before co-founding Zanerobe with Jonathan Yeo.',
+  },
+  jonathanYeo: {
+    name: 'Jonathan Yeo',
+    nationality: 'Australian',
+    career: [{ house: 'zanerobe', role: 'Founder', roleDetail: 'Co-founder', start: 2002 }],
+    notes: 'Worked in IT/finance before co-founding Zanerobe with Leith Testoni.',
+  },
+  natTaubman: {
+    name: 'Nat Taubman',
+    nationality: 'Australian',
+    career: [{ house: 'zanerobe', role: 'Creative Director', start: 2012, end: 2015 }],
+    notes: 'Renamed the Neilan Chino as the Sureshot. Left Zanerobe to start the Australian lifestyle label Barney Cools.',
+  },
+  lukeScott: {
+    name: 'Luke Scott',
+    career: [{ house: 'zanerobe', role: 'Head Designer', roleDetail: 'Lead designer', start: 2015 }],
+    notes: 'Created the Zanerobe Rec line (later REC GEN) with NBA player Nate Robinson.',
+  },
+  abeBulgin: {
+    name: 'Abe Bulgin',
+    career: [{ house: 'zanerobe', role: 'Head Designer', start: 2016, approximate: true }],
+  },
+  jordanaLowy: {
+    name: 'Jordana Lowy',
+    career: [{ house: 'zanerobe', role: 'Other', roleDetail: 'Womenswear designer', start: 2011, approximate: true }],
+  },
+  guillaumeSteinmetz: {
+    name: 'Guillaume Steinmetz',
+    nationality: 'French',
+    career: [{ house: 'theBrokenArm', role: 'Founder', roleDetail: 'Co-founder', start: 2013 }],
+  },
+  anaisLafarge: {
+    name: 'Anaïs Lafarge',
+    nationality: 'French',
+    career: [{ house: 'theBrokenArm', role: 'Founder', roleDetail: 'Co-founder', start: 2013 }],
+  },
+  romainJoste: {
+    name: 'Romain Joste',
+    nationality: 'French',
+    career: [{ house: 'theBrokenArm', role: 'Founder', roleDetail: 'Co-founder', start: 2013 }],
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 

@@ -2,7 +2,7 @@ import type { ElementDefinition } from 'cytoscape';
 import { allMoves, collaborations, getDesigner, getHouse, houses } from '../data';
 import type { House } from '../types';
 import { layoutMap } from './geo';
-import { isMajorCity, mapHousePath, mapLocationForHouse } from './locations';
+import { isMajorCity, mapHousePath, mapLocationForHouse, topCities } from './locations';
 import { cityMarkerIcon, houseIcon, initialsIcon } from './icons';
 
 /**
@@ -47,9 +47,11 @@ function houseNode(h: House, parent?: string): ElementDefinition {
 export function mapElements(): ElementDefinition[] {
   const els: ElementDefinition[] = [];
   const { cities } = layoutMap(new Set());
+  const mainCount = (c: (typeof cities)[number]) => c.houses.filter((h) => !h.parentHouse).length;
+  const top = topCities(cities.map((c) => ({ city: c.city, count: mainCount(c) })));
 
   for (const c of cities) {
-    const count = c.houses.filter((h) => !h.parentHouse).length;
+    const count = mainCount(c);
     els.push({
       group: 'nodes',
       data: {
@@ -59,7 +61,8 @@ export function mapElements(): ElementDefinition[] {
         label: c.city,
         count,
         major: isMajorCity(c.city, count),
-        image: cityMarkerIcon(count, false),
+        top: top.has(c.city),
+        image: cityMarkerIcon(count, false, false, top.has(c.city)),
         tip: c.tip,
       },
       // A copy: Cytoscape keeps and mutates the position object, and `tip` must

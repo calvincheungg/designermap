@@ -596,7 +596,7 @@ export class DesignerGraph {
         if (open === !!marker.data('expanded')) return;
         marker.data({
           expanded: open,
-          image: cityMarkerIcon(marker.data('shown') ?? marker.data('count'), open),
+          image: cityMarkerIcon(marker.data('shown') ?? marker.data('count'), open, false, !!marker.data('top')),
         });
       });
       // A grid, and the dotted leader from its pin, show while the city is open.
@@ -963,7 +963,7 @@ export class DesignerGraph {
           .get(m.data('city'))!
           .filter((h) => !h.parentHouse && this.mapContext.has(h.id)).length;
         if (count !== m.data('shown')) {
-          m.data({ shown: count, image: cityMarkerIcon(count, !!m.data('expanded')) });
+          m.data({ shown: count, image: cityMarkerIcon(count, !!m.data('expanded'), false, !!m.data('top')) });
         }
       });
       setClass(markers, 'hidden', (m) => m.data('shown') === 0);

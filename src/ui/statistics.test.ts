@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { BrandCategory, collaborations, getHouse, houses } from '../data';
 import { MarketPositioning } from '../data/tags';
 import type { Collaboration } from '../types';
-import { CHART_GAP_YEARS, chartColumns, pairingKind, partnerType } from './statistics';
+import { CHART_GAP_YEARS, chartColumns, matchesSeries, pairingKind, partnerType, seriesKey, seriesLabel } from './statistics';
 
 describe('chartColumns', () => {
   it('keeps short empty runs as zero-count years', () => {
@@ -62,3 +62,32 @@ describe('Collaborations by year breakdowns', () => {
 const houseIds = houses.map((house) => house.id);
 const isLuxuryOrStreet = (id: string) => getHouse(id)!.tags.brandCategory.includes(BrandCategory.Streetwear)
   || [MarketPositioning.HighLuxury, MarketPositioning.Luxury].includes(getHouse(id)!.tags.marketPositioning);
+
+describe('My tags chart series', () => {
+  const street = { group: 'brandCategory', value: BrandCategory.Streetwear } as const;
+  const luxury = { group: 'marketPositioning', value: MarketPositioning.Luxury } as const;
+  const tagged = (id: string) => getHouse(id)!.tags;
+
+  it('matches a single tag when any brand has it', () => {
+    for (const project of collaborations) {
+      expect(matchesSeries(project, [street])).toBe(project.houses.some((id) => tagged(id).brandCategory.includes(BrandCategory.Streetwear)));
+    }
+  });
+
+  it('needs two different brands for a pair of tags, even the same tag twice', () => {
+    const lux = houseIds.find((id) => tagged(id).marketPositioning === MarketPositioning.Luxury && !tagged(id).brandCategory.includes(BrandCategory.Streetwear))!;
+    const str = houseIds.find((id) => tagged(id).brandCategory.includes(BrandCategory.Streetwear) && tagged(id).marketPositioning !== MarketPositioning.Luxury)!;
+    const both = houseIds.find((id) => tagged(id).brandCategory.includes(BrandCategory.Streetwear) && tagged(id).marketPositioning === MarketPositioning.Luxury);
+    expect(matchesSeries({ houses: [lux, str] }, [luxury, street])).toBe(true);
+    expect(matchesSeries({ houses: [str, lux] }, [luxury, street])).toBe(true);
+    expect(matchesSeries({ houses: [lux, lux] }, [luxury, street])).toBe(false);
+    if (both) expect(matchesSeries({ houses: [both, both] }, [luxury, street])).toBe(false);
+    expect(matchesSeries({ houses: [str, str] }, [street, street])).toBe(false);
+    expect(matchesSeries({ houses: [str, both ?? str] }, [street, street])).toBe(!!both);
+  });
+
+  it('keys and labels a series by its tags', () => {
+    expect(seriesKey([luxury, street])).toBe('marketPositioning:Luxury×brandCategory:Streetwear');
+    expect(seriesLabel([luxury, street])).toBe('Luxury × Streetwear');
+  });
+});

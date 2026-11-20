@@ -44,10 +44,10 @@ import { clampRect, defaultRect } from './ui/side-panel';
 import { GroupId } from './data/groups';
 
 const openStart = (user: ReturnType<typeof userEvent.setup>) => user.click(screen.getByRole('button', { name: 'Start' }));
-/** The Directory starts closed; the Start menu opens it. */
-const openDirectory = async (user: ReturnType<typeof userEvent.setup>) => {
+/** My Computer starts closed; the Start menu opens it. */
+const openComputer = async (user: ReturnType<typeof userEvent.setup>) => {
   await openStart(user);
-  await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'Directory' }));
+  await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'My Computer' }));
 };
 
 afterEach(() => {
@@ -280,7 +280,7 @@ describe('React app graph integration', () => {
     // Quick Launch, between Start and Search, opens the same shortcuts as the desktop icons.
     const quickLaunch = within(within(taskbar).getByRole('toolbar', { name: 'Quick Launch' }));
     expect(quickLaunch.getAllByRole('button').map((button) => button.getAttribute('aria-label')))
-      .toEqual(['Launch Explorer', 'Launch Recycle Bin', 'Launch Statistics', 'Launch List View', 'Launch Settings']);
+      .toEqual(['Launch My Computer', 'Launch Explorer', 'Launch Recycle Bin', 'Launch Statistics', 'Launch List View', 'Launch Settings', 'Launch Notepad']);
     await user.click(quickLaunch.getByRole('button', { name: 'Launch Explorer' }));
     expect(map.hasAttribute('aria-hidden')).toBe(false);
     await user.click(quickLaunch.getByRole('button', { name: 'Launch Recycle Bin' }));
@@ -338,7 +338,7 @@ describe('React app graph integration', () => {
     expect(screen.getByRole('dialog', { name: 'Statistics' })).toBeTruthy();
   });
 
-  it('switches the map to night colours from Settings or the Start menu, and remembers it', async () => {
+  it('switches the map to night colours from Settings, and remembers it', async () => {
     const user = userEvent.setup();
     localStorage.removeItem('designer-map:map-theme');
     const { unmount } = render(<App />);
@@ -359,12 +359,13 @@ describe('React app graph integration', () => {
     await user.click(within(settings).getByRole('checkbox', { name: 'Show move lines' }));
     expect(graph.setShowMoves).toHaveBeenLastCalledWith(false);
     await user.click(within(settings).getByRole('checkbox', { name: 'Show move lines' }));
+    await user.click(within(settings).getByRole('radio', { name: 'Day' }));
+    expect(graph.setNight).toHaveBeenLastCalledWith(false);
+    await user.click(within(settings).getByRole('radio', { name: 'Night' }));
+    // Display preferences live only in Settings, not the Start menu.
     await openStart(user);
     const start = screen.getByRole('dialog', { name: 'Start menu' });
-    expect(within(start).getByRole('radio', { name: 'Night' })).toHaveProperty('checked', true);
-    await user.click(within(start).getByRole('radio', { name: 'Day' }));
-    expect(graph.setNight).toHaveBeenLastCalledWith(false);
-    await user.click(within(start).getByRole('radio', { name: 'Night' }));
+    for (const name of ['Night', 'Origin', 'On map']) expect(within(start).queryByRole('radio', { name })).toBeNull();
     unmount();
     render(<App />);
     expect(mocks.instances.at(-1)!.setNight).toHaveBeenLastCalledWith(true);
@@ -505,17 +506,16 @@ describe('Properties window layout', () => {
   it('starts closed, opens from the Start menu, minimizes to the taskbar and restores', async () => {
     const user = userEvent.setup();
     render(<App />);
-    expect(document.getElementById('side-window')).toBeNull();
-    await openDirectory(user);
-    const panel = document.getElementById('side-window')!;
-    const task = screen.getByRole('button', { name: 'Directory' , pressed: true });
-    expect(panel.hidden).toBe(false);
-    await user.click(screen.getByRole('button', { name: 'Minimize Directory' }));
+    expect(screen.queryByRole('dialog', { name: 'My Computer' })).toBeNull();
+    await openComputer(user);
+    const panel = screen.getByRole('dialog', { name: 'My Computer' });
+    const task = screen.getByRole('button', { name: 'My Computer', pressed: true });
+    await user.click(screen.getByRole('button', { name: 'Minimize My Computer' }));
     expect(panel.hidden).toBe(true);
     expect(task.getAttribute('aria-pressed')).toBe('false');
-    expect(screen.queryByRole('separator', { name: 'Resize Directory' })).toBeNull();
-    await user.click(screen.getByRole('button', { name: 'Directory', pressed: false }));
-    expect(document.getElementById('side-window')!.hidden).toBe(false);
+    expect(screen.queryByRole('separator', { name: 'Resize My Computer' })).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'My Computer', pressed: false }));
+    expect(panel.hidden).toBe(false);
   });
 
   const withArea = (run: () => Promise<void> | void) => async () => {
@@ -524,42 +524,48 @@ describe('Properties window layout', () => {
     const height = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(600);
     try { await run(); } finally { width.mockRestore(); height.mockRestore(); }
   };
+  const box = (panel: HTMLElement) => [panel.style.left, panel.style.top, panel.style.width, panel.style.height];
 
-  it('floats at the right edge, moves by its title bar and stays inside the map area', withArea(async () => {
+  it('cascades from the left, moves by its title bar, stays inside the area and maximizes on double-click', withArea(async () => {
     render(<App />);
-    await openDirectory(userEvent.setup());
-    const panel = document.getElementById('side-window')!;
-    expect([panel.style.left, panel.style.top, panel.style.width, panel.style.height]).toEqual(['588px', '12px', '400px', '576px']);
-    const titleBar = screen.getByLabelText('Move Directory window');
-    fireEvent.pointerDown(titleBar, { button: 0, clientX: 700, clientY: 20, pointerId: 1 });
-    fireEvent.pointerMove(titleBar, { clientX: 400, clientY: 120, pointerId: 1 });
+    await openComputer(userEvent.setup());
+    const panel = screen.getByRole('dialog', { name: 'My Computer' });
+    expect(box(panel)).toEqual(['12px', '40px', '520px', '440px']);
+    const titleBar = screen.getByLabelText('Move My Computer window');
+    fireEvent.pointerDown(titleBar, { button: 0, clientX: 100, clientY: 50, pointerId: 1 });
+    fireEvent.pointerMove(titleBar, { clientX: 400, clientY: 130, pointerId: 1 });
     fireEvent.pointerUp(titleBar, { pointerId: 1 });
-    expect([panel.style.left, panel.style.top]).toEqual(['288px', '24px']);
-    fireEvent.pointerDown(titleBar, { button: 0, clientX: 400, clientY: 120, pointerId: 1 });
+    expect([panel.style.left, panel.style.top]).toEqual(['312px', '120px']);
+    fireEvent.pointerDown(titleBar, { button: 0, clientX: 400, clientY: 130, pointerId: 1 });
     fireEvent.pointerMove(titleBar, { clientX: -900, clientY: 900, pointerId: 1 });
-    expect([panel.style.left, panel.style.top]).toEqual(['0px', '24px']);
+    expect([panel.style.left, panel.style.top]).toEqual(['0px', '160px']);
     fireEvent.pointerUp(titleBar, { pointerId: 1 });
-    expect(JSON.parse(localStorage.getItem('designer-map:properties-window')!)).toEqual({ x: 0, y: 24, width: 400, height: 576 });
+    // Double-clicking the title bar maximizes the window; again restores it where it was.
     fireEvent.doubleClick(titleBar);
-    expect(panel.style.left).toBe('588px');
+    expect(box(panel)).toEqual(['0px', '0px', '1000px', '600px']);
+    expect(screen.queryByRole('separator', { name: 'Resize My Computer' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Restore My Computer' }));
+    expect(box(panel)).toEqual(['0px', '160px', '520px', '440px']);
+    fireEvent.click(screen.getByRole('button', { name: 'Maximize My Computer' }));
+    expect(box(panel)).toEqual(['0px', '0px', '1000px', '600px']);
   }));
 
   it('resizes from the grip with pointer and keyboard, within minimum sizes', withArea(async () => {
     const user = userEvent.setup();
     render(<App />);
-    await openDirectory(user);
-    const panel = document.getElementById('side-window')!;
-    const grip = screen.getByRole('separator', { name: 'Resize Directory' });
-    fireEvent.pointerDown(grip, { button: 0, clientX: 990, clientY: 590, pointerId: 1 });
-    fireEvent.pointerMove(grip, { clientX: 690, clientY: 190, pointerId: 1 });
+    await openComputer(user);
+    const panel = screen.getByRole('dialog', { name: 'My Computer' });
+    const grip = screen.getByRole('separator', { name: 'Resize My Computer' });
+    fireEvent.pointerDown(grip, { button: 0, clientX: 530, clientY: 480, pointerId: 1 });
+    fireEvent.pointerMove(grip, { clientX: 130, clientY: 0, pointerId: 1 });
     fireEvent.pointerUp(grip, { pointerId: 1 });
     expect([panel.style.width, panel.style.height]).toEqual(['260px', '180px']);
     grip.focus();
     await user.keyboard('{ArrowRight}{ArrowDown}');
     expect([panel.style.width, panel.style.height]).toEqual(['270px', '190px']);
-    screen.getByLabelText('Move Directory window').focus();
+    screen.getByLabelText('Move My Computer window').focus();
     await user.keyboard('{ArrowLeft}');
-    expect(panel.style.left).toBe('578px');
+    expect(panel.style.left).toBe('2px');
   }));
 });
 
@@ -568,9 +574,6 @@ describe('Map context menu', () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
-    await openDirectory(user);
-    await user.click(screen.getByRole('button', { name: 'Minimize Directory' }));
-    expect(document.getElementById('side-window')!.hidden).toBe(true);
     fireEvent.contextMenu(document.getElementById('graph')!, { clientX: 40, clientY: 50 });
     expect(graph.houseAt).toHaveBeenCalledWith(40, 50);
     await user.click(screen.getByRole('menuitem', { name: 'Show More' }));
@@ -629,7 +632,7 @@ describe('Multiple Properties windows', () => {
     // A single window: Restore is greyed out until it is minimized.
     fireEvent.contextMenu(taskbar.getByRole('button', { name: 'Dior' }));
     let menu = screen.getByRole('menu', { name: 'Dior window' });
-    expect(within(menu).getAllByRole('menuitem').map((item) => item.textContent)).toEqual(['Restore', 'Minimize', 'Show on Map', 'Close']);
+    expect(within(menu).getAllByRole('menuitem').map((item) => item.textContent)).toEqual(['Restore', 'Minimize', 'Maximize', 'Show on Map', 'Close']);
     expect((within(menu).getByRole('menuitem', { name: 'Restore' }) as HTMLButtonElement).disabled).toBe(true);
     await user.click(within(menu).getByRole('menuitem', { name: 'Minimize' }));
     expect(screen.queryByRole('dialog', { name: 'Dior' })).toBeNull();
@@ -667,21 +670,20 @@ describe('Multiple Properties windows', () => {
     expect(graph.select).toHaveBeenLastCalledWith(null, false);
   });
 
-  it('opens item windows beside the Directory, focusing an open item instead of repeating it', async () => {
+  it('opens item windows beside their city, focusing an open item instead of repeating it', async () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
-    await openDirectory(user);
     await pick(user, 'dior', 'Dior house');
     await pick(user, 'chanel', 'Chanel house');
     await pick(user, 'prada', 'Prada house');
-    expect(titles()).toEqual(['Directory', 'Dior', 'Chanel', 'Prada']);
+    expect(titles()).toEqual(['Dior', 'Chanel', 'Prada']);
     // Each new brand window asks the map where its city is, to open beside it.
     expect(graph.locationBox.mock.calls.map(([id]) => id)).toEqual(['dior', 'chanel', 'prada']);
     // Picking an open item focuses its window instead of opening another, and leaves it where it is.
     await pick(user, 'dior', 'Dior house');
     expect(graph.locationBox).toHaveBeenCalledTimes(3);
-    expect(screen.getAllByRole('dialog')).toHaveLength(4);
+    expect(screen.getAllByRole('dialog')).toHaveLength(3);
     expect(screen.getByRole('dialog', { name: 'Dior' }).hasAttribute('data-active')).toBe(true);
     // The taskbar collapses them into one button whose menu lists each window.
     const taskbar = within(document.querySelector<HTMLElement>('.taskbar')!);
@@ -706,7 +708,6 @@ describe('Multiple Properties windows', () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
-    await openDirectory(user);
     await pick(user, 'dior', 'Dior house');
     await pick(user, 'chanel', 'Chanel house');
     await user.click(screen.getByRole('button', { name: 'Close Chanel' }));
@@ -716,12 +717,7 @@ describe('Multiple Properties windows', () => {
     await user.click(screen.getByRole('button', { name: 'Close Dior' }));
     expect(graph.select).toHaveBeenLastCalledWith(null, false);
     expect(document.getElementById('status-selection')!.textContent).toBe('Nothing selected');
-    // The Directory closes too, and the Start menu brings it back.
-    await user.click(screen.getByRole('button', { name: 'Close Directory' }));
     expect(screen.queryByRole('dialog')).toBeNull();
-    await openStart(user);
-    await user.click(screen.getByRole('button', { name: 'Directory' }));
-    expect(screen.getByRole('dialog', { name: 'Directory' })).toBeTruthy();
   });
 });
 
@@ -916,8 +912,8 @@ describe('City windows', () => {
     const { unmount } = render(<App />);
     const graph = mocks.instances[0]! as typeof mocks.instances[0] & { toggleCity: ReturnType<typeof vi.fn> };
     graph.toggleCity = vi.fn();
-    await openStart(user);
-    await user.click(screen.getByRole('radio', { name: 'On map' }));
+    await user.click(screen.getByTitle('Open Settings (drag to move)'));
+    await user.click(within(screen.getByRole('dialog', { name: 'Settings' })).getByRole('radio', { name: 'On map' }));
     openCity('Paris');
     expect(graph.toggleCity).toHaveBeenCalledWith('Paris');
     expect(screen.queryByRole('dialog', { name: 'Paris' })).toBeNull();
@@ -925,9 +921,10 @@ describe('City windows', () => {
     expect(localStorage.getItem('designer-map:city-view')).toBe('map');
     unmount();
     render(<App />);
-    await openStart(user);
-    expect(screen.getByRole<HTMLInputElement>('radio', { name: 'On map' }).checked).toBe(true);
-    await user.click(screen.getByRole('radio', { name: 'In windows' }));
+    await user.click(screen.getByTitle('Open Settings (drag to move)'));
+    const settings = screen.getByRole('dialog', { name: 'Settings' });
+    expect(within(settings).getByRole<HTMLInputElement>('radio', { name: 'On map' }).checked).toBe(true);
+    await user.click(within(settings).getByRole('radio', { name: 'In windows' }));
     openCity('Paris');
     expect(screen.getByRole('dialog', { name: 'Paris' })).toBeTruthy();
   });
@@ -975,7 +972,7 @@ describe('Start menu commands', () => {
     const dialog = screen.getByRole('dialog', { name: 'Run' });
     expect(within(dialog).getByRole('alert').textContent).toContain("Cannot find 'zzqx'");
     await user.click(within(dialog).getByRole('button', { name: 'Browse…' }));
-    expect(screen.getByRole('dialog', { name: 'Directory' })).toBeTruthy();
+    expect(screen.getByRole('dialog', { name: 'My Computer' })).toBeTruthy();
     // Opening Run again focuses the same window; Cancel closes it.
     await openStart(user);
     await user.click(startMenu().getByRole('button', { name: 'Run…' }));
@@ -1045,5 +1042,173 @@ describe('Start menu commands', () => {
     expect(graph.setAllExpanded).toHaveBeenCalledWith(false);
     expect(graph.fit).toHaveBeenCalled();
     expect(document.getElementById('status-counts')!.textContent).toBe('View reset');
+  });
+});
+
+describe('Windows features', () => {
+  const startMenu = () => within(screen.getByRole('dialog', { name: 'Start menu' }));
+
+  it('switches windows with Alt+Tab, closes the active one with Alt+F4 and opens Help with F1', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await openComputer(user);
+    await openStart(user);
+    await user.click(startMenu().getByRole('button', { name: 'Notepad' }));
+    expect(screen.getByRole('dialog', { name: 'Untitled - Notepad' }).hasAttribute('data-active')).toBe(true);
+    // Holding Alt, Tab steps through the windows (most recent first); releasing Alt switches.
+    fireEvent.keyDown(window, { key: 'Tab', altKey: true });
+    const switcher = screen.getByRole('dialog', { name: 'Switch windows' });
+    expect(within(switcher).getAllByRole('option').map((option) => option.getAttribute('aria-label')))
+      .toEqual(['Untitled - Notepad', 'My Computer', 'Explorer']);
+    expect(within(switcher).getByRole('option', { selected: true }).getAttribute('aria-label')).toBe('My Computer');
+    fireEvent.keyUp(window, { key: 'Alt' });
+    expect(screen.queryByRole('dialog', { name: 'Switch windows' })).toBeNull();
+    expect(screen.getByRole('dialog', { name: 'My Computer' }).hasAttribute('data-active')).toBe(true);
+    // Escape cancels a switch.
+    fireEvent.keyDown(window, { key: 'Tab', altKey: true });
+    fireEvent.keyDown(window, { key: 'Escape', altKey: true });
+    fireEvent.keyUp(window, { key: 'Alt' });
+    expect(screen.getByRole('dialog', { name: 'My Computer' }).hasAttribute('data-active')).toBe(true);
+    fireEvent.keyDown(window, { key: 'F4', altKey: true });
+    expect(screen.queryByRole('dialog', { name: 'My Computer' })).toBeNull();
+    fireEvent.keyDown(window, { key: 'F1' });
+    expect(screen.getByRole('dialog', { name: 'Help' })).toBeTruthy();
+    // Ctrl+Esc opens and closes the Start menu.
+    fireEvent.keyDown(window, { key: 'Escape', ctrlKey: true });
+    expect(screen.getByRole('dialog', { name: 'Start menu' })).toBeTruthy();
+    fireEvent.keyDown(window, { key: 'Escape', ctrlKey: true });
+    expect(screen.queryByRole('dialog', { name: 'Start menu' })).toBeNull();
+  });
+
+  it('offers Arrange Icons, Line Up, Refresh, New Text Document and Properties on the bare desktop', async () => {
+    const user = userEvent.setup();
+    localStorage.removeItem('designer-map:desktop-arrange');
+    render(<App />);
+    const labels = () => [...document.querySelectorAll('.desktop-icon-label')].map((label) => label.textContent);
+    expect(labels()).toEqual(['My Computer', 'Explorer', 'Recycle Bin', 'Statistics', 'List View', 'Settings', 'Notepad']);
+    const desktop = () => fireEvent.contextMenu(document.querySelector('.desktop-area')!, { clientX: 300, clientY: 300 });
+    desktop();
+    const menu = screen.getByRole('menu', { name: 'Desktop' });
+    expect([...menu.querySelectorAll('button')].map((item) => item.textContent))
+      .toEqual(['Arrange Icons by Name', '✓Arrange Icons by Type', 'Line Up Icons', 'Refresh', 'New Text Document', 'Properties']);
+    await user.click(within(menu).getByRole('menuitemcheckbox', { name: 'Arrange Icons by Name' }));
+    expect(labels()).toEqual(['Explorer', 'List View', 'My Computer', 'Notepad', 'Recycle Bin', 'Settings', 'Statistics']);
+    expect(localStorage.getItem('designer-map:desktop-arrange')).toBe('name');
+    desktop();
+    await user.click(screen.getByRole('menuitem', { name: 'New Text Document' }));
+    expect(screen.getByRole('dialog', { name: 'Untitled - Notepad' })).toBeTruthy();
+    desktop();
+    await user.click(screen.getByRole('menuitem', { name: 'Properties' }));
+    expect(screen.getByRole('dialog', { name: 'Settings' })).toBeTruthy();
+    localStorage.removeItem('designer-map:desktop-arrange');
+  });
+
+  it('browses brands, groups and designers as My Computer folders', async () => {
+    const user = userEvent.setup();
+    localStorage.removeItem('designer-map:computer-path');
+    render(<App />);
+    await user.click(screen.getByTitle('Open My Computer (drag to move)'));
+    const computer = within(screen.getByRole('dialog', { name: 'My Computer' }));
+    const address = () => computer.getByRole('status', { name: 'Address' }).textContent;
+    expect(address()).toBe('My Computer');
+    await user.click(computer.getByRole('button', { name: 'Locations (C:)' }));
+    await user.click(computer.getByRole('button', { name: 'Europe' }));
+    await user.click(computer.getByRole('button', { name: 'France' }));
+    await user.click(computer.getByRole('button', { name: 'Paris' }));
+    expect(address()).toBe('C:\\Europe\\France\\Paris');
+    await user.click(computer.getByRole('button', { name: 'Dior' }));
+    expect(screen.getByRole('dialog', { name: 'Dior' })).toBeTruthy();
+    expect(mocks.instances[0]!.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    // Up, Back and Forward move through the folders; the path is remembered.
+    await user.click(computer.getByRole('button', { name: 'Up' }));
+    expect(address()).toBe('C:\\Europe\\France');
+    await user.click(computer.getByRole('button', { name: 'Back' }));
+    expect(address()).toBe('C:\\Europe\\France\\Paris');
+    await user.click(computer.getByRole('button', { name: 'Forward' }));
+    expect(address()).toBe('C:\\Europe\\France');
+    expect(JSON.parse(localStorage.getItem('designer-map:computer-path')!)).toEqual(['C', 'Europe', 'FR']);
+    // Each part of the Address bar jumps to its folder; the icon goes back to My Computer.
+    const crumbs = within(computer.getByRole('status', { name: 'Address' }));
+    await user.click(crumbs.getByRole('button', { name: 'Europe' }));
+    expect(address()).toBe('C:\\Europe');
+    await user.click(crumbs.getByRole('button', { name: 'C:' }));
+    expect(address()).toBe('C:\\');
+    await user.click(crumbs.getByRole('button', { name: 'Go to My Computer' }));
+    expect(address()).toBe('My Computer');
+    await user.click(computer.getByRole('button', { name: 'Back' }));
+    await user.click(computer.getByRole('button', { name: 'Back' }));
+    await user.click(computer.getByRole('button', { name: 'Back' }));
+    expect(address()).toBe('C:\\Europe\\France');
+    // A city folder's menu opens its city window.
+    fireEvent.contextMenu(computer.getByRole('button', { name: 'Paris' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Open City Window' }));
+    expect(screen.getByRole('dialog', { name: 'Paris' })).toBeTruthy();
+    localStorage.removeItem('designer-map:computer-path');
+  });
+
+  it('keeps Notepad text in this browser and inserts the time and date with F5', async () => {
+    const user = userEvent.setup();
+    localStorage.removeItem('designer-map:notepad');
+    render(<App />);
+    await user.click(screen.getByTitle('Open Notepad (drag to move)'));
+    const text = screen.getByRole('textbox', { name: 'Notepad text' });
+    await user.type(text, 'Margiela ');
+    fireEvent.keyDown(text, { key: 'F5' });
+    expect((text as HTMLTextAreaElement).value).toMatch(/^Margiela \d{1,2}:\d{2}/);
+    expect(localStorage.getItem('designer-map:notepad')).toBe((text as HTMLTextAreaElement).value);
+    // File ▸ Save As… asks for a name; the .txt extension stays fixed.
+    const downloads: string[] = [];
+    const create = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:note');
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) { downloads.push(this.download); });
+    try {
+      await user.click(screen.getByRole('menuitem', { name: 'File' }));
+      await user.click(screen.getByRole('menuitem', { name: 'Save As…' }));
+      const save = within(screen.getByRole('dialog', { name: 'Save As' }));
+      const name = save.getByRole('textbox', { name: 'File name:' });
+      expect((name as HTMLInputElement).value).toBe('Untitled');
+      expect(save.getByLabelText('Extension').textContent).toBe('.txt');
+      await user.clear(name);
+      expect((save.getByRole('button', { name: 'Save' }) as HTMLButtonElement).disabled).toBe(true);
+      await user.type(name, 'Moodboard.txt');
+      await user.click(save.getByRole('button', { name: 'Save' }));
+      expect(downloads).toEqual(['Moodboard.txt']);
+      expect(screen.queryByRole('dialog', { name: 'Save As' })).toBeNull();
+    } finally { create.mockRestore(); click.mockRestore(); }
+    // File ▸ New asks before discarding the text; No clears it.
+    await user.click(screen.getByRole('menuitem', { name: 'File' }));
+    await user.click(screen.getByRole('menuitem', { name: 'New' }));
+    const confirm = within(screen.getByRole('alertdialog', { name: 'Notepad' }));
+    expect(confirm.getByText(/Moodboard file has changed/)).toBeTruthy();
+    await user.click(confirm.getByRole('button', { name: 'No' }));
+    expect((text as HTMLTextAreaElement).value).toBe('');
+    await user.click(screen.getByRole('menuitem', { name: 'File' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Exit' }));
+    expect(screen.queryByRole('dialog', { name: 'Untitled - Notepad' })).toBeNull();
+    localStorage.removeItem('designer-map:notepad');
+  });
+});
+
+describe('Notepad font size', () => {
+  it('starts at 16px and is set from Edit ▸ Set Font… or Settings, kept for next time', async () => {
+    const user = userEvent.setup();
+    localStorage.removeItem('designer-map:notepad-font-size');
+    render(<App />);
+    await user.click(screen.getByTitle('Open Notepad (drag to move)'));
+    const text = () => screen.getByRole('textbox', { name: 'Notepad text' });
+    expect(text().style.fontSize).toBe('16px');
+    await user.click(screen.getByRole('menuitem', { name: 'Edit' }));
+    await user.click(screen.getByRole('menuitem', { name: 'Set Font…' }));
+    const font = within(screen.getByRole('dialog', { name: 'Font' }));
+    await user.selectOptions(font.getByRole('listbox', { name: 'Size:' }), '24');
+    await user.click(font.getByRole('button', { name: 'OK' }));
+    expect(text().style.fontSize).toBe('24px');
+    expect(localStorage.getItem('designer-map:notepad-font-size')).toBe('24');
+    // Settings ▸ Notepad edits the same size.
+    await user.click(screen.getByTitle('Open Settings (drag to move)'));
+    const notepadSize = screen.getByRole('combobox', { name: 'Notepad font size:' }) as HTMLSelectElement;
+    expect(notepadSize.value).toBe('24');
+    await user.selectOptions(notepadSize, '12');
+    expect(text().style.fontSize).toBe('12px');
+    localStorage.removeItem('designer-map:notepad-font-size');
   });
 });

@@ -1,10 +1,12 @@
-import { useMemo, useState, type ReactNode } from 'react';
+import { useId, useMemo, useState, type ReactNode } from 'react';
 import { allMoves, BrandCategory, collaborations, countryNames, designers, getDesigner, getHouse, groups, isBusinessLeadership, marketPositionings, tenuresAt, type CountryCode } from '../data';
 import type { Collaboration, House } from '../types';
 import { MarketPositioning } from '../data/tags';
 import { mapLocationForCity } from '../graph/locations';
 import { EntityLink, Fields, PlaceLink, ProfileSection, RowLimitedPanel, type Actions } from './panel';
-import { SelectBox } from './listbox';
+import { SearchBox, SelectBox, type ListItem } from './listbox';
+import { filterFields, type FilterGroup } from './filters';
+import { tagLabel } from './labels';
 
 /** Rows shown in each "top" table. */
 export const STATS_TOP = 10;
@@ -126,14 +128,30 @@ export function chartColumns(counts: Map<number, number>): ChartColumn[] {
 const releasesText = (count: number) => `${count.toLocaleString()} ${count === 1 ? 'release' : 'releases'}`;
 
 /** How the Collaborations by year bars are split: one colour, by partner type, or first-time vs repeat pairings. */
-export type YearBreakdown = 'total' | 'partners' | 'pairings';
-const BREAKDOWNS: readonly (readonly [YearBreakdown, string])[] = [['total', 'Total'], ['partners', 'Partner type'], ['pairings', 'First-time vs repeat']];
+export type YearBreakdown = 'total' | 'partners' | 'pairings' | 'tags';
+const BREAKDOWNS: readonly (readonly [YearBreakdown, string])[] = [['total', 'Total'], ['partners', 'Partner type'], ['pairings', 'First-time vs repeat'], ['tags', 'My tags…']];
 const BREAKDOWN_VALUES = BREAKDOWNS.map(([value]) => value);
 const BREAKDOWN_KEY = 'designer-map:stats-year-breakdown';
+/** Collaborations by year: bar heights as release counts, or as each colour's share of the year's releases. */
+export type YearScale = 'count' | 'share';
+const SCALES: readonly (readonly [YearScale, string])[] = [['count', 'Count'], ['share', 'Share of year']];
+const SCALE_VALUES = SCALES.map(([value]) => value);
+const SCALE_KEY = 'designer-map:stats-year-scale';
+/** Collaborations by year drawn as (stacked) bars or as one line per colour. */
+export type YearStyle = 'bars' | 'lines';
+const STYLES: readonly (readonly [YearStyle, string])[] = [['bars', 'Bars'], ['lines', 'Lines']];
+const STYLE_VALUES = STYLES.map(([value]) => value);
+const STYLE_KEY = 'designer-map:stats-year-style';
+/** A year's bar height in Share of year: 100% for a stacked year, or the focused colour's share of it, in whole percent. */
+/** Share of year leaves out years with fewer releases than this: one or two releases make 50–100% swings. */
+export const MIN_SHARE_RELEASES = 4;
+export function yearShare(count: number, total: number) {
+  return total ? Math.round((count / total) * 1000) / 10 : 0;
+}
 
 interface Segment { key: string; label: string; color: string; hint?: string }
 /** Bar segments per breakdown, bottom to top, in Win98's 16-colour palette. */
-const SEGMENTS: Record<YearBreakdown, readonly Segment[]> = {
+const SEGMENTS: Record<Exclude<YearBreakdown, 'tags'>, readonly Segment[]> = {
   total: [{ key: 'all', label: 'Releases', color: '#000080' }],
   partners: [
     { key: 'luxuryStreet', label: 'Luxury × streetwear', color: '#800080', hint: 'A High Luxury or Luxury brand with a different Streetwear brand' },
@@ -188,52 +206,181 @@ export function pairingKind(project: Pick<Collaboration, 'houses' | 'year'>): 'f
   return pairKeys(project).some((pair) => (known.get(pair) ?? project.year) >= project.year) ? 'first' : 'repeat';
 }
 
-const segmentOf = (breakdown: YearBreakdown, project: Collaboration) =>
-  breakdown === 'partners' ? partnerType(project) : breakdown === 'pairings' ? pairingKind(project) : 'all';
+/** One brand tag from the filter groups (`group` keeps Avant-garde the category apart from Avant-garde the aesthetic). */
+export interface TagRef { group: FilterGroup; value: string }
+/**
+ * A "My tags" chart series: one tag (a release with any brand tagged it), or two tags
+ * (one brand tagged the first with a different brand tagged the second; both can be the same tag).
+ */
+export type TagSeries = readonly [TagRef] | readonly [TagRef, TagRef];
+
+/** Most series the chart holds, one per colour. */
+export const MAX_TAG_SERIES = 6;
+const SERIES_COLORS = ['#000080', '#800000', '#008000', '#800080', '#808000', '#008080'] as const;
+const OTHER_TAGS: Segment = { key: 'other', label: 'Other', color: '#808080', hint: 'Matches none of your tags' };
+const TAG_SERIES_KEY = 'designer-map:stats-year-tags';
+
+const groupLabel = (group: FilterGroup) => filterFields.find(([key]) => key === group)![1];
+export const seriesKey = (series: TagSeries) => series.map(({ group, value }) => `${group}:${value}`).join('×');
+export const seriesLabel = (series: TagSeries) => series.map(({ value }) => tagLabel(value)).join(' × ');
+const seriesHint = (series: TagSeries) => series.length === 1
+  ? `A ${tagLabel(series[0].value)} brand (${groupLabel(series[0].group).toLowerCase()}) takes part`
+  : `A ${tagLabel(series[0].value)} brand with a different ${tagLabel(series[1].value)} brand`;
+
+/** Every tag a series can use, searchable by name, with its filter group as the hint. */
+const TAG_ITEMS: readonly ListItem<TagRef>[] = filterFields.flatMap(([group, label, options]) =>
+  options.map((value) => ({ label: tagLabel(value), hint: label, value: { group, value } })));
+
+const validTag = (ref: unknown): ref is TagRef => !!ref && typeof ref === 'object'
+  && filterFields.some(([group, , options]) => group === (ref as TagRef).group && (options as readonly string[]).includes((ref as TagRef).value));
+
+function readTagSeries(): TagSeries[] {
+  try {
+    const stored: unknown = JSON.parse(localStorage.getItem(TAG_SERIES_KEY) ?? '[]');
+    if (!Array.isArray(stored)) return [];
+    const valid = stored.filter((series): series is TagSeries => Array.isArray(series)
+      && (series.length === 1 || series.length === 2) && series.every(validTag));
+    return valid.filter((series, i) => valid.findIndex((other) => seriesKey(other) === seriesKey(series)) === i).slice(0, MAX_TAG_SERIES);
+  } catch { return []; }
+}
+
+function hasTag(id: string, { group, value }: TagRef) {
+  const tags: string | readonly string[] | undefined = getHouse(id)?.tags[group];
+  return typeof tags === 'string' ? tags === value : !!tags?.includes(value);
+}
+
+/** Whether a release fits a tag series (see TagSeries). */
+export function matchesSeries(project: Pick<Collaboration, 'houses'>, series: TagSeries): boolean {
+  const ids = [...new Set(project.houses)];
+  const [first, second] = series;
+  if (!second) return ids.some((id) => hasTag(id, first));
+  return ids.some((a) => hasTag(a, first) && ids.some((b) => b !== a && hasTag(b, second)));
+}
+
+/** The chart's colours, bottom to top, and the colour each release falls under. */
+interface Scheme { segments: readonly Segment[]; of: (project: Collaboration) => string }
+
+/** A release counts under the first of the user's series it fits (legend order), else Other. */
+function tagScheme(list: readonly TagSeries[]): Scheme {
+  if (!list.length) return { segments: SEGMENTS.total, of: () => 'all' };
+  const segments = list.map((series, i) => ({ key: seriesKey(series), label: seriesLabel(series), color: SERIES_COLORS[i]!, hint: seriesHint(series) }));
+  return {
+    segments: [...segments, OTHER_TAGS],
+    of: (project) => { const i = list.findIndex((series) => matchesSeries(project, series)); return i < 0 ? OTHER_TAGS.key : segments[i]!.key; },
+  };
+}
+
+const builtInScheme = (breakdown: Exclude<YearBreakdown, 'tags'>): Scheme => ({
+  segments: SEGMENTS[breakdown],
+  of: (project) => breakdown === 'partners' ? partnerType(project) : breakdown === 'pairings' ? pairingKind(project) : 'all',
+});
 
 const Swatch = ({ color }: { color: string }) => <span className="stats-swatch" style={{ background: color }} aria-hidden="true" />;
 
-/** A Win98 column chart of releases per year, optionally stacked; hovering a column shows its exact counts, clicking picks the year. */
-function YearChart({ releases, breakdown, label, selected, onPick }: {
-  releases: readonly Collaboration[]; breakdown: YearBreakdown; label: string;
-  selected?: number; onPick: (year: number) => void;
+/**
+ * A Win98 column chart of releases per year, optionally stacked; hovering a column shows its exact counts,
+ * clicking picks the year. Clicking a colour (a bar segment or the legend) shows only that colour, rescaled
+ * on the same year axis; clicking it again shows every colour.
+ */
+/**
+ * The line view: one polyline per colour across the year columns, with square markers like
+ * Excel 2000's. Lines break at collapsed gaps and at years left out of Share of year.
+ */
+function ChartLines({ columns, segments, max, value, charted }: {
+  columns: readonly ChartColumn[]; segments: readonly Segment[]; max: number;
+  value: (key: string, year: number) => number; charted: (year: number) => boolean;
+}) {
+  const span = columns.length;
+  const y = (v: number) => 100 - (v / max) * 100;
+  return <svg className="stats-chart-lines" viewBox={`0 0 ${span} 100`} preserveAspectRatio="none" aria-hidden="true">
+    {segments.map((segment) => {
+      const runs: string[][] = [[]];
+      columns.forEach((column, i) => {
+        if (column.kind === 'year' && charted(column.year)) runs.at(-1)!.push(`${i + 0.5},${y(value(segment.key, column.year))}`);
+        else if (runs.at(-1)!.length) runs.push([]);
+      });
+      return <g key={segment.key} stroke={segment.color}>
+        {runs.filter((run) => run.length > 1).map((run, i) => <polyline key={i} points={run.join(' ')} fill="none" />)}
+        {runs.flat().map((point) => <path key={point} className="stats-chart-marker" d={`M${point}h0`} />)}
+      </g>;
+    })}
+  </svg>;
+}
+
+function YearChart({ releases, scheme, label, selected, onPick, focus, onFocus, share: asShare = false, lines = false }: {
+  releases: readonly Collaboration[]; scheme: Scheme; label: string;
+  /** One line per colour (its count, or its share of each year) instead of stacked bars. */
+  lines?: boolean;
+  /** Share of year: bars show percentages of each year's releases instead of counts. */
+  share?: boolean;
+  selected?: number; onPick: (year: number, keep?: boolean) => void;
+  focus?: string; onFocus: (segment: string | undefined) => void;
 }) {
   const [hover, setHover] = useState<number | null>(null);
-  const segments = SEGMENTS[breakdown];
-  const { counts, bySegment, totals } = useMemo(() => {
+  const allSegments = scheme.segments;
+  const focused = allSegments.find((segment) => segment.key === focus);
+  const segments = focused ? [focused] : allSegments;
+  const { counts, yearTotals, allTotals, bySegment, totals } = useMemo(() => {
     const bySegment = new Map<number, Map<string, number>>();
     const totals = new Map<string, number>();
-    for (const project of releases) {
-      const key = segmentOf(breakdown, project);
+    const allTotals = tally(releases.map((project) => project.year));
+    // Share of year only charts years with enough releases for a share to mean something.
+    const charted = asShare ? releases.filter((project) => (allTotals.get(project.year) ?? 0) >= MIN_SHARE_RELEASES) : releases;
+    for (const project of charted) {
+      const key = scheme.of(project);
       const year = bySegment.get(project.year) ?? new Map<string, number>();
       year.set(key, (year.get(key) ?? 0) + 1);
       bySegment.set(project.year, year);
       totals.set(key, (totals.get(key) ?? 0) + 1);
     }
-    return { counts: tally(releases.map((project) => project.year)), bySegment, totals };
-  }, [releases, breakdown]);
+    const yearTotals = tally(charted.map((project) => project.year));
+    // A focused colour keeps every year on the axis, counting only its own releases.
+    const counts = focus ? new Map([...yearTotals.keys()].map((year) => [year, bySegment.get(year)?.get(focus) ?? 0])) : yearTotals;
+    return { counts, yearTotals, allTotals, bySegment, totals };
+  }, [releases, scheme, focus, asShare]);
   const columns = useMemo(() => chartColumns(counts), [counts]);
-  if (!columns.length) return <p className="hint">Nothing to count with the current filters.</p>;
+  if (!columns.length) return <p className="hint">{asShare && releases.length
+    ? `No year has ${MIN_SHARE_RELEASES} or more releases with the current filters; switch Show as to Count.`
+    : 'Nothing to count with the current filters.'}</p>;
   const years = [...counts.keys()];
   const first = Math.min(...years), last = Math.max(...years);
-  const max = Math.max(...counts.values());
+  // In Share of year a stacked bar always fills the plot; a focused colour rescales to its own peak share.
+  const value = (year: number) => !asShare ? counts.get(year) ?? 0
+    : focus ? yearShare(counts.get(year) ?? 0, yearTotals.get(year) ?? 0) : (yearTotals.get(year) ? 100 : 0);
+  /** A colour's own value in a year: its count, or its share of the year (lines are drawn per colour, not stacked). */
+  const lineValue = (key: string, year: number) => {
+    const n = bySegment.get(year)?.get(key) ?? 0;
+    return asShare ? yearShare(n, yearTotals.get(year) ?? 0) : n;
+  };
+  const lineMax = Math.max(1, Math.ceil(Math.max(0, ...segments.flatMap((segment) => years.map((year) => lineValue(segment.key, year))))));
+  const max = lines ? lineMax : asShare ? Math.max(1, Math.ceil(Math.max(...years.map(value)))) : Math.max(1, ...counts.values());
+  const peakYear = years.find((y) => value(y) === Math.max(...years.map(value)));
   const span = columns.length;
   // Label roughly every fifth of the range, on round years.
   const step = [1, 2, 5, 10, 20, 25, 50].find((s) => span / s <= 8) ?? 100;
+  // The first and last years are always labelled; a round year too close to either is left out so labels don't overlap.
+  const clearance = Math.ceil(step * 0.6);
+  const labelled = (i: number, year: number) => i === 0 || i === span - 1
+    || (year % step === 0 && i >= clearance && span - 1 - i >= clearance);
   const stacked = segments.length > 1;
+  const keyed = allSegments.length > 1;
   const parts = (year: number) => segments.map((segment) => [segment, bySegment.get(year)?.get(segment.key) ?? 0] as const);
-  const tipText = (column: ChartColumn) => column.kind === 'year'
-    ? `${column.year}: ${releasesText(column.count)}${stacked && column.count ? ` (${parts(column.year).filter(([, n]) => n).map(([segment, n]) => `${segment.label} ${n}`).join(', ')})` : ''}`
-    : `${column.from}–${column.to}: no releases`;
+  const share = (n: number, total: number) => total ? ` (${Math.round((n / total) * 100)}%)` : '';
+  const tipText = (column: ChartColumn) => column.kind === 'year' && asShare && !yearTotals.has(column.year) && allTotals.get(column.year)
+    ? `${column.year}: ${releasesText(allTotals.get(column.year)!)}, too few to show as a share`
+    : column.kind === 'year'
+    ? `${column.year}: ${focused ? `${focused.label} ${column.count.toLocaleString()} of ${releasesText(yearTotals.get(column.year) ?? 0)}${share(column.count, yearTotals.get(column.year) ?? 0)}` : releasesText(column.count)}${stacked && column.count ? ` (${parts(column.year).filter(([, n]) => n).map(([segment, n]) => `${segment.label} ${n}`).join(', ')})` : ''}`
+    : `${column.from}–${column.to}: ${asShare ? `fewer than ${MIN_SHARE_RELEASES} releases a year` : 'no releases'}`;
   const hovered = hover === null ? undefined : columns[hover];
   // Keep the tooltip inside the plot: anchor it left, centred or right depending on the column.
   const tipAlign = hover === null ? '' : hover < span * 0.2 ? 'start' : hover > span * 0.8 ? 'end' : 'center';
   return <>
-    <div className="sunken-panel stats-chart" role="group" aria-label={`${label}, ${first}–${last}; peak ${max} in ${years.find((y) => counts.get(y) === max)}`}>
-      <div className="stats-chart-scale" aria-hidden="true"><span>{max}</span><span>0</span></div>
-      <div className="stats-chart-plot" onMouseLeave={() => setHover(null)}>
+    <div className="sunken-panel stats-chart" role="group" aria-label={`${label}${asShare ? ' as a share of each year' : ''}, ${first}–${last}; peak ${asShare ? `${value(peakYear!)}%` : max} in ${peakYear}`}>
+      <div className="stats-chart-scale" aria-hidden="true"><span>{asShare ? `${max}%` : max}</span><span>0{asShare ? '%' : ''}</span></div>
+      <div className={`stats-chart-plot${lines ? ' lines' : ''}`} onMouseLeave={() => setHover(null)}>
+        {lines && <ChartLines columns={columns} segments={segments} max={max} value={lineValue}
+          charted={(year) => !asShare || yearTotals.has(year)} />}
         {columns.map((column, i) => {
-          const edge = i === 0 || i === span - 1;
           if (column.kind === 'gap') return <div key={`gap-${column.from}`} className="stats-chart-col stats-chart-gap" onMouseEnter={() => setHover(i)}>
             <span className="stats-chart-track"><span className="stats-chart-break" aria-hidden="true">≈</span></span>
             <span className="stats-chart-year" />
@@ -241,12 +388,17 @@ function YearChart({ releases, breakdown, label, selected, onPick }: {
           return <button type="button" key={column.year} aria-disabled={!column.count || undefined}
             className={`stats-chart-col${hover === i ? ' hover' : ''}${selected === column.year ? ' selected' : ''}`}
             aria-label={tipText(column)} aria-pressed={selected === column.year}
-            onMouseEnter={() => setHover(i)} onClick={() => { if (column.count) onPick(column.year); }}>
-            <span className="stats-chart-track"><span className="stats-chart-bar" style={{ height: `${(column.count / max) * 100}%` }}>
+            onMouseEnter={() => setHover(i)} onClick={(event) => {
+              if (!column.count) return;
+              // Clicking a colour in a stacked bar focuses that colour and lists the year's releases of it.
+              const segment = stacked ? (event.target as HTMLElement).dataset.segment : undefined;
+              if (segment) { onFocus(segment); onPick(column.year, true); } else onPick(column.year);
+            }}>
+            <span className="stats-chart-track">{!lines && <span className="stats-chart-bar" style={{ height: `${(value(column.year) / max) * 100}%` }}>
               {column.count > 0 && parts(column.year).map(([segment, n]) => n > 0 &&
-                <span key={segment.key} className="stats-chart-seg" style={{ height: `${(n / column.count) * 100}%`, background: segment.color }} />)}
-            </span></span>
-            <span className="stats-chart-year">{column.year % step === 0 || edge ? column.year : ''}</span>
+                <span key={segment.key} data-segment={segment.key} title={stacked ? `Show only ${segment.label}` : undefined} className="stats-chart-seg" style={{ height: `${(n / column.count) * 100}%`, background: segment.color }} />)}
+            </span>}</span>
+            <span className="stats-chart-year">{labelled(i, column.year) ? column.year : ''}</span>
           </button>;
         })}
         {hovered && <span className={`stats-chart-tip ${tipAlign}`} style={{ left: `${((hover! + 0.5) / span) * 100}%` }} aria-hidden="true">
@@ -258,66 +410,188 @@ function YearChart({ releases, breakdown, label, selected, onPick }: {
         </span>}
       </div>
     </div>
-    {stacked && <ul className="stats-legend" aria-label="Chart colours">
-      {[...segments].reverse().map((segment) => {
+    {keyed && <ul className={`stats-legend${focused ? ' focused' : ''}`} aria-label="Chart colours">
+      {[...allSegments].reverse().map((segment) => {
         const n = totals.get(segment.key) ?? 0;
-        return <li key={segment.key} title={segment.hint}><Swatch color={segment.color} />{segment.label} <span className="stats-legend-count">{n.toLocaleString()} ({Math.round((n / releases.length) * 100)}%)</span></li>;
+        const charted = [...totals.values()].reduce((sum, value) => sum + value, 0);
+        const on = segment.key === focus;
+        return <li key={segment.key}>
+          <button type="button" className={`stats-legend-item${on ? ' on' : ''}`} aria-pressed={on} disabled={!n && !on}
+            title={`${segment.hint ? `${segment.hint}. ` : ''}${on ? 'Click to show every colour' : 'Click to show only this colour'}`}
+            onClick={() => onFocus(on ? undefined : segment.key)}>
+            <Swatch color={segment.color} />{segment.label} <span className="stats-legend-count">{n.toLocaleString()} ({charted ? Math.round((n / charted) * 100) : 0}%)</span>
+          </button>
+        </li>;
       })}
+      {focused && <li><button type="button" className="stats-legend-item stats-legend-all" onClick={() => onFocus(undefined)}>Show all</button></li>}
     </ul>}
   </>;
 }
 
 /** The Collaborations by year section: the "Colour by" picker, the chart and the picked year's releases. */
-function YearSection({ releases, house }: { releases: readonly Collaboration[]; house: (id: string) => ReactNode }) {
+/** Releases the year chart shows: none dated after the current year (announced ones would end every line in a cliff). */
+export function chartedReleases(releases: readonly Collaboration[], thisYear = new Date().getFullYear()) {
+  return releases.filter((project) => project.year <= thisYear);
+}
+
+function YearSection({ releases: all, house }: { releases: readonly Collaboration[]; house: (id: string) => ReactNode }) {
+  const thisYear = new Date().getFullYear();
+  const releases = useMemo(() => chartedReleases(all, thisYear), [all, thisYear]);
+  const upcoming = all.length - releases.length;
+  const [scale, setScale] = useState<YearScale>(() => {
+    try { return localStorage.getItem(SCALE_KEY) === 'share' ? 'share' : 'count'; } catch { return 'count'; }
+  });
+  const [style, setStyle] = useState<YearStyle>(() => {
+    try { return localStorage.getItem(STYLE_KEY) === 'lines' ? 'lines' : 'bars'; } catch { return 'bars'; }
+  });
+  const pickStyle = (next: YearStyle) => {
+    setStyle(next);
+    try { localStorage.setItem(STYLE_KEY, next); } catch { /* storage unavailable */ }
+  };
+  const pickScale = (next: YearScale) => {
+    setScale(next);
+    try { localStorage.setItem(SCALE_KEY, next); } catch { /* storage unavailable */ }
+  };
   const [breakdown, setBreakdown] = useState<YearBreakdown>(() => {
     try {
       const stored = localStorage.getItem(BREAKDOWN_KEY);
       return BREAKDOWN_VALUES.find((value) => value === stored) ?? 'total';
     } catch { return 'total'; }
   });
+  const [tagSeries, setTagSeries] = useState<TagSeries[]>(readTagSeries);
+  // The one colour shown on its own (a segment key of the current breakdown), if any.
+  const [focus, setFocus] = useState<string>();
   const pickBreakdown = (next: YearBreakdown) => {
     setBreakdown(next);
+    setFocus(undefined);
     try { localStorage.setItem(BREAKDOWN_KEY, next); } catch { /* storage unavailable */ }
   };
+  const changeSeries = (next: TagSeries[]) => {
+    setTagSeries(next);
+    setFocus(undefined);
+    try { localStorage.setItem(TAG_SERIES_KEY, JSON.stringify(next)); } catch { /* storage unavailable */ }
+  };
+  const scheme = useMemo(() => breakdown === 'tags' ? tagScheme(tagSeries) : builtInScheme(breakdown), [breakdown, tagSeries]);
   // The year picked on the chart; dropped when the filters leave it without releases.
   const [pickedYear, setPickedYear] = useState<number>();
-  const chartYear = pickedYear !== undefined && releases.some((project) => project.year === pickedYear) ? pickedYear : undefined;
+  const chartYear = pickedYear !== undefined && releases.some((project) => project.year === pickedYear
+    && (!focus || scheme.of(project) === focus)) ? pickedYear : undefined;
   return <ProfileSection title="Collaborations by year">
     <div className="field-row stats-limit">
       <span>Colour by</span>
       <SelectBox label="Colour the chart by" values={BREAKDOWN_VALUES} value={breakdown} onChange={pickBreakdown}
         text={(value) => BREAKDOWNS.find(([key]) => key === value)![1]} />
     </div>
-    <YearChart releases={releases} breakdown={breakdown} label="Collaboration releases per year" selected={chartYear}
-      onPick={(picked) => setPickedYear((current) => current === picked ? undefined : picked)} />
+    {breakdown === 'tags' && <TagSeriesPicker series={tagSeries} onChange={changeSeries} />}
+    <div className="field-row stats-limit">
+      <span>Chart</span>
+      <SelectBox label="Draw the chart as" values={STYLE_VALUES} value={style} onChange={pickStyle}
+        text={(value) => STYLES.find(([key]) => key === value)![1]} />
+      {/* Shares need colours to compare: with Total there is only one, so the chart stays in counts. */}
+      {scheme.segments.length > 1 && <>
+        <span>Show as</span>
+        <SelectBox label="Show the chart as" values={SCALE_VALUES} value={scale} onChange={pickScale}
+          text={(value) => SCALES.find(([key]) => key === value)![1]} />
+      </>}
+    </div>
+    <YearChart releases={releases} scheme={scheme} label="Collaboration releases per year" selected={chartYear}
+      share={scale === 'share' && scheme.segments.length > 1} lines={style === 'lines'}
+      onPick={(picked, keep) => setPickedYear((current) => !keep && current === picked ? undefined : picked)}
+      focus={focus} onFocus={setFocus} />
     {chartYear === undefined
-      ? releases.length > 0 && <p className="hint">Click a column to list that year's releases.</p>
-      : <YearReleases year={chartYear} releases={releases} breakdown={breakdown} house={house} />}
+      ? releases.length > 0 && <p className="hint">Click a column to list that year's releases{scheme.segments.length > 1 ? ', or a colour to show it on its own' : ''}.
+        {scale === 'share' && scheme.segments.length > 1 && ` Years with fewer than ${MIN_SHARE_RELEASES} releases are left out, since one or two releases swing the share widely; hover a column for its counts.`}</p>
+      : <YearReleases year={chartYear} releases={releases} scheme={scheme} house={house} focus={focus} onFocus={setFocus} />}
+    {upcoming > 0 && <p className="hint">{releasesText(upcoming)} dated after {thisYear} {upcoming === 1 ? 'is' : 'are'} not charted yet.</p>}
   </ProfileSection>;
 }
 
+/** A tag typed in full (any case) counts as picked, so Add works without choosing from the list. */
+function typedTag(text: string): TagRef | undefined {
+  const name = text.trim().toLowerCase();
+  const exact = TAG_ITEMS.filter((item) => item.label.toLowerCase() === name);
+  return exact.length === 1 ? exact[0]!.value : undefined;
+}
+
+/**
+ * "My tags": the chart's series as removable chips, plus two searchable tag boxes and Add.
+ * One tag charts releases with a brand tagged it; a second tag charts that brand with a different brand tagged the second.
+ */
+function TagSeriesPicker({ series, onChange }: { series: readonly TagSeries[]; onChange: (next: TagSeries[]) => void }) {
+  const id = useId();
+  const [firstText, setFirstText] = useState('');
+  const [secondText, setSecondText] = useState('');
+  const [firstPick, setFirstPick] = useState<TagRef>();
+  const [secondPick, setSecondPick] = useState<TagRef>();
+  const first = firstPick ?? typedTag(firstText);
+  const second = secondPick ?? typedTag(secondText);
+  const unknownSecond = !!secondText.trim() && !second;
+  const candidate: TagSeries | undefined = first ? (second ? [first, second] : [first]) : undefined;
+  const duplicate = !!candidate && series.some((existing) => seriesKey(existing) === seriesKey(candidate)
+    || (candidate.length === 2 && seriesKey(existing) === seriesKey([candidate[1], candidate[0]])));
+  const full = series.length >= MAX_TAG_SERIES;
+  const problem = full ? `Up to ${MAX_TAG_SERIES} tags; remove one to add another.`
+    : duplicate ? 'Already on the chart.'
+    : unknownSecond ? 'Pick the second tag from the list, or clear it.'
+    : (firstText.trim() && !first) ? 'Pick a tag from the list.' : undefined;
+  const add = () => {
+    if (!candidate || duplicate || full || unknownSecond) return;
+    onChange([...series, candidate]);
+    setFirstText(''); setSecondText(''); setFirstPick(undefined); setSecondPick(undefined);
+  };
+  return <div className="stats-tag-picker">
+    {series.length > 0 && <ul className="stats-tag-chips" aria-label="Your chart tags">
+      {series.map((item, i) => <li key={seriesKey(item)}>
+        <button type="button" className="filter-chip" title={`${seriesHint(item)}. Click to remove`}
+          aria-label={`Remove ${seriesLabel(item)} from the chart`} onClick={() => onChange(series.filter((_, j) => j !== i))}>
+          <Swatch color={SERIES_COLORS[i]!} />{seriesLabel(item)} ×
+        </button>
+      </li>)}
+    </ul>}
+    <form className="stats-tag-form" onSubmit={(event) => { event.preventDefault(); add(); }}>
+      <SearchBox items={TAG_ITEMS} value={firstText} label="Tag:" inputId={`${id}-first`} placeholder="Search tags" limit={Infinity} dropButton
+        onChange={(text) => { setFirstText(text); setFirstPick(undefined); }} onPick={(item) => setFirstPick(item.value)} />
+      <SearchBox items={TAG_ITEMS} value={secondText} label="with:" inputId={`${id}-second`} placeholder="Any brand (optional)" limit={Infinity} dropButton
+        onChange={(text) => { setSecondText(text); setSecondPick(undefined); }} onPick={(item) => setSecondPick(item.value)} />
+      <button type="submit" disabled={!candidate || !!problem}>Add</button>
+    </form>
+    <p className="hint">{problem ?? (series.length
+      ? 'Each release counts under the first tag it matches, in this order. Click a tag above to remove it.'
+      : 'Pick a tag to chart its collaborations; add a second to see releases between brands of the two tags (e.g. Luxury with Streetwear).')}</p>
+  </div>;
+}
+
 /** The releases of one year from the chart, each as its linked participating brands, grouped by the chart's colours. */
-function YearReleases({ year, releases, breakdown, house }: {
-  year: number; releases: readonly Collaboration[]; breakdown: YearBreakdown; house: (id: string) => ReactNode;
+function YearReleases({ year, releases, scheme, house, focus, onFocus }: {
+  year: number; releases: readonly Collaboration[]; scheme: Scheme; house: (id: string) => ReactNode;
+  focus?: string; onFocus: (segment: string | undefined) => void;
 }) {
-  const segments = SEGMENTS[breakdown];
+  const segments = scheme.segments;
   const stacked = segments.length > 1;
+  const focused = segments.find((segment) => segment.key === focus);
   const rows = useMemo(() => releases.filter((project) => project.year === year)
     .map((project) => {
-      const key = segmentOf(breakdown, project);
+      const key = scheme.of(project);
       return { id: project.id, segment: segments.find((segment) => segment.key === key)!,
         houses: [...new Set(project.houses)].sort((a, b) => houseName(a).localeCompare(houseName(b))) };
     })
+    .filter((row) => !focus || row.segment.key === focus)
     .sort((a, b) => (stacked ? segments.indexOf(b.segment) - segments.indexOf(a.segment) : 0)
-      || a.houses.map(houseName).join(' ').localeCompare(b.houses.map(houseName).join(' '))), [releases, year, breakdown, segments, stacked]);
+      || a.houses.map(houseName).join(' ').localeCompare(b.houses.map(houseName).join(' '))), [releases, year, scheme, segments, stacked, focus]);
   return <>
-    <p className="stats-year-heading"><strong>{year}</strong>: {releasesText(rows.length)}</p>
+    <p className="stats-year-heading"><strong>{year}</strong>: {releasesText(rows.length)}{focused && <> ({focused.label})</>}</p>
     <RowLimitedPanel rows={STATS_VISIBLE_ROWS} className="stats-table"><table aria-label={`Collaboration releases in ${year}`}>
       <thead><tr><th className="stats-rank">#</th><th className="stats-label">Brands</th>{stacked && <th className="stats-label">Type</th>}</tr></thead>
       <tbody>{rows.map((row, index) => <tr key={row.id}>
         <td className="stats-rank">{index + 1}</td>
         <td className="stats-label" title={row.houses.map(houseName).join(' × ')}>{row.houses.map((id, i) => <span key={id}>{i > 0 && ' × '}{house(id)}</span>)}</td>
-        {stacked && <td className="stats-label nowrap"><Swatch color={row.segment.color} />{row.segment.label}</td>}
+        {stacked && <td className="stats-label nowrap">
+          <button type="button" className="stats-type" aria-pressed={row.segment.key === focus}
+            title={row.segment.key === focus ? 'Show every colour' : `Show only ${row.segment.label}`}
+            onClick={() => onFocus(row.segment.key === focus ? undefined : row.segment.key)}>
+            <Swatch color={row.segment.color} />{row.segment.label}
+          </button>
+        </td>}
       </tr>)}</tbody>
     </table></RowLimitedPanel>
   </>;

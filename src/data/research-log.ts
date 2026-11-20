@@ -24,22 +24,36 @@ export interface CollabSearch {
 // Entries without lastPage/oldestYear were backfilled from git history.
 export const collabSearches = {
   adidas: { date: '2026-11-19', complete: true, lastPage: 815, oldestYear: 2007 },
+  // /brands/ pages don't paginate; crawled /tags/adieu, plus the brand's own news page.
+  adieu: { date: '2026-11-20', complete: true, lastPage: 1, oldestYear: 2014 },
+  // /brands/ pages don't paginate; crawled /tags/afew.
+  afew: { date: '2026-11-19', complete: true, lastPage: 5, oldestYear: 2011 },
   airwalk: { date: '2026-11-19', complete: true, lastPage: 3, oldestYear: 2009 },
   alife: { date: '2026-11-18', complete: true, lastPage: 20, oldestYear: 2007 },
   alphaIndustries: { date: '2026-11-18', complete: true, lastPage: 15, oldestYear: 2008 },
+  // /brands/ pages redirect; crawled /tags/a-ma-maniere.
+  aMaManiere: { date: '2026-11-20', complete: true, lastPage: 13, oldestYear: 2014 },
   apc: { date: '2026-11-18', complete: true, lastPage: 33, oldestYear: 2007 },
   asics: { date: '2026-11-18', complete: true, lastPage: 161, oldestYear: 2007 },
+  // /brands/ pages redirect; crawled /tags/asphaltgold.
+  asphaltgold: { date: '2026-11-20', complete: true, lastPage: 1, oldestYear: 2014 },
   atmos: { date: '2026-11-18', complete: true, lastPage: 45, oldestYear: 2007 },
   awakeNy: { date: '2026-11-18', complete: true, lastPage: 18, oldestYear: 2014 },
   bait: { date: '2026-11-18', complete: true, lastPage: 17, oldestYear: 2012 },
   barbour: { date: '2026-11-18', complete: true },
+  // /brands/ pages don't paginate; crawled /tags/barneys-new-york.
+  barneysNewYork: { date: '2026-11-19', complete: true, lastPage: 7, oldestYear: 2008 },
   beenTrill: { date: '2026-11-19', complete: true, lastPage: 5, oldestYear: 2012 },
   birkenstock: { date: '2026-11-19', complete: true, lastPage: 14, oldestYear: 2008 },
   blumarine: { date: '2026-11-19', complete: true, lastPage: 1, oldestYear: 2023 },
   brooks: { date: '2026-11-18', complete: true },
+  // /brands/ pages don't paginate; crawled /tags/bstn, plus web searches.
+  bstn: { date: '2026-11-19', complete: true, lastPage: 2, oldestYear: 2013 },
   burberry: { date: '2026-11-18', complete: true },
   calvinKlein: { date: '2026-11-18', complete: true },
   canadaGoose: { date: '2026-11-18', complete: true, lastPage: 10, oldestYear: 2008 },
+  // Crawled /tags/capsule; the generic tag is mostly unrelated capsule collections.
+  capsule: { date: '2026-11-20', complete: true, lastPage: 4, oldestYear: 2009 },
   carrots: { date: '2026-11-18', complete: true, lastPage: 4, oldestYear: 2015 },
   cdgShirt: { date: '2026-11-19', complete: true, lastPage: 11, oldestYear: 2011 },
   champion: { date: '2026-11-18', complete: true },
@@ -54,21 +68,35 @@ export const collabSearches = {
   extraButter: { date: '2026-11-19', complete: true, lastPage: 9, oldestYear: 2008 },
   faherty: { date: '2026-11-19', complete: true, noArchive: true },
   fila: { date: '2026-11-18', complete: true },
+  fillingPieces: { date: '2026-11-20', complete: true, lastPage: 9, oldestYear: 2011 },
   fragmentDesign: { date: '2026-11-18', complete: true },
+  ftc: { date: '2026-11-20', complete: true, lastPage: 7, oldestYear: 2007 },
   ftp: { date: '2026-11-18', complete: true, lastPage: 2, oldestYear: 2014 },
   georgeCox: { date: '2026-11-18', complete: true },
+  // /brands/ pages redirect; crawled /tags/hbx.
+  hbx: { date: '2026-11-20', complete: true, lastPage: 97, oldestYear: 2015 },
   hellstar: { date: '2026-11-18', complete: true, lastPage: 1, oldestYear: 2026 },
   herschelSupply: { date: '2026-11-18', complete: true },
   highsAndLows: { date: '2026-11-19', complete: true, lastPage: 3, oldestYear: 2010 },
   hm: { date: '2026-11-18', complete: true, lastPage: 20, oldestYear: 2008 },
   // /brands/ pages don't paginate; crawled /tags/holzweiler (2 pages) plus the brand's own collaborations page.
   holzweiler: { date: '2026-11-19', complete: true, lastPage: 2, oldestYear: 2017 },
+  // /brands/ pages don't paginate; crawled /tags/hysteric-glamour plus the Fashion Press collab list.
+  hystericGlamour: { date: '2026-11-19', complete: true, lastPage: 9, oldestYear: 2007 },
   jamesPerse: { date: '2026-11-19', complete: true, lastPage: 1, oldestYear: 2013 },
+  // /brands/ pages redirect; crawled /tags/juice.
+  juice: { date: '2026-11-20', complete: true, lastPage: 6, oldestYear: 2008 },
+  justDon: { date: '2026-11-20', complete: true, lastPage: 7, oldestYear: 2013 },
   jwAnderson: { date: '2026-11-18', complete: true },
+  kanuk: { date: '2026-11-19', complete: true, lastPage: 1, oldestYear: 2021 },
   kappa: { date: '2026-11-18', complete: true, lastPage: 10, oldestYear: 2016 },
+  // /brands/ pages redirect; crawled /tags/kicks-lab.
+  kicksLab: { date: '2026-11-20', complete: true, lastPage: 2, oldestYear: 2008 },
   lacoste: { date: '2026-11-19', complete: true, lastPage: 25, oldestYear: 2007 },
   levis: { date: '2026-11-19', complete: true, lastPage: 79, oldestYear: 2007 },
   littleTokyoTableTennis: { date: '2026-11-18', complete: true, lastPage: 1, oldestYear: 2022 },
+  // /brands/ pages don't paginate; crawled /tags/matchesfashion.
+  matchesFashion: { date: '2026-11-19', complete: true, lastPage: 10, oldestYear: 2015 },
   mitaSneakers: { date: '2026-11-18', complete: true, lastPage: 15, oldestYear: 2007 },
   moncler: { date: '2026-11-18', complete: true, lastPage: 38, oldestYear: 2008 },
   nanga: { date: '2026-11-18', complete: true, lastPage: 5, oldestYear: 2016 },
@@ -78,6 +106,8 @@ export const collabSearches = {
   nexusVII: { date: '2026-11-18', complete: true, lastPage: 10, oldestYear: 2010 },
   noah: { date: '2026-11-18', complete: true, lastPage: 23, oldestYear: 2015 },
   nonnative: { date: '2026-11-18', complete: true, lastPage: 28, oldestYear: 2007 },
+  // /brands/ pages don't paginate; crawled /tags/notre.
+  notre: { date: '2026-11-19', complete: true, lastPage: 4, oldestYear: 2015 },
   onitsukaTiger: { date: '2026-11-18', complete: true },
   onRunning: { date: '2026-11-18', complete: true },
   openingCeremony: { date: '2026-11-18', complete: true, lastPage: 32, oldestYear: 2008 },
@@ -90,6 +120,8 @@ export const collabSearches = {
   paulSmith: { date: '2026-11-18', complete: true },
   perryEllis: { date: '2026-11-18', complete: true },
   placesPlusFaces: { date: '2026-11-18', complete: true, lastPage: 2, oldestYear: 2015 },
+  // /brands/ pages don't paginate; crawled /tags/polar-skate-co.
+  polarSkateCo: { date: '2026-11-20', complete: true, lastPage: 2, oldestYear: 2014 },
   poloRalphLauren: { date: '2026-11-18', complete: true },
   popTradingCompany: { date: '2026-11-18', complete: true },
   porterYoshida: { date: '2026-11-17', complete: true },
@@ -100,12 +132,18 @@ export const collabSearches = {
   // Pages 171+ were read through the uppercase /tags/Reebok/ archive (pages 171-195).
   reebok: { date: '2026-11-18', complete: true, lastPage: 195, oldestYear: 2007 },
   repetto: { date: '2026-11-19', complete: true, noArchive: true },
+  rimowa: { date: '2026-11-19', complete: true, lastPage: 20, oldestYear: 2008 },
   roots: { date: '2026-11-18', complete: true },
   rothco: { date: '2026-11-18', complete: true, lastPage: 1, oldestYear: 2012 },
+  // /brands/ pages redirect; crawled /tags/rsvp-gallery.
+  rsvpGallery: { date: '2026-11-20', complete: true, lastPage: 8, oldestYear: 2009 },
   saintAlfred: { date: '2026-11-19', complete: true, lastPage: 4, oldestYear: 2007 },
+  saintwoods: { date: '2026-11-19', complete: true, lastPage: 3, oldestYear: 2016 },
   saucony: { date: '2026-11-18', complete: true },
   sneakerFreaker: { date: '2026-11-19', complete: true, lastPage: 9, oldestYear: 2008 },
   sneakersnstuff: { date: '2026-11-19', complete: true, lastPage: 14, oldestYear: 2009 },
+  // /brands/ pages don't paginate; crawled /tags/social-status.
+  socialStatus: { date: '2026-11-19', complete: true, lastPage: 8, oldestYear: 2012 },
   solovair: { date: '2026-11-18', complete: true },
   // Read through the /tags/ssense/ archive (/brands/ssense/page/N repeats page 1).
   ssense: { date: '2026-11-19', complete: true, lastPage: 45, oldestYear: 2012 },
@@ -115,14 +153,22 @@ export const collabSearches = {
   // Pages 89+ were read through the all-caps /tags/STUSSY/ archive (pages 98–173).
   stussy: { date: '2026-11-19', complete: true, lastPage: 173, oldestYear: 2007 },
   subu: { date: '2026-11-18', complete: true, lastPage: 2, oldestYear: 2020 },
+  supreme: { date: '2026-11-19', complete: true, lastPage: 199, oldestYear: 2007 },
+  syte: { date: '2026-11-20', complete: true, lastPage: 2, oldestYear: 2012 },
   tenCorsoComo: { date: '2026-11-19', complete: true, lastPage: 4, oldestYear: 2008 },
   tenDeep: { date: '2026-11-18', complete: true, lastPage: 10, oldestYear: 2011 },
   thebeMagugu: { date: '2026-11-18', complete: true, lastPage: 1, oldestYear: 2019 },
+  // /brands/ pages don't paginate; crawled /tags/the-broken-arm.
+  theBrokenArm: { date: '2026-11-20', complete: true, lastPage: 3, oldestYear: 2014 },
   // Pages 28+ were read through the all-caps /tags/THE-HUNDREDS/ archive (pages 32–49).
   theHundreds: { date: '2026-11-19', complete: true, lastPage: 49, oldestYear: 2007 },
   theNorthFace: { date: '2026-11-18', complete: true },
   timberland: { date: '2026-11-18', complete: true, lastPage: 42, oldestYear: 2007 },
   tommyHilfiger: { date: '2026-11-18', complete: true },
+  // Crawled /tags/tom-sachs.
+  tomSachsStudio: { date: '2026-11-20', complete: true, lastPage: 17, oldestYear: 2008 },
+  // /brands/ pages don't paginate; crawled /tags/tres-bien.
+  tresBien: { date: '2026-11-19', complete: true, lastPage: 8, oldestYear: 2010 },
   trickers: { date: '2026-11-19', complete: true, lastPage: 10, oldestYear: 2008 },
   ugg: { date: '2026-11-18', complete: true, lastPage: 12, oldestYear: 2008 },
   umbro: { date: '2026-11-18', complete: true, lastPage: 13, oldestYear: 2007 },
@@ -131,6 +177,13 @@ export const collabSearches = {
   vetements: { date: '2026-11-19', complete: true, lastPage: 31, oldestYear: 2015 },
   vineyardVines: { date: '2026-11-18', complete: true, noArchive: true },
   wackoMaria: { date: '2026-11-17', complete: true },
+  // Crawled /tags/wildside-yohji-yamamoto.
+  wildsideYohjiYamamoto: { date: '2026-11-20', complete: true, lastPage: 4, oldestYear: 2022 },
   wtaps: { date: '2026-11-18', complete: true, lastPage: 41, oldestYear: 2007 },
+  yohjiYamamoto: { date: '2026-11-20', complete: true, lastPage: 46, oldestYear: 2008 },
+  // Crawled /tags/yohji-yamamoto-pour-homme.
+  yohjiYamamotoPourHomme: { date: '2026-11-20', complete: true, lastPage: 2, oldestYear: 2017 },
+  // No /brands/ archive (404); crawled /tags/ys.
+  ys: { date: '2026-11-20', complete: true, lastPage: 3, oldestYear: 2014 },
   zegna: { date: '2026-11-18', complete: true },
 } satisfies Partial<Record<HouseId, CollabSearch>>;

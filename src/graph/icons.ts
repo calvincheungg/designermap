@@ -64,10 +64,13 @@ const DIGITS: Record<string, string[]> = {
  * badge with a pixel pointer underneath. Raised grey when collapsed; pressed
  * navy with white digits when expanded. Regional clusters use a teal face.
  */
-export function cityMarkerIcon(count: number, expanded: boolean, cluster = false): string {
+/** Pin face of the `TOP_CITY_COUNT` cities with the most brands (the app's collaboration red). */
+export const TOP_CITY_FACE = '#cc0000';
+
+export function cityMarkerIcon(count: number, expanded: boolean, cluster = false, top = false): string {
   const W = '#ffffff', L = '#dfdfdf', G = '#808080', K = '#000000';
-  const face = expanded ? '#000080' : cluster ? '#008080' : '#c0c0c0';
-  const ink = expanded || cluster ? '#ffffff' : '#000000';
+  const face = expanded ? '#000080' : cluster ? '#008080' : top ? TOP_CITY_FACE : '#c0c0c0';
+  const ink = expanded || cluster || top ? '#ffffff' : '#000000';
   // Raised: light top-left, dark bottom-right. Pressed: the reverse.
   const [outerTL, innerTL, innerBR, outerBR] = expanded ? [K, G, L, W] : [W, L, G, K];
 

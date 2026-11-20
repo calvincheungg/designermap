@@ -1,26 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { houses, GroupId } from '../data';
+import { GroupId } from '../data';
 import { tagLabel } from './labels';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { PanelContent, panelTitle, type Selection } from './panel';
 
-const renderPanel = (selection: Selection, visibleHouses = houses) => ({
+const renderPanel = (selection: Selection) => ({
   title: panelTitle(selection),
-  html: renderToStaticMarkup(createElement(PanelContent, { selection, visibleHouses, onSelect: () => {}, onTag: () => {} })),
+  html: renderToStaticMarkup(createElement(PanelContent, { selection, onSelect: () => {}, onTag: () => {} })),
 });
 
 describe('group navigation and tag display', () => {
-  it('shows states and provinces in directory menus while keeping house locations concise', () => {
+  it('keeps house locations concise, without states or provinces', () => {
     expect(renderPanel({ kind: 'house', id: 'commonProjects' }).html).toContain('New York, USA');
     expect(renderPanel({ kind: 'house', id: 'aritzia' }).html).toContain('Vancouver, Canada');
     expect(renderPanel({ kind: 'house', id: 'psychoBunny' }).html).toContain('Montreal, Canada');
     expect(renderPanel({ kind: 'house', id: 'dior' }).html).toContain('Paris, France');
-    const singleCity = renderPanel(null, houses.filter((house) => house.id === 'aritzia')).html;
-    expect(singleCity).toContain('Canada · Vancouver, British Columbia (1)');
-    const multipleCities = renderPanel(null, houses.filter((house) => ['aritzia', 'canadaGoose'].includes(house.id))).html;
-    expect(multipleCities).toContain('Vancouver, British Columbia (1)');
-    expect(multipleCities).toContain('Toronto, Ontario (1)');
   });
 
   it('shows capitalized tag labels while keeping filter values intact', () => {
@@ -35,7 +30,7 @@ describe('group navigation and tag display', () => {
   it('links a house to its group and the group back to its brands', () => {
     const house = renderPanel({ kind: 'house', id: 'moncler' });
     expect(house.html).toContain(`data-select="group:${GroupId.Moncler}"`);
-    const group = renderPanel({ kind: 'group', id: GroupId.Moncler }, []);
+    const group = renderPanel({ kind: 'group', id: GroupId.Moncler });
     expect(group.title).toBe('Moncler Group');
     expect(group.html).toContain('Current Brands in This Map (4)');
     expect(group.html).toContain('data-select="house:moncler"');
@@ -67,8 +62,7 @@ describe('group navigation and tag display', () => {
     expect(html).not.toContain('instagram.com/fentybeauty/');
   });
 
-  it('lists groups in the directory and handles an unknown group', () => {
-    expect(renderPanel(null, houses).html).toContain(`data-select="group:${GroupId.Kering}"`);
+  it('handles an unknown group', () => {
     expect(renderPanel({ kind: 'group', id: 'unknown' as GroupId }).title).toBe('Not found');
   });
 });

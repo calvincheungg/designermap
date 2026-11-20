@@ -14,7 +14,7 @@ export type RunTarget =
  * brand, designer, group, city, country or year and press Enter (or OK).
  * Picking a suggestion runs it straight away. The window stays open, keeping
  * the last entry, so several things can be opened in turn; Cancel closes it
- * and Browse… opens the Directory.
+ * and Browse… opens My Computer.
  */
 export function RunContent({ items, onRun, onBrowse, onClose }: {
   items: readonly ListItem<RunTarget>[];

@@ -1,10 +1,28 @@
 import { describe, expect, it } from 'vitest';
 import { buildClusterLevels, clusterLevel, type ClusterCity } from './clusters';
 import { housesByMapLocation, project } from './geo';
-import { clusterLabel, isMajorCity, mapLocationCoordinates } from './locations';
+import { clusterLabel, isMajorCity, mapLocationCoordinates, TOP_CITY_COUNT, topCities } from './locations';
 
 const city = (name: string, x: number, count = 1): ClusterCity => ({
   city: name, tip: { x, y: 0 }, count, major: isMajorCity(name, count),
+});
+
+describe('top cities (red pins)', () => {
+  it('picks the busiest map locations, ties broken by name', () => {
+    const counts = Array.from({ length: 14 }, (_, i) => ({ city: `C${String(i).padStart(2, '0')}`, count: 20 - i }));
+    counts.push({ city: 'A tie', count: 11 }, { city: 'Empty', count: 0 });
+    const top = topCities(counts);
+    expect(top.size).toBe(TOP_CITY_COUNT);
+    expect(top.has('C00') && top.has('A tie') && top.has('C08')).toBe(true);
+    expect(top.has('C09') || top.has('Empty')).toBe(false);
+  });
+
+  it('gives the real dataset ten top cities, Paris among them', () => {
+    const counts = [...housesByMapLocation()].map(([city, hs]) => ({ city, count: hs.filter(h => !h.parentHouse).length }));
+    const top = topCities(counts);
+    expect(top.size).toBe(TOP_CITY_COUNT);
+    expect(top.has('Paris')).toBe(true);
+  });
 });
 
 describe('zoom-dependent regional clusters', () => {

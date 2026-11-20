@@ -3,13 +3,25 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 /**
  * Win98 Start button and menu. The menu holds the map's options; `children`
  * receives `close` so commands can dismiss it, as Win98 menu commands do.
- * Checkboxes, radios and typing in Find leave it open.
+ * Checkboxes, radios and typing in Find leave it open. Ctrl+Esc opens or
+ * closes it from anywhere, as the Windows key did.
  */
 export function StartMenu({ children }: { children: (close: () => void) => ReactNode }) {
   const [open, setOpen] = useState(false);
   const button = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
   const close = () => setOpen(false);
+  useEffect(() => {
+    const shortcut = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || !event.ctrlKey) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      setOpen((current) => !current);
+      button.current?.focus();
+    };
+    window.addEventListener('keydown', shortcut, true);
+    return () => window.removeEventListener('keydown', shortcut, true);
+  }, []);
   useEffect(() => {
     if (!open) return;
     const outside = (event: PointerEvent) => {

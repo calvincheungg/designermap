@@ -39,12 +39,15 @@ src/data/validate.ts  sanity checks (also run in tests + logged in browser)
 src/graph/geo.ts      projection, world SVG markup, city-box placement + overlap removal
 src/graph/locations.ts display-only regional pin groups and their anchor cities
 src/graph/            Cytoscape: elements.ts (per view), style.ts, icons.ts, graph.ts
-src/ui/panel.tsx      React Properties components for house / designer / group / directory
+src/ui/panel.tsx      React Properties components for house / designer / group
 src/ui/listbox.tsx    React Win98 Find combobox (replaces <datalist>)
 src/ui/filters.tsx    Start menu "Filter brands" cascade + toolbar chips for active filters
 src/ui/side-panel.tsx floating Properties window: move, resize, minimize, close (useParentSize / useWindowGestures shared with the map)
 src/ui/map-window.tsx the map's own movable, resizable window frame on the desktop
-src/ui/desktop.ts     window manager: Directory + up to 3 Properties + up to 3 city/country windows
+src/ui/desktop.ts     window manager: Properties, city/country and tool windows (maximize, focus, limits)
+src/ui/my-computer.tsx My Computer: drives and folders (locations, brands by market position, groups, designers A–Z)
+src/ui/notepad.tsx    Notepad tool window: a plain-text note kept in localStorage
+src/ui/task-switcher.tsx Alt+Tab window switcher
 src/ui/tool-windows.tsx Recycle Bin (ended brands), Help (map legend) and dev-only What's Missing report windows
 src/ui/run-dialog.tsx Start ▸ Run… box: open a brand, designer, group, city, country or year by name
 src/ui/recent.ts      Start ▸ Documents: recently opened items (localStorage)
@@ -55,7 +58,7 @@ src/ui/statistics.tsx  Statistics window (Start menu): filtered totals, tiers, c
 src/ui/settings.tsx   Settings window: map colours (day/night), text size, Show brands at, Open cities, connection lines
 src/ui/city-window.tsx place windows: scrollable Large Icons grid of a city's or country's main brands
 src/ui/map-view.tsx   React lifecycle boundary for DesignerGraph and its context menu
-src/ui/start-menu.tsx Win98 taskbar Start menu: base/origin, lines + connection filter, brand filters, map commands
+src/ui/start-menu.tsx Win98 taskbar Start menu: lines + connection filter, brand filters, map commands
 src/App.tsx           interface state and synchronization with the graph API
 src/main.tsx          React root and startup data validation
 ```
@@ -110,13 +113,15 @@ Key rules:
     explicit `majorCities` list in `graph/locations.ts`. Year/tag filters never
     change major-city status. Open cities also stay out of clusters. Teal cluster
     pins show the sum of eligible main brands and clicking zooms into their area;
-    individual city pins open brand grids. Geographic cluster membership stays
+    individual city pins open brand grids. The `TOP_CITY_COUNT` (10) map locations with
+    the most main brands across the full dataset (`topCities`, ties by name; marker data `top`)
+    get a red pin face (`TOP_CITY_FACE`, white digits); open cities stay navy. Geographic cluster membership stays
     stable across filters. **Only cluster four or more eligible city pins**
     (`MIN_CLUSTER_CITIES`), counting cities rather than brands. Groups of one,
     two or three retain individual pins, including when year/tag filters or open
     grids reduce an existing cluster below four cities. Beirut and Tel Aviv alone
     must never become a cluster.
-    House cities, Properties and the directory retain their actual locations.
+    House cities, Properties and My Computer retain their actual locations.
     City grids, expansion and move endpoints use `mapLocationForCity` /
     `housesByMapLocation`; clustering only affects the marker display. Selection
     reveals individual city grids, so connections never terminate at hidden clusters.
@@ -124,7 +129,7 @@ Key rules:
     with the map when zoomed out but cap at ~26px on screen (`sizeMarkers`,
     re-run on every zoom); colliding labels are hidden via `text-opacity`
     (an empty `label` bypass would *remove* the override) and appear on hover. Clicking a pin opens a
-    city window (Start menu "Open cities: In windows", the default) or, with "On map"
+    city window (Settings "Clicking a city pin opens it: In windows", the default) or, with "On map"
     (`designer-map:city-view`, read via a ref so the graph is never rebuilt),
     toggles the city on the map; `DesignerGraph.expanded` holds open cities. An open city's
     houses sit in an invisible `grid` compound in the nearest spot that covers no
@@ -251,13 +256,13 @@ Key rules:
   Properties shows a collapsible History table (Founded → events → Ended).
   `origin.city` and `moved` event cities are typed as `CityName` (the `satisfies`
   type at the end of houses.ts), so a city missing from cities.ts fails `npm run check`.
-  The Start menu's "Show brands at: Current base / Origin" radios call
+  The Settings window's "Show brands at: Current base / Origin" radios call
   `setLocationMode` in `graph/locations.ts` and remount `MapView` (keyed by
   mode), so `mapLocationForHouse`/`housesByMapLocation` place each root brand
   at its origin; labels follow their root. Properties shows an Origin row;
-  the directory keeps current bases. Remembered as `designer-map:location-mode`.
+  My Computer keeps current bases. Remembered as `designer-map:location-mode`.
 - US and Canadian cities need state/province metadata in `cityRegions` in
-  `cities.ts`. Use `formatCity` only in the right-hand directory's city menus.
+  `cities.ts`. My Computer files US and Canadian brands in state / province folders from `cityRegions`; `formatCity` is not used for display.
   Keep map labels and house location fields concise, without state/province.
   Keep plain city keys for coordinates, grouping and graph IDs. Validation
   checks regional coverage.
@@ -314,7 +319,7 @@ Key rules:
   `parentHouse` links a distinct label to its parent fashion house, independently
   of ownership, licences or founding. Each label keeps its own tags, city and
   creative tenures. Do not link sister brands solely because they share an owner.
-  The directory nests families; Properties links both directions. On the map,
+  My Computer lists labels in their city folders ("Label of …"); Properties links both directions. On the map,
   labels share their root house’s pin and grid, with only main houses counted in
   pins or shown on city expansion. Selecting a house reveals its direct labels;
   selecting a nested label reveals its ancestry and its own direct labels.
@@ -333,9 +338,10 @@ Key rules:
 - Map options live in the taskbar Start menu (`StartMenu`), styled after
   `public/assets/start_menu.gif`: navy side banner, 32px pixel icons
   (`ui/start-icons.tsx`), etched separators, navy highlight rows and black
-  submenu arrows. "Show brands at", "Open cities" and "Connection lines" are cascading
-  submenus (CSS hover/focus-within) with menu bullets/check marks; Expand all,
-  Statistics, Directory, Help, Run… and Reset View are commands that close the menu.
+  submenu arrows. "Connection lines" is a cascading
+  submenu (CSS hover/focus-within) with menu bullets/check marks; Expand all,
+  Statistics, List View, Notepad, My Computer, Settings, Help, Run… and Reset View are commands that close the menu.
+  Ctrl+Esc opens or closes the Start menu from anywhere.
   "Documents" (first) lists the last `MAX_RECENT` (10) brands, designers, groups
   and places brought to the front (`ui/recent.ts`, `designer-map:recent`); items
   the filters hide are disabled, and Clear Documents empties it. Run… opens the
@@ -344,7 +350,7 @@ Key rules:
   keeping its last entry, with the opened window in front. Enter runs the best match, exact names
   first (`matchingItems(…, exactFirst)`; the taskbar Find keeps its order),
   4-digit years set the year, unknown names show Win98's "Cannot find" message,
-  Cancel closes it and Browse… opens the Directory. Help is a tool window (`HELP`, type `help`)
+  Cancel closes it and Browse… opens My Computer. Help is a tool window (`HELP`, type `help`; icon `public/assets/help.webp`, a transparent 32px icon cut from `help.jpeg`)
   with the pin/line/pulse legend. Reset View clears selection, filters, year,
   connection filter, every window and open city, then fits the map; display
   settings (lines, Show brands at, Open cities) stay. Minesweeper colours live
@@ -354,7 +360,7 @@ Key rules:
   (`.taskbar-search`, placeholder "Search"): its suggestions open upward and
   appear only once the user types (`SearchBox previewAll={false} dropUp`); city
   windows' Find still lists every brand. The year slider and Play live in the
-  clock's pop-up (`ui/year-tray.tsx YearTray`); a set year shows beside the
+  clock's pop-up (`ui/year-tray.tsx YearTray`); the clock shows the time and short date (long date in its tooltip; date hidden on phones), and a set year shows beside the
   time. Everything above the taskbar is the `.desktop-area`: desktop icons,
   the map window and every other window are siblings there, measured and kept
   inside it. The map is its own window (`#map-window`, `ui/map-window.tsx
@@ -368,14 +374,17 @@ Key rules:
   `inert`, so the graph keeps its size. Its taskbar button toggles minimize; Close
   removes that button and the desktop's Explorer icon reopens it. Other windows
   open, restore and focus without it; only a new map selection (search, Show on
-  Map, links) reopens it. Desktop icons (`desktopShortcuts` in App: Explorer,
-  Recycle Bin, Statistics, List View, Settings) stack down the desktop's left edge
-  under every window, by `slot` (in the `.desktop-icons` layer; with the map maximized that layer
+  Map, links) reopens it. Desktop icons (`desktopShortcuts` in App: My Computer,
+  Explorer, Recycle Bin — `type: 'system'` — then Statistics, List View, Settings, Notepad) stack down
+  the desktop's left edge under every window, in `arrangeIcons` order (in the `.desktop-icons` layer; with the map maximized that layer
   covers the map's content area, `useMapContentBounds`, so they sit on the map's top-left above it),
   laid out by `DesktopIcons` (`ui/desktop-icon.tsx`): drag across bare desktop for a dotted rubber band
   (Ctrl/Shift adds; Ctrl+click toggles), dragging a selected icon moves the whole selection, and
   right-click gives a Win98 menu (Open — every selected icon — Select All, Line Up Icons, Reset Position); positions remembered as
-  `designer-map:desktop-icon:<name>`. The same shortcuts appear as 16px Quick Launch
+  `designer-map:desktop-icon:<name>`. Right-clicking the bare desktop opens its own menu: Arrange Icons by
+  Name / by Type (`designer-map:desktop-arrange`; both also line the icons up), Line Up Icons, Refresh
+  (the icons blink off for a frame and are kept on screen), then App's `desktopActions`: New Text Document
+  (Notepad) and Properties (Settings). The same shortcuts appear as 16px Quick Launch
   buttons (`.quick-launch`, "Launch <name>") between Start and Search; on phones the
   desktop icons are hidden and only Quick Launch remains. The toolbar holds only the
   removable chips for active filters and is hidden (`.toolbar:empty`) unless filtering.
@@ -411,21 +420,47 @@ Key rules:
   "Filter brands" (group ▸ checkboxes) and the connection filter live in the Start menu.
 - The map always fills its window. Properties windows float on the desktop above it
   (`PropertiesWindow`): drag the title bar to move, the corner grip to resize,
-  double-click the title bar to reset; they stay inside the desktop area. Every
-  window has Minimize and Close (X). The taskbar (`ui/taskbar.tsx TaskGroup`)
-  has one button per window type (Directory, Brands, Designers, Locations): a lone window
+  Maximize / Restore (or double-click the title bar; `PropertyWindow.maximized`,
+  `desktop.ts toggleMaximized`, not remembered); they stay inside the desktop area. Every
+  window has Minimize, Maximize and Close (X). The taskbar (`ui/taskbar.tsx TaskGroup`)
+  has one button per window type (Brands, Designers, Locations, each tool): a lone window
   gets a plain button (restore / minimize-if-active / focus, as in Win98); two
   or more collapse into one counted button whose pop-up menu lists them, and
   picking one restores and focuses it; each row has an X that closes that window.
   Right-clicking a button (or a row in the group list) opens a Win98 window menu
-  (`ContextMenu`): Restore, Minimize, Show on Map (brands/designers/groups),
+  (`ContextMenu`): Restore, Minimize, Maximize / Restore Size, Show on Map (brands/designers/groups),
   Close Other Windows (same type), Close; a grouped button offers Restore All,
   Minimize All and Close All (`desktop.ts restoreWindows/minimizeWindows/closeWindows`).
-  - One Directory window, closed on startup and opened by the Start menu's
-    Directory command (position remembered: `designer-map:properties-window`).
+  - Keyboard shortcuts (App): Alt+Tab / Alt+Shift+Tab hold-and-release switching (`useTaskSwitcher`,
+    `TaskSwitcher`: every desk window plus the map window `MAP_KEY`, most recently used first;
+    Escape cancels), Alt+F4 closes the active window (the map window when none is active), F1 opens Help.
+  - My Computer (`desktop.ts MY_COMPUTER`, tool type `computer`; icon `public/assets/my_computer.webp`, a transparent 48px icon cut from
+    `my_computer.jpg`, drawn with `.smooth-icon` scaling; Start menu, desktop icon, Quick Launch,
+    Run's Browse…) replaced the old Directory. `listFolder(path, visibleHouses)` builds each folder:
+    the root holds Locations (C:), Brands (D:), Groups (E:), Designers (F:) and Control Panel (opens Settings); C: is
+    continent (`countryContinents` in countries.ts) ▸ country ▸ city ▸ every brand based
+    there, labels included — except the USA and Canada, filed by state / province (`cityRegions`) ▸ every brand
+    there, each with its city in Info; D: has a folder per market position (High Luxury → Budget, only tiers
+    with visible brands) listing its brands with their city; E: is each group's brands; F: files designers by first letter (`letterOf`).
+    Everything follows the year/tag filters; a folder that empties falls back to its nearest ancestor
+    (`nearestFolder`). Back / Forward / Up (Backspace, Alt+←/→), an Address field (`C:\Europe\France\Paris`; each part is a link to that folder, the icon to My Computer),
+    Large Icons / Details (`designer-map:computer-view`); the path is remembered as `designer-map:computer-path`.
+    Folders use `public/assets/folder.webp` (`FOLDER_ICON`, a transparent 32px icon cut from `folder.jpg`;
+    city/country windows use it in Alt+Tab too). Clicking a brand or designer opens its Properties; right-click offers Show on Map, the city/country
+    window, or a group's Properties.
+  - Saving a file (Notepad's Save As…, List View's Save As CSV… and its toolbar Save) always goes through
+    `SaveAsDialog` (`ui/save-as-dialog.tsx`): a File name box (default `Untitled` / `Designer Map - <sheet>`)
+    with the extension locked beside it, a fixed Save as type, Save / Cancel. `cleanFileName` drops
+    characters Windows forbids and a typed copy of the extension.
+  - Notepad (`NOTEPAD`, tool type `notepad`, "Untitled - Notepad", icon `public/assets/notepad.webp`): a black-on-white textarea under a File / Edit /
+    Search / Help menu bar, in a heavy black monospace (Fixedsys-like, weight 600). Text size: 16px by
+    default, from `NOTEPAD_FONT_SIZES` via Edit ▸ Set Font… or Settings ▸ Notepad (App state, remembered as
+    `designer-map:notepad-font-size`). The text and Word Wrap are remembered in this browser (`designer-map:notepad`,
+    `designer-map:notepad-wrap`). File ▸ New asks Yes / No / Cancel before clearing (Yes saves first), Save As…
+    opens the Save As box, Exit closes; Edit ▸ Time/Date (F5); Search ▸ Find… with Find Next (F3).
   - Up to `MAX_PROPERTY_WINDOWS` brand/group windows and, as a separate
     window type (`desktop.ts windowType`), up to `MAX_DESIGNER_WINDOWS`
-    designer windows, cascaded from the Directory (designers continue the cascade
+    designer windows, cascaded from the right edge (designers continue the cascade
     after the brand slots). A newly opened (or reused) brand window instead opens beside its city:
     after `graph.select`, App asks `DesignerGraph.locationBox` for the city pin plus the brand icon
     (using the view a reveal animation will settle on) and `anchorWindow` places it like a city window;
@@ -440,7 +475,7 @@ Key rules:
     whose item the year/tag filters hide are closed.
   - Tool windows (`desktop.ts ToolItem`, one each, each its own window type and
     taskbar button): Statistics, the Recycle Bin and What's Missing. The Recycle
-    Bin and Statistics desktop icons (`DesktopIcon`, `slot` 1 and 2) sit on the desktop. Clicking the Statistics icon opens Statistics; a Recycle Bin click (not a drag) opens the window
+    Bin and Statistics desktop icons sit on the desktop. Clicking the Statistics icon opens Statistics; a Recycle Bin click (not a drag) opens the window
     of brands with an Ended year, within the filters, newest first. It's a Win98 Explorer folder
     (`RecycleBinContent`, reusing the place window's layout and `BrandIcon`): the ended brands are files
     in a Large Icons grid four wide (`recycleBinSize`, from `cityWindowSize`), or Details with Win98's
@@ -451,7 +486,7 @@ Key rules:
     nobody linked, likely missing origins (`missingOriginCandidates`), and no
     founding year, logo, website or Instagram.
   - List View (`desktop.ts LIST_VIEW`, tool type `list`): an Excel 2000 workbook ("Designer Map.xls"),
-    opened from the Start menu, its desktop icon or Quick Launch (`slot` 3;
+    opened from the Start menu, its desktop icon or Quick Launch (
     icon `public/assets/excel.webp`, cropped from `excel.jpg`). `ui/list-view-data.ts` holds the sheets
     and sheet operations (no React), `ui/list-view-dialogs.tsx` the pop-ups, `ui/list-view.tsx` the window.
     - Sheets (`SHEETS`, each a `defineSheet` of columns with `values`, a default `width` and optional
@@ -494,7 +529,7 @@ Key rules:
       bar's zoom field for a slider (`ZOOM_MIN` 25 – `ZOOM_MAX` 200, steps of 5).
     - Full Screen (View menu, the title bar's Maximize/Restore button, or double-clicking the title
       bar): App's `listFullScreen` passes `maximized` to `PropertiesWindow`, which then fills the desktop
-      area and can't be moved or resized until restored. Other windows can opt in with `onMaximize`.
+      area and can't be moved or resized until restored. It is List View's Maximize; other windows use `PropertyWindow.maximized`.
     **All of it is local to the workbook**: it ignores the map's year/tag filters and never changes
     them. Rows are virtualised (17px rows, scaled by zoom).
   - Share links: the URL hash holds the selection, year and tag filters
@@ -521,6 +556,25 @@ Key rules:
     "Colour by" (`designer-map:stats-year-breakdown`) stacks bars by partner type
     (`partnerType`: luxury × streetwear, then retailer, then sportswear, else other) or
     first-time vs repeat pairing (`pairingKind`, against every recorded release, not the filters).
+    "My tags…" (`TagSeriesPicker`) lets the user add up to `MAX_TAG_SERIES` (6) series from two searchable
+    tag boxes (every filter tag, hint = its group): one tag = a release with a brand tagged it; two tags = a brand
+    tagged the first with a *different* brand tagged the second (`matchesSeries`). A release counts under the
+    first series it matches (chip order), else Other. Series show as removable chips, remembered as
+    `designer-map:stats-year-tags`.
+    The chart (and its year list) leaves out releases dated after the current year (`chartedReleases`), noting
+    how many under it, so announced releases don't end the chart in a cliff; other Statistics totals keep them.
+    "Chart" (`designer-map:stats-year-style`): Bars, or Lines (`ChartLines`: an SVG of one polyline per colour
+    with square markers over the columns, which still handle hover, tooltips and clicks; each line is that
+    colour's own count or share, scaled to the highest line; lines break at collapsed gaps and left-out years).
+    "Show as" (only when the chart has colours, i.e. not Total; `designer-map:stats-year-scale`): Count, or
+    Share of year, where each year with releases fills the plot (stacked by share) and a focused colour shows
+    its share of each year's releases (`yearShare`), scaled to its peak share with % axis labels; tooltips
+    still give the counts. Share of year leaves out years with fewer than `MIN_SHARE_RELEASES` (4) releases
+    (the axis is trimmed to busy years; quiet years in between are empty, their tooltip says why), and its
+    legend percentages count only the charted years.
+    Clicking a colour (a bar segment, a legend entry or a release's Type cell) shows only that
+    colour, rescaled on the same year axis, and narrows the year's release list to it; clicking it
+    again (or the legend's Show all, or changing Colour by) shows every colour.
   - On phones only the active window shows, stacked under the map.
   Right-clicking a brand offers "Show More", which opens (or restores) its window.
 - Selecting a brand rings its same-city move/collaboration partners around it
@@ -534,7 +588,7 @@ Key rules:
 - Palette: teal desktop `#008080`, face `#c0c0c0`, selection navy `#000080`.
   Map uses the Windows reserved colours: sea `#a6caf0`, land `#c0dcc0`,
   borders `#a0a0a4`, city boxes `#fffbf0`.
-- Night mode ("Map colours: Day / Night" in the Start menu and the Settings window,
+- Night mode ("Map colours: Day / Night" in the Settings window,
   `designer-map:map-theme`) recolours only the map: `DesignerGraph.setNight` toggles
   the pane's `night` class (CSS map colours: sea `#000040`, land `#203828`) and appends
   `nightStyle` (style.ts) to the Cytoscape stylesheet; pulse traces use `traceColours`.
@@ -550,9 +604,10 @@ Key rules:
   growing with the count (`cityLightRadius`, `cityLightOpacity`), a fixed screen size
   above zoom 0.6. Any new map colour needs a night counterpart.
 - Settings (`desktop.ts SETTINGS`, tool type `settings`) is a tool window opened from
-  the Start menu, its desktop icon or Quick Launch (`slot` 4;
-  `public/assets/settings.webp`, cut from `settings.jpg`). It mirrors the Start menu's
-  display options and connection filter; both edit the same App state.
+  the Start menu, its desktop icon, Quick Launch or the desktop menu's Properties (
+  `public/assets/settings.webp`, cut from `settings.jpg`). It is the only home of the map
+  display options (Map colours, Show brands at, Open cities); its connection-line options mirror the
+  Start menu's Connection lines submenu, and both edit the same App state.
   Text size (Normal 100% / Large 125% / Extra large 150%, `designer-map:text-size`)
   sets `--text-zoom` on the root: CSS `zoom` on window contents (not frames, so
   sizing and dragging stay in plain px; List View keeps its own Zoom), desktop icon

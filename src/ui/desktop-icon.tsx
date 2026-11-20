@@ -6,7 +6,19 @@ interface Rect { x: number; y: number; width: number; height: number }
 const DRAG_THRESHOLD = 4;
 const MARGIN = 8;
 
-export interface DesktopShortcut { label: string; icon: ReactNode; storageKey: string; open: () => void }
+export interface DesktopShortcut {
+  label: string; icon: ReactNode; storageKey: string; open: () => void;
+  /** Arrange Icons by Type: system icons (My Computer, Recycle Bin…) first, then programs. */
+  type?: 'system' | 'program';
+}
+export type ArrangeBy = 'type' | 'name';
+const ARRANGE_KEY = 'designer-map:desktop-arrange';
+const TYPE_ORDER = { system: 0, program: 1 } as const;
+/** The icons in slot order: by type (keeping the given order within a type) or alphabetically. */
+export function arrangeIcons<T extends Pick<DesktopShortcut, 'label' | 'type'>>(icons: readonly T[], by: ArrangeBy): T[] {
+  return by === 'name' ? [...icons].sort((a, b) => a.label.localeCompare(b.label))
+    : [...icons].sort((a, b) => TYPE_ORDER[a.type ?? 'program'] - TYPE_ORDER[b.type ?? 'program']);
+}
 
 function readPoint(key: string): Point | null {
   try {
@@ -24,15 +36,33 @@ const overlaps = (a: Rect, b: Rect) => a.x < b.x + b.width && a.x + a.width > b.
  * icon; drag to move it (positions remembered under each `storageKey`; without one it sits in
  * its `slot` row down the left edge). Drag across empty desktop for a dotted rubber band that
  * selects the icons it touches (Ctrl/Shift adds to the selection, as does Ctrl+click); dragging
- * any selected icon moves them all. Right-click an icon for its Win98 menu.
+ * any selected icon moves them all. Right-click an icon for its Win98 menu, or the bare
+ * desktop for Arrange Icons, Line Up Icons, Refresh and the caller's `desktopActions`.
  */
-export function DesktopIcons({ icons, className, style }: { icons: readonly DesktopShortcut[]; className?: string; style?: CSSProperties }) {
+export function DesktopIcons({ icons: given, className, style, desktopActions = [] }: {
+  icons: readonly DesktopShortcut[]; className?: string; style?: CSSProperties;
+  /** Extra commands at the end of the desktop's own right-click menu (New, Properties). */
+  desktopActions?: readonly MenuAction[];
+}) {
   const layer = useRef<HTMLDivElement>(null);
+  const [arrange, setArrange] = useState<ArrangeBy>(() => {
+    try { return localStorage.getItem(ARRANGE_KEY) === 'name' ? 'name' : 'type'; } catch { return 'type'; }
+  });
+  const icons = arrangeIcons(given, arrange);
+  /** Refresh: the icons blink off for a frame, as Win98's desktop redraws. */
+  const [refreshing, setRefreshing] = useState(false);
+  useEffect(() => {
+    if (!refreshing) return;
+    const frame = requestAnimationFrame(() => setRefreshing(false));
+    return () => cancelAnimationFrame(frame);
+  }, [refreshing]);
+  const [desktopMenu, setDesktopMenu] = useState<{ x: number; y: number } | null>(null);
   const [points, setPoints] = useState<Record<string, Point | null>>(() =>
     Object.fromEntries(icons.map((icon) => [icon.storageKey, readPoint(icon.storageKey)])));
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [band, setBand] = useState<Rect | null>(null);
   const [menu, setMenu] = useState<{ x: number; y: number; keys: readonly string[] } | null>(null);
+  const closeDesktopMenu = useCallback(() => setDesktopMenu(null), []);
   const drag = useRef<{ start: Point; origins: Map<string, Point>; moved: boolean; open?: () => void } | null>(null);
 
   const element = (key: string) => layer.current?.querySelector<HTMLElement>(`[data-icon="${CSS.escape(key)}"]`) ?? null;
@@ -91,8 +121,16 @@ export function DesktopIcons({ icons, className, style }: { icons: readonly Desk
       window.addEventListener('pointerup', up);
       window.addEventListener('pointercancel', up);
     };
+    // Right-clicking the bare desktop opens its own menu.
+    const context = (event: globalThis.MouseEvent) => {
+      if (event.target !== area && event.target !== layer.current) return;
+      event.preventDefault();
+      setSelected(new Set());
+      setDesktopMenu({ x: event.clientX, y: event.clientY });
+    };
     document.addEventListener('pointerdown', press, true);
-    return () => document.removeEventListener('pointerdown', press, true);
+    area.addEventListener('contextmenu', context);
+    return () => { document.removeEventListener('pointerdown', press, true); area.removeEventListener('contextmenu', context); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const selectedRef = useRef(selected);
   selectedRef.current = selected;
@@ -157,6 +195,21 @@ export function DesktopIcons({ icons, className, style }: { icons: readonly Desk
     for (const icon of icons) writePoint(icon.storageKey, null);
     setPoints(Object.fromEntries(icons.map((icon) => [icon.storageKey, null])));
   };
+  const arrangeBy = (by: ArrangeBy) => {
+    setArrange(by);
+    try { localStorage.setItem(ARRANGE_KEY, by); } catch { /* storage unavailable */ }
+    lineUp();
+  };
+  const desktopMenuActions = (): MenuAction[] => [
+    { label: 'Arrange Icons by Name', checked: arrange === 'name', run: () => arrangeBy('name') },
+    { label: 'Arrange Icons by Type', checked: arrange === 'type', run: () => arrangeBy('type') },
+    { label: 'Line Up Icons', run: lineUp },
+    { label: 'Refresh', separator: true, run: () => {
+      setRefreshing(true);
+      setPoints((current) => Object.fromEntries(Object.entries(current).map(([key, point]) => [key, point && clamp(key, point)])));
+    } },
+    ...desktopActions.map((action, index) => index === 0 ? { ...action, separator: true } : action),
+  ];
   const menuActions = (keys: readonly string[]): MenuAction[] => {
     const chosen = icons.filter((icon) => keys.includes(icon.storageKey));
     return [
@@ -170,7 +223,7 @@ export function DesktopIcons({ icons, className, style }: { icons: readonly Desk
     ];
   };
 
-  return <div ref={layer} className={`desktop-icons${className ? ` ${className}` : ''}`} style={style}>
+  return <div ref={layer} className={`desktop-icons${refreshing ? ' refreshing' : ''}${className ? ` ${className}` : ''}`} style={style}>
     {icons.map((icon, slot) => {
       const point = points[icon.storageKey];
       return <button key={icon.storageKey} type="button" data-icon={icon.storageKey}
@@ -183,6 +236,7 @@ export function DesktopIcons({ icons, className, style }: { icons: readonly Desk
       </button>;
     })}
     {band && <div className="desktop-band" aria-hidden="true" style={{ left: band.x, top: band.y, width: band.width, height: band.height }} />}
+    {desktopMenu && <ContextMenu x={desktopMenu.x} y={desktopMenu.y} label="Desktop" actions={desktopMenuActions()} onClose={closeDesktopMenu} />}
     {menu && <ContextMenu x={menu.x} y={menu.y} label="Icon Actions" actions={menuActions(menu.keys)} onClose={(restoreFocus) => {
       setMenu(null);
       if (restoreFocus && menu.keys[0]) element(menu.keys[0])?.focus();

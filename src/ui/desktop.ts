@@ -1,16 +1,15 @@
 import type { ScreenBox } from '../graph/graph';
 import type { Place, Selection } from './panel';
 
-/** Brand and group Properties windows open at once, besides the Directory. */
+/** Brand and group Properties windows open at once. */
 export const MAX_PROPERTY_WINDOWS = 10;
 /** Designer Properties windows open at once, counted separately from brands. */
 export const MAX_DESIGNER_WINDOWS = 10;
 /** City and country windows open at once, counted separately from Properties. */
 export const MAX_LOCATION_WINDOWS = 10;
-export const DIRECTORY = 'directory';
 
-/** Single-instance tool windows: Statistics, the Recycle Bin of ended brands, the What's Missing report, Help, Run, the List View sheet and Settings. */
-export type ToolId = 'stats' | 'recycle' | 'missing' | 'help' | 'run' | 'list' | 'settings';
+/** Single-instance tool windows: Statistics, the Recycle Bin of ended brands, the What's Missing report, Help, Run, the List View sheet, Settings, My Computer and Notepad. */
+export type ToolId = 'stats' | 'recycle' | 'missing' | 'help' | 'run' | 'list' | 'settings' | 'computer' | 'notepad';
 export type ToolItem = { kind: 'tool'; id: ToolId };
 export const tool = (id: ToolId): ToolItem => ({ kind: 'tool', id });
 export const STATISTICS = tool('stats');
@@ -18,6 +17,8 @@ export const HELP = tool('help');
 export const RUN = tool('run');
 export const LIST_VIEW = tool('list');
 export const SETTINGS = tool('settings');
+export const MY_COMPUTER = tool('computer');
+export const NOTEPAD = tool('notepad');
 /** A map selection shown in Properties, a city's brand grid, or a tool window. */
 export type Item = NonNullable<Selection> | Place | ToolItem;
 /** City and country windows: grids of brands, not map selections. */
@@ -34,6 +35,8 @@ const firstSlot = (item: Item) => windowType(item) === 'designer' ? MAX_PROPERTY
 const sameCategory = (a: Item, b: Item) => windowType(a) === windowType(b);
 export interface PropertyWindow {
   key: string; item: Item; minimized: boolean;
+  /** Filling the desktop area (Maximize, or a double-click on the title bar); kept while minimized. */
+  maximized?: boolean;
   /** Bumped when the window is reused for another item, so its sections reset. */
   revision: number;
   /** Cascade position (1–3, designers 4–6), kept while the window stays open. */
@@ -43,11 +46,9 @@ export interface PropertyWindow {
 }
 export interface Desk {
   windows: PropertyWindow[];
-  /** Stacking order of window keys, bottom first; the Directory is DIRECTORY. */
+  /** Stacking order of window keys, bottom first. */
   order: string[];
   active: string | null;
-  directoryOpen: boolean;
-  directoryMinimized: boolean;
   nextKey: number;
 }
 
@@ -55,12 +56,12 @@ export const sameItem = (a: Item | null | undefined, b: Item | null | undefined)
   a === b || (!!a && !!b && a.kind === b.kind && a.id === b.id);
 
 export function initialDesk(): Desk {
-  return { windows: [], order: [], active: null, directoryOpen: false, directoryMinimized: false, nextKey: 1 };
+  return { windows: [], order: [], active: null, nextKey: 1 };
 }
 
 export const windowFor = (desk: Desk, key: string | null) => desk.windows.find((w) => w.key === key);
-const isOpen = (desk: Desk, key: string) => key === DIRECTORY ? desk.directoryOpen : !!windowFor(desk, key);
-const isMinimized = (desk: Desk, key: string) => key === DIRECTORY ? desk.directoryMinimized : !!windowFor(desk, key)?.minimized;
+const isOpen = (desk: Desk, key: string) => !!windowFor(desk, key);
+const isMinimized = (desk: Desk, key: string) => !!windowFor(desk, key)?.minimized;
 
 /** Bring a window to the front, restore it if minimized, and make it active. */
 export function focusWindow(desk: Desk, key: string): Desk {
@@ -70,7 +71,6 @@ export function focusWindow(desk: Desk, key: string): Desk {
     order: [...desk.order.filter((k) => k !== key), key],
     active: key,
     windows: desk.windows.map((w) => w.key === key && w.minimized ? { ...w, minimized: false } : w),
-    directoryMinimized: key === DIRECTORY ? false : desk.directoryMinimized,
   };
 }
 
@@ -112,14 +112,18 @@ function nextActive(desk: Desk, key: string): string | null {
 
 export function closeWindow(desk: Desk, key: string): Desk {
   const active = desk.active === key ? nextActive(desk, key) : desk.active;
-  if (key === DIRECTORY) return { ...desk, directoryOpen: false, directoryMinimized: false, active };
   return { ...desk, windows: desk.windows.filter((w) => w.key !== key), order: desk.order.filter((k) => k !== key), active };
 }
 
 export function minimizeWindow(desk: Desk, key: string): Desk {
   const active = desk.active === key ? nextActive(desk, key) : desk.active;
-  if (key === DIRECTORY) return { ...desk, directoryMinimized: true, active };
   return { ...desk, windows: desk.windows.map((w) => w.key === key ? { ...w, minimized: true } : w), active };
+}
+
+/** Maximize / Restore: fill the desktop area, or go back to the window's own placement. */
+export function toggleMaximized(desk: Desk, key: string): Desk {
+  if (!windowFor(desk, key)) return desk;
+  return focusWindow({ ...desk, windows: desk.windows.map((w) => w.key === key ? { ...w, maximized: !w.maximized } : w) }, key);
 }
 
 /** Win98 taskbar: restore a minimized window, minimize the active one, otherwise focus it. */

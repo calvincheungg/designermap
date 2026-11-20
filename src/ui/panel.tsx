@@ -1,7 +1,7 @@
 import { Fragment, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import {
-  careerOf, collaborationsOf, countryNames, designers, formatTenureYears, foundersOf, getDesigner, getGroup,
-  getHouse, groups, houses, housesInGroup, isBusinessLeadership, labelsOf, logoUrl, movesOf, parentHouseOf, regionalHousesInGroup, tenuresAt,
+  careerOf, collaborationsOf, countryNames, formatTenureYears, foundersOf, getDesigner, getGroup,
+  getHouse, housesInGroup, isBusinessLeadership, labelsOf, logoUrl, movesOf, parentHouseOf, regionalHousesInGroup, tenuresAt,
 } from '../data';
 import type { Selection as GraphSelection } from '../graph/graph';
 import type { Collaboration, House, HouseEvent, HouseTenure, Tenure } from '../types';
@@ -10,7 +10,6 @@ import { mapLocationForCity } from '../graph/locations';
 import { frameIcon, initialsIcon, logoInfo } from '../graph/icons';
 import { tagLabel } from './labels';
 import type { HouseFilters } from '../data/tags';
-import { formatCity } from '../data/cities';
 import { SelectBox } from './listbox';
 
 export type Selection = GraphSelection;
@@ -93,33 +92,6 @@ function HouseList({ list, onSelect }: { list: readonly House[]; onSelect: Actio
   };
   return <ul>{[...list].filter((house) => !house.parentHouse || !ids.has(house.parentHouse))
     .sort((a, b) => a.name.localeCompare(b.name)).map(renderBranch)}</ul>;
-}
-
-function Directory({ visibleHouses, onSelect }: { visibleHouses: readonly House[]; onSelect: Actions['onSelect'] }) {
-  const byCountry = [...Map.groupBy(visibleHouses, (h) => countryNames[h.country])].sort(([a], [b]) => a.localeCompare(b));
-  const ids = new Set(visibleHouses.map((h) => h.id));
-  const visibleDesigners = designers.filter((d) => d.career.some((t) => ids.has(t.house))).sort((a, b) => a.name.localeCompare(b.name));
-  return <>
-    <p className="hint">Click an icon in the graph, or pick from the lists below.</p>
-    {!visibleHouses.length && <p className="hint">No houses match. Try another filter, a later year, or Clear filters.</p>}
-    <fieldset><legend>Fashion houses ({visibleHouses.length})</legend><ul className="tree-view scroll-box">
-      {byCountry.map(([country, list]) => {
-        const cities = [...Map.groupBy(list, (h) => h.city)].sort(([a], [b]) => a.localeCompare(b));
-        return <li key={country}><details><summary>{country}{cities.length === 1 ? ` · ${formatCity(cities[0]![0])}` : ''} ({list.length})</summary>
-          {cities.length === 1 ? <HouseList list={list} onSelect={onSelect} /> : <ul>{cities.map(([city, cityHouses]) =>
-            <li key={city}><details><summary>{formatCity(city)} ({cityHouses.length})</summary><HouseList list={cityHouses} onSelect={onSelect} /></details></li>)}</ul>}
-        </details></li>;
-      })}
-    </ul></fieldset>
-    <fieldset><legend>Groups ({groups.length})</legend><ul className="tree-view scroll-box">
-      {[...groups].sort((a, b) => a.name.localeCompare(b.name)).map((group) => <li key={group.id}>
-        <EntityLink kind="group" id={group.id} onSelect={onSelect}>{group.name}</EntityLink> ({housesInGroup(group.id).length})
-      </li>)}
-    </ul></fieldset>
-    <fieldset><legend>Designers &amp; leaders ({visibleDesigners.length})</legend><ul className="tree-view scroll-box">
-      {visibleDesigners.map((designer) => <li key={designer.id}><EntityLink kind="designer" id={designer.id} onSelect={onSelect}>{designer.name}</EntityLink></li>)}
-    </ul></fieldset>
-  </>;
 }
 
 function TenureTable({ list, supporting, business, onSelect }: { list: HouseTenure[]; supporting?: boolean; business?: boolean; onSelect: Actions['onSelect'] }) {
@@ -306,13 +278,13 @@ function DesignerProfile({ id, onSelect }: { id: string; onSelect: Actions['onSe
 }
 
 export function panelTitle(selection: Selection): string {
-  if (!selection) return 'Directory';
+  if (!selection) return 'Properties';
   const name = selection.kind === 'house' ? getHouse(selection.id)?.name : selection.kind === 'designer' ? getDesigner(selection.id)?.name : getGroup(selection.id)?.name;
   return name ?? 'Not found';
 }
 
-export function PanelContent({ selection, visibleHouses = houses, year = Infinity, onSelect, onTag, onOpenPlace, onShowOnMap }: {
-  selection: Selection; visibleHouses?: readonly House[]; year?: number;
+export function PanelContent({ selection, year = Infinity, onSelect, onTag, onOpenPlace, onShowOnMap }: {
+  selection: Selection; year?: number;
 } & Actions) {
   if (selection?.kind === 'house') {
     const house = getHouse(selection.id);
@@ -320,5 +292,5 @@ export function PanelContent({ selection, visibleHouses = houses, year = Infinit
   }
   if (selection?.kind === 'designer') return <DesignerProfile id={selection.id} onSelect={onSelect} />;
   if (selection?.kind === 'group') return <GroupProfile id={selection.id} onSelect={onSelect} />;
-  return <Directory visibleHouses={visibleHouses} onSelect={onSelect} />;
+  return <p className="hint">Nothing selected.</p>;
 }

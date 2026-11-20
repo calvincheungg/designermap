@@ -1,7 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode, type RefObject } from 'react';
 
-export const DIRECTORY_RECT_KEY = 'designer-map:properties-window';
-const MINIMIZED_KEY = 'designer-map:panel-minimized';
 export const DEFAULT_PANEL_WIDTH = 400;
 export const MIN_PANEL_WIDTH = 260;
 export const MIN_PANEL_HEIGHT = 180;
@@ -28,19 +26,12 @@ export function storedRect(key: string | undefined): WindowRect | null {
   } catch { return null; }
 }
 
-/** Minimized state of the Properties window, remembered across visits. */
-export function usePanelMinimized() {
-  const [minimized, setMinimized] = useState(() => read(MINIMIZED_KEY) === 'on');
-  useEffect(() => write(MINIMIZED_KEY, minimized ? 'on' : 'off'), [minimized]);
-  return [minimized, setMinimized] as const;
-}
-
 /** Steps between cascaded windows, like Win98's Cascade Windows. */
 const CASCADE = 28;
 
 /**
- * Directory at the right edge, Properties windows cascading down and to the
- * left of it; city windows cascade from the left edge at a shorter height.
+ * Properties windows cascade down and to the left from the right edge;
+ * city and tool windows cascade from the left edge at a shorter height.
  */
 export function defaultRect(area: Size, cascade = 0, align: 'left' | 'right' = 'right', preferred?: Size, min = MIN_SIZE): WindowRect {
   const width = Math.min(preferred?.width ?? DEFAULT_PANEL_WIDTH, Math.max(min.width, area.width - 2 * MARGIN));
@@ -139,9 +130,10 @@ export function useWindowGestures(placed: WindowRect | null, update: (next: Wind
 /**
  * A Properties window floating on the desktop like a Win98 window:
  * drag its title bar to move it, drag the corner grip to resize it, minimize
- * it to the taskbar or close it. Arrow keys move it from the focused title bar
- * or resize it from the focused grip; double-clicking the title bar restores
- * the default placement. Pressing anywhere in it brings it to the front.
+ * it to the taskbar, maximize it or close it. Arrow keys move it from the focused
+ * title bar or resize it from the focused grip; double-clicking the title bar
+ * maximizes or restores it (without `onMaximize`, it restores the default
+ * placement). Pressing anywhere in it brings it to the front.
  */
 export function PropertiesWindow({ id, titleId, bodyId, title, icon, minimized, maximized = false, onMaximize, active, zIndex, cascade = 0, anchor, align = 'right', preferredSize, minSize = MIN_SIZE, fitHeight = false, storageKey, scrollKey,
   className, onMinimize, onClose, onFocus, children }: {

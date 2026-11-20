@@ -41,8 +41,10 @@ const designerById = new Map(designers.map((d) => [d.id, d]));
 
 // Read the literal records here so misspelled founder IDs fail type checking,
 // without a circular dependency between house and designer ID inference.
-const founderIdsByHouse = new Map<string, readonly DesignerId[]>(Object.entries(houseRecords)
-  .map(([id, house]) => [id, 'founders' in house ? house.founders : []]));
+// Assigning to an explicit view checks every ID without building a union of all founder tuples.
+const founderRecords: Record<string, { readonly founders?: readonly DesignerId[]; readonly [field: string]: unknown }> = houseRecords;
+const founderIdsByHouse = new Map<string, readonly DesignerId[]>(Object.entries(founderRecords)
+  .map(([id, house]) => [id, house.founders ?? []]));
 
 export const getHouse = (id: string) => houseById.get(id);
 export const getDesigner = (id: string) => designerById.get(id);

@@ -19,8 +19,10 @@ export function defaultMapRect(area: Size): WindowRect {
  * the desktop area. Until the user moves or resizes it, it follows the default
  * placement as the desktop resizes; its rect is remembered under MAP_RECT_KEY.
  */
-export function MapWindowFrame({ title, icon, hidden, maximized, onMinimize, onToggleMaximize, onClose, children }: {
+export function MapWindowFrame({ title, icon, hidden, maximized, onMinimize, onToggleMaximize, onClose, onActivate, children }: {
   title: string; icon: ReactNode; hidden: boolean; maximized: boolean;
+  /** A press anywhere in the window (Alt+Tab counts it as the most recently used). */
+  onActivate?: () => void;
   onMinimize: () => void; onToggleMaximize: () => void; onClose: () => void; children: ReactNode;
 }) {
   const frame = useRef<HTMLDivElement>(null);
@@ -32,7 +34,7 @@ export function MapWindowFrame({ title, icon, hidden, maximized, onMinimize, onT
   const { begin, move, end, arrows } = useWindowGestures(maximized ? null : placed, (next) => { if (area) setRect(clampRect(next, area, MAP_MIN_SIZE)); });
 
   return <div ref={frame} className={`window main-window${maximized ? ' maximized' : ''}`} id="map-window" aria-label={title}
-    aria-hidden={hidden || undefined} inert={hidden || undefined} data-placed={placed ? 'true' : undefined}
+    aria-hidden={hidden || undefined} inert={hidden || undefined} data-placed={placed ? 'true' : undefined} onPointerDownCapture={onActivate}
     style={placed ? { left: placed.x, top: placed.y, width: placed.width, height: placed.height } : undefined}>
     <div className="title-bar" tabIndex={maximized ? undefined : 0} aria-label={maximized ? undefined : `Move ${title} window`}
       onPointerDown={begin('move')} onPointerMove={move} onPointerUp={end} onPointerCancel={end} onKeyDown={arrows('move')}

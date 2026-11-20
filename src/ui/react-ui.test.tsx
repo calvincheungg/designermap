@@ -162,13 +162,6 @@ describe('React interface interactions', () => {
     expect(screen.getByRole('group', { name: 'Labels (6)' })).toBeTruthy();
   });
 
-  it('keeps a filtered label reachable in the directory when its parent is absent', () => {
-    render(<PanelContent selection={null} visibleHouses={[getHouse('ea7')!]} onSelect={() => {}} onTag={() => {}} />);
-    fireEvent.click(screen.getByText(/Italy · Milan/, { selector: 'summary' }));
-    expect(screen.getByRole('link', { name: 'EA7 Emporio Armani' })).toBeTruthy();
-    expect(screen.queryByRole('link', { name: 'Emporio Armani' })).toBeNull();
-  });
-
   it('keeps multiple filter selections from the menu, removes individual chips and clears all', async () => {
     const user = userEvent.setup();
     function Harness() {

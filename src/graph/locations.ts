@@ -56,6 +56,21 @@ const majorCitySet: ReadonlySet<string> = new Set(majorCities);
 export const isMajorCity = (city: string, brandCount: number): boolean =>
   brandCount >= 5 || majorCitySet.has(city);
 
+/** How many of the busiest map locations get a red pin. */
+export const TOP_CITY_COUNT = 10;
+
+/**
+ * The `TOP_CITY_COUNT` map locations with the most main brands, counted across the
+ * full dataset (like major cities), so filters never recolour a pin. Ties break by name.
+ */
+export function topCities(counts: readonly { city: string; count: number }[]): ReadonlySet<string> {
+  return new Set([...counts]
+    .filter((c) => c.count > 0)
+    .sort((a, b) => b.count - a.count || a.city.localeCompare(b.city))
+    .slice(0, TOP_CITY_COUNT)
+    .map((c) => c.city));
+}
+
 export const mapLocationForCity = (city: string): string => city;
 
 /** Which city places brands on the map: their current base or their founding city. */

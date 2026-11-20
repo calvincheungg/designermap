@@ -9,25 +9,29 @@ import { MapView } from './ui/map-view';
 import { StartIcon } from './ui/start-icons';
 import { StartMenu } from './ui/start-menu';
 import { PanelContent, panelTitle, type Place, type Selection } from './ui/panel';
-import { DIRECTORY_RECT_KEY, PropertiesWindow } from './ui/side-panel';
-import { DIRECTORY, closeWindow, focusWindow, initialDesk, isPlace, isTool, isSelectionItem, STATISTICS, HELP, RUN, LIST_VIEW, SETTINGS, tool, minimizeWindow, anchorWindow, openItem, openItemAt, retainItems, sameItem, toggleTask, windowFor, windowType, closeWindows, minimizeWindows, restoreWindows, type Desk, type Item } from './ui/desktop';
+import { PropertiesWindow } from './ui/side-panel';
+import { closeWindow, focusWindow, initialDesk, isPlace, isTool, isSelectionItem, STATISTICS, HELP, RUN, LIST_VIEW, SETTINGS, MY_COMPUTER, NOTEPAD, tool, minimizeWindow, toggleMaximized as toggleWindowMaximized, anchorWindow, openItem, openItemAt, retainItems, sameItem, toggleTask, windowFor, windowType, closeWindows, minimizeWindows, restoreWindows, type Desk, type Item } from './ui/desktop';
 import { TaskGroup, type Task } from './ui/taskbar';
 import { YearTray } from './ui/year-tray';
 import { StatisticsContent } from './ui/statistics';
 import { HelpContent, MissingReportContent, RecycleBinContent, endedBrands, recycleBinSize } from './ui/tool-windows';
-import { SettingsContent, isCursorSize, isTextSize, textScale, type CityView, type CursorSize, type MapTheme, type TextSize } from './ui/settings';
+import { SettingsContent, DEFAULT_NOTEPAD_FONT_SIZE, isCursorSize, isNotepadFontSize, isTextSize, textScale, type CityView, type CursorSize, type MapTheme, type TextSize } from './ui/settings';
 import { RunContent, type RunTarget } from './ui/run-dialog';
 import { ListViewContent, readLayout } from './ui/list-view';
 import { addRecent, readRecent, recentLabel, saveRecent, type RecentItem } from './ui/recent';
 import { DesktopIcons } from './ui/desktop-icon';
 import { MapWindowFrame } from './ui/map-window';
+import { FOLDER_ICON, MY_COMPUTER_ICON, MyComputerContent } from './ui/my-computer';
+import { NotepadContent } from './ui/notepad';
+import { TaskSwitcher, useTaskSwitcher, type SwitchTarget } from './ui/task-switcher';
+import { BrandIcon } from './ui/city-window';
 import { readSharedView, sharedViewHash } from './ui/share-link';
 
 /** Tool windows' opening sizes: Statistics is wider than Properties so its bar tables have room. */
 /** Place windows hold a fixed grid of icons, so they grow with the text size. */
 const scaleSize = (size: { width: number; height: number }, scale: number) => scale === 1 ? size
   : { width: Math.round(size.width * scale), height: Math.round(size.height * scale) };
-const TOOL_SIZES = { stats: { width: 460, height: 640 }, recycle: { width: 380, height: 480 }, missing: { width: 420, height: 560 }, help: { width: 440, height: 560 }, run: { width: 400, height: 240 }, list: { width: 820, height: 560 }, settings: { width: 340, height: 610 } } as const;
+const TOOL_SIZES = { stats: { width: 460, height: 640 }, recycle: { width: 380, height: 480 }, missing: { width: 420, height: 560 }, help: { width: 440, height: 560 }, run: { width: 400, height: 240 }, list: { width: 820, height: 560 }, settings: { width: 340, height: 610 }, computer: { width: 520, height: 440 }, notepad: { width: 460, height: 380 } } as const;
 /** Run is a small dialog-like window, so it may be smaller than the Properties minimum. */
 const RUN_MIN_SIZE = { width: 320, height: 200 };
 /** Start menu's What's Missing report: a research aid, so development builds only. */
@@ -39,6 +43,13 @@ const LIST_VIEW_ICON_KEY = 'designer-map:desktop-icon:list-view';
 const LIST_VIEW_ICON = '/assets/excel.webp';
 const SETTINGS_ICON_KEY = 'designer-map:desktop-icon:settings';
 const SETTINGS_ICON = '/assets/settings.webp';
+const MY_COMPUTER_ICON_KEY = 'designer-map:desktop-icon:my-computer';
+const NOTEPAD_ICON_KEY = 'designer-map:desktop-icon:notepad';
+const NOTEPAD_ICON = '/assets/notepad.webp';
+/** Win98's Help book, cut from help.jpeg (its checkerboard background made transparent). */
+const HELP_ICON = '/assets/help.webp';
+/** Notepad is small and may be narrower than the Properties minimum. */
+const NOTEPAD_MIN_SIZE = { width: 240, height: 160 };
 const MAP_ICON = '/assets/ie4.webp';
 /** List View's sheet needs room for its menu bar, formula bar and a few columns. */
 const LIST_MIN_SIZE = { width: 360, height: 260 };
@@ -54,11 +65,13 @@ const CITY_VIEW_KEY = 'designer-map:city-view';
 const MAP_THEME_KEY = 'designer-map:map-theme';
 const TEXT_SIZE_KEY = 'designer-map:text-size';
 const CURSOR_SIZE_KEY = 'designer-map:cursor-size';
+const NOTEPAD_FONT_KEY = 'designer-map:notepad-font-size';
 const MAP_WINDOW_KEY = 'designer-map:map-window';
 const MAP_ICON_KEY = 'designer-map:desktop-icon:explorer';
+/** The map window's key in the Alt+Tab list (desk windows use their own keys). */
+const MAP_KEY = 'map-window';
 /** The map's own window: open, minimized to the taskbar, or closed (reopened from its desktop icon). */
 type MapWindow = { state: 'open' | 'minimized' | 'closed'; maximized: boolean };
-const movedCount = houses.filter((h) => h.origin).length;
 const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 const searchItems: ListItem<NonNullable<Selection>>[] = [
   ...houses.map((h) => ({ label: h.name, aliases: h.aliases, hint: 'house', value: { kind: 'house' as const, id: h.id } })),
@@ -77,19 +90,42 @@ const yearRunItems: ListItem<RunTarget>[] = Array.from({ length: maxYear - minYe
 const RECENT_HINTS = { house: 'brand', designer: 'designer', group: 'group', city: 'city', country: 'country' } as const;
 
 /** Place windows are titled with the city or country, like an Explorer folder; others as Properties. */
-const TOOL_TITLES = { stats: 'Statistics', recycle: 'Recycle Bin', missing: "What's Missing", help: 'Help', run: 'Run', list: 'List View - Designer Map.xls', settings: 'Settings' } as const;
+const TOOL_TITLES = { stats: 'Statistics', recycle: 'Recycle Bin', missing: "What's Missing", help: 'Help', run: 'Run', list: 'List View - Designer Map.xls', settings: 'Settings', computer: 'My Computer', notepad: 'Untitled - Notepad' } as const;
+const image = (src: string, size: number, className?: string) => <img className={className} src={src} alt="" width={size} height={size} draggable={false} />;
+/** A window's icon (Alt+Tab, title bars): the brand's logo, or a Win98 icon for its kind. */
+function windowIcon(item: Item, size: number) {
+  if (item.kind === 'house') { const house = getHouse(item.id); return house ? <BrandIcon house={house} /> : <StartIcon name="folder" size={size} />; }
+  if (item.kind === 'designer') return <StartIcon name="designer" size={size} />;
+  if (item.kind === 'group') return <StartIcon name="group" size={size} />;
+  if (isPlace(item)) return image(FOLDER_ICON, size);
+  switch (item.id) {
+    case 'recycle': return image('/assets/bin.webp', size);
+    case 'list': return image(LIST_VIEW_ICON, size, 'xl-icon');
+    case 'settings': return image(SETTINGS_ICON, size);
+    case 'stats': return <StartIcon name="chart" size={size} />;
+    case 'help': return image(HELP_ICON, size);
+    case 'run': return <StartIcon name="run" size={size} />;
+    case 'computer': return image(MY_COMPUTER_ICON, size, 'smooth-icon');
+    case 'notepad': return image(NOTEPAD_ICON, size);
+    case 'missing': return <StartIcon name="folder" size={size} />;
+  }
+}
+/** Tool windows with their own 16px title-bar icon. */
+const TITLE_ICONS: ReadonlySet<string> = new Set(['list', 'settings', 'computer', 'notepad', 'help']);
 const windowTitle = (item: Item) => isPlace(item) ? placeTitle(item) : isTool(item) ? TOOL_TITLES[item.id] : panelTitle(item);
 
 /** The desktop's shortcuts, shown as icons on the desktop and as Quick Launch buttons beside Start. */
 function desktopShortcuts(openMap: () => void, open: (item: Item) => void) {
-  const image = (src: string, className?: string) => (size: number) =>
-    <img className={className} src={src} alt="" width={size} height={size} draggable={false} />;
+  const picture = (src: string, className?: string) => (size: number) => image(src, size, className);
+  const pixel = (name: 'chart') => (size: number) => <StartIcon name={name} size={size} />;
   return [
-    { label: 'Explorer', icon: image(MAP_ICON, 'browser-icon'), storageKey: MAP_ICON_KEY, open: openMap },
-    { label: 'Recycle Bin', icon: image('/assets/bin.webp'), storageKey: RECYCLE_BIN_KEY, open: () => open(tool('recycle')) },
-    { label: 'Statistics', icon: (size: number) => <StartIcon name="chart" size={size} />, storageKey: STATISTICS_ICON_KEY, open: () => open(STATISTICS) },
-    { label: 'List View', icon: image(LIST_VIEW_ICON, 'xl-icon'), storageKey: LIST_VIEW_ICON_KEY, open: () => open(LIST_VIEW) },
-    { label: 'Settings', icon: image(SETTINGS_ICON), storageKey: SETTINGS_ICON_KEY, open: () => open(SETTINGS) },
+    { label: 'My Computer', type: 'system' as const, icon: picture(MY_COMPUTER_ICON, 'smooth-icon'), storageKey: MY_COMPUTER_ICON_KEY, open: () => open(MY_COMPUTER) },
+    { label: 'Explorer', type: 'system' as const, icon: picture(MAP_ICON, 'browser-icon'), storageKey: MAP_ICON_KEY, open: openMap },
+    { label: 'Recycle Bin', type: 'system' as const, icon: picture('/assets/bin.webp'), storageKey: RECYCLE_BIN_KEY, open: () => open(tool('recycle')) },
+    { label: 'Statistics', icon: pixel('chart'), storageKey: STATISTICS_ICON_KEY, open: () => open(STATISTICS) },
+    { label: 'List View', icon: picture(LIST_VIEW_ICON, 'xl-icon'), storageKey: LIST_VIEW_ICON_KEY, open: () => open(LIST_VIEW) },
+    { label: 'Settings', icon: picture(SETTINGS_ICON), storageKey: SETTINGS_ICON_KEY, open: () => open(SETTINGS) },
+    { label: 'Notepad', icon: picture(NOTEPAD_ICON), storageKey: NOTEPAD_ICON_KEY, open: () => open(NOTEPAD) },
   ];
 }
 
@@ -137,6 +173,10 @@ export function App() {
   const [cursorSize, setCursorSize] = useState<CursorSize>(() => {
     try { const saved = localStorage.getItem(CURSOR_SIZE_KEY); return isCursorSize(saved) ? saved : 'normal'; } catch { return 'normal'; }
   });
+  const [notepadFontSize, setNotepadFontSize] = useState(() => {
+    try { const saved = Number(localStorage.getItem(NOTEPAD_FONT_KEY)); return isNotepadFontSize(saved) ? saved : DEFAULT_NOTEPAD_FONT_SIZE; } catch { return DEFAULT_NOTEPAD_FONT_SIZE; }
+  });
+  useEffect(() => { try { localStorage.setItem(NOTEPAD_FONT_KEY, String(notepadFontSize)); } catch { /* storage unavailable */ } }, [notepadFontSize]);
   const [locationMode, setMode] = useState<LocationMode>(() => {
     let mode: LocationMode = 'current';
     try { if (localStorage.getItem(LOCATION_KEY) === 'origin') mode = 'origin'; } catch { /* storage unavailable */ }
@@ -166,7 +206,7 @@ export function App() {
   const select = useCallback((value: Selection, reveal = false) => {
     setRequest((current) => ({ value, reveal, revision: current.revision + 1 }));
     setDesk((current) => {
-      if (!value) return { ...current, active: current.active === DIRECTORY ? DIRECTORY : null };
+      if (!value) return { ...current, active: null };
       const next = openItem(current, value);
       const opened = windowFor(next, next.active);
       const before = opened && windowFor(current, opened.key);
@@ -329,7 +369,7 @@ export function App() {
     else { setPlayFrom(null); setYear(target.year); }
   };
   const openRecent = (item: RecentItem) => item.kind === 'city' || item.kind === 'country' ? openPlace(item) : select(item, true);
-  const openDirectory = () => { changeDesk((d) => focusWindow({ ...d, directoryOpen: true }, DIRECTORY)); graph.current?.fit(); };
+  const openTool = (item: Item) => changeDesk((d) => openItem(d, item));
   /** Start ▸ Reset View: no selection, filters, year, open windows or open cities. Map settings stay as they are. */
   const resetView = () => {
     setPlayFrom(null);
@@ -360,6 +400,7 @@ export function App() {
     return [
       { label: 'Restore', disabled: !task.minimized, primary: task.minimized, run: () => show(task.key) },
       { label: 'Minimize', disabled: task.minimized, run: () => changeDesk((d) => minimizeWindow(d, task.key)) },
+      ...(w ? [{ label: isMaximized(w) ? 'Restore Size' : 'Maximize', run: () => maximize(w.key) }] : []),
       ...(selection ? [{ label: 'Show on Map', separator: true, run: () => select(selection, true) }] : []),
       ...(others.length ? [{ label: others.length === 1 ? 'Close Other Window' : `Close ${others.length} Other Windows`, separator: !selection,
         run: () => closeKeys(others.map((o) => o.key)) }] : []),
@@ -376,13 +417,55 @@ export function App() {
     ];
   };
 
+  const isList = (item: Item) => isTool(item) && item.id === 'list';
+  const isMaximized = (w: { item: Item; maximized?: boolean }) => isList(w.item) ? listFullScreen : !!w.maximized;
+  /** Maximize / Restore one window; List View's is its View ▸ Full Screen. */
+  const maximize = (key: string) => {
+    const w = windowFor(desk, key);
+    if (w && isList(w.item)) { setListFullScreen((on) => !on); show(key); }
+    else changeDesk((d) => toggleWindowMaximized(d, key));
+  };
+
+  // Keyboard shortcuts: Alt+Tab switches windows (task-switcher.tsx), Alt+F4 closes the active one, F1 opens Help.
+  const recency = useRef<string[]>([]);
+  const touch = (key: string) => { recency.current = [key, ...recency.current.filter((k) => k !== key)]; };
+  useEffect(() => { if (desk.active) touch(desk.active); }, [desk.active]);
+  const switchTargets = (): SwitchTarget[] => {
+    const rank = (key: string) => { const i = recency.current.indexOf(key); return i < 0 ? Infinity : i; };
+    const list: SwitchTarget[] = [...desk.windows].reverse().map((w) => ({ key: w.key, title: windowTitle(w.item), icon: windowIcon(w.item, 32) }));
+    if (mapWindow.state !== 'closed') list.push({ key: MAP_KEY, title: 'Explorer', icon: image(MAP_ICON, 32, 'browser-icon') });
+    // The active window comes first; the rest by how recently they were used.
+    return list.sort((a, b) => Number(b.key === desk.active) - Number(a.key === desk.active) || rank(a.key) - rank(b.key));
+  };
+  const switcher = useTaskSwitcher(switchTargets, (key) => {
+    if (key === MAP_KEY) { touch(MAP_KEY); openMap(); changeDesk((d) => ({ ...d, active: null })); }
+    else show(key);
+  });
+  const shortcuts = useRef<(event: KeyboardEvent) => void>(() => {});
+  shortcuts.current = (event) => {
+    if (event.key === 'F4' && event.altKey) {
+      event.preventDefault();
+      if (desk.active) closeKeys([desk.active]);
+      else if (mapWindow.state === 'open') setMapWindow((w) => ({ ...w, state: 'closed' }));
+    } else if (event.key === 'F1' && !event.altKey && !event.ctrlKey && !event.metaKey) {
+      event.preventDefault();
+      openTool(HELP);
+    }
+  };
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => shortcuts.current(event);
+    window.addEventListener('keydown', listener);
+    return () => window.removeEventListener('keydown', listener);
+  }, []);
+
   const mapHidden = mapWindow.state !== 'open';
   const iconBounds = useMapContentBounds(mapContent, mapWindow.maximized && !mapHidden);
   const icons = desktopShortcuts(openMap, (item) => changeDesk((d) => openItem(d, item)));
   return <div className={`desktop${mapWindow.maximized ? ' map-maximized' : ''}`}><div className="desktop-area">
     {/* Over a full-screen map the icons sit on the map's top-left corner, above it and under the other windows. */}
-    <DesktopIcons icons={icons.map((icon) => ({ ...icon, icon: icon.icon(32) }))} className={iconBounds ? 'over-map' : undefined} style={iconBounds ?? undefined} />
-    <MapWindowFrame title="Explorer" icon={<img className="title-bar-icon" src={MAP_ICON} alt="" width={16} height={16} draggable={false} />}
+    <DesktopIcons icons={icons.map((icon) => ({ ...icon, icon: icon.icon(32) }))} className={iconBounds ? 'over-map' : undefined} style={iconBounds ?? undefined}
+      desktopActions={[{ label: 'New Text Document', run: () => openTool(NOTEPAD) }, { label: 'Properties', run: () => openTool(SETTINGS) }]} />
+    <MapWindowFrame onActivate={() => touch(MAP_KEY)} title="Explorer" icon={<img className="title-bar-icon" src={MAP_ICON} alt="" width={16} height={16} draggable={false} />}
       hidden={mapHidden} maximized={mapWindow.maximized} onToggleMaximize={toggleMaximized}
       onMinimize={() => setMapWindow((w) => ({ ...w, state: 'minimized' }))} onClose={() => setMapWindow((w) => ({ ...w, state: 'closed' }))}>
       <div className="window-body">
@@ -404,24 +487,15 @@ export function App() {
         <p className="status-bar-field" id="status-year">{year >= maxYear ? 'Showing all years' : `Up to ${year}`}</p>
       </div>
     </MapWindowFrame>
-    {desk.directoryOpen && <PropertiesWindow id="side-window" titleId="panel-title" bodyId="panel" title="Directory"
-      storageKey={DIRECTORY_RECT_KEY} scrollKey={visibleHouses} minimized={desk.directoryMinimized}
-      active={desk.active === DIRECTORY || desk.active === null} zIndex={zIndex(DIRECTORY)}
-      onFocus={() => changeDesk((d) => focusWindow(d, DIRECTORY))} onMinimize={() => changeDesk((d) => minimizeWindow(d, DIRECTORY))}
-      onClose={() => changeDesk((d) => closeWindow(d, DIRECTORY))}>
-      <PanelContent key={filterKey} selection={null} visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onTag={addTag} />
-    </PropertiesWindow>}
     {desk.windows.map((w) => <PropertiesWindow key={w.key} id={w.key} titleId={`${w.key}-title`} bodyId={`${w.key}-body`}
-      title={windowTitle(w.item)} cascade={w.slot} anchor={w.anchor} align={isPlace(w.item) || isTool(w.item) ? 'left' : 'right'} className={isPlace(w.item) ? 'city-window' : isTool(w.item) && w.item.id === 'recycle' ? 'city-window recycle-window' : isTool(w.item) && w.item.id === 'run' ? 'run-window' : isTool(w.item) && w.item.id === 'list' ? 'list-window' : undefined}
-      icon={isTool(w.item) && w.item.id === 'list' ? <img className="xl-icon" src={LIST_VIEW_ICON} alt="" width={16} height={16} />
-        : isTool(w.item) && w.item.id === 'settings' ? <img src={SETTINGS_ICON} alt="" width={16} height={16} /> : undefined}
+      title={windowTitle(w.item)} cascade={w.slot} anchor={w.anchor} align={isPlace(w.item) || isTool(w.item) ? 'left' : 'right'} className={isPlace(w.item) ? 'city-window' : isTool(w.item) && w.item.id === 'recycle' ? 'city-window recycle-window' : isTool(w.item) && w.item.id === 'run' ? 'run-window' : isTool(w.item) && w.item.id === 'list' ? 'list-window' : isTool(w.item) && w.item.id === 'computer' ? 'city-window computer-window' : isTool(w.item) && w.item.id === 'notepad' ? 'notepad-window' : undefined}
+      icon={isTool(w.item) && TITLE_ICONS.has(w.item.id) ? windowIcon(w.item, 16) : undefined}
       preferredSize={isPlace(w.item) ? scaleSize(cityWindowSize(placeTileCount(w.item, visibleIds)), textScale(textSize))
         : isTool(w.item) && w.item.id === 'recycle' ? scaleSize(recycleBinSize(endedBrands(visibleHouses, visibleYear).length), textScale(textSize)) : isTool(w.item) ? TOOL_SIZES[w.item.id] : undefined}
       minSize={isPlace(w.item) ? scaleSize(cityWindowSize(1), textScale(textSize))
-        : isTool(w.item) && w.item.id === 'recycle' ? scaleSize(recycleBinSize(1), textScale(textSize)) : isTool(w.item) && w.item.id === 'run' ? RUN_MIN_SIZE : isTool(w.item) && w.item.id === 'list' ? LIST_MIN_SIZE : undefined}
+        : isTool(w.item) && w.item.id === 'recycle' ? scaleSize(recycleBinSize(1), textScale(textSize)) : isTool(w.item) && w.item.id === 'run' ? RUN_MIN_SIZE : isTool(w.item) && w.item.id === 'list' ? LIST_MIN_SIZE : isTool(w.item) && w.item.id === 'notepad' ? NOTEPAD_MIN_SIZE : undefined}
       fitHeight={isSelectionItem(w.item)}
-      maximized={isTool(w.item) && w.item.id === 'list' && listFullScreen}
-      onMaximize={isTool(w.item) && w.item.id === 'list' ? () => setListFullScreen((on) => !on) : undefined}
+      maximized={isMaximized(w)} onMaximize={() => maximize(w.key)}
       scrollKey={w.revision} minimized={w.minimized} active={desk.active === w.key} zIndex={zIndex(w.key)}
       onFocus={() => changeDesk((d) => focusWindow(d, w.key))} onMinimize={() => changeDesk((d) => minimizeWindow(d, w.key))}
       onClose={() => changeDesk((d) => closeWindow(d, w.key), w.item)}>
@@ -431,11 +505,14 @@ export function App() {
           : w.item.id === 'recycle' ? <RecycleBinContent visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onShowOnMap={revealOnMap} />
           : w.item.id === 'help' ? <HelpContent />
           : w.item.id === 'list' ? <ListViewContent onSelect={select} onOpenPlace={openPlace} onShowOnMap={revealSelection} onShowPlace={showPlaceOnMap} fullScreen={listFullScreen} onFullScreen={setListFullScreen} onHelp={() => changeDesk((d) => openItem(d, HELP))} onClose={() => closeKeys([w.key])} />
-          : w.item.id === 'settings' ? <SettingsContent settings={{ mapTheme, textSize, cursorSize, locationMode, cityView, showLines, showCollaborations, connectionFilter }}
-            onChange={{ mapTheme: setMapTheme, textSize: setTextSize, cursorSize: setCursorSize, locationMode: changeLocationMode, cityView: setCityView, showLines: setShowLines, showCollaborations: setShowCollaborations, connectionFilter: setConnectionFilter }} />
-          : w.item.id === 'run' ? <RunContent items={runItems} onRun={run} onBrowse={openDirectory} onClose={() => closeKeys([w.key])} />
+          : w.item.id === 'settings' ? <SettingsContent settings={{ mapTheme, textSize, cursorSize, locationMode, cityView, showLines, showCollaborations, connectionFilter, notepadFontSize }}
+            onChange={{ mapTheme: setMapTheme, textSize: setTextSize, cursorSize: setCursorSize, locationMode: changeLocationMode, cityView: setCityView, showLines: setShowLines, showCollaborations: setShowCollaborations, connectionFilter: setConnectionFilter, notepadFontSize: setNotepadFontSize }} />
+          : w.item.id === 'run' ? <RunContent items={runItems} onRun={run} onBrowse={() => openTool(MY_COMPUTER)} onClose={() => closeKeys([w.key])} />
+          : w.item.id === 'computer' ? <MyComputerContent visibleHouses={visibleHouses} onSelect={select} onShowOnMap={revealSelection}
+            onOpenPlace={openPlace} onShowPlace={showPlaceOnMap} onOpenSettings={() => openTool(SETTINGS)} />
+          : w.item.id === 'notepad' ? <NotepadContent fontSize={notepadFontSize} onFontSize={setNotepadFontSize} onClose={() => closeKeys([w.key])} onHelp={() => openTool(HELP)} />
           : <MissingReportContent onSelect={select} />
-        : <PanelContent key={`${w.revision}:${filterKey}`} selection={w.item} visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onTag={addTag} onOpenPlace={openPlace} onShowOnMap={revealSelection} />}
+        : <PanelContent key={`${w.revision}:${filterKey}`} selection={w.item} year={visibleYear} onSelect={select} onTag={addTag} onOpenPlace={openPlace} onShowOnMap={revealSelection} />}
     </PropertiesWindow>)}
   </div><div className="taskbar"><StartMenu>{(close) => <>
       <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
@@ -451,36 +528,6 @@ export function App() {
         </div>
       </div>
       <hr className="start-separator" />
-      <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
-        <StartIcon name="globe" /><span className="start-label">Show brands at</span><span className="start-arrow" aria-hidden="true" />
-        <fieldset className="window start-submenu" title={`${movedCount} brands have a different origin city`}>
-          <legend className="visually-hidden">Show brands at</legend>
-          {([['current', 'Current base'], ['origin', 'Origin']] as const).map(([mode, label]) => <div className="field-row start-subitem" key={mode}>
-            <input type="radio" id={`location-${mode}`} name="location-mode" checked={locationMode === mode} onChange={() => changeLocationMode(mode)} />
-            <label htmlFor={`location-${mode}`}>{label}</label>
-          </div>)}
-        </fieldset>
-      </div>
-      <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
-        <StartIcon name="moon" /><span className="start-label">Map colours</span><span className="start-arrow" aria-hidden="true" />
-        <fieldset className="window start-submenu">
-          <legend className="visually-hidden">Map colours</legend>
-          {([['day', 'Day'], ['night', 'Night']] as const).map(([theme, label]) => <div className="field-row start-subitem" key={theme}>
-            <input type="radio" id={`map-theme-${theme}`} name="map-theme" checked={mapTheme === theme} onChange={() => setMapTheme(theme)} />
-            <label htmlFor={`map-theme-${theme}`}>{label}</label>
-          </div>)}
-        </fieldset>
-      </div>
-      <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
-        <StartIcon name="folder" /><span className="start-label">Open cities</span><span className="start-arrow" aria-hidden="true" />
-        <fieldset className="window start-submenu" title="What clicking a city pin does">
-          <legend className="visually-hidden">Open cities</legend>
-          {([['window', 'In windows'], ['map', 'On map']] as const).map(([view, label]) => <div className="field-row start-subitem" key={view}>
-            <input type="radio" id={`city-view-${view}`} name="city-view" checked={cityView === view} onChange={() => setCityView(view)} />
-            <label htmlFor={`city-view-${view}`}>{label}</label>
-          </div>)}
-        </fieldset>
-      </div>
       <div className="start-item start-parent" tabIndex={0} aria-haspopup="true">
         <StartIcon name="lines" /><span className="start-label">Connection lines</span><span className="start-arrow" aria-hidden="true" />
         <fieldset className="window start-submenu">
@@ -503,10 +550,11 @@ export function App() {
       <button className="start-item start-command" id="statistics" onClick={() => { close(); changeDesk((d) => openItem(d, STATISTICS)); }}><StartIcon name="chart" /><span className="start-label">Statistics</span></button>
       <button className="start-item start-command" id="list-view" onClick={() => { close(); changeDesk((d) => openItem(d, LIST_VIEW)); }}><img className="start-icon xl-icon" src={LIST_VIEW_ICON} alt="" width={32} height={32} /><span className="start-label">List View</span></button>
       {SHOW_MISSING_REPORT && <button className="start-item start-command" id="missing-report" onClick={() => { close(); changeDesk((d) => openItem(d, tool('missing'))); }}><StartIcon name="folder" /><span className="start-label">What's Missing</span></button>}
-      <button className="start-item start-command" id="home" onClick={() => { close(); openDirectory(); }}><StartIcon name="folder" /><span className="start-label">Directory</span></button>
+      <button className="start-item start-command" id="notepad" onClick={() => { close(); openTool(NOTEPAD); }}><img className="start-icon" src={NOTEPAD_ICON} alt="" width={32} height={32} /><span className="start-label">Notepad</span></button>
+      <button className="start-item start-command" id="my-computer" onClick={() => { close(); openTool(MY_COMPUTER); }}><img className="start-icon smooth-icon" src={MY_COMPUTER_ICON} alt="" width={32} height={32} /><span className="start-label">My Computer</span></button>
       <hr className="start-separator" />
       <button className="start-item start-command" id="settings" onClick={() => { close(); changeDesk((d) => openItem(d, SETTINGS)); }}><img className="start-icon" src={SETTINGS_ICON} alt="" width={32} height={32} /><span className="start-label">Settings</span></button>
-      <button className="start-item start-command" id="help" onClick={() => { close(); changeDesk((d) => openItem(d, HELP)); }}><StartIcon name="help" /><span className="start-label">Help</span></button>
+      <button className="start-item start-command" id="help" onClick={() => { close(); changeDesk((d) => openItem(d, HELP)); }}><img className="start-icon" src={HELP_ICON} alt="" width={32} height={32} /><span className="start-label">Help</span></button>
       <button className="start-item start-command" id="run" onClick={() => { close(); changeDesk((d) => openItem(d, RUN)); }}><StartIcon name="run" /><span className="start-label">Run…</span></button>
       <hr className="start-separator" />
       <button className="start-item start-command" id="reset-view" onClick={() => { close(); resetView(); }}><StartIcon name="reset" /><span className="start-label">Reset View</span></button>
@@ -523,14 +571,11 @@ export function App() {
       onClick={() => setMapWindow((w) => ({ ...w, state: w.state === 'open' ? 'minimized' : 'open' }))}>
       <img className="task-icon" src={MAP_ICON} alt="" width={16} height={16} draggable={false} /><span className="task-label">Explorer</span>
     </button>}
-    {desk.directoryOpen && <TaskGroup label="Directory" active={desk.active} onToggle={toggle} onShow={show}
-      onClose={(key) => closeKeys([key])} windowActions={windowActions} groupActions={groupActions}
-      tasks={[{ key: DIRECTORY, title: 'Directory', minimized: desk.directoryMinimized, controls: 'side-window' }]} />}
-    {([['Brands', 'brand'], ['Designers', 'designer'], ['Locations', 'place'], ['Statistics', 'stats'], ['List View', 'list'], ['Recycle Bin', 'recycle'], ["What's Missing", 'missing'], ['Settings', 'settings'], ['Help', 'help'], ['Run', 'run']] as const).map(([label, type]) => <TaskGroup key={label} label={label} active={desk.active}
+    {([['Brands', 'brand'], ['Designers', 'designer'], ['Locations', 'place'], ['Statistics', 'stats'], ['List View', 'list'], ['Recycle Bin', 'recycle'], ["What's Missing", 'missing'], ['Settings', 'settings'], ['My Computer', 'computer'], ['Notepad', 'notepad'], ['Help', 'help'], ['Run', 'run']] as const).map(([label, type]) => <TaskGroup key={label} label={label} active={desk.active}
       onToggle={toggle} onShow={show} onClose={(key) => closeKeys([key])} windowActions={windowActions} groupActions={groupActions} tasks={desk.windows.filter((w) => windowType(w.item) === type)
         .map((w) => ({ key: w.key, title: windowTitle(w.item), minimized: w.minimized, controls: w.key }))} />)}<YearTray year={year} minYear={minYear} maxYear={maxYear} playing={playFrom !== null} onYear={setYear}
       onPlay={() => setPlayFrom((current) => current === null ? year >= maxYear ? minYear : year : null)} />
-  </div></div>;
+  </div>{switcher && <TaskSwitcher list={switcher.list} index={switcher.index} />}</div>;
 }
 
 /** While `on`, the map content area's box relative to the desktop area (desktop icons are laid over it). */

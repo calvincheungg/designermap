@@ -11,6 +11,8 @@ export interface MenuAction {
   primary?: boolean;
   /** A toggle: shows a check mark when on, like Win98's View menu. */
   checked?: boolean;
+  /** A key shown at the right edge, like Win98's "F5". */
+  shortcut?: string;
 }
 /** A Win98 pop-up menu at (x, y); with `above`, its bottom edge sits at y (for taskbar menus). */
 export function ContextMenu({ x, y, actions, onClose, label = 'Map Actions', above = false }: {
@@ -54,7 +56,7 @@ export function ContextMenu({ x, y, actions, onClose, label = 'Map Actions', abo
       action.separator ? <hr key={`${action.label}-separator`} className="menu-separator" /> : null,
       <button type="button" role={action.checked === undefined ? 'menuitem' : 'menuitemcheckbox'} aria-checked={action.checked} key={action.label}
         disabled={action.disabled} className={action.primary ? 'primary' : undefined}
-        onClick={() => { onClose(true); action.run(); }}>{action.checked !== undefined && <span className="menu-check" aria-hidden="true">{action.checked ? '✓' : ''}</span>}{action.label}</button>,
+        onClick={() => { onClose(true); action.run(); }}>{action.checked !== undefined && <span className="menu-check" aria-hidden="true">{action.checked ? '✓' : ''}</span>}{action.label}{action.shortcut && <span className="menu-shortcut">{action.shortcut}</span>}</button>,
     ])}
   </div>, document.body);
 }
