@@ -73,6 +73,7 @@ export const collabSearches = {
   ftc: { date: '2026-11-20', complete: true, lastPage: 7, oldestYear: 2007 },
   ftp: { date: '2026-11-18', complete: true, lastPage: 2, oldestYear: 2014 },
   georgeCox: { date: '2026-11-18', complete: true },
+  givenchy: { date: '2026-11-20', complete: true, lastPage: 36, oldestYear: 2008 },
   // /brands/ pages redirect; crawled /tags/hbx.
   hbx: { date: '2026-11-20', complete: true, lastPage: 97, oldestYear: 2015 },
   hellstar: { date: '2026-11-18', complete: true, lastPage: 1, oldestYear: 2026 },
