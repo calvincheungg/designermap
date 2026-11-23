@@ -2,9 +2,10 @@ import { geoGraticule10, geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature, mesh } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import world from 'world-atlas/countries-110m.json';
-import type { FeatureCollection, MultiLineString } from 'geojson';
+import type { FeatureCollection, MultiLineString, Polygon } from 'geojson';
 import subdivisions from '../data/map/north-america-subdivisions.json';
 import { houses } from '../data';
+import { CountryCode, countryNames } from '../data/countries';
 import { getLocationMode, mapLocationCoordinates, mapLocationForHouse, type LocationMode } from './locations';
 import type { House, LatLng } from '../types';
 import { PIN_H, PIN_W } from './icons';
@@ -31,6 +32,65 @@ export interface Point {
 export function project([lat, lng]: LatLng): Point {
   const [x, y] = projection([lng, lat])!;
   return { x, y };
+}
+
+/** Map names in world-atlas that differ from `countryNames`. */
+const atlasNames: Partial<Record<string, string>> = {
+  [CountryCode.UnitedKingdom]: 'United Kingdom',
+  [CountryCode.UnitedStates]: 'United States of America',
+};
+
+/** Steps per side when searching a landmass for an inland point near its centroid. */
+const CENTER_GRID = 60;
+const centerCache = new Map<string, Point | undefined>();
+
+/**
+ * Middle of a country's largest landmass, so islands and overseas territories
+ * don't pull it out to sea: the centroid, or an inland point near it when a
+ * curved country's centroid is outside it. Undefined for places too small for the map.
+ */
+export function countryCenter(code: string): Point | undefined {
+  if (!centerCache.has(code)) centerCache.set(code, findCountryCenter(code));
+  return centerCache.get(code);
+}
+
+function findCountryCenter(code: string): Point | undefined {
+  const topo = world as unknown as Topology<{ countries: GeometryCollection<{ name: string }> }>;
+  const name = atlasNames[code] ?? countryNames[code as CountryCode];
+  const geometry = topo.objects.countries.geometries.find((g) => g.properties && 'name' in g.properties && g.properties.name === name);
+  if (!geometry) return undefined;
+  const country = feature(topo, geometry);
+  if (country.type !== 'Feature') return undefined;
+  const shape = country.geometry;
+  if (shape.type !== 'Polygon' && shape.type !== 'MultiPolygon') return undefined;
+  const landmasses: Polygon[] = (shape.type === 'Polygon' ? [shape.coordinates] : shape.coordinates)
+    .map((coordinates) => ({ type: 'Polygon', coordinates }));
+  const main = landmasses.reduce((a, b) => (path.area(b) > path.area(a) ? b : a));
+  const rings = main.coordinates.map((ring) => ring.map(([lng, lat]) => project([lat!, lng!])));
+  const edges = rings.flatMap((ring) => ring.slice(1).map((b, i): [Point, Point] => [ring[i]!, b]));
+  const inside = (p: Point) => edges.reduce((odd, [a, b]) =>
+    (a.y > p.y) !== (b.y > p.y) && p.x < a.x + ((b.x - a.x) * (p.y - a.y)) / (b.y - a.y) ? !odd : odd, false);
+
+  const [x, y] = path.centroid(main);
+  const centroid = { x, y };
+  if (inside(centroid)) return centroid;
+
+  const coast = (p: Point) => Math.min(...edges.map(([a, b]) => {
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy || 1)));
+    return Math.hypot(p.x - a.x - t * dx, p.y - a.y - t * dy);
+  }));
+  const [[x1, y1], [x2, y2]] = path.bounds(main);
+  let best: Point | undefined;
+  let bestScore = -Infinity;
+  for (let i = 1; i < CENTER_GRID; i++) for (let j = 1; j < CENTER_GRID; j++) {
+    const p = { x: x1 + ((x2 - x1) * i) / CENTER_GRID, y: y1 + ((y2 - y1) * j) / CENTER_GRID };
+    if (!inside(p)) continue;
+    // Close to the centroid, but clear of the border.
+    const score = coast(p) - Math.hypot(p.x - x, p.y - y) / 2;
+    if (score > bestScore) { bestScore = score; best = p; }
+  }
+  return best;
 }
 
 /** World map with internal boundaries for Canadian provinces/territories and US states. */

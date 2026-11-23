@@ -2,12 +2,13 @@ import { minesweeperColour } from './minesweeper';
 import cytoscape, { type Collection, type Core, type EdgeSingular, type NodeSingular, type SingularElementArgument } from 'cytoscape';
 import { allMoves, collaborationsOf, careerOf, getHouse, houses, housesInGroup, type GroupId } from '../data';
 import { collaborationEdges, mapElements, moveEdges, nodeId } from './elements';
-import { housesByMapLocation, LABEL_PX, layoutMap, MAP_HEIGHT, MAP_MIN_ZOOM, MAP_WIDTH, mapSvgMarkup, pinScale, project, ringLayout, type Point } from './geo';
+import { countryCenter, housesByMapLocation, LABEL_PX, layoutMap, MAP_HEIGHT, MAP_MIN_ZOOM, MAP_WIDTH, mapSvgMarkup, pinScale, project, ringLayout, type Point } from './geo';
 import { cityMarkerIcon, frameIcon, logoInfo, logoSize, PIN_H, PIN_W } from './icons';
 import { graphStyle, nightStyle, textStyle, NIGHT_BLUE, NIGHT_RED } from './style';
-import { clusterLabel, mapHousePath, mapLocationCoordinates, mapLocationForCity, mapLocationForHouse } from './locations';
+import { areaLabel, clusterLabel, mapHousePath, mapLocationCoordinates, mapLocationForCity, mapLocationForHouse } from './locations';
 import { placeMarkers } from './markers';
-import { buildClusterLevels, clusterLevel, CLUSTER_ZOOMS, MIN_CLUSTER_CITIES, type PinCluster } from './clusters';
+import { cityRegions, type CityName } from '../data/cities';
+import { buildClusterLevels, clusterLevel, type PinCluster } from './clusters';
 
 export type ConnectionFilter = 'all' | 'designers' | 'collaborations';
 
@@ -126,6 +127,8 @@ export class DesignerGraph {
   private markerTips = new Map<string, { x: number; y: number }>();
   private markerTimer: ReturnType<typeof setTimeout> | undefined;
   private clusterLevels: readonly (readonly PinCluster[])[] = [];
+  /** Cities of the clicked cluster, shown individually until the map zooms out below `minZoom`. */
+  private openedCluster?: { cities: ReadonlySet<string>; minZoom: number };
   private clusterLabels = new Map<string, string>();
   private canvasHost: HTMLElement;
   private resizeObserver: ResizeObserver;
@@ -184,7 +187,7 @@ export class DesignerGraph {
 
     this.cy.on('tap', 'node[kind = "marker"]', (e) => {
       const marker = e.target as NodeSingular;
-      if (marker.data('isCluster')) this.zoomToCluster(marker);
+      if (marker.data('isCluster')) this.openCluster(marker);
       else if (callbacks.onOpenCity) callbacks.onOpenCity(mapLocationForCity(marker.data('city')), this.screenBox(marker));
       else this.toggleCity(marker.data('city'));
     });
@@ -253,12 +256,18 @@ export class DesignerGraph {
     this.cy.add(mapElements());
     const clusterCities = this.cy.nodes('[kind = "marker"]').map(marker => ({
       city: marker.data('city') as string, tip: marker.data('tip'), count: marker.data('count') as number,
-      major: !!marker.data('major'),
+      major: !!marker.data('major'), country: marker.data('country') as string,
+      region: cityRegions[marker.data('city') as CityName]?.region,
     }));
-    this.clusterLevels = buildClusterLevels(clusterCities);
+    this.clusterLevels = buildClusterLevels(clusterCities, countryCenter);
     const counts = new Map(clusterCities.map(city => [city.city, city.count]));
     for (const level of this.clusterLevels) for (const cluster of level) {
-      if (cluster.members.length < MIN_CLUSTER_CITIES || this.clusterLabels.has(cluster.id)) continue;
+      if (cluster.members.length < 2 || this.clusterLabels.has(cluster.id)) continue;
+      const { area } = cluster;
+      if (area) {
+        this.clusterLabels.set(cluster.id, areaLabel(area));
+        continue;
+      }
       const representative = [...cluster.members].sort((a, b) => counts.get(b)! - counts.get(a)! || a.localeCompare(b))[0]!;
       this.clusterLabels.set(cluster.id, clusterLabel(cluster.members, representative));
     }
@@ -662,15 +671,18 @@ export class DesignerGraph {
   /** Only display membership/counts change with filters; the geographic hierarchy is cached. */
   private updateClusters() {
     const cy = this.cy;
+    if (this.openedCluster && !cy.animated() && cy.zoom() < this.openedCluster.minZoom) this.openedCluster = undefined;
+    const opened = this.openedCluster?.cities;
     const available = new Map(cy.nodes('[kind = "marker"][!isCluster]')
-      .not('.hidden, .selection-hidden').filter(marker => !this.expanded.has(marker.data('city')))
+      .not('.hidden, .selection-hidden')
+      .filter(marker => !this.expanded.has(marker.data('city')) && !opened?.has(marker.data('city')))
       .map(marker => [marker.data('city') as string, marker] as const));
     const clustered = new Set<string>();
     const active = new Set<string>();
     cy.batch(() => {
       for (const cluster of this.clusterLevels[clusterLevel(cy.zoom())] ?? []) {
         const members = cluster.members.filter(city => available.has(city));
-        if (members.length < MIN_CLUSTER_CITIES) continue;
+        if (members.length < cluster.minCities || members.length < 2) continue;
         members.forEach(city => clustered.add(city));
         const count = members.reduce((total, city) => total + available.get(city)!.data('shown'), 0);
         active.add(cluster.id);
@@ -731,19 +743,27 @@ export class DesignerGraph {
     const box = node.renderedBoundingBox({ includeLabels: false });
     return { left: host.left + box.x1, top: host.top + box.y1, right: host.left + box.x2, bottom: host.top + box.y2 };
   }
-  private zoomToCluster(marker: NodeSingular) {
+  /** One click goes all the way: frame the cluster and show each of its cities. */
+  private openCluster(marker: NodeSingular) {
     const cy = this.cy;
     const points = (marker.data('members') as string[]).map(city => cy.getElementById(nodeId.city(city)).data('tip'));
     const xs = points.map(point => point.x), ys = points.map(point => point.y);
     const x1 = Math.min(...xs), x2 = Math.max(...xs), y1 = Math.min(...ys), y2 = Math.max(...ys);
-    const next = CLUSTER_ZOOMS[clusterLevel(cy.zoom())] ?? cy.maxZoom();
-    const fit = Math.min(Math.max(1, cy.width() - 120) / Math.max(32, x2 - x1),
-      Math.max(1, cy.height() - 120) / Math.max(32, y2 - y1));
-    const zoom = Math.min(cy.maxZoom(), Math.max(next + 0.01, Math.min(fit, cy.zoom() * 2.5)));
+    const start = cy.zoom();
+    const zoom = Math.max(cy.minZoom(), Math.min(cy.maxZoom(),
+      Math.max(1, cy.width() - 120) / Math.max(32, x2 - x1),
+      Math.max(1, cy.height() - 120) / Math.max(32, y2 - y1)));
     const pan = { x: cy.width() / 2 - (x1 + x2) / 2 * zoom, y: cy.height() / 2 - (y1 + y2) / 2 * zoom };
     cy.stop(true, false);
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) cy.viewport({ zoom, pan });
     else cy.animate({ zoom, pan }, { duration: 300 });
+    // Full membership, so cities a filter brings back later stay individual too.
+    const cluster = this.clusterLevels.flat().find(c => c.id === marker.id());
+    this.openedCluster = {
+      cities: new Set(cluster?.members ?? marker.data('members')),
+      minZoom: zoom > start * 1.3 ? (start + zoom) / 2 : zoom * 0.75,
+    };
+    this.sizeMarkers();
   }
 
   /**

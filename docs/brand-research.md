@@ -15,8 +15,13 @@ Follow the user's latest scope and the data conventions in `CLAUDE.md`.
 - Resolve the identity: label versus retailer, diffusion line, similarly named
   company or generic product term. Ask once if the name remains ambiguous;
   continue independent work on identifiable brands.
-- Do not add retailers as brands or add retailer collaborations. Distinguish
-  clothing labels that sell their own designs from multi-brand retailers.
+- A store can be a brand when it makes its own products or clothing (Goodhood,
+  BEAMS, Kith). Tag it `Retailer` alongside its other categories and record its
+  collaborations. Don't add shops that only stock other brands.
+- When adding a brand that earlier searches listed as "not in the dataset", also add
+  the collaborations already found for it, and add it to records that left it out.
+- When adding a sub-label, move its collaborations over from the parent. Move only
+  releases a source credits to that label by name (see "Sub-labels" below).
 
 ## 2. Establish the brand
 
@@ -133,7 +138,7 @@ work in this order to keep searches cheap:
    In the same call, check `src/data/research-log.ts` for a `collabSearches`
    entry. If one exists with `complete: true`, the crawl in step 2 is
    **incremental**: read pages from page 1 only until you reach articles older
-   than its `date` (usually 1–3 pages, so no parallel agents are needed). Tell
+   than its `date` (usually 1–3 pages; pass `--to 3` to the crawl script). Tell
    the user it was searched before, and do a full crawl only if they ask for a
    refresh. If the entry has `complete: false`, resume from its `lastPage`.
    With `noArchive: true`, first check whether a Hypebeast tag exists now;
@@ -142,37 +147,31 @@ work in this order to keep searches cheap:
    high-profile releases and misses a brand's early years.
    - **Full archive crawl (default, always do this first):** read every page
      of the brand's Hypebeast archive, `https://hypebeast.com/brands/<slug>`
-     then `/page/2`, `/page/3`… until a page returns 404. Do not stop at a
-     fixed page count; established brands run to 50–90 pages, back to ~2007.
-     **Check pagination first:** some `/brands/<slug>/page/N` URLs ignore the
-     page number and return page 1 every time (no 404, identical articles).
-     If page 2 matches page 1, crawl the tag archive instead,
-     `https://hypebeast.com/tags/<slug>/page/N` (the "Load More" link on page 1
-     points to it), which pages normally and ends in a 404. Tell each agent to
-     compare page 2 with page 1 and switch to `/tags/` if they match, and to
-     report which URL scheme it used.
-     **Crawl one brand at a time, with one agent at a time**, fetching pages
-     sequentially. Parallel agents trip Hypebeast's rate limit. Give each agent
-     about 12 pages (agents stop at 15 turns), and have it report each page's
-     date range, the last page that existed and its oldest article date, so you
-     can confirm the crawl reached the end. Then start the next agent at the
-     following page. If an agent stops early, resume it with SendMessage. Ask
-     each agent for one line per collaboration, `partner(s) | year | title
-     snippet`, with retailer/store exclusives flagged.
-     **Empty HTTP 202 responses are a throttle, not missing pages.** A page
-     that really doesn't exist returns 404. When pages come back as 202 with an
-     empty body, switch to the **all-caps tag archive**,
-     `https://hypebeast.com/tags/<SLUG IN CAPITALS>/page/N` (for example
-     `/tags/STUSSY/`, `/tags/PUMA/`). It often still serves pages that
-     `/brands/`, `/tags/<slug>/` and `/tags/<Slug>/` block. Its page numbers
-     are offset from `/brands/`, so match pages by article dates; tell the
-     agent the oldest date already read. Authorise one retry per empty page
-     (agents won't retry a 202 unless told to), and stop after two
-     consecutive empty pages. If every scheme returns 202s, stop for a few
-     hours rather than retrying, record the gap in the research log (step 6),
+     until a page returns 404. Do not stop at a fixed page count; established brands run to 50–90 pages, back to ~2007.
+     **Crawl with the script, one brand at a time:**
+     `node scripts/collab/crawl.mjs https://hypebeast.com/brands/<slug> <scratch>/<slug>.tsv`.
+     It waits 4 seconds between pages, saves dates, titles and excerpts, and ends with
+     `COMPLETE` or `INCOMPLETE`, the last page and the oldest article. Read all the
+     saved rows, not only titles containing "x": many collaborations are worded
+     "taps", "joins" or "exclusive". Resume a stopped crawl with `--from <page>`.
+     Other addresses the script reports:
+     - a redirect (some `/brands/` pages go to `/tags/`): crawl the address it names;
+     - pages that repeat: crawl `/tags/<slug>`.
+     Try alternate slugs too (`goodhood` and `the-goodhood-store`).
+     **Empty HTTP 202 responses are a throttle, not missing pages.** The script waits
+     and retries once, then stops after two in a row. Wait several minutes and resume
+     from that page. If it's still blocked, try the **all-caps tag archive**,
+     `/tags/<SLUG IN CAPITALS>` (for example `/tags/STUSSY`), which often serves pages
+     the others block. Its page numbers are offset, so match pages by article dates.
+     If every address stays blocked, stop, record the gap in the research log (step 6)
      and cover the missing years with the web searches below.
-   - Run archive-crawl `web-fetch` agents with `model: "haiku"`; use
-     `model: "sonnet"` for history and career fact-checks.
+     Use agents only when the script can't reach the site: `web-fetch` agents with
+     `model: "haiku"`, one at a time, about 12 pages each, reporting one line per
+     collaboration, each page's date range and the last page that existed.
+   - **Sub-labels (always):** crawl the tags of the brand's sub-labels and main lines
+     as well (BEAMS PLUS, BEAMS T, monkey time), because many of their articles are
+     missing from the parent's archive. See "Sub-labels" below for crediting them.
+   - Use `model: "sonnet"` agents for history and career fact-checks.
    - **Second list source:** for Japanese brands, also read the Fashion Press
      collab list, `https://www.fashion-press.net/news/brand/<id>/collab` with
      every `?page=N`. Otherwise use the brand's own collab/news page or its
@@ -188,19 +187,27 @@ work in this order to keep searches cheap:
      streetwear peers (for example Los Angeles labels) are the most often missed.
    Batch searches for several brands in the same turn. Use `extended` only when
    `standard` returns little.
-3. Check every candidate partner against `houses.ts` in one shell loop before
-   researching it further. Drop partners that aren't houses (artists,
-   celebrities, retailers, non-fashion companies, sports clubs) and list them
+3. Check every candidate partner with
+   `node scripts/collab/lookup.mjs "Partner A, Partner B"` (it searches ids, names
+   and aliases) before researching it further. Drop partners that aren't houses (artists,
+   celebrities, shops that only stock brands, non-fashion companies, sports clubs) and list them
    once in the summary. Do not add houses unless asked.
 4. A collaboration's release year from search results or reputable coverage is
    enough. Open a page only when sources conflict or the year is missing.
-   Never infer a year from an announcement or runway date alone.
+   Never infer a year from an announcement or runway date alone. Articles from
+   late November and December often cover January releases: use the release date in
+   the Fashion Press listing or the article itself.
 5. Add one-line entries, `idPartnerYear: { houses: [...], year },`, before the
    closing `satisfies` line. Give repeat releases in one year distinct IDs (for
    example `Spring2026` and `Fall2026`). No names, notes or sources are needed.
    For archive bulk adds, record one entry per partner per year, plus separate
-   entries for three-or-more-brand projects. Insert with a script that skips
-   any (house set, year) already recorded, parsing whole multi-line entries.
+   entries for three-or-more-brand projects. List candidates one per line (house
+   ids, then years) and run `node scripts/collab/add.mjs <file>`, then again with
+   `--write`. It skips identical records and holds back REVIEW rows: the same year
+   with the same partner recorded under another label of the family, or a record with
+   more or fewer of the brands. Check each against its source: drop it if it's the
+   same release, correct the old record if that one is wrong or leaves out a brand,
+   and add it with `--include-review` only if it's a separate release.
 6. Add or update the brand's entry in `collabSearches` in
    `src/data/research-log.ts` (keys in alphabetical order): today's `date`,
    `complete` (whether the crawl reached the archive's last page), and the
@@ -224,6 +231,36 @@ work in this order to keep searches cheap:
    crawl reached (last page, oldest year), so gaps are visible. List partners
    that aren't houses once, so the user can ask for them to be added. Never
    describe the list as complete: archive crawls read titles only.
+
+### What counts as a collaboration
+
+Record a product made by, or exclusively for, two or more named brands, including
+a store's special-order version ("exclusive", "別注") of another brand's product.
+Leave out:
+
+- products a store merely stocks, and pop-ups, exhibitions, editorials or launch
+  events without a co-branded product;
+- fabric, sole or technology suppliers (GORE-TEX, Vibram), unless the supplier is
+  a dataset brand credited as a collaborator;
+- a store that only sells another pair's collaboration;
+- teasers with no confirmed release.
+
+For group projects, record one entry when the brands made one collection together.
+When a host invites several brands to each make a piece with it (T-SHIRTNOW,
+anniversary T-shirts), record a separate host × brand pair for each.
+
+A joint label without its own entry (B JIRUSHI YOSHIDA) isn't a brand: record the
+participants a source credits, normally Porter and the third brand.
+
+### Sub-labels
+
+- Credit a release to a sub-label only when a headline, listing or the article names
+  it. A plain "BEAMS ×" release belongs to the parent.
+- Credit a line without its own entry to its nearest parent that has one, and say so
+  in the summary.
+- When one year has both a parent and a sub-label release with the same partner,
+  keep both. Never record a parent and its own label as each other's partners:
+  a release by two labels of a family gets one record per label.
 
 ## 4. Resolve evidence and uncertainty
 

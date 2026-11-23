@@ -2,7 +2,7 @@ import type { ElementDefinition } from 'cytoscape';
 import { allMoves, collaborations, getDesigner, getHouse, houses } from '../data';
 import type { House } from '../types';
 import { layoutMap } from './geo';
-import { isMajorCity, mapHousePath, mapLocationForHouse, topCities } from './locations';
+import { isMajorCity, mapCountryForHouse, mapHousePath, mapLocationForHouse, topCities } from './locations';
 import { cityMarkerIcon, houseIcon, initialsIcon } from './icons';
 
 /**
@@ -60,7 +60,8 @@ export function mapElements(): ElementDefinition[] {
         city: c.city,
         label: c.city,
         count,
-        major: isMajorCity(c.city, count),
+        country: mapCountryForHouse(c.houses[0]!.id),
+        major: isMajorCity(count),
         top: top.has(c.city),
         image: cityMarkerIcon(count, false, false, top.has(c.city)),
         tip: c.tip,

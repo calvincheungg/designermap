@@ -17,7 +17,7 @@ describe('world map layout', () => {
       const marker = markers.find((element) => element.data.id === nodeId.city(city));
       expect(marker?.data.label).toBe(city);
       expect(marker?.data.count).toBe(houses.filter((h) => !h.parentHouse && h.city === city).length);
-      expect(marker?.data.major).toBe(isMajorCity(city, marker!.data.count));
+      expect(marker?.data.major).toBe(isMajorCity(marker!.data.count));
     }
     expect(houses.find((h) => h.id === 'sixEightSix')?.city).toBe('Gardena');
     expect(houses.find((h) => h.id === 'maxMara')?.city).toBe('Reggio Emilia');

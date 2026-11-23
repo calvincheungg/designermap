@@ -16,21 +16,21 @@ vi.mock('cytoscape', async (importOriginal) => {
 
 vi.mock('../data', () => {
   const houses = [
-    { id: 'selected', name: 'Selected', city: 'London', founded: 1900 },
-    { id: 'connected', name: 'Connected', city: 'Paris', founded: 1900 },
-    { id: 'unrelated', name: 'Unrelated', city: 'Paris', founded: 1900 },
-    { id: 'secondHop', name: 'Second Hop', city: 'Milan', founded: 1900 },
-    { id: 'manual', name: 'Manual', city: 'Tokyo', founded: 1900 },
-    { id: 'standalone', name: 'Standalone', city: 'Berlin', founded: 1900 },
-    { id: 'future', name: 'Future', city: 'Madrid', founded: 2025 },
-    { id: 'regionalOne', name: 'Regional One', city: 'Gardena', founded: 1900 },
-    { id: 'regionalTwo', name: 'Regional Two', city: 'Irvine', founded: 2000 },
-    { id: 'regionalFuture', name: 'Regional Future', city: 'Seal Beach', founded: 2035 },
-    { id: 'regionalCoast', name: 'Regional Coast', city: 'Santa Cruz', founded: 1900 },
-    { id: 'family', name: 'Family', city: 'Berlin', founded: 1900 },
-    { id: 'label', name: 'Sub Label', city: 'Rome', founded: 2000, parentHouse: 'family' },
-    { id: 'nestedLabel', name: 'Nested Label', city: 'Amsterdam', founded: 2010, parentHouse: 'label' },
-    { id: 'futureLabel', name: 'Future Label', city: 'Rome', founded: 2035, parentHouse: 'family' },
+    { id: 'selected', name: 'Selected', city: 'London', country: 'GB', founded: 1900 },
+    { id: 'connected', name: 'Connected', city: 'Paris', country: 'FR', founded: 1900 },
+    { id: 'unrelated', name: 'Unrelated', city: 'Paris', country: 'FR', founded: 1900 },
+    { id: 'secondHop', name: 'Second Hop', city: 'Milan', country: 'IT', founded: 1900 },
+    { id: 'manual', name: 'Manual', city: 'Tokyo', country: 'JP', founded: 1900 },
+    { id: 'standalone', name: 'Standalone', city: 'Berlin', country: 'DE', founded: 1900 },
+    { id: 'future', name: 'Future', city: 'Madrid', country: 'ES', founded: 2025 },
+    { id: 'regionalOne', name: 'Regional One', city: 'Gardena', country: 'US', founded: 1900 },
+    { id: 'regionalTwo', name: 'Regional Two', city: 'Irvine', country: 'US', founded: 2000 },
+    { id: 'regionalFuture', name: 'Regional Future', city: 'Seal Beach', country: 'US', founded: 2035 },
+    { id: 'regionalCoast', name: 'Regional Coast', city: 'Santa Cruz', country: 'US', founded: 1900 },
+    { id: 'family', name: 'Family', city: 'Berlin', country: 'DE', founded: 1900 },
+    { id: 'label', name: 'Sub Label', city: 'Rome', country: 'IT', founded: 2000, parentHouse: 'family' },
+    { id: 'nestedLabel', name: 'Nested Label', city: 'Amsterdam', country: 'NL', founded: 2010, parentHouse: 'label' },
+    { id: 'futureLabel', name: 'Future Label', city: 'Rome', country: 'IT', founded: 2035, parentHouse: 'family' },
   ];
   const moves = [
     { designerId: 'one', from: { house: 'selected' }, to: { house: 'connected' }, year: 2000, concurrent: false },
@@ -114,7 +114,7 @@ describe('regional cluster interaction', () => {
     vi.advanceTimersByTime(100);
   };
 
-  it('consolidates small cities, preserves major pins, and restores individual cities on zoom in', () => {
+  it('consolidates small cities by country, keeps lone cities, and restores individual cities on zoom in', () => {
     vi.useFakeTimers();
     settleZoom(0.3);
     expect(clusters().length).toBe(1);
@@ -131,21 +131,17 @@ describe('regional cluster interaction', () => {
     expect(clusters()[0]!.id()).toBe(clusterId);
   });
 
-  it('restores individual pins when years or filters leave fewer than four eligible cities', () => {
+  it('restores individual pins when years or filters leave fewer than two eligible cities', () => {
     vi.useFakeTimers();
     settleZoom(0.3);
+    expect(clusters()[0]!.data('label')).toBe('California');
     expect(clusters()[0]!.data('shown')).toBe(4);
     graph.setYear(2020);
-    expect(clusters().length).toBe(0);
-    for (const city of ['Gardena', 'Irvine', 'Santa Cruz']) {
-      expect(graph.cy.getElementById(nodeId.city(city)).visible()).toBe(true);
-    }
+    expect(clusters()[0]!.data('shown')).toBe(3);
     graph.setYear(2040);
     expect(clusters()[0]!.data('shown')).toBe(4);
     graph.setHouseFilter(new Set(['regionalOne', 'regionalTwo']));
-    expect(clusters().length).toBe(0);
-    expect(graph.cy.getElementById(nodeId.city('Gardena')).visible()).toBe(true);
-    expect(graph.cy.getElementById(nodeId.city('Irvine')).visible()).toBe(true);
+    expect(clusters()[0]!.data('shown')).toBe(2);
     graph.setHouseFilter(new Set(['regionalTwo']));
     expect(clusters().length).toBe(0);
     expect(graph.cy.getElementById(nodeId.city('Irvine')).visible()).toBe(true);
@@ -153,14 +149,27 @@ describe('regional cluster interaction', () => {
     expect(graph.cy.nodes('[kind = "marker"]').filter(node => node.visible()).length).toBe(0);
   });
 
-  it('zooms into a cluster on click without opening brand grids', () => {
+  it('shows every city of a clicked cluster at once, and reclusters on zooming back out', () => {
     vi.useFakeTimers();
     settleZoom(0.3);
-    const animate = vi.spyOn(graph.cy, 'animate').mockReturnValue(graph.cy);
+    // Big enough to frame California, but not at the zoom where all pins separate.
+    vi.spyOn(graph.cy, 'width').mockReturnValue(160);
+    vi.spyOn(graph.cy, 'height').mockReturnValue(160);
+    vi.stubGlobal('matchMedia', () => ({ matches: true }));
     clusters()[0]!.emit('tap');
-    expect(animate).toHaveBeenCalledWith(expect.objectContaining({ zoom: expect.any(Number), pan: expect.any(Object) }), { duration: 300 });
-    expect(animate.mock.calls[0]![0]!.zoom).toBeGreaterThan(0.3);
+    vi.advanceTimersByTime(100);
+    expect(graph.cy.zoom()).toBeGreaterThan(0.3);
+    expect(graph.cy.zoom()).toBeLessThan(4.8);
+    expect(clusters().length).toBe(0);
+    for (const city of ['Gardena', 'Irvine', 'Seal Beach', 'Santa Cruz']) {
+      expect(graph.cy.getElementById(nodeId.city(city)).hasClass('clustered')).toBe(false);
+    }
     expect(openHouses()).toEqual([]);
+    graph.setYear(2020);
+    graph.setYear(2040);
+    expect(clusters().length).toBe(0);
+    settleZoom(0.3);
+    expect(clusters()[0]!.data('shown')).toBe(4);
   });
 
   it('keeps an opened city out of its cluster and restores clustering when it closes', () => {
@@ -200,6 +209,8 @@ describe('brand selection on the map', () => {
     graph.select({ kind: 'house', id: 'connected' });
     expect(visiblePins()).toEqual(['Paris']);
     graph.select(null);
+    graph.cy.zoom(0.3);
+    graph.setYear(2020);
     expect(visiblePins()).toEqual(originalPins);
     expect(graph.cy.getElementById('gl:Tokyo').visible()).toBe(true);
     expect(openHouses()).toEqual(['manual']);

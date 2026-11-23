@@ -5,3 +5,4 @@ For every brand research, addition or correction, also read and follow
 `docs/brand-research.md`. Prioritize creative roles; executive research is
 optional unless explicitly requested. Apply the same workflow to each brand
 in a batch.
+Before changing the map, windows or styling, read `docs/ui.md`.

@@ -1,4 +1,5 @@
 import { cities, cityRegions, type CityName } from '../data/cities';
+import { countryNames, type CountryCode } from '../data/countries';
 import { getHouse } from '../data';
 import type { House, LatLng } from '../types';
 
@@ -41,20 +42,11 @@ export const mapRegions = {
   },
 } as const satisfies Record<string, { anchor: CityName; cities: readonly CityName[] }>;
 
-/** Always independent, even when the dataset contains fewer than five brands. */
-export const majorCities = [
-  'Paris', 'London', 'Milan', 'Rome', 'Florence', 'Turin', 'Venice', 'Bologna',
-  'New York', 'Los Angeles', 'San Francisco',
-  'Tokyo', 'Osaka', 'Kyoto', 'Seoul', 'Shanghai', 'Hong Kong', 'Taipei',
-  'Toronto', 'Montreal', 'Vancouver', 'Copenhagen', 'Stockholm',
-  'Berlin', 'Munich', 'Amsterdam', 'Antwerp', 'Barcelona', 'Madrid',
-  'Sydney', 'Melbourne', 'Singapore',
-] as const satisfies readonly CityName[];
-const majorCitySet: ReadonlySet<string> = new Set(majorCities);
+/** Main brands a city needs to keep its own pin; smaller cities join their country's. */
+export const MAJOR_CITY_BRANDS = 5;
 
 /** Count main brands across all years/filters, so a major city never flickers into a cluster. */
-export const isMajorCity = (city: string, brandCount: number): boolean =>
-  brandCount >= 5 || majorCitySet.has(city);
+export const isMajorCity = (brandCount: number): boolean => brandCount >= MAJOR_CITY_BRANDS;
 
 /** How many of the busiest map locations get a red pin. */
 export const TOP_CITY_COUNT = 10;
@@ -80,6 +72,16 @@ export const getLocationMode = (): LocationMode => locationMode;
 /** Set before creating a DesignerGraph; an existing graph keeps the layout it was built with. */
 export function setLocationMode(mode: LocationMode) { locationMode = mode; }
 const mapCityOf = (house: House): string => locationMode === 'origin' && house.origin ? house.origin.city : house.city;
+
+/** Country of the brand's map location, matching `mapLocationForHouse`. */
+export function mapCountryForHouse(id: string): CountryCode {
+  const house = getHouse(mapHouseRoot(id))!;
+  return locationMode === 'origin' && house.origin ? house.origin.country : house.country;
+}
+
+/** Name of a country or state/province pin. */
+export const areaLabel = (area: { country: string; region?: string }): string =>
+  area.region ?? countryNames[area.country as CountryCode] ?? area.country;
 
 /** Prefer familiar region names; otherwise name the area after its largest member city. */
 export function clusterLabel(members: readonly string[], representative: string): string {

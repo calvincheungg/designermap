@@ -180,9 +180,9 @@ export function HelpContent() {
     </ProfileSection>
     <ProfileSection title="Map pins">
       <table className="help-legend"><tbody>
-        <tr><td><span className="help-pin" /></td><td>A city. Larger fashion cities always keep their own pin.</td></tr>
+        <tr><td><span className="help-pin" /></td><td>A city. Cities with five or more brands always keep their own pin.</td></tr>
         <tr><td><span className="help-pin top" /></td><td>One of the ten cities with the most brands.</td></tr>
-        <tr><td><span className="help-pin cluster" /></td><td>A group of nearby smaller cities, with their brand count. Click to zoom in.</td></tr>
+        <tr><td><span className="help-pin cluster" /></td><td>The smaller cities of a country, state or area, with their brand count. Click to see every city.</td></tr>
         <tr><td><span className="help-pin open" /></td><td>An open city, with its brands shown on the map.</td></tr>
       </tbody></table>
     </ProfileSection>

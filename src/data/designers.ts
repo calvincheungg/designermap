@@ -1629,7 +1629,7 @@ export const designers = {
       { house: 'theory', role: 'Other', roleDetail: 'Director of knitwear', start: 2018, end: 2024, sources: ['https://fashionshow.fitnyc.edu/2025/bio/Critic/dushane-noble/'] },
       { house: 'theory', role: 'Womenswear Director', roleDetail: 'Head of design, women’s ready-to-wear', start: 2024, end: null, sources: ['https://fashionshow.fitnyc.edu/2025/bio/Critic/dushane-noble/'] },
       { house: 'helmutLang', role: 'Other', roleDetail: 'Senior knitwear designer', start: 2011, end: 2014, sources: ['https://fashionshow.fitnyc.edu/2025/bio/Critic/dushane-noble/'] },
-      { house: 'donnaKaran', role: 'Other', roleDetail: 'Earlier design role', sources: ['https://fashionshow.fitnyc.edu/2025/bio/Critic/dushane-noble/'] },
+      { house: 'donnaKaran', role: 'Other', roleDetail: 'Earlier role, title unconfirmed', sources: ['https://fashionshow.fitnyc.edu/2025/bio/Critic/dushane-noble/'] },
     ],
     notes: 'Earlier design experience includes Oscar de la Renta, Peter Som and TSE, which are not separately represented. His FIT biography documents four years working on Narciso Rodriguez knitwear without giving exact calendar bounds.',
     sources: ['https://fashionshow.fitnyc.edu/2025/bio/Critic/dushane-noble/', 'https://www.vogue.com/fashion-shows/spring-2027-ready-to-wear/theory'],
@@ -1711,10 +1711,10 @@ export const designers = {
     career: [
       { house: 'coleHaan', role: 'Creative Director', roleDetail: 'Creative director of women’s and licensed product', start: 2016, sources: ['https://www.prnewswire.com/news-releases/cole-haan-appoints-tom-mora-as-creative-director-of-womens--licensed-product-300321239.html'] },
       { house: 'kateSpade', role: 'Head Designer', roleDetail: 'Senior vice president and head of design, ready-to-wear and lifestyle', start: 2022, end: 2024, sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
-      { house: 'ralphLauren', role: 'Other', roleDetail: 'Earlier design role', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
-      { house: 'tommyHilfiger', role: 'Other', roleDetail: 'Earlier design role', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
-      { house: 'coach', role: 'Other', roleDetail: 'Earlier design role', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
-      { house: 'jCrew', role: 'Other', roleDetail: 'Earlier design role', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Earlier role, title unconfirmed', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'tommyHilfiger', role: 'Other', roleDetail: 'Earlier role, title unconfirmed', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'coach', role: 'Other', roleDetail: 'Earlier role, title unconfirmed', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
+      { house: 'jCrew', role: 'Other', roleDetail: 'Earlier role, title unconfirmed', sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/'] },
     ],
     notes: 'Served on Kate Spade’s design team before the formal 2022 title announcement; exact joining year is unconfirmed. Exact departure year from Cole Haan is unconfirmed.',
     sources: ['https://www.tapestry.com/our-people/kate-spade-new-york-names-industry-veterans-tom-mora-and-jennifer-lyu-as-head-product-designers-for-the-global-lifestyle-brand/', 'https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/briefings/retail/can-jonathan-saunders-spark-a-kate-spade-revival/'],
@@ -19818,6 +19818,23 @@ export const designers = {
     career: [{ house: 'kilomet109', role: 'Founder', roleDetail: 'Founder, designer', start: 2012, end: null, sources: ['https://vietnam.vnanet.vn/english/print/kilomet-109-a-fashion-brand-imprinted-by-culture-305574.html'] }],
     notes: 'Also written Thao Vu. From Thái Bình; a former magazine journalist who wrote about craft communities, then trained at the London College for Design and Fashion, Hanoi. British Council Young Creative Entrepreneur (Design/Fashion) award, 2014.',
   },
+  diepYen: {
+    name: 'Diệp Yến',
+    nationality: 'Vietnamese',
+    career: [{ house: 'montsand', role: 'Founder', roleDetail: 'Founder, creative director', start: 2017, end: null }],
+    notes: 'Studied fashion in London and at the University of the West of England, then ran a garment manufacturing business for Vietnamese labels before launching Lobbster, renamed Montsand in 2024.',
+  },
+  duongThanhNguyen: {
+    name: 'Duong Thanh Nguyen',
+    nationality: 'Vietnamese',
+    career: [{ house: 'clownz', role: 'Founder', start: 2011, end: null }],
+  },
+  truongNgocAnh: {
+    name: 'Trương Ngọc Anh',
+    nationality: 'Vietnamese',
+    career: [{ house: 'hnbmg', role: 'Founder', start: 2015 }],
+    notes: 'Founder of the #HNBMG sneaker community and of the Hanoi label SCC Daily Sneaker.',
+  },
   louisGrenier: {
     name: 'Louis Grenier',
     career: [{ house: 'kanuk', role: 'Founder', start: 1974, end: 2015, notes: 'Sold the company in 2015.', sources: ['https://www.pressreader.com/canada/montreal-gazette/20151031/281487865217506'] }],
@@ -21526,6 +21543,376 @@ export const designers = {
     nationality: 'French-Filipino',
     career: [{ house: 'bluemarble', role: 'Founder', roleDetail: 'Founder, artistic director', start: 2019, end: null }],
     notes: 'Left a career in finance to start Bluemarble.',
+  },
+  yoshifumiEgawa: {
+    name: 'Yoshifumi Egawa',
+    nationality: 'Japanese',
+    career: [
+      { house: 'hombreNino', role: 'Founder', roleDetail: 'Founder, director and designer', start: 2012, end: null },
+      { house: 'xlarge', role: 'Other', roleDetail: 'Designer, PLUS L by XLARGE', sources: ['https://openers.jp/en/fashion/fashion_men/1PpeL'] },
+    ],
+    notes: 'Tokyo skateboarder known as YOPPI; member of the T19 skate crew and co-founder of the Harajuku label HECTIC with Naotake Magara. Also founded MASTERPIECE, the streetwear label, unrelated to the bag maker master-piece.',
+  },
+  masashiSeki: {
+    name: 'Masashi Seki',
+    nationality: 'Japanese',
+    career: [
+      { house: 'hombreNino', role: 'Other', roleDetail: 'Co-designer with Yoshifumi Egawa in the 2013–15 collections', sources: ['https://hypebeast.com/2013/3/hombre-nino-2013-spring-summer-lookbook'] },
+    ],
+  },
+  prot: {
+    name: 'PROT',
+    nationality: 'Japanese',
+    career: [{ house: 'proletaReArt', role: 'Founder', roleDetail: 'Founder, designer', start: 2021, end: null }],
+    notes: 'Anonymous designer. Previously designed for a denim brand in Okayama before starting PROLETA RE ART in March 2021.',
+  },
+  melvinSchifter: {
+    name: 'Melvin Schifter',
+    nationality: 'American',
+    career: [{ house: 'leSportsac', role: 'Founder', roleDetail: 'Co-founder', start: 1974 }],
+    notes: 'Stepped back from LeSportsac in the 1990s, when Tim Schifter took over management.',
+  },
+  sandySchifter: {
+    name: 'Sandy Schifter',
+    nationality: 'American',
+    career: [{ house: 'leSportsac', role: 'Founder', roleDetail: 'Co-founder', start: 1974 }],
+  },
+  elizabethKiester: {
+    name: 'Elizabeth Kiester',
+    career: [
+      { house: 'abercrombieFitch', role: 'Other', roleDetail: 'Global concept director', sources: ['https://www.textilwirtschaft.de/fashion-management/lesportsac-elizabeth-kiester-ist-kreativdirektorin-52740'] },
+      { house: 'leSportsac', role: 'Creative Director', start: 2006, end: 2008, sources: ['https://www.textilwirtschaft.de/fashion-management/lesportsac-elizabeth-kiester-ist-kreativdirektorin-52740', 'https://www.textilwirtschaft.de/fashion-management/le-sportsac-64778'] },
+    ],
+  },
+  murielFavaro: {
+    name: 'Muriel Favaro',
+    career: [
+      { house: 'kateSpade', role: 'Other', roleDetail: 'Earlier role, title unconfirmed', sources: ['https://www.textilwirtschaft.de/fashion-management/le-sportsac-64778'] },
+      { house: 'leSportsac', role: 'Creative Director', roleDetail: 'Chief creative director', start: 2008, sources: ['https://www.textilwirtschaft.de/fashion-management/le-sportsac-64778'] },
+    ],
+    notes: 'Previously design director at Tocca, after Kenneth Cole, Saks Fifth Avenue and Kate Spade.',
+  },
+  yutakaGoto: {
+    name: 'Yutaka Goto',
+    nationality: 'Japanese',
+    career: [
+      { house: 'levis', role: 'Other', roleDetail: 'Levi Strauss Japan', sources: ['https://www.beams.co.jp/special/beamsplus/philosophy/vol5/?lang=ja'] },
+      { house: 'remiRelief', role: 'Founder', roleDetail: 'Founder, designer', start: 2007, end: null },
+    ],
+    notes: 'Born in Aichi Prefecture in 1970.',
+  },
+  tomomiKishita: {
+    name: 'Tomomi Kishita',
+    nationality: 'Japanese',
+    career: [{ house: 'isNess', role: 'Founder', roleDetail: 'Founder, designer', start: 2001, end: null }],
+    notes: 'Born in Shizuoka in 1970. Former Harajuku shop buyer and DJ.',
+  },
+  kseniaSchnaiderDesigner: {
+    name: 'Ksenia Schnaider',
+    born: 1984,
+    nationality: 'Ukrainian',
+    career: [{ house: 'kseniaSchnaider', role: 'Founder', roleDetail: 'Co-founder, creative director', start: 2011, end: null }],
+    notes: 'Founded the streetwear label X’U before KSENIASCHNAIDER. Married to co-founder Anton Schnaider.',
+  },
+  antonSchnaider: {
+    name: 'Anton Schnaider',
+    career: [{ house: 'kseniaSchnaider', role: 'Founder', roleDetail: 'Co-founder, graphic designer', start: 2011, end: null }],
+    notes: 'Graphic designer who creates the prints. Married to co-founder Ksenia Schnaider.',
+  },
+  svitlanaBevza: {
+    name: 'Svitlana Bevza',
+    nationality: 'Ukrainian',
+    career: [{ house: 'bevza', role: 'Founder', roleDetail: 'Founder, creative director', start: 2006, end: null }],
+    notes: 'Born in Kyiv; graduated from Kyiv National University of Trade and Economics and Kyiv National University of Technologies and Design.',
+  },
+  irinaDzhus: {
+    name: 'Irina Dzhus',
+    nationality: 'Ukrainian',
+    career: [{ house: 'dzhus', role: 'Founder', roleDetail: 'Founder, designer', start: 2010, end: null }],
+    notes: 'From Kyiv; also a stylist. Graduated from Kyiv National University of Technologies and Design and has taught fashion design at the Academy of Fine Arts in Warsaw.',
+  },
+  liliaLitkovska: {
+    name: 'Lilia Litkovska',
+    nationality: 'Ukrainian',
+    career: [{ house: 'litkovska', role: 'Founder', roleDetail: 'Founder, artistic director', start: 2009, end: null }],
+    notes: 'Also spelled Liliia Litkovska and Litkovskaya. Born in Kyiv into a family of four generations of tailors; also a stylist and costume designer. Founded the SCHOOLL school of art and craft in 2020.',
+  },
+  ruslanBaginskiyDesigner: {
+    name: 'Ruslan Baginskiy',
+    born: 1989,
+    nationality: 'Ukrainian',
+    career: [{ house: 'ruslanBaginskiy', role: 'Founder', roleDetail: 'Founder, designer', start: 2015, end: null }],
+    notes: 'Also spelled Ruslan Bahinskyi. Born in Lviv; worked as a stylist for Ukrainian designers and made a first headpiece in 2011.',
+  },
+  petroYasinskiy: {
+    name: 'Petro Yasinskiy',
+    career: [{ house: 'ruslanBaginskiy', role: 'Founder', roleDetail: 'Co-founder', start: 2015 }],
+    notes: 'Also spelled Yasinsky.',
+  },
+  annaOsmekhina: {
+    name: 'Anna Osmekhina',
+    nationality: 'Ukrainian',
+    career: [{ house: 'ttswtrs', role: 'Founder', roleDetail: 'Founder, creative director', start: 2013, end: null }],
+    notes: 'Also spelled Osmiekhina. Former costume designer and stylist.',
+  },
+  alinaKachorovska: {
+    name: 'Alina Kachorovska',
+    nationality: 'Ukrainian',
+    career: [{ house: 'kachorovska', role: 'Founder', roleDetail: 'Founder, creative director', start: 2013, end: null }],
+    notes: 'Also known as Alina Ocheretiana. Granddaughter of shoemaker Leonida Kachorovska; studied law at Kyiv-Mohyla Academy. Announced stepping down as CEO in 2026 to concentrate on creative direction.',
+  },
+  katyaSilchenko: {
+    name: 'Katya Silchenko',
+    born: 1984,
+    nationality: 'Ukrainian',
+    career: [{ house: 'theCoat', role: 'Founder', roleDetail: 'Founder, creative director', start: 2014, end: null }],
+    notes: 'Also spelled Kateryna Silchenko. Born in Kharkiv; former competitive ballroom dancer and television presenter.',
+  },
+  kateZubarieva: {
+    name: 'Kate Zubarieva',
+    nationality: 'Ukrainian',
+    career: [{ house: 'sleeper', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null }],
+    notes: 'Former fashion editor.',
+  },
+  asyaVaretsa: {
+    name: 'Asya Varetsa',
+    career: [{ house: 'sleeper', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null }],
+    notes: 'Former junior fashion editor at Elle Russia.',
+  },
+  magdaButrym: {
+    name: 'Magda Butrym',
+    born: 1985,
+    nationality: 'Polish',
+    career: [
+      { house: 'magdaButrym', role: 'Founder', roleDetail: 'Founder, creative director', start: 2014, end: null },
+    ],
+    notes: 'Born in Zabrze; studied at MSKPU in Warsaw and worked as a stylist at TVP. Ran the short-lived label Portofino in 2009, then was head designer of La Mania from 2010 until about 2013. Launched Magda Butrym with business partner Aleksandra Halemba. LVMH Prize nominee in 2018.',
+  },
+  zofiaChylak: {
+    name: 'Zofia Chylak',
+    nationality: 'Polish',
+    career: [
+      { house: 'chylak', role: 'Founder', roleDetail: 'Founder, creative director', start: 2014, end: null },
+      { house: 'proenzaSchouler', role: 'Other', roleDetail: 'Design training' },
+    ],
+    notes: 'Also known as Zosia Chylak. Born in Warsaw; trained as an art historian specialising in the Northern Renaissance. Spent a term with New York pattern-maker Nicolas Caito as well as at Proenza Schouler.',
+  },
+  aretaSzpura: {
+    name: 'Areta Szpura',
+    nationality: 'Polish',
+    career: [
+      { house: 'localHeroes', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2013, end: 2017 },
+    ],
+    notes: 'Left Local Heroes in July 2017.',
+  },
+  karolinaSlota: {
+    name: 'Karolina Słota',
+    nationality: 'Polish',
+    career: [
+      { house: 'localHeroes', role: 'Founder', roleDetail: 'Co-founder, creative director', start: 2013, end: 2024 },
+    ],
+    notes: 'Announced leaving Local Heroes in October 2024 and later started the mirror label Glaze.',
+  },
+  joannaJokiel: {
+    name: 'Joanna Jokiel',
+    career: [
+      { house: 'lou', role: 'Founder', roleDetail: 'Founder, head designer', start: 2014, end: null },
+    ],
+    notes: 'Began Lou after designing a dress for herself in 2014.',
+  },
+  gretaGiel: {
+    name: 'Greta Giel',
+    career: [
+      { house: 'chicaca', role: 'Founder', roleDetail: 'Founder, creative director', start: 2012, end: null },
+    ],
+    notes: 'Full name Greta Kinga Giel. Owner of Chicaca, responsible for its designs and prints.',
+  },
+  shoKondo: {
+    name: 'Sho Kondo',
+    nationality: 'Japanese',
+    career: [
+      { house: 'reserved', role: 'Creative Director', start: 2016, end: 2024 },
+      { house: 'balenciaga', role: 'Other', roleDetail: 'Design role; exact title and dates unconfirmed' },
+      { house: 'isabelMarant', role: 'Other', roleDetail: 'Design role; exact title and dates unconfirmed' },
+      { house: 'haiderAckermannLabel', role: 'Other', roleDetail: 'Design role; exact title and dates unconfirmed' },
+      { house: 'maisonMargiela', role: 'Other', roleDetail: 'Design role; exact title and dates unconfirmed' },
+    ],
+    notes: 'Trained at the École de la Chambre Syndicale de la Couture Parisienne and worked at Inditex before joining LPP in September 2016. Also helped refresh Cropp, Mohito and House. Left to co-found the consultancy Kondo & Partners.',
+  },
+  zuzannaKuczynska: {
+    name: 'Zuzanna Kuczyńska',
+    nationality: 'Polish',
+    career: [
+      { house: 'lePetitTrou', role: 'Founder', start: 2014, end: null },
+    ],
+    notes: 'Also known as Zuza Kuczyńska. Warsaw stylist who began the label from her apartment.',
+  },
+  ilonaMajer: {
+    name: 'Ilona Majer',
+    nationality: 'Polish',
+    career: [
+      { house: 'mmcStudio', role: 'Founder', roleDetail: 'Co-founder, designer', start: 1996, end: null },
+    ],
+    notes: 'Studied fashion at the Academy of Fine Arts in Łódź, where Ilona Majer and Rafał Michalak met.',
+  },
+  rafalMichalak: {
+    name: 'Rafał Michalak',
+    nationality: 'Polish',
+    career: [
+      { house: 'mmcStudio', role: 'Founder', roleDetail: 'Co-founder, designer', start: 1996, end: null },
+    ],
+    notes: 'Studied fashion at the Academy of Fine Arts in Łódź, where Ilona Majer and Rafał Michalak met.',
+  },
+  malgorzataCzudak: {
+    name: 'Małgorzata Czudak',
+    career: [
+      { house: 'mmcStudio', role: 'Founder', roleDetail: 'Co-founder', start: 1996 },
+    ],
+    notes: 'Part of the original trio behind MMC Studio; departure year unconfirmed.',
+  },
+  oliverCousins: {
+    name: 'Oliver Cousins',
+    career: [
+      { house: 'maap', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null },
+    ],
+    notes: 'Also known as Ollie Cousins.',
+  },
+  jarradSmith: {
+    name: 'Jarrad Smith',
+    career: [
+      { house: 'maap', role: 'Founder', roleDetail: 'Co-founder', start: 2014, end: null },
+    ],
+    notes: 'MAAP began in Jarrad Smith’s Melbourne garage.',
+  },
+  mishaGlisovic: {
+    name: 'Misha Glisovic',
+    career: [
+      { house: 'maap', role: 'Creative Director', roleDetail: 'Creative director; chief creative officer', start: 2015, end: null, approximate: true },
+    ],
+    notes: 'Studied visual communication and graphic design at Monash University. Business profiles list Misha Glisovic as MAAP’s creative director from 2015 and chief creative officer from 2021. Co-owned and designed the label Schwipe.',
+  },
+  carlMoriarty: {
+    name: 'Carl Moriarty',
+    career: [
+      { house: 'arcteryx', role: 'Other', roleDetail: 'Design director', sources: ['https://www.paceupmedia.com/article/maap-growth-investment-in-talent'] },
+      { house: 'rapha', role: 'Other', roleDetail: 'Design director', sources: ['https://www.paceupmedia.com/article/maap-growth-investment-in-talent'] },
+      { house: 'maap', role: 'Other', roleDetail: 'Lead, Advanced Concepts and Innovation', sources: ['https://www.paceupmedia.com/article/maap-growth-investment-in-talent'] },
+    ],
+    notes: 'Order and dates of the Arc’teryx and Rapha posts are unconfirmed.',
+  },
+  alexCleary: {
+    name: 'Alex Cleary',
+    career: [
+      { house: 'alpha60', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2005, end: null },
+    ],
+    notes: 'Trained in aeronautical engineering before starting the label with sibling Georgie Cleary.',
+  },
+  georgieCleary: {
+    name: 'Georgie Cleary',
+    career: [
+      { house: 'alpha60', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2005, end: null },
+    ],
+    notes: 'Worked in graphic design before starting the label with sibling Alex Cleary.',
+  },
+  stephenBennett: {
+    name: 'Stephen Bennett',
+    career: [
+      { house: 'countryRoad', role: 'Founder', roleDetail: 'Founder', start: 1974 },
+    ],
+    notes: 'Member of the Design Institute of Australia Hall of Fame.',
+  },
+  janeParker: {
+    name: 'Jane Parker',
+    career: [
+      { house: 'countryRoad', role: 'Founder', roleDetail: 'Co-founder, directed the collections', start: 1975, approximate: true },
+    ],
+    notes: 'Sister of Stephen Bennett, joining Country Road shortly after it began. Member of the Design Institute of Australia Hall of Fame.',
+  },
+  sophieHolt: {
+    name: 'Sophie Holt',
+    career: [
+      { house: 'countryRoad', role: 'Creative Director', start: 2003, end: 2016, approximate: true },
+    ],
+    notes: 'Began at Sportsgirl, then worked at Seed and was head designer at Witchery for six years. Became creative director of Oroton in 2018. These labels are not represented here.',
+  },
+  clarrieMance: {
+    name: 'Clarrie Mance',
+    career: [
+      { house: 'windsorSmith', role: 'Founder', roleDetail: 'Founder', start: 1946 },
+    ],
+    notes: 'The Mance family still runs Windsor Smith.',
+  },
+  parLundqvist: {
+    name: 'Pär Lundqvist',
+    nationality: 'Swedish',
+    career: [
+      { house: 'neuwDenim', role: 'Founder', roleDetail: 'Co-founder, design director', start: 2009, end: null },
+    ],
+  },
+  richardBell: {
+    name: 'Richard Bell',
+    career: [
+      { house: 'neuwDenim', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
+    ],
+  },
+  stephenLittle: {
+    name: 'Stephen Little',
+    career: [
+      { house: 'neuwDenim', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
+    ],
+    notes: 'Also known as Steve Little. Co-founder and chief executive of ThreeByOne.',
+  },
+  johnCondilis: {
+    name: 'John Condilis',
+    career: [
+      { house: 'nobodyDenim', role: 'Founder', roleDetail: 'Co-founder', start: 1999 },
+    ],
+    notes: 'Trained in mechanical engineering and joined the denim laundry opened by father Jim Condilis in 1992. Later consulted on Outland Denim’s Cambodian factory.',
+  },
+  nickCondilis: {
+    name: 'Nick Condilis',
+    career: [
+      { house: 'nobodyDenim', role: 'Founder', roleDetail: 'Co-founder', start: 1999 },
+    ],
+  },
+  wesleyHartwell: {
+    name: 'Wesley Hartwell',
+    nationality: 'British',
+    career: [
+      { house: 'nobodyDenim', role: 'Creative Director' },
+    ],
+    notes: 'Joined Nobody Denim in sales and marketing before becoming its creative director; worked from New York.',
+  },
+  leonieRutherford: {
+    name: 'Leonie Rutherford',
+    career: [
+      { house: 'nobodyDenim', role: 'Head Designer' },
+    ],
+  },
+  bekMcQuoid: {
+    name: 'Bek McQuoid',
+    career: [
+      { house: 'nobodyDenim', role: 'Other', roleDetail: 'Design and development director' },
+    ],
+  },
+  fionaScanlan: {
+    name: 'Fiona Scanlan',
+    career: [
+      { house: 'scanlanTheodore', role: 'Founder', roleDetail: 'Co-founder, designer', start: 1987, end: 2002 },
+    ],
+  },
+  garyTheodore: {
+    name: 'Gary Theodore',
+    career: [
+      { house: 'scanlanTheodore', role: 'Founder', roleDetail: 'Co-founder, design direction', start: 1987, end: null },
+    ],
+  },
+  mariaSita: {
+    name: 'Maria Sita',
+    career: [
+      { house: 'scanlanTheodore', role: 'Creative Director', end: null },
+    ],
+    notes: 'Has shared design direction with Gary Theodore for more than 25 years; titled head of design in 2024 coverage and creative director by the brand.',
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 

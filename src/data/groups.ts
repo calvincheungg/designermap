@@ -171,6 +171,10 @@ export enum GroupId {
   WHPGlobal = 'whpGlobal',
   ACON = 'acon',
   NewellBrands = 'newellBrands',
+  LPP = 'lpp',
+  WoolworthsHoldings = 'woolworthsHoldings',
+  ThreeByOne = 'threeByOne',
+  Maeka = 'maeka',
 }
 
 /** Group profiles. Brand membership lives only in houses.ts (parentGroup). */
@@ -615,7 +619,7 @@ export const groups = {
   },
   [GroupId.Itochu]: {
     name: 'Itochu Corporation',
-    description: 'A Japanese trading and investment company with a textile business that includes Descente.',
+    description: 'A Japanese trading and investment company with a textile business that includes Descente and LeSportsac.',
     website: 'https://www.itochu.co.jp/en/',
     notes: 'Descente became a wholly owned subsidiary following the 2024 tender offer and subsequent procedures in 2025.',
   },
@@ -1110,5 +1114,28 @@ export const groups = {
     description: 'An American consumer goods company whose outdoor and recreation brands include Marmot and Coleman.',
     website: 'https://www.newellbrands.com/our-brands',
     notes: 'Acquired Marmot with Jarden in April 2016 and kept it when it sold the former Jarden winter sports brands in 2017.',
+  },
+  [GroupId.LPP]: {
+    name: 'LPP',
+    description: 'Publicly listed Polish fashion company based in Gdańsk, operating Reserved, Sinsay, Cropp, House and Mohito.',
+    website: 'https://www.lpp.com',
+    notes: 'Acquired Artman, the Kraków owner of House and Mohito, in 2008 and merged with it in July 2009.',
+  },
+  [GroupId.WoolworthsHoldings]: {
+    name: 'Woolworths Holdings',
+    description: 'South African retail group behind the Woolworths stores and Australia’s Country Road Group. Unrelated to the Australian supermarket chain Woolworths.',
+    website: 'https://www.woolworthsholdings.co.za',
+    notes: 'Gained control of Country Road in 1998 and full ownership in 2014.',
+  },
+  [GroupId.ThreeByOne]: {
+    name: 'ThreeByOne',
+    description: 'Privately owned Melbourne denim company behind Neuw Denim, Rolla’s, Abrand and the Service Denim Store shops.',
+    website: 'https://www.linkedin.com/company/threebyone-pty-ltd',
+  },
+  [GroupId.Maeka]: {
+    name: 'Maeka Group',
+    description: 'Australian denim company formerly known as Outland Denim Group, with its own cut-and-sew factory and wash house in Cambodia.',
+    website: 'https://outlanddenim.com',
+    notes: 'Bought the assets of Nobody Denim in October 2023.',
   },
 } satisfies Record<GroupId, GroupData>;

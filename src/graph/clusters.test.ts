@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { buildClusterLevels, clusterLevel, type ClusterCity } from './clusters';
-import { housesByMapLocation, project } from './geo';
-import { clusterLabel, isMajorCity, mapLocationCoordinates, TOP_CITY_COUNT, topCities } from './locations';
+import { countryCenter, housesByMapLocation, project } from './geo';
+import { cityRegions, type CityName } from '../data/cities';
+import { CountryCode } from '../data/countries';
+import { areaLabel, clusterLabel, isMajorCity, mapCountryForHouse, mapLocationCoordinates, TOP_CITY_COUNT, topCities } from './locations';
 
 const city = (name: string, x: number, count = 1): ClusterCity => ({
-  city: name, tip: { x, y: 0 }, count, major: isMajorCity(name, count),
+  city: name, tip: { x, y: 0 }, count, major: isMajorCity(count), country: 'FR',
 });
 
 describe('top cities (red pins)', () => {
@@ -25,56 +27,76 @@ describe('top cities (red pins)', () => {
   });
 });
 
-describe('zoom-dependent regional clusters', () => {
-  it('protects cities with exactly five main brands and explicit major cities with fewer brands', () => {
-    expect(isMajorCity('Small city', 4)).toBe(false);
-    expect(isMajorCity('Small city', 5)).toBe(true);
-    expect(isMajorCity('Small city', 6)).toBe(true);
-    expect(isMajorCity('Paris', 1)).toBe(true);
-    const levels = buildClusterLevels([city('Small city', 0, 5), city('Paris', 1), city('Village A', 2), city('Village B', 3)]);
-    expect(levels[0]!.flatMap(cluster => cluster.members).sort()).toEqual(['Village A', 'Village B']);
+describe('zoom-dependent country and region clusters', () => {
+  it('protects cities by brand count alone', () => {
+    expect([4, 5, 6].map(isMajorCity)).toEqual([false, true, true]);
+    const levels = buildClusterLevels([city('Small city', 0, 5), city('Paris', 1), city('Village', 2)]);
+    expect(levels[0]!.flatMap(cluster => cluster.members).sort()).toEqual(['Paris', 'Village']);
   });
 
-  it('splits nested clusters progressively, keeping isolated cities and all geographic coordinates', () => {
-    const cities = [city('A', 0), city('B', 20), city('C', 90), city('D', 110), city('E', 1000)];
+  it('groups by state in the US and by country elsewhere, then proximity, only splitting as it zooms in', () => {
+    const us = (name: string, x: number, region: string) => ({ ...city(name, x), country: 'US', region });
+    const cities = [us('A', 0, 'Maine'), us('B', 5, 'Maine'), us('C', 10, 'Ohio'), us('D', 900, 'Ohio'),
+      ...[0, 5, 10, 15, 200].map((x, i) => city(`F${i}`, x)), { ...city('Lone', 3), country: 'BE' }];
     const original = structuredClone(cities);
     const levels = buildClusterLevels(cities);
-    expect(levels[0]!.map(cluster => cluster.members)).toContainEqual(['A', 'B', 'C', 'D']);
-    expect(levels[0]!.map(cluster => cluster.members)).toContainEqual(['E']);
-    expect(levels[levels.length - 1]!.every(cluster => cluster.members.length === 1)).toBe(true);
-    for (let level = 1; level < levels.length; level++) {
-      for (const cluster of levels[level]!) {
-        expect(levels[level - 1]!.some(parent => cluster.members.every(member => parent.members.includes(member)))).toBe(true);
-      }
+    const ids = (level: number) => levels[level]!.map(cluster => cluster.id).sort();
+    expect(ids(0)).toEqual(['c:Lone', 'cluster:FR', 'cluster:US/Maine', 'cluster:US/Ohio']);
+    expect(ids(1)).toEqual(['c:A', 'c:B', 'c:C', 'c:D', 'c:F4', 'c:Lone', 'cluster:F0|F1|F2|F3']);
+    expect(levels[3]!.every(cluster => cluster.members.length === 1)).toBe(true);
+    for (let level = 1; level < levels.length; level++) for (const cluster of levels[level]!) {
+      expect(levels[level - 1]!.some(parent => cluster.members.every(member => parent.members.includes(member)))).toBe(true);
     }
     expect(cities).toEqual(original);
-    expect(buildClusterLevels([...cities].reverse())).toEqual(levels);
   });
 
-  it('requires four city pins, rather than four brands, and keeps Beirut and Tel Aviv separate', () => {
-    const pair = ['Beirut', 'Tel Aviv'].map(name => ({ ...city(name, 0), tip: project(mapLocationCoordinates(name)) }));
-    expect(buildClusterLevels(pair)[0]!.map(cluster => cluster.members)).toEqual([['Beirut'], ['Tel Aviv']]);
-    const cities = [city('A', 0, 4), city('B', 5, 4), city('C', 10, 4)];
-    expect(buildClusterLevels(cities).every(level => level.every(cluster => cluster.members.length === 1))).toBe(true);
-    cities.push(city('D', 15));
-    expect(buildClusterLevels(cities)[0]!.map(cluster => cluster.members)).toEqual([['A', 'B', 'C', 'D']]);
+  it('places area pins on a member city and keeps Beirut and Tel Aviv separate', () => {
+    const levels = buildClusterLevels([city('A', 0), city('B', 90), city('C', 1000)]);
+    expect(levels[0]![0]!.tip).toEqual({ x: 90, y: 0 });
+    const pair = [{ ...city('Beirut', 0), country: 'LB' }, { ...city('Tel Aviv', 1), country: 'IL' }];
+    expect(buildClusterLevels(pair).every(level => level.length === 2)).toBe(true);
   });
 
-  it('bounds cluster extents instead of joining long chains of nearby cities', () => {
-    const cities = Array.from({ length: 20 }, (_, i) => city(String(i), i * 25));
-    for (const cluster of buildClusterLevels(cities)[0]!) {
+  it('places country pins in the middle of the country, leaving state pins on a city', () => {
+    const at = { x: 50, y: 20 };
+    expect(buildClusterLevels([city('A', 0), city('B', 90)], () => at)[0]![0]!.tip).toEqual(at);
+    const states = ['A', 'B'].map((name, x) => ({ ...city(name, x), country: 'US', region: 'Maine' }));
+    expect(buildClusterLevels(states, () => at)[0]![0]!.tip).not.toEqual(at);
+  });
+
+  it('finds the middle of real countries, ignoring overseas land', () => {
+    const near = (code: CountryCode, lat: number, lng: number, within = 40) => {
+      const center = countryCenter(code)!, expected = project([lat, lng]);
+      expect(Math.hypot(center.x - expected.x, center.y - expected.y), code).toBeLessThan(within);
+    };
+    near(CountryCode.Australia, -25.5, 134.5);
+    near(CountryCode.France, 46.6, 2.5);
+    near(CountryCode.UnitedKingdom, 53.5, -2);
+    near(CountryCode.Norway, 64.2, 13.6);
+    near(CountryCode.Vietnam, 16.5, 107);
+    expect(countryCenter(CountryCode.HongKong)).toBeUndefined();
+    const missing = Object.values(CountryCode).filter(code => !countryCenter(code));
+    expect(missing.sort()).toEqual([CountryCode.HongKong, CountryCode.Singapore].sort());
+  });
+
+  it('bounds proximity clusters instead of joining long chains of nearby cities', () => {
+    const cities = Array.from({ length: 20 }, (_, i) => city(String(i), i * 10));
+    for (const cluster of buildClusterLevels(cities)[1]!) {
       const xs = cluster.members.map(name => cities.find(city => city.city === name)!.tip.x);
-      expect(Math.max(...xs) - Math.min(...xs)).toBeLessThanOrEqual(256);
+      expect(Math.max(...xs) - Math.min(...xs)).toBeLessThanOrEqual(64);
     }
   });
 
   it('uses discrete levels and guarantees individual city pins at close zoom', () => {
-    expect([0.3, 0.599, 0.6, 1.2, 2.4, 4.8, 8].map(clusterLevel)).toEqual([0, 0, 1, 2, 3, 4, 4]);
+    expect([0.3, 0.599, 0.6, 1.2, 2.4, 4.8, 8].map(clusterLevel)).toEqual([0, 0, 0, 1, 2, 3, 3]);
     expect(buildClusterLevels([]).every(level => level.length === 0)).toBe(true);
   });
 
   it('covers each non-major city exactly once at every level and reduces the real overview pin count', () => {
-    const cities = [...housesByMapLocation()].map(([name, houses]) => city(name, 0, houses.filter(house => !house.parentHouse).length));
+    const cities = [...housesByMapLocation()].map(([name, houses]) => ({
+      ...city(name, 0, houses.filter(house => !house.parentHouse).length),
+      country: mapCountryForHouse(houses[0]!.id), region: cityRegions[name as CityName]?.region,
+    }));
     cities.forEach(city => { city.tip = project(mapLocationCoordinates(city.city)); });
     const expected = cities.filter(city => !city.major).map(city => city.city).sort();
     const levels = buildClusterLevels(cities);
@@ -83,6 +105,9 @@ describe('zoom-dependent regional clusters', () => {
   });
 
   it('labels geographic clusters without renaming their underlying cities', () => {
+    expect(areaLabel({ country: CountryCode.Italy })).toBe('Italy');
+    expect(areaLabel({ country: CountryCode.Norway })).toBe('Norway');
+    expect(areaLabel({ country: CountryCode.UnitedStates, region: 'Maine' })).toBe('Maine');
     expect(clusterLabel(['Gardena', 'Irvine'], 'Gardena')).toBe('Southern California');
     expect(clusterLabel(['Denver', 'Broomfield'], 'Denver')).toBe('Colorado');
     expect(clusterLabel(['A', 'B'], 'A')).toBe('A area');
