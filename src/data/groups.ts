@@ -175,6 +175,8 @@ export enum GroupId {
   WoolworthsHoldings = 'woolworthsHoldings',
   ThreeByOne = 'threeByOne',
   Maeka = 'maeka',
+  ELand = 'eLand',
+  OVS = 'ovs',
 }
 
 /** Group profiles. Brand membership lives only in houses.ts (parentGroup). */
@@ -524,7 +526,7 @@ export const groups = {
   },
   [GroupId.VivaGoods]: {
     name: 'Viva Goods',
-    description: 'A Hong Kong-listed apparel and footwear group with a controlling 51% interest in Clarks.',
+    description: 'A Hong Kong-listed apparel and footwear group with a controlling 51% interest in Clarks and full ownership of testoni.',
     website: 'https://www.vivagoods.hk/en/about-us/',
   },
   [GroupId.ACON]: {
@@ -1137,5 +1139,17 @@ export const groups = {
     description: 'Australian denim company formerly known as Outland Denim Group, with its own cut-and-sew factory and wash house in Cambodia.',
     website: 'https://outlanddenim.com',
     notes: 'Bought the assets of Nobody Denim in October 2023.',
+  },
+  [GroupId.ELand]: {
+    name: 'E-Land',
+    description: 'South Korean fashion and retail group that owns Mandarina Duck.',
+    website: 'https://www.eland.co.kr',
+    notes: 'Took control of Mandarina Duck in 2011.',
+  },
+  [GroupId.OVS]: {
+    name: 'OVS',
+    description: 'Publicly listed Italian clothing retailer based in Mestre, Venice, whose brands include Piombo, Stefanel and Les Copains.',
+    website: 'https://www.ovscorporate.it',
+    notes: 'Bought the Les Copains brand out of bankruptcy in 2022 and relaunched it in OVS stores in 2025.',
   },
 } satisfies Record<GroupId, GroupData>;

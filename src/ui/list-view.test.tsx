@@ -11,7 +11,7 @@ const brands = getSheet('brands');
 const rows = () => brands.rows();
 const houseOf = (key: string) => houses.find((house) => house.id === key)!;
 
-describe('List View sheet logic', () => {
+describe('Spreadsheet sheet logic', () => {
   it('letters columns like Excel', () => {
     expect([0, 1, 25, 26, 27].map(columnLetter)).toEqual(['A', 'B', 'Z', 'AA', 'AB']);
   });
@@ -130,7 +130,7 @@ describe('List View sheet logic', () => {
   });
 });
 
-describe('List View computed columns, charts, pivots and ranges', () => {
+describe('Spreadsheet computed columns, charts, pivots and ranges', () => {
   const col = (id: string) => brands.columns.findIndex((column) => column.id === id);
   it('adds creative director, collaboration and sublabel columns to Brands', () => {
     for (const row of rows().slice(0, 300)) {
@@ -342,7 +342,7 @@ describe('ListViewContent', () => {
     const { user } = setup();
     expect(firstRow().querySelector('td')!.className).toContain('xl-frozen');
     await user.click(screen.getByRole('menuitem', { name: 'Window' }));
-    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Freeze Panes' }));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Freeze First Column' }));
     expect(firstRow().querySelector('td')!.className).not.toContain('xl-frozen');
     expect(screen.getByRole('region', { name: 'Brands worksheet' }).className).toContain('grey-ended');
     await user.click(screen.getByRole('menuitem', { name: 'Format' }));
@@ -462,6 +462,38 @@ describe('ListViewContent', () => {
     const letter = within(table()).getAllByRole('row')[0]!.querySelectorAll('th')[4]!;
     fireEvent.pointerDown(letter, { button: 0 });
     expect(screen.getByLabelText('AutoCalculate').textContent).toContain(`Count=${houses.filter((h) => h.founded !== undefined).length.toLocaleString()}`);
+  });
+
+  it('drags across column letters to select and copy just those columns', async () => {
+    const { user } = setup();
+    const writeText = vi.fn((_text: string) => Promise.resolve());
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    const letters = within(table()).getAllByRole('row')[0]!.querySelectorAll('th');
+    fireEvent.pointerDown(letters[2]!, { button: 0, buttons: 1 });
+    fireEvent.pointerEnter(letters[3]!, { buttons: 1 });
+    fireEvent.pointerUp(window);
+    const cells = within(table()).getAllByRole('row')[2]!.querySelectorAll('td');
+    expect([...cells].slice(0, 4).map((cell) => cell.classList.contains('in-range'))).toEqual([false, true, true, false]);
+    await user.keyboard('{Control>}c{/Control}');
+    const lines = writeText.mock.calls[0]![0].split('\n');
+    expect(lines).toHaveLength(houses.length + 1);
+    expect(lines[0]).toBe(`${brands.columns[1]!.label}\t${brands.columns[2]!.label}`);
+  });
+
+  it('drags over cells, starting on a link, without selecting text, following it or losing focus', () => {
+    const { onSelect } = setup();
+    const cells = () => within(table()).getAllByRole('row').slice(2, 5).map((r) => r.querySelectorAll('td'));
+    const link = cells()[0]![0]!.querySelector('a, button')!;
+    fireEvent.pointerDown(link, { button: 0, buttons: 1 });
+    expect(fireEvent.mouseDown(link, { button: 0 })).toBe(false);
+    expect(document.activeElement).toBe(screen.getByRole('region', { name: 'Brands worksheet' }));
+    fireEvent.pointerEnter(cells()[2]![0]!, { buttons: 1 });
+    expect(cells()[1]![0]!.className).toContain('in-range');
+    expect(cells()[1]![1]!.className).not.toContain('in-range');
+    fireEvent.pointerEnter(cells()[0]![0]!, { buttons: 1 });
+    fireEvent.pointerUp(window);
+    fireEvent.click(link, { detail: 1 });
+    expect(onSelect).not.toHaveBeenCalled();
   });
 
   it('charts a column and filters the sheet from a bar', async () => {

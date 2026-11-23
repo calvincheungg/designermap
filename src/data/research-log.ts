@@ -76,9 +76,31 @@ export const collabSearches = {
   dime: { date: '2026-11-23', complete: true, lastPage: 11, oldestYear: 2014 },
   dior: { date: '2026-11-18', complete: true, lastPage: 53, oldestYear: 2008 },
   drMartens: { date: '2026-11-18', complete: true, lastPage: 36, oldestYear: 2007 },
+  dunhill: { date: '2026-11-23', complete: true, lastPage: 2, oldestYear: 2009 },
+  dunst: { date: '2026-11-23', complete: true, noArchive: true },
+  // /brands/ page redirects; crawled /tags/duran-lantink.
+  duranLantinkLabel: { date: '2026-11-23', complete: true, lastPage: 1, oldestYear: 2019 },
+  duroOlowu: { date: '2026-11-23', complete: true, noArchive: true },
+  dynamite: { date: '2026-11-23', complete: true, noArchive: true },
+  dzhus: { date: '2026-11-23', complete: true, noArchive: true },
+  // /brands/ page redirects; crawled /tags/eat-dust, plus the brand's own journal.
+  eatDust: { date: '2026-11-23', complete: true, lastPage: 1, oldestYear: 2015 },
   // Crawled /tags/ebbets-field-flannels, /tags/ebbets-field (2 pages) and /tags/ebbets (1 page).
   ebbetsFieldFlannels: { date: '2026-11-23', complete: true, lastPage: 6, oldestYear: 2011 },
   eckhausLatta: { date: '2026-11-18', complete: true },
+  // /brands/ page redirects; crawled /tags/ecko-unltd, /tags/ecko and /tags/marc-ecko.
+  eckoUnltd: { date: '2026-11-23', complete: true, lastPage: 1, oldestYear: 2008 },
+  // Crawled /tags/ecole-de-pensee.
+  ecoleDePensee: { date: '2026-11-23', complete: true, lastPage: 1, oldestYear: 2017 },
+  elisabettaFranchi: { date: '2026-11-23', complete: true, noArchive: true },
+  elizabethAndJames: { date: '2026-11-23', complete: true, noArchive: true },
+  // /brands/ page redirects; crawled /tags/elwood.
+  elwood: { date: '2026-11-23', complete: true, lastPage: 1, oldestYear: 2008 },
+  emmelRefines: { date: '2026-11-23', complete: true, noArchive: true },
+  // /brands/ page redirects; crawled /tags/enfin-leve.
+  enfinLeve: { date: '2026-11-23', complete: true, lastPage: 1, oldestYear: 2014 },
+  // /brands/ page redirects; crawled /tags/ernest-w-baker.
+  ernestWBaker: { date: '2026-11-23', complete: true, lastPage: 1, oldestYear: 2023 },
   extraButter: { date: '2026-11-19', complete: true, lastPage: 9, oldestYear: 2008 },
   faherty: { date: '2026-11-19', complete: true, noArchive: true },
   fila: { date: '2026-11-18', complete: true },

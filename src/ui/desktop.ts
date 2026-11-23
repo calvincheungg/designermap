@@ -8,7 +8,7 @@ export const MAX_DESIGNER_WINDOWS = 10;
 /** City and country windows open at once, counted separately from Properties. */
 export const MAX_LOCATION_WINDOWS = 10;
 
-/** Single-instance tool windows: Statistics, the Recycle Bin of ended brands, the What's Missing report, Help, Run, the List View sheet, Settings, My Computer and Notepad. */
+/** Single-instance tool windows: Statistics, the Recycle Bin of ended brands, the What's Missing report, Help, Run, the Spreadsheet, Settings, My Computer and Notepad. */
 export type ToolId = 'stats' | 'recycle' | 'missing' | 'help' | 'run' | 'list' | 'settings' | 'computer' | 'notepad';
 export type ToolItem = { kind: 'tool'; id: ToolId };
 export const tool = (id: ToolId): ToolItem => ({ kind: 'tool', id });

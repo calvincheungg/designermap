@@ -13,7 +13,7 @@ export function cleanFileName(name: string, extension: string) {
 /**
  * Win98's Save As box: edit the file name; the extension and file type are
  * fixed. Save (or Enter) calls `onSave` with the full name, Cancel or Escape
- * closes it. Laid over its window, like the List View dialogs.
+ * closes it. Laid over its window, like the Spreadsheet dialogs.
  */
 export function SaveAsDialog({ defaultName, extension, typeLabel, onSave, onCancel }: {
   defaultName: string; extension: string;

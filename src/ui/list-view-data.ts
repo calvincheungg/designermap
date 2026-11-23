@@ -6,7 +6,7 @@ import { tagLabel } from './labels';
 import type { Place } from './panel';
 
 /**
- * The List View workbook's data: one sheet per kind of record, and the sheet
+ * The Spreadsheet workbook's data: one sheet per kind of record, and the sheet
  * operations (sort, AutoFilter, search, CSV, AutoFit). Nothing here touches the
  * map or React; ui/list-view.tsx draws it.
  */
@@ -44,6 +44,8 @@ export interface SheetRow {
   open: CellLink;
   /** Drawn in grey when Format ▸ Grey Out Ended Brands is on. */
   ended?: boolean;
+  /** A subtotal line (Data ▸ Subtotals…), not a record: its group, or the grand total. */
+  subtotal?: { group: string; grand: boolean };
 }
 export type SheetId = 'brands' | 'groups' | 'designers' | 'careers' | 'collaborations' | 'locations';
 export interface SortKey { column: string; descending: boolean }
@@ -251,7 +253,10 @@ export const CUSTOM_OPS = [
 export type CustomOp = typeof CUSTOM_OPS[number][0];
 export interface Condition { op: CustomOp; operand: string }
 export type ColumnFilter =
-  | { kind: 'value'; value: string } | { kind: 'blanks' } | { kind: 'nonBlanks' }
+  | { kind: 'value'; value: string }
+  /** Several ticked values (and blanks). */
+  | { kind: 'values'; values: readonly string[]; blanks: boolean }
+  | { kind: 'blanks' } | { kind: 'nonBlanks' }
   /** (Custom...): one or two conditions joined by And / Or. */
   | { kind: 'custom'; conditions: readonly [Condition] | readonly [Condition, Condition]; join: 'and' | 'or' }
   /** (Top 10...): the largest or smallest values of a number column, by count or percent of rows. */
@@ -286,6 +291,7 @@ export function matchesCondition(values: readonly string[], { op, operand }: Con
 /** Does one cell pass its column's filter? (Top 10 needs the whole column: see `filterSheet`.) */
 export function matchesColumnFilter(values: readonly string[], filter: Exclude<ColumnFilter, { kind: 'top' }>, numeric = false): boolean {
   if (filter.kind === 'value') return values.includes(filter.value);
+  if (filter.kind === 'values') return values.length ? values.some((value) => filter.values.includes(value)) : filter.blanks;
   if (filter.kind === 'blanks') return !values.length;
   if (filter.kind === 'nonBlanks') return values.length > 0;
   const results = filter.conditions.map((condition) => matchesCondition(values, condition, numeric));
@@ -320,6 +326,10 @@ export function filterSheet(sheet: Sheet, rows: readonly SheetRow[], filters: Li
 
 const opLabel = (op: CustomOp) => CUSTOM_OPS.find(([value]) => value === op)![1];
 export const filterLabel = (filter: ColumnFilter) => filter.kind === 'value' ? filter.value
+  : filter.kind === 'values' ? (() => {
+    const names = [...filter.values, ...(filter.blanks ? ['(Blanks)'] : [])];
+    return names.length > 3 ? `${names.slice(0, 2).join(', ')} + ${names.length - 2} more` : names.join(', ');
+  })()
   : filter.kind === 'blanks' ? '(Blanks)' : filter.kind === 'nonBlanks' ? '(NonBlanks)'
   : filter.kind === 'top' ? `${filter.bottom ? 'Bottom' : 'Top'} ${filter.amount}${filter.percent ? '%' : ''}`
   : filter.conditions.map((c) => `${opLabel(c.op)} "${c.operand}"`).join(filter.join === 'and' ? ' and ' : ' or ');
@@ -472,10 +482,12 @@ export function pivotTable(sheet: Sheet, rows: readonly SheetRow[], rowCol: numb
 /* ---------- a selected range: AutoCalculate and Copy ---------- */
 
 /** The status bar's AutoCalculate over a range: non-blank cells, and Sum / Average / Min / Max of single numbers in number columns. */
-export function rangeStats(sheet: Sheet, rows: readonly SheetRow[], columns: readonly number[]) {
+export function rangeStats(sheet: Sheet, rows: readonly SheetRow[], columns: readonly number[], included?: (row: number, column: number) => boolean) {
   let count = 0;
   const numbers: number[] = [];
-  for (const row of rows) for (const col of columns) {
+  for (const [r, row] of rows.entries()) for (const [c, col] of columns.entries()) {
+    // Subtotal lines would count their rows twice.
+    if (row.subtotal || (included && !included(r, c))) continue;
     const cell = row.cells[col]!;
     if (!cell.length) continue;
     count++;
@@ -483,7 +495,7 @@ export function rangeStats(sheet: Sheet, rows: readonly SheetRow[], columns: rea
   }
   if (!numbers.length) return { count };
   const sum = numbers.reduce((total, n) => total + n, 0);
-  return { count, numbers: numbers.length, sum, average: sum / numbers.length, min: Math.min(...numbers), max: Math.max(...numbers) };
+  return { count, numbers: numbers.length, sum, average: sum / numbers.length, min: numbers.reduce((a, b) => Math.min(a, b)), max: numbers.reduce((a, b) => Math.max(a, b)) };
 }
 
 /** A range as tab-separated text, which pastes cell for cell into Excel or Google Sheets; `header` adds the field names first. */
@@ -491,4 +503,137 @@ export function rangeTsv(sheet: Sheet, rows: readonly SheetRow[], columns: reado
   const clean = (text: string) => text.replace(/[\t\r\n]+/g, ' ');
   const lines = [...(header ? [columns.map((col) => clean(sheet.columns[col]!.label))] : []), ...rows.map((row) => columns.map((col) => clean(cellText(row, col))))];
   return lines.map((line) => line.join('\t')).join('\n');
+}
+
+/** A range as an HTML table for the clipboard: bold field names and links survive pasting into Excel, Sheets or a document. */
+export function rangeHtml(rows: readonly SheetRow[], columns: readonly number[], sheet: Sheet, header: boolean, href: (link: CellLink) => string | undefined): string {
+  const safe = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  // Text cells say so, or names like 032c, 3.1 and 424 would paste as numbers.
+  const cell = (row: SheetRow, col: number) => {
+    const content = row.cells[col]!.map((value, i) => {
+      const link = row.links[col]?.[i], target = link && href(link);
+      return target ? `<a href="${safe(target)}">${safe(value)}</a>` : safe(value);
+    }).join(', ');
+    const numeric = sheet.columns[col]!.numeric || row.subtotal;
+    return `<td${numeric ? '' : ` style="mso-number-format:'\\@'"`}>${row.subtotal ? `<b>${content}</b>` : content}</td>`;
+  };
+  return `<meta charset="utf-8"><table>${header ? `<tr>${columns.map((col) => `<th align="left"><b>${safe(sheet.columns[col]!.label)}</b></th>`).join('')}</tr>` : ''}${rows.map((row) => `<tr>${columns.map((col) => cell(row, col)).join('')}</tr>`).join('')}</table>`;
+}
+
+/* ---------- Edit ▸ Find ---------- */
+
+export interface FindOptions { text: string; matchCase: boolean; whole: boolean; by: 'rows' | 'columns' }
+/** Does one cell's text match? Case and accents are ignored unless Match case is on. */
+export function findMatches(text: string, { text: query, matchCase, whole }: Pick<FindOptions, 'text' | 'matchCase' | 'whole'>): boolean {
+  const [a, b] = matchCase ? [text, query] : [fold(text), fold(query)];
+  return whole ? a.trim() === b.trim() : a.includes(b);
+}
+
+/* ---------- Data ▸ Subtotals… ---------- */
+
+export const SUBTOTAL_FNS = [['count', 'Count'], ['sum', 'Sum'], ['average', 'Average'], ['max', 'Max'], ['min', 'Min']] as const;
+export type SubtotalFn = typeof SUBTOTAL_FNS[number][0];
+export interface Subtotals { by: string; fn: SubtotalFn; columns: readonly string[] }
+/** The collapse key of the grand total (outline level 1). */
+export const GRAND = '\u0000grand';
+
+/** Subtotals group on one column, so it always sorts first; the sheet's own sort orders rows within a group. */
+export function effectiveSort(sort: ListSort, subtotals: Subtotals | null): ListSort {
+  if (!subtotals || sort[0]?.column === subtotals.by) return sort;
+  return [{ column: subtotals.by, descending: false }, ...sort.filter((key) => key.column !== subtotals.by)];
+}
+function subtotalValue(rows: readonly SheetRow[], col: number, fn: SubtotalFn): string[] {
+  if (fn === 'count') return [String(rows.reduce((n, row) => n + (row.cells[col]!.length ? 1 : 0), 0))];
+  const numbers = rows.flatMap((row) => row.cells[col]!.length === 1 ? [Number(row.cells[col]![0])] : []).filter(Number.isFinite);
+  if (!numbers.length) return [];
+  const sum = numbers.reduce((a, b) => a + b, 0);
+  const value = fn === 'sum' ? sum : fn === 'average' ? sum / numbers.length : numbers.reduce((a, b) => fn === 'max' ? Math.max(a, b) : Math.min(a, b));
+  return [String(Math.round(value * 100) / 100)];
+}
+/** Sorted rows with a subtotal line after each group and a grand total at the end. */
+export function subtotalLines(sheet: Sheet, rows: readonly SheetRow[], { by, fn, columns }: Subtotals): SheetRow[] {
+  const index = columnIndex(sheet, by);
+  if (index < 0 || !rows.length) return [...rows];
+  const label = SUBTOTAL_FNS.find(([id]) => id === fn)![1];
+  const line = (name: string, group: string, members: readonly SheetRow[], grand: boolean): SheetRow => ({
+    key: `subtotal:${group}`, name, links: [], menus: [], open: { kind: 'url', href: '' }, subtotal: { group, grand },
+    cells: sheet.columns.map((column, col) => col === index ? [name] : columns.includes(column.id) ? subtotalValue(members, col, fn) : []),
+  });
+  const out: SheetRow[] = [];
+  for (const [group, members] of Map.groupBy(rows, (row) => cellText(row, index) || BLANK_LABEL))
+    out.push(...members, line(`${group} ${label}`, group, members, false));
+  return [...out, line(`Grand ${label}`, GRAND, rows, true)];
+}
+/** The subtotal lines left when groups are collapsed to their totals. */
+export function collapseLines(sheet: Sheet, lines: readonly SheetRow[], by: string, collapsed: readonly string[]): SheetRow[] {
+  if (!collapsed.length) return [...lines];
+  const index = columnIndex(sheet, by), closed = new Set(collapsed);
+  return lines.filter((row) => row.subtotal ? row.subtotal.grand || !closed.has(GRAND) : !closed.has(GRAND) && !closed.has(cellText(row, index) || BLANK_LABEL));
+}
+
+/* ---------- the rows a sheet lists ---------- */
+
+export interface ListState { sort: ListSort; filters: ListFilters; search: string; hiddenRows: readonly string[]; subtotals: Subtotals | null; collapsed: readonly string[] }
+/** Sort, search, filter, hide, subtotal and collapse a sheet's rows, keeping the steps the window needs. */
+export function listRows(sheet: Sheet, { sort, filters, search, hiddenRows, subtotals, collapsed }: ListState) {
+  const sorted = sortSheet(sheet, sheet.rows(), effectiveSort(sort, subtotals));
+  const searched = searchSheet(sorted, search);
+  const filtered = filterSheet(sheet, searched, filters);
+  const hidden = new Set(hiddenRows);
+  const visible = hidden.size ? filtered.filter((row) => !hidden.has(row.key)) : filtered;
+  const lines = subtotals ? subtotalLines(sheet, visible, subtotals) : visible;
+  const shown = subtotals ? collapseLines(sheet, lines, subtotals.by, collapsed) : lines;
+  // Row numbers follow the sort, so a filter or search leaves gaps in them, as in Excel; subtotal lines are numbered too.
+  const numbers = new Map((subtotals ? lines : sorted).map((row, i) => [row.key, i + 2]));
+  return { sorted, searched, filtered, visible, lines, shown, numbers };
+}
+
+/* ---------- Format ▸ Conditional Formatting… ---------- */
+
+export const FORMAT_COLORS = [['Yellow', '#ffff99'], ['Green', '#ccffcc'], ['Blue', '#99ccff'], ['Rose', '#ff99cc'], ['Orange', '#ffcc99'], ['Lavender', '#cc99ff'], ['Turquoise', '#ccffff'], ['Grey', '#c0c0c0']] as const;
+/** One column's conditional format. */
+export type CellFormat =
+  | { kind: 'bars'; color: string }
+  /** Low red, middle yellow, high green. */
+  | { kind: 'scale' }
+  /** A colour per value (a market tier, a country…). */
+  | { kind: 'values' }
+  | { kind: 'highlight'; condition: Condition; color: string };
+const VALUE_COLORS = ['#99ccff', '#ffcc99', '#ccffcc', '#ff99cc', '#ffff99', '#cc99ff', '#ccffff', '#d9c3a5', '#b8d8ba', '#f4b6c2', '#c5cae9', '#ffe0b2'];
+const mix = (a: string, b: string, t: number) => `#${[1, 3, 5].map((i) => {
+  const x = parseInt(a.slice(i, i + 2), 16), y = parseInt(b.slice(i, i + 2), 16);
+  return Math.round(x + (y - x) * t).toString(16).padStart(2, '0');
+}).join('')}`;
+/** A column's paint: a cell fill, or a data bar's share of the cell (0–1). Scales run over the whole column, so filters don't recolour it. */
+export function formatPainter(sheet: Sheet, col: number, format: CellFormat): (row: SheetRow) => { fill?: string; bar?: number } | undefined {
+  const column = sheet.columns[col]!;
+  if (format.kind === 'highlight') return (row) => row.cells[col]!.length && matchesCondition(row.cells[col]!, format.condition, column.numeric) ? { fill: format.color } : undefined;
+  if (format.kind === 'values') {
+    const colors = new Map(columnValues(sheet, sheet.rows(), column.id).values.map((value, i) => [value, VALUE_COLORS[i % VALUE_COLORS.length]!]));
+    return (row) => { const fill = colors.get(row.cells[col]![0] ?? ''); return fill ? { fill } : undefined; };
+  }
+  const number = (row: SheetRow) => row.cells[col]!.length === 1 ? Number(row.cells[col]![0]) : NaN;
+  const numbers = sheet.rows().map(number).filter(Number.isFinite).sort((a, b) => a - b);
+  const low = numbers[0] ?? 0, high = numbers.at(-1) ?? 0, middle = numbers[Math.floor(numbers.length / 2)] ?? 0;
+  return (row) => {
+    const value = number(row);
+    if (!Number.isFinite(value)) return undefined;
+    // Counts start from 0; years would all look alike that way, so they start from the earliest.
+    const base = column.year ? low : Math.min(0, low);
+    if (format.kind === 'bars') return { bar: high === base ? 1 : Math.max(0.02, (value - base) / (high - base)) };
+    return { fill: value <= middle ? mix('#f8696b', '#ffeb84', middle === low ? 1 : (value - low) / (middle - low)) : mix('#ffeb84', '#63be7b', (value - middle) / (high - middle)) };
+  };
+}
+/** Keep only stored formats that still make sense. */
+export function validFormats(sheet: Sheet, stored: unknown): Partial<Record<string, CellFormat>> {
+  if (!stored || typeof stored !== 'object') return {};
+  const color = (value: unknown) => FORMAT_COLORS.some(([, hex]) => hex === value);
+  return Object.fromEntries(Object.entries(stored as Record<string, CellFormat | null>).filter(([id, format]) => {
+    const column = sheet.columns.find((c) => c.id === id);
+    if (!column || !format || typeof format !== 'object') return false;
+    if (format.kind === 'values') return true;
+    if (format.kind === 'scale') return !!column.numeric;
+    if (format.kind === 'bars') return !!column.numeric && color(format.color);
+    return format.kind === 'highlight' && color(format.color) && CUSTOM_OPS.some(([op]) => op === format.condition?.op) && typeof format.condition.operand === 'string';
+  })) as Partial<Record<string, CellFormat>>;
 }

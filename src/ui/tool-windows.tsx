@@ -164,7 +164,7 @@ export function HelpContent() {
         <li>Click a city pin to see its brands. Choose whether cities open in windows or on the map under Settings ▸ Clicking a city pin opens it.</li>
         <li>Click a brand to select it: the map shows its connections and its Properties window opens.</li>
         <li>Use the clock in the taskbar to pick a year, or press Play to watch the map grow over time.</li>
-        <li>Start ▸ List View shows every brand, group, designer, career role, collaboration and location in a spreadsheet, one sheet tab each. Right-click a cell to filter by it, drag or shift-click to select and copy a range, try Insert ▸ Chart and the PivotTable tab, and use File ▸ Save As CSV to export. Type in its formula bar to search. Its sorting, filters and search only change that list, never the map.</li>
+        <li>Start ▸ Spreadsheet lists every brand, group, designer, career role, collaboration and location, one sheet tab each. Right-click a cell to filter by it, drag or shift-click to select and copy a range, try Insert ▸ Chart and the PivotTable tab, and use File ▸ Save As CSV to export. Type in its formula bar to search. Its sorting, filters and search only change that list, never the map.</li>
         <li>Settings ▸ Map colours switches the map between Day and Night. Settings also sets the text size and holds the other display options.</li>
         <li>My Computer browses everything as folders: Locations (C:) by continent, country and city (states and provinces in the USA and Canada), Brands (D:) by market position, Groups (E:) and Designers (F:) A–Z. Backspace goes up a folder.</li>
         <li>Notepad keeps a note in this browser. Press F5 in it to insert the time and date, or use File ▸ Save As… to download it.</li>

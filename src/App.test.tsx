@@ -220,14 +220,14 @@ describe('React app graph integration', () => {
     expect(address.getAttribute('aria-expanded')).toBe('false');
   });
 
-  it('opens the List View sheet, whose filters leave the map alone', async () => {
+  it('opens the Spreadsheet, whose filters leave the map alone', async () => {
     const user = userEvent.setup();
     render(<App />);
     const graph = mocks.instances[0]!;
     await openStart(user);
-    await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'List View' }));
-    const sheet = screen.getByRole('dialog', { name: 'List View - Designer Map.xls' });
-    expect(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('button', { name: 'List View - Designer Map.xls' })).toBeTruthy();
+    await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'Spreadsheet' }));
+    const sheet = screen.getByRole('dialog', { name: 'Spreadsheet - Designer Map.xls' });
+    expect(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('button', { name: 'Spreadsheet - Designer Map.xls' })).toBeTruthy();
     const filterCalls = graph.setHouseFilter.mock.calls.length;
     await user.click(within(sheet).getByRole('button', { name: 'Filter Market' }));
     await user.click(screen.getByRole('option', { name: 'High Luxury' }));
@@ -235,12 +235,12 @@ describe('React app graph integration', () => {
     expect(graph.setHouseFilter.mock.calls.length).toBe(filterCalls);
     expect(screen.queryByRole('group', { name: 'Selected Filters' })).toBeNull();
     // Maximize (or View ▸ Full Screen) fills the map area; Restore puts it back.
-    await user.click(within(sheet).getByRole('button', { name: 'Maximize List View - Designer Map.xls' }));
+    await user.click(within(sheet).getByRole('button', { name: 'Maximize Spreadsheet - Designer Map.xls' }));
     expect(sheet.className).toContain('maximized');
     await user.click(within(sheet).getByRole('menuitem', { name: 'View' }));
     expect(screen.getByRole('menuitemcheckbox', { name: 'Full Screen' }).getAttribute('aria-checked')).toBe('true');
     await user.keyboard('{Escape}');
-    await user.click(within(sheet).getByRole('button', { name: 'Restore List View - Designer Map.xls' }));
+    await user.click(within(sheet).getByRole('button', { name: 'Restore Spreadsheet - Designer Map.xls' }));
     expect(sheet.className).not.toContain('maximized');
     localStorage.clear();
   });
@@ -280,7 +280,7 @@ describe('React app graph integration', () => {
     // Quick Launch, between Start and Search, opens the same shortcuts as the desktop icons.
     const quickLaunch = within(within(taskbar).getByRole('toolbar', { name: 'Quick Launch' }));
     expect(quickLaunch.getAllByRole('button').map((button) => button.getAttribute('aria-label')))
-      .toEqual(['Launch My Computer', 'Launch Explorer', 'Launch Recycle Bin', 'Launch Statistics', 'Launch List View', 'Launch Settings', 'Launch Notepad']);
+      .toEqual(['Launch My Computer', 'Launch Explorer', 'Launch Recycle Bin', 'Launch Statistics', 'Launch Spreadsheet', 'Launch Settings', 'Launch Notepad']);
     await user.click(quickLaunch.getByRole('button', { name: 'Launch Explorer' }));
     expect(map.hasAttribute('aria-hidden')).toBe(false);
     await user.click(quickLaunch.getByRole('button', { name: 'Launch Recycle Bin' }));
@@ -1116,14 +1116,14 @@ describe('Windows features', () => {
     localStorage.removeItem('designer-map:desktop-arrange');
     render(<App />);
     const labels = () => [...document.querySelectorAll('.desktop-icon-label')].map((label) => label.textContent);
-    expect(labels()).toEqual(['My Computer', 'Explorer', 'Recycle Bin', 'Statistics', 'List View', 'Settings', 'Notepad']);
+    expect(labels()).toEqual(['My Computer', 'Explorer', 'Recycle Bin', 'Statistics', 'Spreadsheet', 'Settings', 'Notepad']);
     const desktop = () => fireEvent.contextMenu(document.querySelector('.desktop-area')!, { clientX: 300, clientY: 300 });
     desktop();
     const menu = screen.getByRole('menu', { name: 'Desktop' });
     expect([...menu.querySelectorAll('button')].map((item) => item.textContent))
       .toEqual(['Arrange Icons by Name', '✓Arrange Icons by Type', 'Line Up Icons', 'Refresh', 'New Text Document', 'Properties']);
     await user.click(within(menu).getByRole('menuitemcheckbox', { name: 'Arrange Icons by Name' }));
-    expect(labels()).toEqual(['Explorer', 'List View', 'My Computer', 'Notepad', 'Recycle Bin', 'Settings', 'Statistics']);
+    expect(labels()).toEqual(['Explorer', 'My Computer', 'Notepad', 'Recycle Bin', 'Settings', 'Spreadsheet', 'Statistics']);
     expect(localStorage.getItem('designer-map:desktop-arrange')).toBe('name');
     desktop();
     await user.click(screen.getByRole('menuitem', { name: 'New Text Document' }));

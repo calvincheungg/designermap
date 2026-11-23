@@ -6270,7 +6270,10 @@ export const designers = {
   antonioMarras: {
     name: 'Antonio Marras',
     nationality: 'Italian',
-    career: [{ house: 'kenzo', role: 'Creative Director', start: 2003, end: 2011 }],
+    career: [
+      { house: 'lesCopains', role: 'Creative Director', roleDetail: 'Trend Les Copains', end: 2005, approximate: true },
+      { house: 'kenzo', role: 'Creative Director', start: 2003, end: 2011 },
+    ],
   },
   carolLim: {
     name: 'Carol Lim',
@@ -8486,6 +8489,10 @@ export const designers = {
     name: "Alessandro Dell'Acqua",
     nationality: 'Italian',
     career: [
+      { house: 'genny', role: 'Other', roleDetail: 'Designer' },
+      { house: 'lesCopains', role: 'Other', roleDetail: 'Designer' },
+      { house: 'laPerla', role: 'Creative Director', roleDetail: 'Ready-to-wear', start: 2002, end: 2008, approximate: true },
+      { house: 'lesCopains', role: 'Creative Director', start: 2012, end: 2013 },
       { house: 'n21', role: 'Founder', roleDetail: 'Founder and creative director', start: 2010, end: null, sources: ['https://www.numeroventuno.com/en/pages/about'] },
       { house: 'rochas', role: 'Creative Director', start: 2013, end: 2020, notes: 'Last collection February 2020.' },
     ],
@@ -20543,6 +20550,7 @@ export const designers = {
     born: 1984,
     nationality: 'Italian',
     career: [
+      { house: 'lesCopains', role: 'Other', roleDetail: 'Intern' },
       { house: 'robertoCavalli', role: 'Other', roleDetail: 'Designer' },
       { house: 'zuhairMurad', role: 'Other', roleDetail: 'Designer' },
       { house: 'dolceGabbana', role: 'Other', roleDetail: 'Head designer, Celebrity & Special Projects' },
@@ -21913,6 +21921,268 @@ export const designers = {
       { house: 'scanlanTheodore', role: 'Creative Director', end: null },
     ],
     notes: 'Has shared design direction with Gary Theodore for more than 25 years; titled head of design in 2024 coverage and creative director by the brand.',
+  },
+  adaMasotti: {
+    name: 'Ada Masotti',
+    nationality: 'Italian',
+    career: [
+      { house: 'laPerla', role: 'Founder', roleDetail: 'Founder, designer', start: 1954 },
+    ],
+    notes: 'Trained as a corset-maker. Passed the company to her son Alberto in 1981.',
+  },
+  olgaCantelli: {
+    name: 'Olga Cantelli Masotti',
+    nationality: 'Italian',
+    career: [
+      { house: 'laPerla', role: 'Other', roleDetail: 'Designer', start: 1972 },
+      { house: 'laPerla', role: 'Creative Director' },
+    ],
+    notes: 'Hired by Ada Masotti in 1972; became creative director after her husband Alberto took over the company in 1981. The family sold it in the late 2000s.',
+  },
+  steinunnSigurd: {
+    name: 'Steinunn Sigurðardóttir',
+    nationality: 'Icelandic',
+    career: [
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Designer' },
+      { house: 'calvinKlein', role: 'Other', roleDetail: 'Designer' },
+      { house: 'gucci', role: 'Other', roleDetail: 'Designer, under Tom Ford' },
+      { house: 'laPerla', role: 'Creative Director', roleDetail: 'Ready-to-wear', start: 2000, end: 2003, approximate: true },
+    ],
+    notes: 'Graduated from Parsons in 1986. Founded her own label, STEiNUNN, in 2000 and left La Perla to focus on it.',
+  },
+  pedroLourenco: {
+    name: 'Pedro Lourenço',
+    nationality: 'Brazilian',
+    career: [
+      { house: 'laPerla', role: 'Creative Director', start: 2016, end: 2016 },
+    ],
+    notes: 'Left when his contract ended in July 2016. Later founded the gender-fluid label Zilver.',
+  },
+  juliaHaart: {
+    name: 'Julia Haart',
+    born: 1971,
+    nationality: 'American',
+    career: [
+      { house: 'laPerla', role: 'Creative Director', start: 2016, end: 2018, approximate: true },
+    ],
+    notes: 'Moscow-born; worked on two seasons of La Perla accessories before her August 2016 appointment. Departure confirmed by 2018; accounts of its exact date differ. Founder of Body by Julia.',
+  },
+  alessandraBertuzzi: {
+    name: 'Alessandra Bertuzzi',
+    nationality: 'Italian',
+    career: [
+      { house: 'laPerla', role: 'Other', roleDetail: 'Design team', start: 1987, end: 2018, approximate: true },
+      { house: 'laPerla', role: 'Creative Director', roleDetail: 'Head creative designer', start: 2018 },
+    ],
+  },
+  nicoleRendone: {
+    name: 'Nicole Rendone',
+    nationality: 'Italian-American',
+    career: [
+      { house: 'victoriasSecret', role: 'Other', roleDetail: 'Senior designer, PINK' },
+      { house: 'nike', role: 'Other', roleDetail: 'Senior creative director, women’s bras and innovation', sources: ['https://connectionsbylebook.com/northamerica2021/jury/nicole-rendone'] },
+      { house: 'laPerla', role: 'Creative Director', roleDetail: 'Chief design officer and creative director', start: 2021, end: 2023, approximate: true },
+    ],
+  },
+  elisabettaFranchiDesigner: {
+    name: 'Elisabetta Franchi',
+    born: 1968,
+    nationality: 'Italian',
+    career: [
+      { house: 'elisabettaFranchi', role: 'Founder', roleDetail: 'Founder and designer', start: 1998, end: null },
+    ],
+    notes: 'Born in Bologna; opened a first atelier in 1995 before the company Betty Blue in 1998.',
+  },
+  deborahBaker: {
+    name: 'Deborah Baker',
+    nationality: 'British',
+    career: [
+      { house: 'fiorentiniBaker', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2001 },
+    ],
+    notes: 'Freelanced for various shoe companies before starting the label. Sole head of the company by 2014.',
+  },
+  paoloFiorentini: {
+    name: 'Paolo Fiorentini',
+    nationality: 'Italian',
+    career: [
+      { house: 'fiorentiniBaker', role: 'Founder', roleDetail: 'Co-founder', start: 2001 },
+    ],
+    notes: 'Interior designer; no longer part of the company by 2014.',
+  },
+  brunoMagliFounder: {
+    name: 'Bruno Magli',
+    nationality: 'Italian',
+    career: [
+      { house: 'brunoMagli', role: 'Founder', roleDetail: 'Co-founder', start: 1936 },
+    ],
+  },
+  marinoMagli: {
+    name: 'Marino Magli',
+    nationality: 'Italian',
+    career: [
+      { house: 'brunoMagli', role: 'Founder', roleDetail: 'Co-founder', start: 1936 },
+    ],
+  },
+  mariaMagli: {
+    name: 'Maria Magli',
+    nationality: 'Italian',
+    career: [
+      { house: 'brunoMagli', role: 'Founder', roleDetail: 'Co-founder', start: 1936 },
+    ],
+  },
+  ritaMagli: {
+    name: 'Rita Magli',
+    nationality: 'Italian',
+    career: [
+      { house: 'brunoMagli', role: 'Creative Director' },
+    ],
+    notes: 'Wife of Morris Magli; led the brand’s creative direction from the 1990s to the early 2000s.',
+  },
+  andreaPfister: {
+    name: 'Andrea Pfister',
+    nationality: 'Italian',
+    career: [
+      { house: 'brunoMagli', role: 'Head Designer', notes: 'One of several shoe designers who led the brand’s design in turn during the 1990s.' },
+    ],
+  },
+  diegoDolcini: {
+    name: 'Diego Dolcini',
+    nationality: 'Italian',
+    career: [
+      { house: 'brunoMagli', role: 'Head Designer', notes: 'One of several shoe designers who led the brand’s design in turn during the 1990s.' },
+    ],
+  },
+  ernestoEsposito: {
+    name: 'Ernesto Esposito',
+    nationality: 'Italian',
+    career: [
+      { house: 'brunoMagli', role: 'Head Designer', notes: 'One of several shoe designers who led the brand’s design in turn during the 1990s.' },
+    ],
+  },
+  brunoFrisoni: {
+    name: 'Bruno Frisoni',
+    career: [
+      { house: 'brunoMagli', role: 'Head Designer', notes: 'One of several shoe designers who led the brand’s design in turn during the 1990s.' },
+    ],
+  },
+  sharonWauchob: {
+    name: 'Sharon Wauchob',
+    nationality: 'Irish',
+    career: [
+      { house: 'brunoMagli', role: 'Other', roleDetail: 'Creative team', notes: 'Joined the creative team after Opera’s 2001 acquisition; exact years unconfirmed.' },
+    ],
+  },
+  aaronSchwartz: {
+    name: 'Aaron Schwartz',
+    career: [
+      { house: 'brunoMagli', role: 'Creative Director', roleDetail: 'President and creative director', notes: 'In the role in 2005; exact years unconfirmed.' },
+    ],
+  },
+  maxKibardin: {
+    name: 'Max Kibardin',
+    born: 1976,
+    nationality: 'Russian',
+    career: [
+      { house: 'furla', role: 'Other', roleDetail: 'Footwear creative director' },
+      { house: 'brunoMagli', role: 'Creative Director', roleDetail: 'Chief creative officer', start: 2011 },
+    ],
+    notes: 'Studied at Istituto Marangoni in Milan; runs a namesake shoe label and was named creative director of Caruso in 2022.',
+  },
+  amedeoTestoni: {
+    name: 'Amedeo Testoni',
+    nationality: 'Italian',
+    career: [
+      { house: 'testoni', role: 'Founder', roleDetail: 'Founder, shoemaker', start: 1929 },
+    ],
+    notes: 'Opened his Bologna studio at 24.',
+  },
+  marisaTestoni: {
+    name: 'Marisa Testoni',
+    nationality: 'Italian',
+    career: [
+      { house: 'testoni', role: 'Creative Director', notes: 'Creative director when the first women’s collection launched in 1964; exact years unconfirmed.' },
+    ],
+    notes: 'Daughter of Amedeo Testoni.',
+  },
+  marioBandiera: {
+    name: 'Mario Bandiera',
+    died: 2018,
+    nationality: 'Italian',
+    career: [
+      { house: 'lesCopains', role: 'Founder', roleDetail: 'Founder', start: 1958, end: 2018 },
+    ],
+  },
+  antonioBerardi: {
+    name: 'Antonio Berardi',
+    nationality: 'British',
+    career: [
+      { house: 'lesCopains', role: 'Creative Director', roleDetail: 'Trend Les Copains', start: 2005, approximate: true, notes: 'First collection Spring/Summer 2006.' },
+    ],
+  },
+  graemeBlack: {
+    name: 'Graeme Black',
+    nationality: 'British',
+    career: [
+      { house: 'lesCopains', role: 'Other', roleDetail: 'Intern' },
+      { house: 'armani', role: 'Other', roleDetail: 'Designer, Black Label' },
+      { house: 'ferragamo', role: 'Other', roleDetail: 'Creative consultant', start: 2001 },
+      { house: 'hugoBoss', role: 'Other', roleDetail: 'Creative consultant, Boss Black womenswear' },
+      { house: 'lesCopains', role: 'Creative Director', start: 2014, end: 2014 },
+    ],
+    notes: 'Studied in Edinburgh and began with John Galliano and Zandra Rhodes. Ran his own label from 2005 and has been creative director of Erdos 1436.',
+  },
+  stefaniaBandiera: {
+    name: 'Stefania Bandiera',
+    nationality: 'Italian',
+    career: [
+      { house: 'lesCopains', role: 'Other', roleDetail: 'Design team', end: 2014 },
+      { house: 'lesCopains', role: 'Creative Director', start: 2014 },
+    ],
+    notes: 'Wife of founder Mario Bandiera; still creative director in 2018.',
+  },
+  peterSom: {
+    name: 'Peter Som',
+    nationality: 'American',
+    career: [
+      { house: 'lesCopains', role: 'Other', roleDetail: 'Blue Les Copains, design lead', notes: 'In the role in 2015; exact years unconfirmed.' },
+    ],
+  },
+  yossiCohen: {
+    name: 'Yossi Cohen',
+    career: [
+      { house: 'lesCopains', role: 'Creative Director', start: 2020, approximate: true },
+    ],
+  },
+  massimoPiombo: {
+    name: 'Massimo Piombo',
+    nationality: 'Italian',
+    career: [
+      { house: 'lesCopains', role: 'Creative Director', roleDetail: 'Oversees creative operations as creative director of OVS', start: 2025, approximate: true },
+    ],
+    notes: 'Founder of the Piombo label.',
+  },
+  paoloTrento: {
+    name: 'Paolo Trento',
+    nationality: 'Italian',
+    career: [
+      { house: 'mandarinaDuck', role: 'Founder', roleDetail: 'Co-founder', start: 1977 },
+    ],
+  },
+  pietroMannato: {
+    name: 'Pietro Mannato',
+    nationality: 'Italian',
+    career: [
+      { house: 'mandarinaDuck', role: 'Founder', roleDetail: 'Co-founder', start: 1977 },
+    ],
+  },
+  valentinaMilloch: {
+    name: 'Valentina Milloch',
+    nationality: 'Italian',
+    career: [
+      { house: 'diesel', role: 'Other', roleDetail: 'Head of design, handbags and accessories' },
+      { house: 'mandarinaDuck', role: 'Creative Director', roleDetail: 'Chief designer and communication officer', start: 2012 },
+    ],
+    notes: 'Earlier work included Vogue, Iceberg, Sissi Rossi and Redwall.',
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 

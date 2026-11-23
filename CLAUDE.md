@@ -53,7 +53,7 @@ src/ui/run-dialog.tsx Start ▸ Run… box: open a brand, designer, group, city,
 src/ui/recent.ts      Start ▸ Documents: recently opened items (localStorage)
 src/ui/desktop-icon.tsx draggable Win98 desktop icon (on the desktop, left column)
 src/ui/share-link.ts  shareable view in the URL hash: #brand=…&year=…&<filter>=a,b
-src/ui/list-view.tsx   List View window: Excel 2000-style workbook (sheets in list-view-data.ts, dialogs, chart, pivot)
+src/ui/list-view.tsx   Spreadsheet window: Excel 2000-style workbook (sheets in list-view-data.ts, selection maths in list-view-select.ts, .xlsx writer in list-view-xlsx.ts, dialogs, chart, pivot)
 src/ui/statistics.tsx  Statistics window (Start menu): filtered totals, tiers, countries, cities, top lists
 src/ui/settings.tsx   Settings window: map colours (day/night), text size, Show brands at, Open cities, connection lines
 src/ui/city-window.tsx place windows: scrollable Large Icons grid of a city's or country's main brands

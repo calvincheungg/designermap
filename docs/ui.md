@@ -144,7 +144,7 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
   (`ui/start-icons.tsx`), etched separators, navy highlight rows and black
   submenu arrows. "Connection lines" is a cascading
   submenu (CSS hover/focus-within) with menu bullets/check marks; Expand all,
-  Statistics, List View, Notepad, My Computer, Settings, Help, Run… and Reset View are commands that close the menu.
+  Statistics, Spreadsheet, Notepad, My Computer, Settings, Help, Run… and Reset View are commands that close the menu.
   Ctrl+Esc opens or closes the Start menu from anywhere.
   "Documents" (first) lists the last `MAX_RECENT` (10) brands, designers, groups
   and places brought to the front (`ui/recent.ts`, `designer-map:recent`); items
@@ -179,7 +179,7 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
   removes that button and the desktop's Explorer icon reopens it. Other windows
   open, restore and focus without it; only a new map selection (search, Show on
   Map, links) reopens it. Desktop icons (`desktopShortcuts` in App: My Computer,
-  Explorer, Recycle Bin — `type: 'system'` — then Statistics, List View, Settings, Notepad) stack down
+  Explorer, Recycle Bin — `type: 'system'` — then Statistics, Spreadsheet, Settings, Notepad) stack down
   the desktop's left edge under every window, in `arrangeIcons` order (in the `.desktop-icons` layer; with the map maximized that layer
   covers the map's content area, `useMapContentBounds`, so they sit on the map's top-left above it),
   laid out by `DesktopIcons` (`ui/desktop-icon.tsx`): drag across bare desktop for a dotted rubber band
@@ -252,7 +252,7 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
     Folders use `public/assets/folder.webp` (`FOLDER_ICON`, a transparent 32px icon cut from `folder.jpg`;
     city/country windows use it in Alt+Tab too). Clicking a brand or designer opens its Properties; right-click offers Show on Map, the city/country
     window, or a group's Properties.
-  - Saving a file (Notepad's Save As…, List View's Save As CSV… and its toolbar Save) always goes through
+  - Saving a file (Notepad's Save As…, Spreadsheet's Save As CSV… and its toolbar Save) always goes through
     `SaveAsDialog` (`ui/save-as-dialog.tsx`): a File name box (default `Untitled` / `Designer Map - <sheet>`)
     with the extension locked beside it, a fixed Save as type, Save / Cancel. `cleanFileName` drops
     characters Windows forbids and a typed copy of the extension.
@@ -289,7 +289,7 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
     (Start menu, `import.meta.env.DEV` only) lists research gaps across all brands:
     nobody linked, likely missing origins (`missingOriginCandidates`), and no
     founding year, logo, website or Instagram.
-  - List View (`desktop.ts LIST_VIEW`, tool type `list`): an Excel 2000 workbook ("Designer Map.xls"),
+  - Spreadsheet (`desktop.ts LIST_VIEW`, tool type `list`): an Excel 2000 workbook ("Designer Map.xls"),
     opened from the Start menu, its desktop icon or Quick Launch (
     icon `public/assets/excel.webp`, cropped from `excel.jpg`). `ui/list-view-data.ts` holds the sheets
     and sheet operations (no React), `ui/list-view-dialogs.tsx` the pop-ups, `ui/list-view.tsx` the window.
@@ -299,20 +299,42 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
       `Other` and business roles; the last two have in-cell lists), Groups, Designers, Careers
       (one row per tenure), Collaborations (one row per release, newest first; no names or notes) and
       Locations (Brands = count of brands based there with a drop-down listing them all, Alt+↓).
-      Tabs, arrows or Ctrl+PgUp/PgDn switch. Sort, filters, search, active cell, widths and hidden
-      columns are kept per sheet.
-    - Menus File (Save As CSV… of the shown rows/columns), Edit, View (formula bar, gridlines, Full
+      Tabs, arrows or Ctrl+PgUp/PgDn switch. Sort, filters, search, active cell, widths, column order,
+      frozen panes, formats and hidden columns are kept per sheet. `listRows` is the one pipeline (sort →
+      search → filter → hidden rows → subtotals → collapse) the grid, PivotTable and exports share.
+    - Menus File (Save As Excel Workbook…: every sheet as listed, `list-view-xlsx.ts`, a dependency-free zip
+      writer keeping links, widths, panes, AutoFilter, outlines, tab colours and formats; Save As CSV… of the
+      shown rows/columns), Edit, View (formula bar, gridlines, Full
       Screen, zoom presets 50–200%),
       Format (AutoFit, Hide/Unhide columns, Reset widths, Grey Out Ended Brands: grey cell fill),
-      Data (Sort… with Sort by / Then by / Then by, AutoFilter, Show All), Window (Freeze Panes: pins
-      the first shown column, on by default), Help. Toolbar: Save, Sort ↑/↓, AutoFilter, Show All, Zoom.
+      Data (Sort… with Sort by / Then by / Then by, AutoFilter, Show All, Subtotals…), Window (Freeze Panes
+      at the active cell, Freeze First Column — on by default — and Unfreeze; `MAX_FROZEN` keeps panes
+      from filling a narrow window), Help. Toolbar: Save, Sort ↑/↓, AutoFilter, Show All, Zoom.
     - AutoFilter drop-downs: (All), (Top 10...) on number columns (top/bottom, items/percent, ties
       kept), (Custom...) with two conditions joined by And/Or, values from rows the other columns
-      leave, (Blanks)/(NonBlanks). Blue row numbers while narrowed; "N of M records found".
+      leave, (Blanks)/(NonBlanks). Tick boxes (or Ctrl+click, Space) choose several values, applied with OK;
+      clicking a name picks just that one. Blue row numbers while narrowed; "N of M records found".
     - The formula bar shows the active cell and doubles as the sheet's search (`searchSheet`; ✕ clears).
-    - Range selection: shift-click, drag, Shift+arrows, column letters, row numbers, the corner box or
-      Ctrl+A. The status bar's AutoCalculate shows Count, plus Sum/Average/Min/Max over number columns
-      (`rangeStats`); Ctrl+C copies the range as tab-separated text (`rangeTsv`) for pasting into a spreadsheet.
+    - Range selection: shift-click, drag, Shift+arrows, column letters or row numbers (drag or shift-click
+      for several), the corner box or Ctrl+A. Dragging past an edge scrolls. Browser text selection is off in
+      the sheet, a press keeps focus on the grid (so Ctrl+C always copies the cells), and a drag or
+      shift-click never follows a link. One border surrounds the range (`rangeClass`). Ctrl+click (⌘ on a Mac)
+      adds areas; Copy needs them to line up (`copyBlock`). Ctrl+Space / Shift+Space select columns / rows,
+      Ctrl+Arrow stops at the edge of filled cells (`blockEdge`), and Tab / Enter walk the active cell
+      (`cursor`) through a selection (Enter opens the record when only one cell is selected). The status bar's AutoCalculate shows Count, plus Sum/Average/Min/Max over number columns
+      (`rangeStats`); Ctrl+C copies the range as tab-separated text (`rangeTsv`) and
+      as an HTML table with links (`rangeHtml`; records link to their share link), inside a moving dashed
+      border (still under reduced motion) until Esc or the list changes.
+    - The Name Box and Go To… (Ctrl+G, F5) take D200, A1:C50, B:D, 5:9 or several with commas. Find…
+      (Ctrl+F, Shift+F4 for the next) is a modeless dialog; Edit ▸ Search goes to the formula bar.
+    - Subtotals (`subtotalLines`) are synthetic rows (`SheetRow.subtotal`): the grouping column always sorts
+      first, level buttons 1 2 3 sit in the corner, −/+ in the total's row number. AutoCalculate skips them.
+    - Conditional Formatting… gives a column one format: data bars, colour scale, a colour per value, or
+      a highlight (`formatPainter`). Selection tint shows over it.
+    - Dragging a wholly selected column's letter moves the selected columns (also Move Left / Right);
+      letters follow position. Column commands act on every selected column (`columnsFor`).
+    - Right-click a row number: Open, Show on Map, Copy, Hide / Unhide Rows. Right-click a tab: Hide /
+      Unhide, Tab Color…, Save As CSV…, Select All. Opening a hidden sheet shows its tab again.
     - Insert ▸ Chart… / the Chart Wizard button (`list-view-chart.tsx`): a draggable chart object over
       the sheet counting the listed rows by one column (bar or column, top N with the rest noted under
       the plot, by count or column order, decades for year columns). It follows filters and search live;
@@ -326,14 +348,14 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
     - Columns open at their default widths. Drag a letter's right border to resize (min
       `MIN_COLUMN_WIDTH`); double-click it to AutoFit to the widest entry (`autoFitWidth`, canvas-measured).
     - The layout is remembered per browser (`designer-map:list-view`, `readLayout` validates it against
-      the current columns): active sheet, each sheet's sort, widths and hidden columns, zoom and the
-      View/Window/Format toggles, Full Screen and the PivotTable layout. Filters, search, ranges and
-      charts are not remembered.
+      the current columns): active sheet, each sheet's sort, widths, column order, frozen panes, formats and hidden columns, tabs, zoom and the
+      View/Window/Format toggles, Full Screen and the PivotTable layout. Filters, search, ranges, hidden
+      rows, subtotals and charts are not remembered.
     - Zoom: toolbar box (presets plus any custom value), View menu, or click / right-click the status
       bar's zoom field for a slider (`ZOOM_MIN` 25 – `ZOOM_MAX` 200, steps of 5).
     - Full Screen (View menu, the title bar's Maximize/Restore button, or double-clicking the title
       bar): App's `listFullScreen` passes `maximized` to `PropertiesWindow`, which then fills the desktop
-      area and can't be moved or resized until restored. It is List View's Maximize; other windows use `PropertyWindow.maximized`.
+      area and can't be moved or resized until restored. It is Spreadsheet's Maximize; other windows use `PropertyWindow.maximized`.
     **All of it is local to the workbook**: it ignores the map's year/tag filters and never changes
     them. Rows are virtualised (17px rows, scaled by zoom).
   - Share links: the URL hash holds the selection, year and tag filters
@@ -429,7 +451,7 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
   Start menu's Connection lines submenu, and both edit the same App state.
   Text size (Normal 100% / Large 125% / Extra large 150%, `designer-map:text-size`)
   sets `--text-zoom` on the root: CSS `zoom` on window contents (not frames, so
-  sizing and dragging stay in plain px; List View keeps its own Zoom), desktop icon
+  sizing and dragging stay in plain px; Spreadsheet keeps its own Zoom), desktop icon
   labels and status bar. `DesignerGraph.setTextScale` enlarges
   brand labels (`textStyle`) and pin labels (`sizeMarkers`). Place windows scale their
   fixed grid size with it (`scaleSize`). The taskbar (with the Start menu and its
