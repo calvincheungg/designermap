@@ -105,13 +105,30 @@ export const designers = {
   },
   shimonOvadia: {
     name: 'Shimon Ovadia',
-    career: [{ house: 'ovadia', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2010 }],
+    career: [
+      { house: 'ovadia', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2010 },
+      { house: 'jPress', role: 'Head Designer', roleDetail: 'Designer of the J. Press York Street line, with his twin brother', start: 2012, end: 2014, sources: ['https://hypebeast.com/2012/8/j-press-york-street-by-ariel-and-shimon-ovadia', 'https://en.wikipedia.org/wiki/J._Press'] },
+    ],
     notes: 'Co-founded the menswear label with twin brother Ariel. They now also work through Ovadia Bros; departure or pause dates for the original clothing label are unconfirmed.',
     sources: ['https://ovadiabros.com/pages/about', 'https://www.yahoo.com/lifestyle/ovadia-twins-launch-creative-agency-223411478.html'],
   },
+  jacobiPress: {
+    name: 'Jacobi Press',
+    nationality: 'Latvian-American',
+    career: [{ house: 'jPress', role: 'Founder', roleDetail: 'Founder, tailor', start: 1902 }],
+    sources: ['https://jpress.com/pages/our-history-1', 'https://en.wikipedia.org/wiki/J._Press'],
+  },
+  mikitoTakeshima: {
+    name: 'Mikito Takeshima',
+    career: [{ house: 'jPress', role: 'Head Designer', roleDetail: 'Designer of J. Press Blue (successor to York Street)', start: 2014 }],
+    sources: ['https://en.wikipedia.org/wiki/J._Press'],
+  },
   arielOvadia: {
     name: 'Ariel Ovadia',
-    career: [{ house: 'ovadia', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2010 }],
+    career: [
+      { house: 'ovadia', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2010 },
+      { house: 'jPress', role: 'Head Designer', roleDetail: 'Designer of the J. Press York Street line, with his twin brother', start: 2012, end: 2014, sources: ['https://hypebeast.com/2012/8/j-press-york-street-by-ariel-and-shimon-ovadia', 'https://en.wikipedia.org/wiki/J._Press'] },
+    ],
     notes: 'Co-founded the menswear label with twin brother Shimon. They now also work through Ovadia Bros; departure or pause dates for the original clothing label are unconfirmed.',
     sources: ['https://ovadiabros.com/pages/about', 'https://www.yahoo.com/lifestyle/ovadia-twins-launch-creative-agency-223411478.html'],
   },
@@ -1216,10 +1233,11 @@ export const designers = {
   setsumasaKobayashi: {
     name: "Setsumasa Kobayashi",
     career: [
+      { house: 'generalResearch', role: 'Founder', roleDetail: 'Founder and designer', start: 1994, end: 2006, approximate: true, sources: ['https://www.vibram.com/jp/en/news-and-events/interview_SETSUMASA_KOBAYASHI.html'] },
       { house: 'mountainResearch', role: 'Founder', start: 2006 },
       { house: 'mountainResearch', role: 'Head Designer', start: 2006, end: 2024 },
     ],
-    notes: "Trained at a shoe factory in Florence and worked for a Japanese footwear company before designing collection footwear for Takeo Kikuchi. Those employers are not separately represented. Founded General Research before launching Mountain Research in 2006, then handed clothing design leadership to longtime assistant Masahiro Abe for Autumn/Winter 2024. His broader role remains unconfirmed.",
+    notes: "Trained at a shoe factory in Florence and worked for a Japanese footwear company before designing collection footwear for Takeo Kikuchi. Those employers are not separately represented. Renamed General Research as Mountain Research in 2006, then handed clothing design leadership to longtime assistant Masahiro Abe for Autumn/Winter 2024. His broader role remains unconfirmed.",
     sources: ["https://www.eyecmag.com/news/2024/7/23/mountain-research-appoints-a-new-chief-designer-masahiro-abe", "https://havenshop.com/features/editorial/setsumasa-kobayashi-mountain-research/"],
   },
   masahiroAbe: {
@@ -1371,8 +1389,11 @@ export const designers = {
   },
   jackCarlson: {
     name: 'Jack Carlson',
-    career: [{ house: 'rowingBlazers', role: 'Founder', roleDetail: 'Co-founder, designer and creative director; later creative advisor', start: 2017, end: 2025 }],
-    notes: 'Designer, author, archaeologist and former US national rowing-team coxswain. Left Rowing Blazers in March 2025 and became creative director and president of J.Press in 2025; J.Press is not separately represented.',
+    career: [
+      { house: 'rowingBlazers', role: 'Founder', roleDetail: 'Co-founder, designer and creative director; later creative advisor', start: 2017, end: 2025 },
+      { house: 'jPress', role: 'Creative Director', roleDetail: 'Creative director and president', start: 2025, end: null, sources: ['https://fashionunited.com/news/people/j-press-names-jack-carlson-as-its-new-creative-director/2025090968134', 'https://hypebeast.com/2025/9/rowing-blazers-jack-carlson-joins-j-press'] },
+    ],
+    notes: 'Designer, author, archaeologist and former US national rowing-team coxswain. Left Rowing Blazers in March 2025 and became creative director and president of J. Press in September 2025.',
     sources: ['https://rowingblazers.com/pages/about-us', 'https://fashionista.com/2025/03/jack-carlson-exits-rowing-blazers', 'https://www.onward-hd.co.jp/en/pickup/20250909.html'],
   },
   davidRosenzweig: {
@@ -1644,6 +1665,7 @@ export const designers = {
   andySpade: {
     name: 'Andy Spade',
     career: [
+      { house: 'jackSpade', role: 'Founder', roleDetail: 'Founder', start: 1999, approximate: true },
       { house: 'kateSpade', role: 'Other', roleDetail: 'Business co-founder', start: 1993, end: 2006, sources: ['https://cfda.com/member/kate-spade/'] },
     ],
     sources: ['https://cfda.com/member/kate-spade/'],
@@ -3440,6 +3462,7 @@ export const designers = {
     nationality: 'Japanese',
     career: [
       { house: 'undercover', role: 'Founder', start: 1990, end: null },
+      { house: 'nowhere', role: 'Founder', roleDetail: 'Co-founder with Nigo', start: 1993, end: 2000 },
       { house: 'undercoverism', role: 'Creative Director', roleDetail: 'Original UNDERCOVER menswear identity', start: 2009, end: 2015, sources: ['https://hbx.com/archives/brands/undercoverism', 'https://www.highsnobiety.com/p/undercoverism-fw21-collection-lookbook/'] },
       { house: 'undercoverism', role: 'Creative Director', roleDetail: 'Revived menswear line', start: 2021, end: 2023, sources: ['https://www.highsnobiety.com/p/undercoverism-fw21-collection-lookbook/', 'https://www.fashion-press.net/brands/68'] },
       { house: 'theShepherdUndercover', role: 'Creative Director', start: 2016, end: null, sources: ['https://undercoverism.com/historyofu/', 'https://undercoverism.com/new/20261015_1/newarrival'] },
@@ -3495,6 +3518,7 @@ export const designers = {
     born: 1970,
     nationality: 'Japanese',
     career: [
+      { house: 'nowhere', role: 'Founder', roleDetail: 'Co-founder with Jun Takahashi', start: 1993, end: 2000 },
       { house: 'bape', role: 'Founder', roleDetail: 'Founder, creative director', start: 1993, end: 2013 },
       {
         house: 'billionaireBoysClub',
@@ -3512,6 +3536,7 @@ export const designers = {
         sources: ['https://www.bbcicecream.com/pages/about', 'https://hufworldwide.com/blogs/lookbooks/huf-x-bbc-icecream'],
       },
       { house: 'humanMade', role: 'Founder', start: 2010, end: null },
+      { house: 'nigold', role: 'Founder', roleDetail: 'Founder and designer of the UNITED ARROWS line', start: 2014 },
       { house: 'kenzo', role: 'Artistic Director', start: 2021, end: null },
     ],
   },
@@ -5219,7 +5244,10 @@ export const designers = {
   sk8thing: {
     name: 'Sk8thing',
     nationality: 'Japanese',
-    career: [{ house: 'cavEmpt', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2011, end: null }],
+    career: [
+      { house: 'goodenough', role: 'Founder', roleDetail: 'Co-founder, graphic designer', start: 1990, sources: ['https://sabukaru.online/articles/an-ura-hara-champion-goodenough', 'https://hypebeast.com/2016/10/hiroshi-fujiwara-goodenough-history'] },
+      { house: 'cavEmpt', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2011, end: null },
+    ],
   },
   tobyFeltwell: {
     name: 'Toby Feltwell',
@@ -5277,6 +5305,7 @@ export const designers = {
     name: 'Daiki Suzuki',
     nationality: 'Japanese',
     career: [
+      { house: 'nepenthes', role: 'Other', roleDetail: 'Buyer; later opened Nepenthes New York' },
       { house: 'engineeredGarments', role: 'Founder', roleDetail: 'Founder, designer', start: 1999, end: null },
     ],
   },
@@ -6036,6 +6065,7 @@ export const designers = {
     name: 'Keizo Shimizu',
     nationality: 'Japanese',
     career: [
+      { house: 'nepenthes', role: 'Founder', roleDetail: 'Founder', start: 1988, end: null },
       { house: 'needles', role: 'Founder', roleDetail: 'Founder, designer (Nepenthes)', start: 2003, end: null, approximate: true },
     ],
   },
@@ -6815,7 +6845,10 @@ export const designers = {
   emmaHill: {
     name: 'Emma Hill',
     nationality: 'British',
-    career: [{ house: 'mulberry', role: 'Creative Director', start: 2008, end: 2013 }],
+    career: [
+      { house: 'mulberry', role: 'Creative Director', start: 2008, end: 2013 },
+      { house: 'ilBisonte', role: 'Creative Director', roleDetail: 'Consultant creative director', notes: 'Appointed after the 2015 Palamon investment; exact dates unconfirmed.', sources: ['https://www.businessoffashion.com/articles/luxury/emma-hill-appointed-consultant-creative-director-at-il-bisonte'] },
+    ],
   },
   johnnyCoca: {
     name: 'Johnny Coca',
@@ -7018,6 +7051,7 @@ export const designers = {
     nationality: 'Japanese',
     career: [
       { house: 'headPorter', role: 'Founder', roleDetail: 'Founder and design producer', start: 1998, end: 2019, sources: ['https://www.fashion-press.net/brands/1371', 'https://www.wwdjapan.com/articles/732723'] },
+      { house: 'goodenough', role: 'Founder', roleDetail: 'Co-founder, designer', start: 1990, notes: 'Ran the label anonymously; stepped back towards the end of the 1990s, later reviving it for occasional capsules.', sources: ['https://hypebeast.com/2016/10/hiroshi-fujiwara-goodenough-history'] },
       { house: 'fragmentDesign', role: 'Founder', start: 2003, end: null },
       { house: 'uniformExperiment', role: 'Founder', roleDetail: 'Co-founder with Hirofumi Kiyonaga', start: 2004, end: null, approximate: true },
     ],
@@ -7040,8 +7074,17 @@ export const designers = {
     nationality: 'Canadian',
     career: [
       { house: 'acronym', role: 'Founder', roleDetail: 'Co-founder, designer', start: 1994, end: null },
+      { house: 'nikeAcg', role: 'Head Designer', roleDetail: 'Designer of NikeLab ACG, with Nike senior design director Matthew Millward', start: 2014, end: 2018, notes: 'Relaunched ACG as NikeLab ACG in December 2014; his collections ran through Holiday 2018, after which James Arizumi took over the line.', sources: ['https://hypebeast.com/2014/12/nike-taps-acronyms-errolson-hugh-for-acg-revamp', 'https://www.complex.com/style/a/gregory-babcock/errolson-hugh-nike-acg-interview'] },
       { house: 'stoneIslandShadowProject', role: 'Head Designer', roleDetail: 'Design and creative leadership; ACRONYM partnership', start: 2008, end: 2021, sources: ['https://www.stoneisland.com/en-ca/archive-stone-island-shadow-project.html', 'https://www.zoofashions.com/blogs/editorial/in-focus-stone-island-shadow-project-ss21'] },
       { house: 'tilak', role: 'Other', roleDetail: 'Ongoing technical apparel design partnership', start: 2000, approximate: true, notes: 'Hugh dates the relationship to 2000 or 2001 and describes shared product development over many years. By the 2026 anniversary interview he was no longer actively designing for Tilak; the exact departure year is unconfirmed.', sources: ['https://www.highsnobiety.com/p/tilak-40th-anniversary-interview/'] },
+    ],
+  },
+  jamesArizumi: {
+    name: 'James Arizumi',
+    nationality: 'American',
+    career: [
+      { house: 'nikeAcg', role: 'Creative Director', roleDetail: 'Global creative director', start: 2018, end: 2020, notes: 'Took over ACG from Errolson Hugh alongside his Nike SB senior brand creative director role, steering it back to bright, retro trail styling from Spring/Summer 2019. Earlier designed the Nike SB "What the Dunk".', sources: ['https://www.highsnobiety.com/p/nike-acg-james-arizumi-interview', 'https://coroflot.com/jamesarizumi/profile'] },
+      { house: 'jordanBrand', role: 'Other', roleDetail: 'Senior footwear design director, Special Projects', start: 2021, sources: ['https://hypebeast.com/2021/12/essentials-james-arizumi', 'https://coroflot.com/jamesarizumi/profile'] },
     ],
   },
   michaelaSachenbacher: {
@@ -7093,6 +7136,7 @@ export const designers = {
     name: 'Dirk Schönberger',
     nationality: 'German',
     career: [
+      { house: 'joop', role: 'Creative Director', start: 2007, end: 2009, sources: ['https://www.textilwirtschaft.de/fashion-management/dirk-schoenberger-wird-kreativ-chef-bei-joop-55400', 'https://www.sgieurope.com/adidas-has-appointed-dirk-sch%C3%B6nberger-as-creative-director-of-the-/19308.article'] },
       { house: 'adidas', role: 'Creative Director', roleDetail: 'Sport Style division', start: 2010, end: 2018, sources: ['https://www.fashion-council-germany.org/team/dirk-sch%C3%B6nberger'] },
       {
         house: 'mcm',
@@ -7517,6 +7561,47 @@ export const designers = {
       { house: 'fcRealBristol', role: 'Founder', roleDetail: 'Founder and creative leadership', start: 1999, end: 2022, sources: ['https://www.jleague.jp/news/article/22897/'] },
       { house: 'uniformExperiment', role: 'Founder', roleDetail: 'Co-founder with Hiroshi Fujiwara', start: 2004, end: null, approximate: true },
     ],
+  },
+  satoshiSuzukiLoopwheeler: {
+    name: 'Satoshi Suzuki',
+    nationality: 'Japanese',
+    career: [
+      { house: 'loopwheeler', role: 'Founder', roleDetail: 'Founder and CEO', start: 1999, end: null, sources: ['https://loopwheeler.jp/pages/keep-moving-forward'] },
+    ],
+    notes: 'Born in Shizuoka Prefecture. Started a garment OEM production business in 1991 before founding LOOPWHEELER.',
+  },
+  arataFujiwara: {
+    name: 'Arata Fujiwara',
+    nationality: 'Japanese',
+    career: [{ house: 'kuon', role: 'Founder', roleDetail: 'Founder and director', start: 2016, sources: ['https://tokion.jp/en/2020/11/24/the-road-to-creating-kuon/'] }],
+    notes: 'Worked in law before founding KUON and its operating company MOONSHOT, which also supports SASHIKO GALS.',
+  },
+  shinichiroIshibashi: {
+    name: 'Shinichiro Ishibashi',
+    nationality: 'Japanese',
+    career: [
+      { house: 'kolor', role: 'Other', roleDetail: 'Pattern maker', sources: ['https://tokion.jp/en/2020/11/24/the-road-to-creating-kuon/'] },
+      { house: 'kuon', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2016, sources: ['https://rakutenfashionweektokyo.com/jp/topics/interview/shinichiro-ishibashi/'] },
+    ],
+    notes: 'Bunka Fashion College graduate from Iwate. Trained at a Marunouchi tailor and became a freelance pattern maker in 2014.',
+  },
+  eiichiIzumi: {
+    name: 'Eiichi Izumi',
+    nationality: 'Japanese',
+    career: [{ house: 'minotaur', role: 'Founder', roleDetail: 'Founder and director', start: 2004, sources: ['https://hapticdesign.org/designer/file005_izumi/'] }],
+    notes: 'Worked as a buyer of imported brands in Fukuoka, where Izumi is from, before launching MINOTAUR.',
+  },
+  hisayoHidaka: {
+    name: 'Hisayo Hidaka',
+    nationality: 'Japanese',
+    career: [{ house: 'scye', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2000, sources: ['https://www.houyhnhnm.jp/en/feature/105760/'] }],
+    notes: 'Bunka Fashion College graduate who worked as a designer for several apparel companies before co-founding Scye.',
+  },
+  hideakiMiyahara: {
+    name: 'Hideaki Miyahara',
+    nationality: 'Japanese',
+    career: [{ house: 'scye', role: 'Founder', roleDetail: 'Co-founder and pattern cutter', start: 2000, sources: ['https://www.houyhnhnm.jp/en/feature/105760/'] }],
+    notes: 'Bunka Fashion College graduate who worked as a pattern maker for several apparel companies before co-founding Scye.',
   },
   toliaTitaev: {
     name: 'Tolia Titaev',
@@ -14274,6 +14359,8 @@ export const designers = {
         sources: ['https://minami.katalok.ooo/ja/about'],
         end: null,
       },
+      { house: 'freshService', role: 'Founder', start: 2012, sources: ['https://alpha-tokyo.com/message'] },
+      { house: 'freshService', role: 'Creative Director', end: null, sources: ['https://www.honeyee.com/detail/107635'] },
     ],
     sources: ['https://alpha-tokyo.com/message', 'https://minami.katalok.ooo/ja/about'],
     notes: 'Founded alpha as an independent practice in 2008 and incorporated it in 2012. Previously worked at H.P.FRANCE and directed 1LDK; also directs FreshService. Temporary retail projects and collaborations are excluded from career links.',
@@ -15628,9 +15715,10 @@ export const designers = {
   jensGrede: {
     name: 'Jens Grede',
     career: [
+      { house: 'frame', role: 'Founder', roleDetail: 'Co-founder', start: 2012 },
       { house: 'skims', role: 'Founder', roleDetail: 'Co-founder and chief executive officer', start: 2019, end: null, sources: ['https://am.gs.com/en-gb/advisors/news/press-release/2025/skims'] },
     ],
-    notes: 'Also co-founded FRAME with Erik Torstensson in 2012. FRAME is not currently represented as a house.',
+    notes: 'Previously built the Saturday Group creative agencies with Erik Torstensson.',
     sources: ['https://frame-store.com/en-be/pages/about'],
   },
   erinMagee: {
@@ -15707,6 +15795,7 @@ export const designers = {
     name: 'D’Wayne Edwards',
     career: [
       { house: 'nike', role: 'Other', roleDetail: 'Senior footwear designer', start: 2000, end: 2001, sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/d-wayne-edwards/'] },
+      { house: 'pfFlyers', role: 'Creative Director', roleDetail: 'Led creative direction for the relaunch’s first year', start: 2021, end: 2022, approximate: true },
       { house: 'jordanBrand', role: 'Head Designer', roleDetail: 'Footwear design director', start: 2001, end: 2011, sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/d-wayne-edwards/'] },
     ],
     notes: 'Previously designed at LA Gear and Skechers, then founded Pensole and developed Pensole Lewis College. Those businesses are not currently represented as houses. A teenage Reebok competition is not employment.',
@@ -15831,9 +15920,10 @@ export const designers = {
       { house: 'yeezy', role: 'Other', roleDetail: 'Footwear designer; menswear footwear for Seasons 3 and 4', start: 2015, notes: 'Hiring year confirmed by his biography; exact departure date unconfirmed.', sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/salehe-bembury/', 'https://www.monclergroup.com/v3/assets/blt61bda6b71f29a239/bltc691abf6151fa5dd/68e3907235c6236cc17cfa65/MONCLER-GENIUS-X-SALEHE-BEMBURY_PRESS-RELEASE_ENG.pdf'] },
       { house: 'versace', role: 'Head Designer', roleDetail: 'Head of men’s sneakers; later vice president of sneakers and men’s footwear', start: 2017, end: 2020, sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/salehe-bembury/', 'https://hypebeast.com/2020/12/salehe-bembury-versace-departure-info'] },
       { house: 'crocs', role: 'Creative Director', roleDetail: 'Crocs x Pollex Pod collection only', start: 2023, end: null, notes: 'Formal continuing collection leadership began in 2023, after the first 2021 collaboration. The initial deal was for two years; 2026 coverage continues to identify him as Pollex creative director. Does not cover the entire Crocs brand.', sources: ['https://investors.crocs.com/news-and-events/press-releases/press-release-details/2023/Crocs-Announces-Extended-Partnership-with-Designer-Salehe-Bembury/default.aspx', 'https://sneakernews.com/tag/crocs/'] },
+      { house: 'spunge', role: 'Founder', start: 2021, end: null, sources: ['https://andscape.com/features/salehe-bembury-spunge-interview/', 'https://beaspunge.com/'] },
       { house: 'puma', role: 'Other', roleDetail: 'Puma Hoops design partner; signature footwear and athlete-program development', start: 2024, notes: 'Official appointment describes a broader basketball design and athlete-recruitment role beyond a single capsule. Exact end and present appointment status unconfirmed.', sources: ['https://about.puma.com/en/newsroom/product-and-brand-news/2024/29-07-2024-puma-hoops-and-salehe-bembury-usher-new-era'] },
     ],
-    notes: 'Previously designed for Payless; later developed his independent Spunge business. Those labels are not represented. New Balance, Moncler and other product collaborations are not recorded as employment.',
+    notes: 'Previously designed for Payless, which is not represented. New Balance, Moncler and other product collaborations are not recorded as employment.',
     sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/salehe-bembury/'],
   },
   karenWalker: {
@@ -16482,6 +16572,7 @@ export const designers = {
       { house: 'beams', role: 'Other', roleDetail: 'Fashion retail, buying and brand direction', end: 1989, notes: 'BoF lists 1987–1989, while his first-person recollection places him at BEAMS around 1986 or 1987. Start year omitted because the precise joining date is unresolved.', sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/hirofumi-kurino/', 'https://www.houyhnhnm.jp/en/feature/468739/'] },
       { house: 'unitedArrows', role: 'Founder', roleDetail: 'Co-founder', start: 1989, end: null, sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/hirofumi-kurino/', 'https://www.fhcm.paris/en/news/a-feel-for-fashion-kurino-hirofumi'] },
       { house: 'unitedArrows', role: 'Creative Director', roleDetail: 'Former creative director and chief creative officer', notes: 'Historical leadership title confirmed; exact appointment and transition years are unknown. The current advisory title is recorded separately.', sources: ['https://www.united-arrows.co.jp/ir/pdf/annual_report2002.pdf', 'https://tokyoknit.jp/en/supporter'] },
+      { house: 'districtUnitedArrows', role: 'Creative Director', roleDetail: 'Store director', start: 2000, sources: ['https://www.fashionsnap.com/article/2025-01-14/ua-district-close/'] },
       { house: 'unitedArrows', role: 'Other', roleDetail: 'Senior advisor for creative direction', end: null, notes: 'The 2026 profile identifies the advisory scope, rather than an uninterrupted formal creative-director appointment since founding.', sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/people/hirofumi-kurino/', 'https://www.gqjapan.jp/article/260424-my-life-style-hirofumi-kurino'] },
     ],
     notes: '栗野宏文. Earlier worked at Suzuya, an employer not represented here. Selecting or distributing Comme des Garçons, New Balance and other labels does not establish employment at those houses.',
@@ -16519,7 +16610,7 @@ export const designers = {
     career: [
       { house: 'rayBeams', role: 'Other', roleDetail: 'Ray BEAMS buyer and director', end: 2009, notes: 'Promoted after the 1989 staff departures, with the exact appointment year unconfirmed; left Ray’s direction in 2009.', sources: ['https://www.fashionsnap.com/article/2025-04-10/raybeams/'] },
       { house: 'beams', role: 'Womenswear Director', roleDetail: 'Womenswear creative direction', start: 2004, end: null, sources: ['https://www.beams.co.jp/special/50th/topics/topic-2044/'] },
-      { house: 'beams', role: 'Other', roleDetail: 'Concurrent International Gallery BEAMS direction', start: 2005, notes: 'Exact end or transition into broader advisory work is unconfirmed.', sources: ['https://www.fashionsnap.com/article/2025-04-10/raybeams/'] },
+      { house: 'internationalGalleryBeams', role: 'Other', roleDetail: 'Concurrent direction alongside BEAMS womenswear', start: 2005, notes: 'Exact end or transition into broader advisory work is unconfirmed.', sources: ['https://www.fashionsnap.com/article/2025-04-10/raybeams/'] },
     ],
     notes: '南馬越一義, known as MAGO. The brand’s 2026 retrospective dates his joining to 1984, while a 2025 WWD profile says 1985; no precise joining date is recorded. His stockist relationships with X-girl and MILKFED. are not employment at those labels.',
     sources: ['https://www.wwdjapan.com/articles/2201702', 'https://www.beams.co.jp/special/50th/topics/topic-2044/'],
@@ -16546,7 +16637,8 @@ export const designers = {
     name: 'Motofumi “Poggy” Kogi',
     career: [
       { house: 'unitedArrows', role: 'Other', roleDetail: 'Retail and press; development of Liquor, woman & tears', start: 1997, end: 2018, notes: 'Broad employment period, beginning as part-time staff. Launched the Liquor, woman & tears concept in 2006; exact dates of individual retail and press titles are unconfirmed.', sources: ['https://media.or-not.com/editorials/poggy-and-masushio-via-sitateru-weare/'] },
-      { house: 'unitedArrows', role: 'Other', roleDetail: 'UNITED ARROWS & SONS concept-store director', start: 2010, end: 2018, sources: ['https://store.united-arrows.co.jp/ua_columns/hitomonoutsuwa/en/wp-4666', 'https://media.or-not.com/editorials/poggy-and-masushio-via-sitateru-weare/'] },
+      { house: 'unitedArrowsAndSons', role: 'Creative Director', roleDetail: 'Concept-store director', start: 2010, end: 2018, sources: ['https://store.united-arrows.co.jp/ua_columns/hitomonoutsuwa/en/wp-4666', 'https://media.or-not.com/editorials/poggy-and-masushio-via-sitateru-weare/'] },
+      { house: 'poggytheman', role: 'Founder', roleDetail: 'Founder and designer', sources: ['https://openers.jp/en/fashion/fashion_news/20191211-poggy-forsomeone'] },
     ],
     notes: '小木基史, also credited as Motofumi POGGY Kogi. Went independent in 2018; later 2G and other projects are outside the represented houses. Product collaborations and styling appearances are not automatically additional employment tenures.',
   },
@@ -18040,7 +18132,10 @@ export const designers = {
   },
   mikeCherman: {
     name: 'Mike Cherman',
-    career: [{ house: 'market', role: 'Founder', roleDetail: 'Founder', start: 2016 }],
+    career: [
+      { house: 'icny', role: 'Founder', roleDetail: 'Founder and designer', start: 2012 },
+      { house: 'market', role: 'Founder', roleDetail: 'Founder', start: 2016 },
+    ],
   },
   emilieHelmstedt: {
     name: 'Emilie Helmstedt',
@@ -21046,6 +21141,391 @@ export const designers = {
       { house: 'chetLo', role: 'Founder', roleDetail: 'Founder and designer', start: 2020, end: null, sources: ['https://londonfashionweek.co.uk/designers/chet-lo'] },
     ],
     notes: 'Asian-American designer from New York; came to London in 2015 for the Central Saint Martins foundation course and graduated from its BA Knitwear in 2020. Years of the internships are unconfirmed.',
+  },
+  thomasKromik: {
+    name: 'Thomas Kromik',
+    nationality: 'German',
+    career: [
+      { house: 'thomKrom', role: 'Founder', roleDetail: 'Founder and designer', start: 2009, end: null, sources: ['https://thomkrom.com/policies/legal-notice', 'https://fuckingyoung.es/?p=318931'] },
+    ],
+    notes: 'Left school at about 16, trained as a salesman in a fashion department store, then worked as a buyer and as a product manager and trend scout for a fast-fashion brand before launching thom/krom. His earlier employers are not named in the sources.',
+  },
+  markusFreitag: {
+    name: 'Markus Freitag',
+    nationality: 'Swiss',
+    career: [
+      { house: 'freitag', role: 'Founder', roleDetail: 'Co-founder (with his brother Daniel); co-owner and board member', start: 1993, end: null, sources: ['https://freitag.ch/mission/about-freitag/history', 'https://freitag.ch/en_AT/media/about/facts-figures'] },
+    ],
+  },
+  danielFreitag: {
+    name: 'Daniel Freitag',
+    nationality: 'Swiss',
+    career: [
+      { house: 'freitag', role: 'Founder', roleDetail: 'Co-founder (with his brother Markus); co-owner', start: 1993, end: null, sources: ['https://freitag.ch/mission/about-freitag/history', 'https://freitag.ch/en_AT/media/about/facts-figures'] },
+    ],
+  },
+  berndGeorgi: {
+    name: 'Bernd Georgi',
+    nationality: 'German',
+    career: [
+      { house: 'floyd', role: 'Founder', roleDetail: 'Co-founder and managing director', start: 2019, end: null, sources: ['https://floyd.one/pages/floyd-story', 'https://floyd.one/pages/imprint'] },
+    ],
+    notes: 'A Munich skater as a teenager. Worked in the fashion industry, including in South Africa and Hong Kong, and in 1996 co-founded a company with Horst Kern that made luggage and accessories for other brands.',
+  },
+  horstKern: {
+    name: 'Horst Kern',
+    nationality: 'German',
+    career: [
+      { house: 'floyd', role: 'Founder', roleDetail: 'Co-founder and managing director', start: 2019, end: null, sources: ['https://floyd.one/pages/floyd-story', 'https://floyd.one/pages/imprint'] },
+    ],
+    notes: 'A Munich skater as a teenager. Worked in the fashion industry, and in 1996 co-founded a company with Bernd Georgi that made luggage and accessories for other brands.',
+  },
+  willyBognerSr: {
+    name: 'Willy Bogner Sr.',
+    nationality: 'German',
+    career: [
+      { house: 'bogner', role: 'Founder', start: 1932, sources: ['https://www.bogner.com/en-us/s/history/71.html'] },
+      { house: 'bogner', role: 'Head of House', start: 1932, end: 1977, sources: ['https://www.bogner.com/en-us/s/history/71.html'] },
+    ],
+    notes: 'Founded the company with a friend in 1932 to import skis, ski equipment and Norwegian knitwear. Ran it until his death in 1977.',
+  },
+  mariaBogner: {
+    name: 'Maria Bogner',
+    nationality: 'German',
+    career: [
+      { house: 'bogner', role: 'Head Designer', roleDetail: 'Designer of the house collections', start: 1948, sources: ['https://www.bogner.com/en-us/s/history/71.html'] },
+    ],
+    notes: 'Wife of Willy Bogner Sr. Presented Bogner\'s first fashion collection in 1948 and designed its stirrup ski pants (1948) and B zipper (1955). When her role ended is not recorded.',
+  },
+  willyBognerJr: {
+    name: 'Willy Bogner Jr.',
+    nationality: 'German',
+    career: [
+      { house: 'bogner', role: 'Other', roleDetail: 'Head of the sports collection and advertising', start: 1972, end: 1977, sources: ['https://www.bogner.com/en-us/s/history/71.html'] },
+      { house: 'bogner', role: 'Head of House', start: 1977, end: 2019, sources: ['https://www.bogner.com/en-us/s/history/71.html', 'https://encyclopedia.com/fashion/news-wires-white-papers-and-books/bogner-willy-jr'] },
+    ],
+    notes: 'Former alpine ski racer and filmmaker, the son of Willy Sr. and Maria Bogner. He launched the Formula W ski collection in 1971, made the film "Fire and Ice" (1986) and launched the FIRE+ICE line in 1989. He retired from day-to-day business in 2019, and the family kept a 40% stake after the 2025 sale to Katjes International.',
+  },
+  wolfgangJoop: {
+    name: 'Wolfgang Joop',
+    nationality: 'German',
+    career: [
+      { house: 'joop', role: 'Founder', start: 1986, sources: ['https://de.wikipedia.org/wiki/Joop!'] },
+      { house: 'joop', role: 'Creative Director', roleDetail: 'Founder-designer', start: 1986, end: 2001, sources: ['https://en.wikipedia.org/wiki/Wolfgang_Joop', 'https://www.joop.com/de/de/heritage'] },
+      { house: 'wunderkind', role: 'Founder', roleDetail: 'Founder and designer', start: 2003, sources: ['https://en.wikipedia.org/wiki/Wunderkind_(fashion)'] },
+    ],
+    notes: 'Potsdam-born designer. He showed fur from 1978, womenswear from 1982 and menswear from 1985 before founding JOOP!. He sold 95% of JOOP! in 1998 but stayed as creative director, then sold the rest and left in 2001. He stepped back from Wunderkind in 2017 but designed its hessnatur capsules from 2023, so his current role is not settled.',
+  },
+  edwinLemberg: {
+    name: 'Edwin Lemberg',
+    career: [
+      { house: 'wunderkind', role: 'Founder', roleDetail: 'Co-founder; CEO', start: 2003, sources: ['https://en.wikipedia.org/wiki/Wunderkind_(fashion)'] },
+    ],
+    notes: 'Wolfgang Joop\'s partner.',
+  },
+  martinHoefeler: {
+    name: 'Martin Höfeler',
+    career: [
+      { house: 'armedangels', role: 'Founder', roleDetail: 'Co-founder; CEO', start: 2007, sources: ['https://en.wikipedia.org/wiki/Armedangels', 'https://crunchbase.com/organization/armedangels'] },
+    ],
+  },
+  antonJurina: {
+    name: 'Anton Jurina',
+    career: [
+      { house: 'armedangels', role: 'Founder', roleDetail: 'Co-founder', start: 2007, sources: ['https://en.wikipedia.org/wiki/Armedangels'] },
+    ],
+  },
+  herbertFrommen: {
+    name: 'Herbert Frommen',
+    nationality: 'German',
+    career: [
+      { house: 'joop', role: 'Founder', roleDetail: 'Co-founder; managing partner (50% stake)', start: 1986, end: 1998, sources: ['https://de.wikipedia.org/wiki/Joop!'] },
+    ],
+    notes: 'A manager at the perfume company Lancaster. He ran the business side of JOOP! while Wolfgang Joop designed, and they sold 95% to Wünsche AG in 1998.',
+  },
+  danielBuezo: {
+    name: 'Daniel Buezo',
+    career: [{ house: 'kidsOfImmigrants', role: 'Founder', roleDetail: 'Co-founder and CEO', start: 2016, end: null }],
+    notes: 'First-generation American who co-founded Kids of Immigrants with Weleh Dennis in Los Angeles.',
+    sources: ['https://remezcla.com/features/culture/daniel-buezo-travels-across-globe-to-inspire-communities-through-his-fashion-brand/', 'https://www.complex.com/shop/brands/Kids%20of%20Immigrants'],
+  },
+  welehDennis: {
+    name: 'Weleh Dennis',
+    career: [{ house: 'kidsOfImmigrants', role: 'Founder', roleDetail: 'Co-founder', start: 2016 }],
+    notes: 'First-generation American who co-founded Kids of Immigrants with Daniel Buezo. Current role unconfirmed.',
+    sources: ['https://www.complex.com/shop/brands/Kids%20of%20Immigrants', 'https://www.youthtothepeople.com/blog/to-the-people--youth-to-the-people/beautiful-people-daniel-buezo-weleh-dennis-founders-of-kids-of-immigrants.html'],
+  },
+  takKato: {
+    name: 'Tak Kato',
+    career: [{ house: 'blends', role: 'Other', roleDetail: 'Co-founder and co-owner', start: 2003, end: null }],
+    notes: 'Grew up in Japan; co-owns Blends with Mike Toe.',
+    sources: ['https://www.blendsus.com/pages/about'],
+  },
+  mikeToe: {
+    name: 'Mike Toe',
+    career: [{ house: 'blends', role: 'Other', roleDetail: 'Co-founder and co-owner', start: 2003, end: null }],
+    notes: 'Grew up in Japan; co-owns Blends with Tak Kato.',
+    sources: ['https://www.blendsus.com/pages/about'],
+  },
+  imranMoosvi: {
+    name: 'Imran Moosvi',
+    career: [{ house: 'imranPotato', role: 'Founder', roleDetail: 'Founder and designer', end: null }],
+    notes: 'New Jersey-raised, New York-based designer who works under the name Imran Potato. The label’s start year is unconfirmed; Imran Potato, LLC filed its first apparel trademark in 2020.',
+    sources: ['https://www.highsnobiety.com/p/imran-potato-interview/', 'https://www.highsnobiety.com/p/imran-potato-vans-interview/'],
+  },
+  isidoreHorween: {
+    name: 'Isidore Horween',
+    career: [{ house: 'horween', role: 'Founder', roleDetail: 'Founder and master tanner', start: 1905, end: 1948 }],
+    notes: 'Ukrainian immigrant who worked in Chicago tanneries for 12 years before starting I. Horween and Co. Also spelled Isadore. Some sources date the end of his working life to 1949.',
+    sources: ['https://www.horween.com/', 'https://en.wikipedia.org/wiki/Horween_Leather_Company'],
+  },
+  brigitteGiraudi: {
+    name: 'Brigitte Giraudi',
+    nationality: 'French',
+    career: [{ house: 'brigitteTanaka', role: 'Founder', roleDetail: 'Co-founder with Chieko Tanaka', start: 2017, end: null }],
+    notes: 'Previously ran her own label, Missbibi, before starting Brigitte Tanaka.',
+    sources: ['https://fashiontechnews.zozo.com/en/culture/brigitte_tanaka', 'https://hubemag.com/?p=10443'],
+  },
+  chiekoTanaka: {
+    name: 'Chieko Tanaka',
+    nationality: 'Japanese',
+    career: [{ house: 'brigitteTanaka', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2017, end: null }],
+    notes: 'Tokyo-born; joined Brigitte Giraudi first as a shop assistant, then as designer, before they founded Brigitte Tanaka together.',
+    sources: ['https://fashiontechnews.zozo.com/en/culture/brigitte_tanaka', 'https://hubemag.com/?p=10443'],
+  },
+  yasunariMiyazaki: {
+    name: 'Yasunari Miyazaki',
+    nationality: 'Japanese',
+    career: [{ house: 'godSelectionXxx', role: 'Founder', roleDetail: 'Founder and designer', start: 2013, end: null }],
+    notes: 'Tokyo-born designer who launched GOD SELECTION XXX after college.',
+    sources: ['https://www.bapegallery.com/exhibitions/19/works/artworks-120-yasunari-miyazaki-blurred-2024/', 'https://www.redbull.com/jp-ja/tokyoneostandard_godselectionxxx'],
+  },
+  naotakaKonno: {
+    name: 'Naotaka Konno',
+    nationality: 'Japanese',
+    career: [
+      { house: 'nexusVII', role: 'Other', roleDetail: 'Founding member', start: 2001, end: 2009 },
+      { house: 'magicStick', role: 'Founder', roleDetail: 'Founder and designer', start: 2009, end: null, approximate: true },
+    ],
+    notes: 'Born in Tokyo in 1976. Worked in sales and press for several brands before joining NEXUSVII. at its start.',
+    sources: ['https://www.wwdjapan.com/articles/810019'],
+  },
+  noriakiEndo: {
+    name: 'Noriaki Endo',
+    nationality: 'Japanese',
+    career: [
+      { house: 'devilock', role: 'Founder', start: 1996, end: 2011 },
+      { house: 'devilock', role: 'Creative Director', roleDetail: 'Director of the relaunched brand', start: 2018, end: null },
+    ],
+    notes: 'Born in Saitama in 1971; sang in the hardcore punk band GMF. Also started DECOY&Co in 2018.',
+    sources: ['https://www.devilockworld.com/', 'https://ja.wikipedia.org/wiki/遠藤憲昭'],
+  },
+  richardNovak: {
+    name: 'Richard Novak',
+    nationality: 'American',
+    career: [
+      { house: 'santaCruzSkateboards', role: 'Founder', roleDetail: 'Co-founder', start: 1973 },
+      { house: 'independentTrucks', role: 'Other', roleDetail: 'Co-founder', start: 1978 },
+    ],
+    notes: 'One of the three NHS partners behind Santa Cruz Skateboards.',
+    sources: ['https://en.wikipedia.org/wiki/NHS,_Inc.', 'https://en.wikipedia.org/wiki/Independent_Truck_Company'],
+  },
+  dougHaut: {
+    name: 'Doug Haut',
+    nationality: 'American',
+    career: [{ house: 'santaCruzSkateboards', role: 'Founder', roleDetail: 'Co-founder', start: 1973 }],
+    notes: 'Surfboard shaper and one of the three NHS partners behind Santa Cruz Skateboards.',
+    sources: ['https://en.wikipedia.org/wiki/NHS,_Inc.'],
+  },
+  jayShuirman: {
+    name: 'Jay Shuirman',
+    nationality: 'American',
+    career: [
+      { house: 'santaCruzSkateboards', role: 'Founder', roleDetail: 'Co-founder', start: 1973 },
+      { house: 'independentTrucks', role: 'Other', roleDetail: 'Co-founder', start: 1978 },
+    ],
+    notes: 'One of the three NHS partners behind Santa Cruz Skateboards.',
+    sources: ['https://en.wikipedia.org/wiki/NHS,_Inc.', 'https://en.wikipedia.org/wiki/Independent_Truck_Company'],
+  },
+  tadayukiKato: {
+    name: 'Tadayuki Kato',
+    nationality: 'Japanese',
+    career: [
+      { house: 'beams', role: 'Other', roleDetail: 'Surf and skate buyer', start: 2012, sources: ['https://www.kokugakuin.ac.jp/article/160231'] },
+      { house: 'ssz', role: 'Founder', roleDetail: 'Founder, director and designer', start: 2017, end: null, sources: ['https://www.kokugakuin.ac.jp/article/160231'] },
+    ],
+    notes: '加藤忠幸. Also works on his family’s Kamakura vegetable farm.',
+  },
+  michimiMizukami: {
+    name: 'Michimi Mizukami',
+    nationality: 'Japanese',
+    career: [
+      { house: 'rayBeams', role: 'Other', roleDetail: 'Earlier work at the label' },
+      { house: 'beamsCouture', role: 'Founder', roleDetail: 'Founder and designer', start: 2017, sources: ['https://www.beams.co.jp/en/news/3066'] },
+    ],
+  },
+  keisukeKanda: {
+    name: 'Keisuke Kanda',
+    nationality: 'Japanese',
+    career: [
+      { house: 'beamsCouture', role: 'Creative Director', roleDetail: 'Launch creative director', start: 2017, sources: ['https://www.beams.co.jp/en/news/3066'] },
+    ],
+    notes: 'Designer of the keisuke kanda label, which is not represented separately.',
+  },
+  subaruIizuka: {
+    name: 'Subaru Iizuka',
+    nationality: 'Japanese',
+    career: [
+      { house: 'beams', role: 'Other', roleDetail: 'Buyer' },
+      { house: 'beamsFutureArchive', role: 'Founder', roleDetail: 'Project founder and lead', start: 2022, sources: ['https://www.houyhnhnm.jp/en/news/616612/'] },
+    ],
+  },
+  terryEllis: {
+    name: 'Terry Ellis',
+    career: [
+      { house: 'fennica', role: 'Founder', roleDetail: 'Co-founder, director and buyer', start: 2003, sources: ['https://pen-online.com/design/terry-ellis-and-keiko-kitamura-redefining-the-spirit-of-contemporary-mingei/'] },
+    ],
+    notes: 'Now runs MOGI Folk Art in Koenji with Keiko Kitamura; the end of the fennica role is unconfirmed.',
+  },
+  keikoKitamura: {
+    name: 'Keiko Kitamura',
+    nationality: 'Japanese',
+    career: [
+      { house: 'fennica', role: 'Founder', roleDetail: 'Co-founder and director', start: 2003, sources: ['https://pen-online.com/design/terry-ellis-and-keiko-kitamura-redefining-the-spirit-of-contemporary-mingei/'] },
+    ],
+    notes: 'Now runs MOGI Folk Art in Koenji with Terry Ellis; the end of the fennica role is unconfirmed.',
+  },
+  tetsuNishiwaki: {
+    name: 'Tetsu Nishiwaki',
+    nationality: 'Japanese',
+    career: [
+      { house: 'beamsGolf', role: 'Creative Director', roleDetail: 'Label director', sources: ['https://www.wwdjapan.com/articles/1895642'] },
+    ],
+    notes: '西脇哲. Worked on BEAMS GOLF from its 2011 launch and had returned as director by 2024; dates of the separate stints and current status are unconfirmed.',
+  },
+  dairikuOkamoto: {
+    name: 'Dairiku Okamoto',
+    nationality: 'Japanese',
+    career: [
+      { house: 'dairiku', role: 'Founder', roleDetail: 'Founder and designer', start: 2017, end: null, sources: ['https://rakutenfashionweektokyo.com/en/topics/interview/dairiku-okamoto'] },
+    ],
+    notes: 'Born in Nara in 1994; studied at Vantan Design Institute.',
+  },
+  daisukeKamide: {
+    name: 'Daisuke Kamide',
+    nationality: 'Japanese',
+    career: [
+      { house: 'teatora', role: 'Founder', roleDetail: 'Founder and designer', start: 2013 },
+    ],
+  },
+  wayneGregory: {
+    name: 'Wayne Gregory',
+    nationality: 'American',
+    career: [
+      { house: 'gregory', role: 'Founder', roleDetail: 'Founder and pack designer', start: 1977 },
+    ],
+    notes: 'Stayed as product-design lead after the 1983 sale to Bianchi; the end of his involvement is unconfirmed.',
+  },
+  marieMeunier: {
+    name: 'Marie Meunier',
+    career: [
+      { house: 'wildThings', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1981 },
+    ],
+    notes: 'Marie-Odile Meunier, a climber from Chamonix. Stayed as shareholder and team member after the 2008 majority sale.',
+  },
+  johnBouchard: {
+    name: 'John Bouchard',
+    nationality: 'American',
+    career: [
+      { house: 'wildThings', role: 'Founder', roleDetail: 'Co-founder', start: 1981 },
+    ],
+  },
+  kyleStewart: {
+    name: 'Kyle Stewart',
+    career: [
+      { house: 'levis', role: 'Other', roleDetail: 'Design studio, London', sources: ['https://www.freundevonfreunden.com/stories/jo-sindle-and-kyle-stewart/'] },
+      { house: 'goodhood', role: 'Founder', roleDetail: 'Co-founder', start: 2007 },
+    ],
+  },
+  joSindle: {
+    name: 'Jo Sindle',
+    career: [
+      { house: 'levis', role: 'Other', roleDetail: 'Design studio, London', sources: ['https://www.freundevonfreunden.com/stories/jo-sindle-and-kyle-stewart/'] },
+      { house: 'goodhood', role: 'Founder', roleDetail: 'Co-founder', start: 2007, end: null, sources: ['https://uk.fashionnetwork.com/news/Goodhood-opens-expanded-east-london-space,1776723.html'] },
+    ],
+  },
+  michaelRancourt: {
+    name: 'Michael Rancourt',
+    nationality: 'American',
+    career: [
+      { house: 'rancourt', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
+    ],
+  },
+  kyleRancourt: {
+    name: 'Kyle Rancourt',
+    nationality: 'American',
+    career: [
+      { house: 'rancourt', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
+    ],
+  },
+  rikuyaHayashi: {
+    name: 'Rikuya Hayashi',
+    nationality: 'Japanese',
+    career: [
+      { house: 'sugarhill', role: 'Founder', roleDetail: 'Founder and designer', start: 2016, end: null, sources: ['https://rakutenfashionweektokyo.com/en/topics/interview/rikuya-hayashi/'] },
+    ],
+    notes: 'Born in Tokyo in 1995. Studied at Bunka Gakuen, coconogacco, FIT and Musashino Art University.',
+  },
+  cuanHanly: {
+    name: 'Cuan Hanly',
+    nationality: 'Irish',
+    career: [
+      { house: 'paulSmith', role: 'Other', roleDetail: 'Earlier work in the UK' },
+      { house: 'jackSpade', role: 'Creative Director', roleDetail: 'Creative director', sources: ['https://www.thegeorgetowndish.com/articles/digest-design-ix-cuan-hanly'] },
+    ],
+    notes: 'Previously ran a tailoring label in Dublin and later worked at Away. Dates at Jack Spade are unconfirmed.',
+  },
+  simonSee: {
+    name: 'Simon See',
+    career: [{ house: 'stepneyWorkersClub', role: 'Founder', roleDetail: 'Co-founder', start: 2018, sources: ['https://www.highsnobiety.com/p/stepney-workers-club-interview'] }],
+  },
+  rogerPereira: {
+    name: 'Roger Pereira',
+    career: [{ house: 'stepneyWorkersClub', role: 'Founder', roleDetail: 'Co-founder', start: 2018, sources: ['https://www.highsnobiety.com/p/stepney-workers-club-interview'] }],
+  },
+  wannyDiFilippo: {
+    name: 'Wanny Di Filippo',
+    nationality: 'Italian',
+    career: [{ house: 'ilBisonte', role: 'Founder', roleDetail: 'Founder and designer', start: 1970, sources: ['https://ilbisonte.com/en/pages/50th-anniversary'] }],
+    notes: 'Born Antonio Di Filippo. Sold the company in 2015 and remained as chairman and ambassador; sources differ on when those roles ended.',
+  },
+  macklemore: {
+    name: 'Macklemore',
+    nationality: 'American',
+    career: [{ house: 'bogeyBoys', role: 'Founder', roleDetail: 'Founder, creative director', start: 2021 }],
+    notes: 'Stage name of rapper Ben Haggerty.',
+  },
+  waiTsui: {
+    name: 'Wai Tsui',
+    nationality: 'Norwegian',
+    career: [
+      { house: 'newBalance', role: 'Other', roleDetail: 'Brand manager, New Balance Lifestyle, Norway', sources: ['https://row.oneblockdown.it/blogs/archive/hiking-patrol-wai-tsui-interview-keen-collaboration-one-block-down-editorial'] },
+      { house: 'puma', role: 'Other', roleDetail: 'Brand manager, Puma Sportstyle, Norway', sources: ['https://row.oneblockdown.it/blogs/archive/hiking-patrol-wai-tsui-interview-keen-collaboration-one-block-down-editorial'] },
+      { house: 'hikingPatrol', role: 'Founder', roleDetail: 'Founder, creative director', start: 2019, end: null },
+    ],
+    notes: 'Started Hiking Patrol as an anonymous Instagram page documenting outdoor style.',
+  },
+  erikTorstensson: {
+    name: 'Erik Torstensson',
+    nationality: 'Swedish',
+    career: [{ house: 'frame', role: 'Founder', roleDetail: 'Co-founder, chief creative officer', start: 2012, end: null }],
+    notes: 'Previously built the Saturday Group creative agencies with Jens Grede.',
+  },
+  anthonyAlvarez: {
+    name: 'Anthony Alvarez',
+    nationality: 'French-Filipino',
+    career: [{ house: 'bluemarble', role: 'Founder', roleDetail: 'Founder, artistic director', start: 2019, end: null }],
+    notes: 'Left a career in finance to start Bluemarble.',
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 

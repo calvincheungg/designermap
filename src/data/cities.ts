@@ -107,6 +107,7 @@ export const cities = {
   Montegranaro: [43.2336, 13.6328],
   Ashland: [40.7812, -76.3463],
   Lafayette: [36.5212, -86.0261],
+  Akron: [41.0814, -81.519],
   Edison: [40.5187, -74.4121],
   Portland: [45.5152, -122.6784],
   Eugene: [44.0521, -123.0868],
@@ -129,6 +130,7 @@ export const cities = {
   'Huntington Beach': [33.6595, -117.9988],
   Rochester: [43.1566, -77.6088],
   Zurich: [47.3769, 8.5417],
+  Kreuzlingen: [47.6458, 9.1781],
   Manchester: [53.4808, -2.2426],
   Turin: [45.0703, 7.6869],
   'Caerano di San Marco': [45.7844, 12.0019],
@@ -191,6 +193,8 @@ export const cities = {
   'South Shields': [54.9986, -1.4323],
   Copenhagen: [55.6761, 12.5683],
   Berlin: [52.52, 13.405],
+  Potsdam: [52.3906, 13.0645],
+  Hannover: [52.3759, 9.732],
   Munich: [48.1351, 11.582],
   'Weil am Rhein': [47.5937, 7.6206],
   'Tel Aviv': [32.0853, 34.7818],
@@ -211,6 +215,7 @@ export const cities = {
   "Martha's Vineyard": [41.3888, -70.6146],
   Sydney: [-33.8688, 151.2093],
   Tokyo: [35.6762, 139.6503],
+  Otsuchi: [39.3583, 141.9],
   Hamburg: [53.5511, 9.9937],
   'Saint-Tropez': [43.2727, 6.6406],
   Wellingborough: [52.3021, -0.6939],
@@ -362,15 +367,25 @@ export const cities = {
   Dallas: [32.7767, -96.797],
   'San Antonio': [29.4241, -98.4936],
   'El Paso': [31.7619, -106.485],
+  Nara: [34.6851, 135.8048],
+  Temecula: [33.4936, -117.1484],
+  'North Conway': [44.0537, -71.1284],
+  'Virginia Beach': [36.8529, -75.978],
+  Lewiston: [44.1004, -70.2148],
 } satisfies Record<string, LatLng>;
 
 export type CityName = keyof typeof cities;
 
 /** State/province metadata is separate from stable map keys and coordinates. */
 export const cityRegions: Partial<Record<CityName, { country: CountryCode; region: string }>> = {
+  Temecula: { country: CountryCode.UnitedStates, region: 'California' },
+  'North Conway': { country: CountryCode.UnitedStates, region: 'New Hampshire' },
+  'Virginia Beach': { country: CountryCode.UnitedStates, region: 'Virginia' },
+  Lewiston: { country: CountryCode.UnitedStates, region: 'Maine' },
   Glendale: { country: CountryCode.UnitedStates, region: 'California' },
   Ashland: { country: CountryCode.UnitedStates, region: 'Pennsylvania' },
   Lafayette: { country: CountryCode.UnitedStates, region: 'Tennessee' },
+  Akron: { country: CountryCode.UnitedStates, region: 'Ohio' },
   Edison: { country: CountryCode.UnitedStates, region: 'New Jersey' },
   'Westlake Village': { country: CountryCode.UnitedStates, region: 'California' },
   Houston: { country: CountryCode.UnitedStates, region: 'Texas' },

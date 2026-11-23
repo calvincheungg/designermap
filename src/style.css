@@ -958,6 +958,66 @@ table.fields .field-separator { margin: 0 8px; }
 .side-window .stats-sort { all: unset; display: block; width: 100%; text-align: right; cursor: var(--cursor-pointer); white-space: nowrap; }
 .side-window .stats-sort:focus-visible { outline: 1px dotted #000; outline-offset: -2px; }
 .side-window .stats-table .stats-rank { width: 1%; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; color: #404040; }
+/* Most diverse collaborators (statistics.tsx DiversitySection): bars only where the window is wide enough. */
+.side-window .stats-diverse { container-type: inline-size; }
+.side-window .stats-diverse .hint { margin: 4px 0; }
+.side-window .stats-diverse-option { display: inline-flex; align-items: center; margin-left: 8px; }
+.side-window .stats-open-row { cursor: var(--cursor-pointer); }
+.side-window .stats-open-toggle { all: unset; padding: 0 4px 0 0; cursor: var(--cursor-pointer); }
+.side-window .stats-open-toggle:focus-visible { outline: 1px dotted currentColor; }
+.stats-diverse-cell { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.stats-diverse-track { flex: none; width: 48px; }
+.stats-diverse-n { min-width: 30px; text-align: right; font-variant-numeric: tabular-nums; }
+.side-window .stats-diverse-breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px 16px; padding: 4px; }
+.side-window .stats-diverse-breakdown ul { margin: 4px 0 0; padding: 0; list-style: none; }
+.side-window .stats-diverse-breakdown li { display: flex; align-items: center; gap: 4px; }
+.stats-diverse-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-window .stats-diverse-sort { display: none; }
+@container (max-width: 640px) {
+  .side-window .stats-diverse-cell .stats-diverse-track { display: none; }
+}
+/* Too narrow for every column: partners and the sorted one, with a Sort by picker. */
+@container (max-width: 440px) {
+  .side-window .stats-diverse-sort { display: flex; }
+  .side-window .stats-diverse table .stats-count { display: none; }
+  .side-window .stats-diverse table .stats-diverse-partners,
+  .side-window .stats-diverse table[data-sort='category'] .stats-diverse-category,
+  .side-window .stats-diverse table[data-sort='market'] .stats-diverse-market,
+  .side-window .stats-diverse table[data-sort='country'] .stats-diverse-country,
+  .side-window .stats-diverse table[data-sort='overall'] .stats-diverse-overall,
+  .side-window .stats-diverse table[data-sort='partners'] .stats-diverse-overall { display: table-cell; }
+}
+/* Statistics tabs (statistics.tsx StatsTabs): 98.css tabs over one raised panel. */
+.side-window .stats-tabs menu[role='tablist'] { display: flex; flex-wrap: wrap; margin: 0 0 -2px; padding: 2px 0 0 3px; position: relative; list-style: none; }
+.side-window .stats-tabs li[role='tab'] { padding: 5px 8px; cursor: var(--cursor-default); white-space: nowrap; }
+.side-window .stats-tabs li[role='tab']:focus-visible { outline: 1px dotted #000; outline-offset: -4px; }
+.side-window .stats-tabpanel { padding: 8px; background: #c0c0c0; box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf; }
+.side-window .stats-tabpanel[hidden] { display: none; }
+.side-window .stats-choice { display: inline-flex; align-items: center; gap: 6px; margin-right: 6px; }
+.side-window .stats-tabpanel .hint { margin: 4px 0; }
+.side-window .stats-details { padding: 2px 4px 4px 24px; }
+.side-window .stats-details ul { margin: 0; padding: 0; list-style: none; }
+.stats-bar.cooling { background: #800000; box-shadow: inset -1px -1px #400000, inset 1px 1px #c04040; }
+:root[data-theme='night'] .stats-bar.cooling { background: #c04040; box-shadow: inset -1px -1px #802020, inset 1px 1px #ff8080; }
+.side-window .stats-subheading { margin: 8px 0 4px; font-weight: bold; }
+/* Degrees of separation (stats-connections.tsx): the chain of collaborations between two brands. */
+.side-window .stats-degrees-form { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-bottom: 6px; }
+.side-window .stats-degrees-form .field-row { margin: 0; }
+.side-window .stats-degrees-form input[type='text'] { width: 170px; color: #000; }
+.side-window .stats-chain { margin: 4px 0; padding: 6px 8px; list-style: none; background: #fff; box-shadow: inset -1px -1px #fff, inset 1px 1px #808080; }
+.side-window .stats-chain-link { padding: 2px 0 2px 12px; color: #404040; }
+/* Who collaborates with whom: a heatmap of brand pairs. */
+.side-window .stats-heatmap { max-height: none; overflow-x: auto; }
+.side-window .stats-heatmap table { width: 100%; border-collapse: collapse; }
+.side-window .stats-heatmap thead th { vertical-align: bottom; height: auto; padding: 4px 2px; text-align: center; }
+.side-window .stats-heatmap thead th.turned span { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; }
+.side-window .stats-heatmap tbody th { padding: 2px 6px; text-align: left; font-weight: normal; white-space: nowrap; }
+.side-window .stats-heatmap td { padding: 0 !important; }
+.stats-heat { all: unset; display: block; box-sizing: border-box; width: 100%; min-width: 30px; padding: 4px 2px; text-align: center; font-variant-numeric: tabular-nums; color: #000; background: color-mix(in srgb, #000080 calc(var(--heat) * 100%), #ffffff); }
+.stats-heat.hot { color: #fff; }
+button.stats-heat { cursor: var(--cursor-pointer); }
+.stats-heat[aria-pressed='true'], .stats-heat:focus-visible { outline: 2px solid #ff0000; outline-offset: -2px; }
+:root[data-theme='night'] .stats-heat { color: #fff; background: color-mix(in srgb, #5050e0 calc(var(--heat) * 100%), #202020); }
 /* Collaborations by year (statistics.tsx YearChart): one navy column per year on a white plot. */
 .side-window .stats-chart { display: flex; gap: 4px; height: 140px; padding: 6px 6px 4px; background: #fff; overflow: hidden; }
 .stats-chart-scale { display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 14px; font-variant-numeric: tabular-nums; text-align: right; }

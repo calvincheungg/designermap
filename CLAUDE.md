@@ -32,7 +32,7 @@ src/types.ts          data model
 src/data/houses.ts    SOURCE OF TRUTH: houses (key = house id)
 src/data/designers.ts SOURCE OF TRUTH: designers + career tenures
 src/data/collaborations.ts SOURCE OF TRUTH: dated brand collaborations (2+ houses)
-src/data/research-log.ts research bookkeeping: brands with a full collaboration search (never read at runtime)
+src/data/research-log.ts research bookkeeping: brands with a full collaboration search (read at runtime only by Statistics' Rising and cooling)
 src/data/cities.ts    city → [lat, lng]; every house city must be listed here
 src/data/index.ts     derived queries: tenuresAt, movesOf, allMoves, yearRange…
 src/data/validate.ts  sanity checks (also run in tests + logged in browser)
@@ -546,11 +546,26 @@ Key rules:
     from the Start menu or its desktop icon. It follows the year/tag filters, isn't a map selection
     (`isSelectionItem` excludes it with place windows), and its names open the
     matching brand, designer, city or country window. The Most collaborations
-    and Most frequent pairings tables each have an "Include retailer collaborations"
+    and Top partnerships tables each have an "Include retailer collaborations"
     checkbox beside their Show picker (`designer-map:stats-retailer-collabs` /
     `designer-map:stats-retailer-pairs`, on by default) that drops releases with a
     `Retailer`-category participant (`involvesRetailer`) from that table only; the
     overview total, Collaborations by year, the map and Properties keep every release.
+    Win98 tabs (`StatsTabs`, `designer-map:stats-tab`; a panel mounts when first opened and stays mounted): Overview,
+    Collaborations, Connections, People, Brands & places. Shared tables and controls are in `ui/stats-shared.tsx`
+    (`SortTable`: sortable columns, openable rows), derived data in `ui/stats-data.ts` (no React), sections in
+    `stats-connections.tsx` and `stats-trends.tsx`:
+    Degrees of separation (shortest chain, ties by most releases), Who collaborates with whom (heatmap of distinct
+    pairs; a cell lists them), Top partnerships (releases, active years, span), Rising and cooling (last N full years
+    against the N before; only brands with a complete entry in `research-log.ts` dated after the period), Talent
+    incubators (people in an `Other` role who first led a house outside the family later), Brands founded by decade
+    and Where brands move (origin → current base). Collaboration sections each remember their own retailer checkbox.
+    Most diverse collaborators (`DiversitySection`, scoring in `ui/collab-diversity.ts`) ranks brands by how varied
+    their distinct partners are in category, market position and country. Rank by Variety (chance two partners
+    picked at random differ; multi-category partners split their weight) or Number reached; Overall averages the
+    percentiles of the ticked measures among brands with at least Min. partners (20 by default; smaller samples dominate Variety). Clicking a row lists its
+    partner counts. Remembered as `designer-map:stats-diverse-mode` / `-include` / `-min` and
+    `designer-map:stats-retailer-diverse`. Narrow windows drop the bars, then all but the sorted column (container queries).
     Collaborations by year (`YearSection`): empty runs over `CHART_GAP_YEARS` (10) collapse
     into one `≈` column; hover shows exact counts; clicking a column lists that year's releases.
     "Colour by" (`designer-map:stats-year-breakdown`) stacks bars by partner type

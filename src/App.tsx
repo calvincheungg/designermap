@@ -31,7 +31,7 @@ import { readSharedView, sharedViewHash } from './ui/share-link';
 /** Place windows hold a fixed grid of icons, so they grow with the text size. */
 const scaleSize = (size: { width: number; height: number }, scale: number) => scale === 1 ? size
   : { width: Math.round(size.width * scale), height: Math.round(size.height * scale) };
-const TOOL_SIZES = { stats: { width: 460, height: 640 }, recycle: { width: 380, height: 480 }, missing: { width: 420, height: 560 }, help: { width: 440, height: 560 }, run: { width: 400, height: 240 }, list: { width: 820, height: 560 }, settings: { width: 340, height: 610 }, computer: { width: 520, height: 440 }, notepad: { width: 460, height: 380 } } as const;
+const TOOL_SIZES = { stats: { width: 560, height: 640 }, recycle: { width: 380, height: 480 }, missing: { width: 420, height: 560 }, help: { width: 440, height: 560 }, run: { width: 400, height: 240 }, list: { width: 820, height: 560 }, settings: { width: 340, height: 610 }, computer: { width: 520, height: 440 }, notepad: { width: 460, height: 380 } } as const;
 /** Run is a small dialog-like window, so it may be smaller than the Properties minimum. */
 const RUN_MIN_SIZE = { width: 320, height: 200 };
 /** Start menu's What's Missing report: a research aid, so development builds only. */

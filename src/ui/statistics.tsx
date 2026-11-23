@@ -1,4 +1,4 @@
-import { useId, useMemo, useState, type ReactNode } from 'react';
+import { Fragment, useId, useMemo, useState, type ReactNode } from 'react';
 import { allMoves, BrandCategory, collaborations, countryNames, designers, getDesigner, getHouse, groups, isBusinessLeadership, marketPositionings, tenuresAt, type CountryCode } from '../data';
 import type { Collaboration, House } from '../types';
 import { MarketPositioning } from '../data/tags';
@@ -7,100 +7,14 @@ import { EntityLink, Fields, PlaceLink, ProfileSection, RowLimitedPanel, type Ac
 import { SearchBox, SelectBox, type ListItem } from './listbox';
 import { filterFields, type FilterGroup } from './filters';
 import { tagLabel } from './labels';
-
-/** Rows shown in each "top" table. */
-export const STATS_TOP = 10;
-
-interface Row {
-  key: string; label: ReactNode; count: number;
-  /** Full label text, shown on hover when a long name is cut short. */
-  title?: string;
-  /** Extra columns after the label, one per `columns` heading. */
-  cells?: ReactNode[];
-}
-
-/** Rows a table shows before it scrolls, however many the "Show" picker lists. */
-export const STATS_VISIBLE_ROWS = 25;
-
-/** Row counts the collaboration tables can show. */
-const COLLAB_LIMITS = [STATS_TOP, 25, 50, 100, 200] as const;
-
-/** A statistics section with a "Show" picker for how many rows its table lists. */
-function LimitedSection({ title, children, controls }: {
-  title: string; children: (limit: number) => ReactNode;
-  /** Extra controls beside the "Show" picker. */
-  controls?: ReactNode;
-}) {
-  const [limit, setLimit] = useState<number>(STATS_TOP);
-  return <ProfileSection title={title}>
-    <div className="field-row stats-limit">
-      <span>Show</span>
-      <SelectBox label={`Rows shown in ${title}`} values={COLLAB_LIMITS} value={limit} onChange={setLimit} />
-      {controls}
-    </div>
-    {children(limit)}
-  </ProfileSection>;
-}
-
-const top = <T,>(entries: Iterable<readonly [T, number]>, limit = STATS_TOP) =>
-  [...entries].sort((a, b) => b[1] - a[1]).slice(0, limit);
-const tally = <T,>(values: Iterable<T>) => {
-  const counts = new Map<T, number>();
-  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
-  return counts;
-};
-
-/** A Win98 table of counts with a navy bar scaled to the largest row. */
-function BarTable({ heading, rows, label, countHeading = 'Count', columns = [], ranked = true }: {
-  heading: string; rows: Row[]; label: string; countHeading?: string;
-  /** Headings of extra columns between the label and the count. */
-  columns?: string[];
-  /** Number the rows in a leading "#" column (off for fixed orders like market tiers). */
-  ranked?: boolean;
-}) {
-  const max = Math.max(1, ...rows.map((row) => row.count));
-  if (!rows.length) return <p className="hint">Nothing to count with the current filters.</p>;
-  return <RowLimitedPanel rows={STATS_VISIBLE_ROWS} className="stats-table"><table aria-label={label}>
-    <thead><tr>{ranked && <th className="stats-rank">#</th>}<th className="stats-label">{heading}</th>{columns.map((column) => <th key={column} className="stats-label">{column}</th>)}<th className="stats-count">{countHeading}</th><th className="stats-bar-cell" aria-hidden="true"></th></tr></thead>
-    <tbody>{rows.map((row, index) => <tr key={row.key}>
-      {ranked && <td className="stats-rank">{index + 1}</td>}<td className="stats-label" title={row.title}>{row.label}</td>{columns.map((column, cell) => <td key={column} className="stats-label">{row.cells?.[cell]}</td>)}<td className="stats-count">{row.count.toLocaleString()}</td>
-      <td className="stats-bar-cell" aria-hidden="true"><span className="stats-bar" style={{ width: `${(row.count / max) * 100}%` }} /></td>
-    </tr>)}</tbody>
-  </table></RowLimitedPanel>;
-}
-
-const houseName = (id: string) => getHouse(id)?.name ?? id;
+import { DIMENSIONS, dimensionValues, diversityRows, partnersByBrand, type Dimension, type DiversityMode } from './collab-diversity';
+import { BarTable, houseName, involvesRetailer, LimitedSection, readSetting, RetailerToggle, STATS_TOP, STATS_VISIBLE_ROWS, tally, top, useRememberedToggle, writeSetting } from './stats-shared';
+import { DegreesSection, HeatmapSection, PairingsSection } from './stats-connections';
+import { DecadesSection, IncubatorsSection, RelocationsSection, TrendsSection } from './stats-trends';
 
 /** Remember, per table, whether it counts releases with a retailer. */
 const RETAILER_COLLABS_KEY = 'designer-map:stats-retailer-collabs';
-const RETAILER_PAIRS_KEY = 'designer-map:stats-retailer-pairs';
-
-/** Whether a release involves a brand that is also a multi-brand store (category Retailer). */
-export const involvesRetailer = (project: Pick<Collaboration, 'houses'>) =>
-  project.houses.some((id) => getHouse(id)?.tags.brandCategory.includes(BrandCategory.Retailer));
-
-/** An on-by-default checkbox setting remembered in localStorage. */
-function useRememberedToggle(key: string) {
-  const [on, setOn] = useState(() => {
-    try { return localStorage.getItem(key) !== 'off'; } catch { return true; }
-  });
-  const toggle = (next: boolean) => {
-    setOn(next);
-    try { localStorage.setItem(key, next ? 'on' : 'off'); } catch { /* storage unavailable */ }
-  };
-  return [on, toggle] as const;
-}
-
-/** "Include retailer collaborations" checkbox, shown beside a table's "Show" picker. */
-function RetailerToggle({ id, checked, onChange }: { id: string; checked: boolean; onChange: (next: boolean) => void }) {
-  return <span className="stats-retailers">
-    <input type="checkbox" id={id} checked={checked} onChange={(event) => onChange(event.target.checked)} />
-    <label htmlFor={id} title="Releases with a brand that is also a store stocking other brands (Kith, BEAMS, Undefeated…)">Include retailer collaborations</label>
-  </span>;
-}
-
-/** Each brand pair in a release (three-brand projects give three pairs), counted across releases. */
-const tallyPairs = (releases: readonly Collaboration[]) => tally(releases.flatMap(pairKeys));
+const RETAILER_DIVERSE_KEY = 'designer-map:stats-retailer-diverse';
 
 /** Empty stretches longer than this many years collapse into one break column. */
 export const CHART_GAP_YEARS = 10;
@@ -637,6 +551,173 @@ function CollaborationsSection({ releases, partners, house, controls }: {
   </LimitedSection>;
 }
 
+const DIVERSITY_MODE_KEY = 'designer-map:stats-diverse-mode';
+const DIVERSITY_DIMENSIONS_KEY = 'designer-map:stats-diverse-include';
+const DIVERSITY_MIN_KEY = 'designer-map:stats-diverse-min';
+const MIN_PARTNERS = [5, 10, 20, 50] as const;
+const DEFAULT_MIN_PARTNERS = 20; // Below this, small samples dominate Variety.
+const DIMENSION_LABELS: Record<Dimension, { title: string; column: string; differ: string; reached: string }> = {
+  category: { title: 'Categories', column: 'Categories', differ: 'are in different brand categories', reached: 'brand categories' },
+  market: { title: 'Market positions', column: 'Market', differ: 'have different market positions', reached: 'market positions' },
+  country: { title: 'Countries', column: 'Countries', differ: 'are based in different countries', reached: 'countries' },
+};
+type DiversitySort = Dimension | 'partners' | 'overall';
+const DIVERSITY_SORTS: readonly DiversitySort[] = ['partners', ...DIMENSIONS, 'overall'];
+const sortLabel = (key: DiversitySort) => key === 'partners' ? 'Partners' : key === 'overall' ? 'Overall' : DIMENSION_LABELS[key].column;
+
+/** Where a brand's scores come from: its partners counted by each dimension, scores included. */
+function DiversityBreakdown({ partners, scores }: { partners: ReadonlySet<string>; scores: (key: Dimension) => string }) {
+  return <div className="stats-diverse-breakdown">{DIMENSIONS.map((dimension) => {
+    const counts = tally([...partners].flatMap((id) => dimensionValues(id, dimension)));
+    const rows = top(counts, Infinity);
+    const max = Math.max(1, ...counts.values());
+    return <div key={dimension}>
+      <strong>{DIMENSION_LABELS[dimension].title}</strong> ({scores(dimension)})
+      <ul>{rows.map(([value, count]) => <li key={value}>
+        <span className="stats-diverse-value" title={value}>{value}</span>
+        <span className="stats-diverse-track" aria-hidden="true"><span className="stats-bar" style={{ width: `${(count / max) * 100}%` }} /></span>
+        <span className="stats-diverse-n">{count}</span>
+      </li>)}</ul>
+    </div>;
+  })}</div>;
+}
+
+/**
+ * Brands whose collaboration partners differ most in category, market position
+ * and country. Settings are remembered; a row opens the partner counts behind it.
+ */
+function DiversitySection({ releases, house }: { releases: readonly Collaboration[]; house: (id: string) => ReactNode }) {
+  const id = useId();
+  const [withRetailers, toggleRetailers] = useRememberedToggle(RETAILER_DIVERSE_KEY);
+  const [mode, setMode] = useState<DiversityMode>(() => readSetting(DIVERSITY_MODE_KEY, (stored) => stored === 'reach' ? 'reach' : 'variety', 'variety'));
+  const [included, setIncluded] = useState<readonly Dimension[]>(() => readSetting(DIVERSITY_DIMENSIONS_KEY, (stored) => {
+    const list = stored.split(',');
+    const valid = DIMENSIONS.filter((dimension) => list.includes(dimension));
+    return valid.length ? valid : undefined;
+  }, DIMENSIONS));
+  const [min, setMin] = useState<number>(() => readSetting<number>(DIVERSITY_MIN_KEY, (stored) => MIN_PARTNERS.find((value) => String(value) === stored), DEFAULT_MIN_PARTNERS));
+  const [sort, setSort] = useState<{ key: DiversitySort; ascending: boolean }>({ key: 'overall', ascending: false });
+  const [opened, setOpened] = useState<string>();
+  const pickMode = (next: DiversityMode) => { setMode(next); writeSetting(DIVERSITY_MODE_KEY, next); };
+  const pickMin = (next: number) => { setMin(next); writeSetting(DIVERSITY_MIN_KEY, String(next)); };
+  const toggle = (dimension: Dimension) => {
+    const next = DIMENSIONS.filter((key) => (key === dimension) !== included.includes(key));
+    if (!next.length) return;
+    setIncluded(next);
+    writeSetting(DIVERSITY_DIMENSIONS_KEY, next.join(','));
+  };
+  const partners = useMemo(() => partnersByBrand(withRetailers ? releases : releases.filter((project) => !involvesRetailer(project))), [releases, withRetailers]);
+  const scored = useMemo(() => diversityRows(partners, mode, included, min), [partners, mode, included, min]);
+  const rows = useMemo(() => {
+    const value = (row: typeof scored[number]) => sort.key === 'partners' ? row.partners.size : sort.key === 'overall' ? row.overall : row.scores[sort.key];
+    const direction = sort.ascending ? 1 : -1;
+    return [...scored].sort((a, b) => direction * (value(a) - value(b)) || b.overall - a.overall
+      || b.partners.size - a.partners.size || houseName(a.id).localeCompare(houseName(b.id)));
+  }, [scored, sort]);
+  const most = useMemo(() => Object.fromEntries(DIMENSIONS.map((dimension) =>
+    [dimension, Math.max(1, ...scored.map((row) => row.scores[dimension]))])) as Record<Dimension, number>, [scored]);
+
+  const hint = (key: DiversitySort) => key === 'partners' ? 'Distinct partner brands'
+    : key === 'overall' ? `Average rank among the ${scored.length} brands compared, from 0 (lowest) to 100 (highest), over the ticked measures`
+    : mode === 'reach' ? `How many ${DIMENSION_LABELS[key].reached} its partners cover`
+    : `Chance that two partners picked at random ${DIMENSION_LABELS[key].differ}`;
+  const heading = (key: DiversitySort) => {
+    const active = sort.key === key;
+    return <th key={key} className={`stats-count stats-diverse-${key}`} aria-sort={active ? (sort.ascending ? 'ascending' : 'descending') : 'none'}>
+      <button type="button" className="stats-sort" title={hint(key)}
+        onClick={() => setSort({ key, ascending: active && !sort.ascending })}>{sortLabel(key)}{active ? (sort.ascending ? ' ▲' : ' ▼') : ''}</button>
+    </th>;
+  };
+  const scoreText = (score: number) => mode === 'reach' ? String(score) : `${Math.round(score * 100)}%`;
+  const cell = (key: DiversitySort, text: string, share: number) => <td key={key} className={`stats-count stats-diverse-${key}`}>
+    <span className="stats-diverse-cell"><span className="stats-diverse-track" aria-hidden="true"><span className="stats-bar" style={{ width: `${share * 100}%` }} /></span>
+      <span className="stats-diverse-n">{text}</span></span>
+  </td>;
+
+  return <LimitedSection title="Most diverse collaborators" controls={<>
+    <span>Min. partners</span>
+    <SelectBox label="Fewest partners to be listed" values={MIN_PARTNERS} value={min} onChange={pickMin} />
+    <RetailerToggle id="stats-retailer-diverse" checked={withRetailers} onChange={toggleRetailers} />
+  </>}>{(limit) => <div className="stats-diverse">
+    <div className="field-row stats-limit" role="radiogroup" aria-label="Rank by">
+      <span>Rank by</span>
+      {([['variety', 'Variety', 'How evenly its partners are spread'], ['reach', 'Number reached', 'How many different values its partners cover']] as const).map(([value, text, title]) =>
+        <span key={value} className="stats-diverse-option" title={title}>
+          <input type="radio" id={`${id}-${value}`} name={`${id}-mode`} checked={mode === value} onChange={() => pickMode(value)} />
+          <label htmlFor={`${id}-${value}`}>{text}</label>
+        </span>)}
+    </div>
+    <div className="field-row stats-limit" role="group" aria-label="Measures in Overall">
+      <span>Overall uses</span>
+      {DIMENSIONS.map((dimension) => <span key={dimension} className="stats-diverse-option">
+        <input type="checkbox" id={`${id}-${dimension}`} checked={included.includes(dimension)}
+          disabled={included.length === 1 && included[0] === dimension} onChange={() => toggle(dimension)} />
+        <label htmlFor={`${id}-${dimension}`}>{DIMENSION_LABELS[dimension].title}</label>
+      </span>)}
+    </div>
+    <div className="field-row stats-limit stats-diverse-sort">
+      <span>Sort by</span>
+      <SelectBox label="Sort diverse collaborators by" values={DIVERSITY_SORTS} value={sort.key} text={sortLabel} onChange={(key) => setSort({ key, ascending: false })} />
+    </div>
+    <p className="hint">{mode === 'variety' ? 'Percentages are the chance that two of a brand’s partners, picked at random, differ.'
+      : 'Counts are how many different values a brand’s partners cover.'} Overall is its average rank from 0 to 100. Click a row for its partners.</p>
+    {rows.length ? <RowLimitedPanel rows={STATS_VISIBLE_ROWS} className="stats-table"><table aria-label="Brands with the most diverse collaborations" data-sort={sort.key}>
+      <thead><tr><th className="stats-rank">#</th><th className="stats-label">Brand</th>{DIVERSITY_SORTS.map(heading)}</tr></thead>
+      <tbody>{rows.slice(0, limit).map((row, index) => {
+        const open = opened === row.id;
+        const flip = () => setOpened(open ? undefined : row.id);
+        return <Fragment key={row.id}>
+          <tr className="stats-open-row" onClick={(event) => {
+            // Brand links and the arrow handle their own clicks.
+            if (!(event.target as Element).closest('a, button')) flip();
+          }}>
+            <td className="stats-rank">{index + 1}</td>
+            <td className="stats-label" title={houseName(row.id)}>
+              <button type="button" className="stats-open-toggle" aria-expanded={open} aria-label={`Partner breakdown for ${houseName(row.id)}`} onClick={flip}>{open ? '▾' : '▸'}</button>
+              {house(row.id)}
+            </td>
+            <td className="stats-count stats-diverse-partners">{row.partners.size.toLocaleString()}</td>
+            {DIMENSIONS.map((key) => cell(key, scoreText(row.scores[key]), mode === 'reach' ? row.scores[key] / most[key] : row.scores[key]))}
+            {cell('overall', String(Math.round(row.overall)), row.overall / 100)}
+          </tr>
+          {open && <tr><td colSpan={2 + DIVERSITY_SORTS.length}><DiversityBreakdown partners={row.partners} scores={(key) => scoreText(row.scores[key])} /></td></tr>}
+        </Fragment>;
+      })}</tbody>
+    </table></RowLimitedPanel> : <p className="hint">No brand has {min} or more partners with the current filters.</p>}
+    {rows.length > 0 && <p className="hint">{rows.length.toLocaleString()} {rows.length === 1 ? 'brand' : 'brands'} with at least {min} partners compared.</p>}
+  </div>}</LimitedSection>;
+}
+
+export type StatsTab = 'overview' | 'collaborations' | 'connections' | 'people' | 'places';
+const TABS: readonly (readonly [StatsTab, string])[] = [['overview', 'Overview'], ['collaborations', 'Collaborations'], ['connections', 'Connections'], ['people', 'People'], ['places', 'Brands & places']];
+const TAB_KEY = 'designer-map:stats-tab';
+
+/** Win98 tabs. A panel mounts when first opened and stays mounted, so its settings survive switching. */
+function StatsTabs({ panels }: { panels: Record<StatsTab, () => ReactNode> }) {
+  const id = useId();
+  const [tab, setTab] = useState<StatsTab>(() => readSetting(TAB_KEY, (stored) => TABS.find(([key]) => key === stored)?.[0], 'overview'));
+  const [visited, setVisited] = useState<readonly StatsTab[]>([tab]);
+  const pick = (next: StatsTab) => {
+    setTab(next);
+    setVisited((keys) => keys.includes(next) ? keys : [...keys, next]);
+    writeSetting(TAB_KEY, next);
+  };
+  return <div className="stats-tabs">
+    <menu role="tablist" aria-label="Statistics" onKeyDown={(event) => {
+      const at = TABS.findIndex(([key]) => key === tab);
+      const to = event.key === 'ArrowRight' ? (at + 1) % TABS.length : event.key === 'ArrowLeft' ? (at + TABS.length - 1) % TABS.length
+        : event.key === 'Home' ? 0 : event.key === 'End' ? TABS.length - 1 : -1;
+      if (to < 0) return;
+      event.preventDefault();
+      pick(TABS[to]![0]);
+      (event.currentTarget.children[to] as HTMLElement).focus();
+    }}>{TABS.map(([key, text]) => <li key={key} role="tab" id={`${id}-${key}-tab`} aria-controls={`${id}-${key}`} aria-selected={key === tab}
+      tabIndex={key === tab ? 0 : -1} onClick={() => pick(key)}>{text}</li>)}</menu>
+    {TABS.filter(([key]) => visited.includes(key)).map(([key]) => <div key={key} role="tabpanel" className="stats-tabpanel" id={`${id}-${key}`}
+      aria-labelledby={`${id}-${key}-tab`} hidden={key !== tab}>{panels[key]()}</div>)}
+  </div>;
+}
+
 /**
  * Statistics for the brands the year and tag filters show: totals, market
  * tiers, countries, cities and the most connected people
@@ -646,7 +727,6 @@ export function StatisticsContent({ visibleHouses, year, filtered, onSelect, onO
   visibleHouses: readonly House[]; year: number; filtered: boolean;
 } & Pick<Actions, 'onSelect' | 'onOpenPlace'>) {
   const [withRetailers, toggleRetailers] = useRememberedToggle(RETAILER_COLLABS_KEY);
-  const [pairsWithRetailers, togglePairRetailers] = useRememberedToggle(RETAILER_PAIRS_KEY);
   const stats = useMemo(() => {
     const ids = new Set(visibleHouses.map((house) => house.id));
     const main = visibleHouses.filter((house) => !house.parentHouse);
@@ -674,83 +754,86 @@ export function StatisticsContent({ visibleHouses, year, filtered, onSelect, onO
       }))
       .filter((stint) => stint.years > 0);
     return {
-      brands: visibleHouses.length, main: main.length, active, people: people.length, moves: moves.length, releases,
+      brands: visibleHouses.length, main, active, people: people.length, moves: moves.length, releases,
       groups: groups.filter((group) => visibleHouses.some((house) => house.parentGroup === group.id)).length,
       countries, cities, tiers, directors, moveYears, tenures,
     };
   }, [visibleHouses, year]);
 
-  // Only the Most collaborations and Most frequent pairings tables follow their retailer checkboxes.
+  // Only the Most collaborations table follows this checkbox.
   const ranking = useMemo(() => {
     const releases = withRetailers ? stats.releases : stats.releases.filter((project) => !involvesRetailer(project));
     const collaborative = tally(releases.flatMap((project) => project.houses));
-    // Distinct partner brands per brand, however many releases they shared.
-    const partners = new Map<string, Set<string>>();
-    for (const project of releases) for (const id of project.houses) {
-      const set = partners.get(id) ?? new Set<string>();
-      for (const other of project.houses) if (other !== id) set.add(other);
-      partners.set(id, set);
-    }
+    const partners = partnersByBrand(releases);
     return { collaborative, uniquePartners: new Map([...partners].map(([id, set]) => [id, set.size] as const)) };
   }, [stats.releases, withRetailers]);
-  const pairs = useMemo(() => tallyPairs(pairsWithRetailers ? stats.releases : stats.releases.filter((project) => !involvesRetailer(project))),
-    [stats.releases, pairsWithRetailers]);
-
   const house = (id: string) => <EntityLink kind="house" id={id} onSelect={onSelect}>{houseName(id)}</EntityLink>;
   return <>
     <h2>Statistics</h2>
     <p className="hint">{filtered ? `For the brands matching the current ${year === Infinity ? '' : 'year and '}filters.`
       : year === Infinity ? 'For every brand on the map.' : `For brands founded by ${year}.`}</p>
-    <ProfileSection title="Overview">
-      <Fields rows={[
-        ['Brands', `${stats.brands.toLocaleString()} (${stats.main.toLocaleString()} main brands, ${(stats.brands - stats.main).toLocaleString()} sublabels)`],
-        ['Active', `${stats.active.toLocaleString()} active · ${(stats.brands - stats.active).toLocaleString()} ended`],
-        ['People', stats.people.toLocaleString()],
-        ['Career moves', stats.moves.toLocaleString()],
-        ['Collaborations', stats.releases.length.toLocaleString()],
-        ['Groups', stats.groups.toLocaleString()],
-        ['Countries', stats.countries.size.toLocaleString()],
-        ['Cities', stats.cities.size.toLocaleString()],
-      ]} />
-    </ProfileSection>
-    <ProfileSection title="Market positioning">
-      <BarTable heading="Tier" ranked={false} label="Brands by market positioning"
-        rows={marketPositionings.filter((tier) => stats.tiers.has(tier)).map((tier) => ({ key: tier, label: tier, count: stats.tiers.get(tier)! }))} />
-    </ProfileSection>
-    <ProfileSection title={`Top countries (of ${stats.countries.size})`}>
-      <BarTable heading="Country" label="Main brands by country" rows={top(stats.countries).map(([code, count]) => ({ key: code, count,
-        label: <PlaceLink place={{ kind: 'country', id: code as CountryCode }} onOpenPlace={onOpenPlace}>{countryNames[code as CountryCode]}</PlaceLink> }))} />
-    </ProfileSection>
-    <ProfileSection title={`Top cities (of ${stats.cities.size})`}>
-      <BarTable heading="City" label="Main brands by city" rows={top(stats.cities).map(([city, count]) => ({ key: city, count,
-        label: <PlaceLink place={{ kind: 'city', id: mapLocationForCity(city) }} onOpenPlace={onOpenPlace}>{city}</PlaceLink> }))} />
-    </ProfileSection>
-    <ProfileSection title="Longest creative director tenures">
-      <BarTable heading="Creative director" columns={['Brand', 'Tenure']} countHeading="Years" label="Longest creative director tenures"
-        rows={[...stats.tenures].sort((a, b) => b.years - a.years).slice(0, STATS_TOP).map(({ house: brand, tenure, years, current }) => ({
-          key: `${tenure.designerId}:${brand.id}:${tenure.start}`, count: years,
-          label: <EntityLink kind="designer" id={tenure.designerId} onSelect={onSelect}>{getDesigner(tenure.designerId)?.name ?? tenure.designerId}</EntityLink>,
-          cells: [house(brand.id), <span className="nowrap">{tenure.start}–{current ? 'present' : tenure.end}</span>],
-        }))} />
-    </ProfileSection>
-    <ProfileSection title="Busiest years for moves">
-      <BarTable heading="Year" countHeading="Moves" label="Years with the most career moves"
-        rows={top(stats.moveYears).map(([moveYear, count]) => ({ key: String(moveYear), label: String(moveYear), count }))} />
-    </ProfileSection>
-    <ProfileSection title="Most creative directors">
-      <BarTable heading="Brand" label="Brands by number of creative directors" rows={top(stats.directors.filter(([, count]) => count > 0))
-        .map(([brand, count]) => ({ key: brand.id, count, label: house(brand.id) }))} />
-    </ProfileSection>
-    <CollaborationsSection releases={ranking.collaborative} partners={ranking.uniquePartners} house={house} controls={
-      <RetailerToggle id="stats-retailer-collabs" checked={withRetailers} onChange={toggleRetailers} />} />
-    <YearSection releases={stats.releases} house={house} />
-    <LimitedSection title="Most frequent pairings" controls={
-      <RetailerToggle id="stats-retailer-pairs" checked={pairsWithRetailers} onChange={togglePairRetailers} />}>{(limit) =>
-      <BarTable heading="Brands" countHeading="Releases" label="Brand pairs with the most collaborations"
-        rows={top(pairs, limit).map(([pair, count]) => {
-          const [a, b] = pair.split('|') as [string, string];
-          return { key: pair, count, label: <>{house(a)} × {house(b)}</>, title: `${houseName(a)} × ${houseName(b)}` };
-        })} />}
-    </LimitedSection>
+    <StatsTabs panels={{
+      overview: () => <>
+      <ProfileSection title="Overview">
+        <Fields rows={[
+          ['Brands', `${stats.brands.toLocaleString()} (${stats.main.length.toLocaleString()} main brands, ${(stats.brands - stats.main.length).toLocaleString()} sublabels)`],
+          ['Active', `${stats.active.toLocaleString()} active · ${(stats.brands - stats.active).toLocaleString()} ended`],
+          ['People', stats.people.toLocaleString()],
+          ['Career moves', stats.moves.toLocaleString()],
+          ['Collaborations', stats.releases.length.toLocaleString()],
+          ['Groups', stats.groups.toLocaleString()],
+          ['Countries', stats.countries.size.toLocaleString()],
+          ['Cities', stats.cities.size.toLocaleString()],
+        ]} />
+      </ProfileSection>
+      <ProfileSection title="Market positioning">
+        <BarTable heading="Tier" ranked={false} label="Brands by market positioning"
+          rows={marketPositionings.filter((tier) => stats.tiers.has(tier)).map((tier) => ({ key: tier, label: tier, count: stats.tiers.get(tier)! }))} />
+      </ProfileSection>
+      </>,
+      collaborations: () => <>
+        <CollaborationsSection releases={ranking.collaborative} partners={ranking.uniquePartners} house={house} controls={
+          <RetailerToggle id="stats-retailer-collabs" checked={withRetailers} onChange={toggleRetailers} />} />
+        <DiversitySection releases={stats.releases} house={house} />
+        <TrendsSection releases={stats.releases} year={year} house={house} />
+        <YearSection releases={stats.releases} house={house} />
+      </>,
+      connections: () => <>
+        <DegreesSection releases={stats.releases} house={house} />
+        <HeatmapSection releases={stats.releases} house={house} />
+        <PairingsSection releases={stats.releases} house={house} />
+      </>,
+      people: () => <>
+      <ProfileSection title="Longest creative director tenures">
+        <BarTable heading="Creative director" columns={['Brand', 'Tenure']} countHeading="Years" label="Longest creative director tenures"
+          rows={[...stats.tenures].sort((a, b) => b.years - a.years).slice(0, STATS_TOP).map(({ house: brand, tenure, years, current }) => ({
+            key: `${tenure.designerId}:${brand.id}:${tenure.start}`, count: years,
+            label: <EntityLink kind="designer" id={tenure.designerId} onSelect={onSelect}>{getDesigner(tenure.designerId)?.name ?? tenure.designerId}</EntityLink>,
+            cells: [house(brand.id), <span className="nowrap">{tenure.start}–{current ? 'present' : tenure.end}</span>],
+          }))} />
+      </ProfileSection>
+      <ProfileSection title="Most creative directors">
+        <BarTable heading="Brand" label="Brands by number of creative directors" rows={top(stats.directors.filter(([, count]) => count > 0))
+          .map(([brand, count]) => ({ key: brand.id, count, label: house(brand.id) }))} />
+      </ProfileSection>
+      <ProfileSection title="Busiest years for moves">
+        <BarTable heading="Year" countHeading="Moves" label="Years with the most career moves"
+          rows={top(stats.moveYears).map(([moveYear, count]) => ({ key: String(moveYear), label: String(moveYear), count }))} />
+      </ProfileSection>
+        <IncubatorsSection houses={visibleHouses} year={year} house={house} onSelect={onSelect} />
+      </>,
+      places: () => <>
+        <DecadesSection houses={stats.main} house={house} />
+      <ProfileSection title={`Top countries (of ${stats.countries.size})`}>
+        <BarTable heading="Country" label="Main brands by country" rows={top(stats.countries).map(([code, count]) => ({ key: code, count,
+          label: <PlaceLink place={{ kind: 'country', id: code as CountryCode }} onOpenPlace={onOpenPlace}>{countryNames[code as CountryCode]}</PlaceLink> }))} />
+      </ProfileSection>
+      <ProfileSection title={`Top cities (of ${stats.cities.size})`}>
+        <BarTable heading="City" label="Main brands by city" rows={top(stats.cities).map(([city, count]) => ({ key: city, count,
+          label: <PlaceLink place={{ kind: 'city', id: mapLocationForCity(city) }} onOpenPlace={onOpenPlace}>{city}</PlaceLink> }))} />
+      </ProfileSection>
+        <RelocationsSection houses={stats.main} year={year} house={house} onOpenPlace={onOpenPlace} />
+      </>,
+    }} />
   </>;
 }

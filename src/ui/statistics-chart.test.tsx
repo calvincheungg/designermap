@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { collaborations, houses } from '../data';
 import { MIN_SHARE_RELEASES, StatisticsContent, chartedReleases, yearShare } from './statistics';
 
+beforeEach(() => localStorage.setItem('designer-map:stats-tab', 'collaborations'));
 afterEach(() => { cleanup(); localStorage.clear(); });
 const chart = () => screen.getByRole('group', { name: /^Collaboration releases per year/ });
 const heights = () => [...chart().querySelectorAll<HTMLElement>('.stats-chart-bar')].map((bar) => bar.style.height);

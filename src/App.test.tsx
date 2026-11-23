@@ -388,9 +388,11 @@ describe('React app graph integration', () => {
     expect(screen.getAllByRole('dialog', { name: 'Statistics' })).toHaveLength(1);
     await user.click(screen.getByTitle('Open Statistics (drag to move)'));
     expect(screen.getAllByRole('dialog', { name: 'Statistics' })).toHaveLength(1);
+    await user.click(within(stats).getByRole('tab', { name: 'Brands & places' }));
     const countries = within(stats).getByRole('table', { name: 'Main brands by country' });
     await user.click(within(countries).getAllByRole('link')[0]!);
     expect(screen.getAllByRole('dialog').length).toBeGreaterThan(1);
+    await user.click(within(stats).getByRole('tab', { name: 'People' }));
     const directors = within(screen.getByRole('dialog', { name: 'Statistics' })).getByRole('table', { name: 'Brands by number of creative directors' });
     await user.click(within(directors).getAllByRole('link')[0]!);
     expect(graph.select).toHaveBeenLastCalledWith(expect.objectContaining({ kind: 'house' }), true);
@@ -413,19 +415,48 @@ describe('React app graph integration', () => {
     const releaseTotal = () => within(table('Brands by number of collaborations')).getAllByRole('row').slice(1)
       .reduce((sum, row) => sum + Number((row as HTMLTableRowElement).cells[2]!.textContent!.replace(/,/g, '')), 0);
     const pairBrands = () => within(table('Brand pairs with the most collaborations')).getAllByRole('link').map((link) => link.textContent!);
+    const tab = (name: string) => user.click(within(stats).getByRole('tab', { name }));
+    await tab('Connections');
     const pairsBefore = table('Brand pairs with the most collaborations').textContent;
+    await tab('Collaborations');
     const before = releaseTotal();
-    const [collabToggle, pairToggle] = within(stats).getAllByRole('checkbox', { name: 'Include retailer collaborations' }) as HTMLInputElement[];
-    expect(collabToggle!.checked && pairToggle!.checked).toBe(true);
-    await user.click(collabToggle!);
+    const toggle = (id: string) => stats.querySelector<HTMLInputElement>(`#stats-retailer-${id}`)!;
+    expect(toggle('collabs').checked && toggle('pairs').checked).toBe(true);
+    await user.click(toggle('collabs'));
     // The overview total and the pairings table keep every release; the ranking drops retailer releases.
-    expect(within(stats).getByText(collaborations.length.toLocaleString())).toBeTruthy();
     expect(releaseTotal()).toBeLessThan(before);
-    expect(table('Brand pairs with the most collaborations').textContent).toBe(pairsBefore);
     expect(localStorage.getItem('designer-map:stats-retailer-collabs')).toBe('off');
-    await user.click(pairToggle!);
+    await tab('Overview');
+    expect(within(stats).getByText(collaborations.length.toLocaleString())).toBeTruthy();
+    await tab('Connections');
+    expect(table('Brand pairs with the most collaborations').textContent).toBe(pairsBefore);
+    await user.click(toggle('pairs'));
     expect(pairBrands().some((name) => retailers.has(name))).toBe(false);
     expect(localStorage.getItem('designer-map:stats-retailer-pairs')).toBe('off');
+  });
+
+  it('ranks diverse collaborators, with adjustable measures and a partner breakdown', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await openStart(user);
+    await user.click(within(screen.getByRole('dialog', { name: 'Start menu' })).getByRole('button', { name: 'Statistics' }));
+    const stats = within(screen.getByRole('dialog', { name: 'Statistics' }));
+    await user.click(stats.getByRole('tab', { name: 'Collaborations' }));
+    const table = () => within(stats.getByRole('table', { name: 'Brands with the most diverse collaborations' }));
+    const before = table().getAllByRole('link').map((link) => link.textContent);
+    expect(before).toHaveLength(10);
+    await user.click(stats.getByRole('checkbox', { name: 'Categories' }));
+    await user.click(stats.getByRole('checkbox', { name: 'Market positions' }));
+    // The last measure can't be unticked.
+    expect((stats.getByRole('checkbox', { name: 'Countries' }) as HTMLInputElement).disabled).toBe(true);
+    expect(localStorage.getItem('designer-map:stats-diverse-include')).toBe('country');
+    await user.click(stats.getByRole('radio', { name: 'Number reached' }));
+    expect(localStorage.getItem('designer-map:stats-diverse-mode')).toBe('reach');
+    expect(table().getAllByRole('link').map((link) => link.textContent)).not.toEqual(before);
+    const arrow = table().getAllByRole('button', { name: /^Partner breakdown/ })[0]!;
+    await user.click(arrow);
+    expect(arrow.getAttribute('aria-expanded')).toBe('true');
+    expect(table().getByText('Market positions')).toBeTruthy();
   });
 
   it('opens a shared link\'s brand and year, and keeps the address bar in step', () => {

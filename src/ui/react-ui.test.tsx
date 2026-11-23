@@ -329,6 +329,7 @@ describe('React interface interactions', () => {
   it('flips the Most collaborations sort to low to high on a second click', async () => {
     const user = userEvent.setup();
     render(<StatisticsContent visibleHouses={Object.values(houses)} year={Infinity} filtered={false} onSelect={() => {}} onOpenPlace={() => {}} />);
+    await user.click(screen.getByRole('tab', { name: 'Collaborations' }));
     const table = () => screen.getByRole('table', { name: /^Brands by number of (collaborations|distinct partner brands)$/ });
     const column = (index: number) => within(table()).getAllByRole('row').slice(1)
       .map((row) => Number(within(row).getAllByRole('cell')[index]!.textContent!.replace(/,/g, '')));
