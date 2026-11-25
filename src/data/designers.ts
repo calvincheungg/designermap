@@ -13969,8 +13969,9 @@ export const designers = {
         sources: ['https://cfda.com/member/martin-cooper/'],
         roleDetail: 'Women’s design studio',
       },
+      { house: 'landsEnd', role: 'Other', roleDetail: 'Led design' },
     ],
-    notes: 'Subsequently led design at Lands’ End. Also designed licensed Calvin Klein and Perry Ellis coats at Fairbrooke Enterprises.',
+    notes: 'Also designed licensed Calvin Klein and Perry Ellis coats at Fairbrooke Enterprises.',
   },
   delphineNinous: {
     name: 'Delphine Ninous',
@@ -14924,12 +14925,13 @@ export const designers = {
   katarzynaSchoewe: {
     name: 'Katarzyna Schoewe',
     career: [
+      { house: 'landsEnd', role: 'Other', roleDetail: 'Design role' },
       { house: 'underArmour', role: 'Other', roleDetail: 'Design team', sources: ['https://www.snowsportsnews.com/newsrepository/2023/february/outdoor-research-promotes-three-team-members-to-new-senior-leadership-positions/'] },
       { house: 'llBean', role: 'Other', roleDetail: 'Design team', sources: ['https://www.snowsportsnews.com/newsrepository/2023/february/outdoor-research-promotes-three-team-members-to-new-senior-leadership-positions/'] },
       { house: 'outdoorResearch', role: 'Creative Director', roleDetail: 'Creative design director; later senior creative design director', end: 2023, notes: 'Appointment reported before the 2023 promotion; exact start year unconfirmed.', sources: ['https://sgbonline.com/outdoor-research-appoints-design-marketing-directors/', 'https://www.snowsportsnews.com/newsrepository/2023/february/outdoor-research-promotes-three-team-members-to-new-senior-leadership-positions/'] },
       { house: 'outdoorResearch', role: 'Head Designer', roleDetail: 'Vice president, design and product innovation', start: 2023, notes: 'Promoted February 2023; subsequently joined Stanley 1913 by June 2026. Exact departure year unconfirmed.', sources: ['https://www.snowsportsnews.com/newsrepository/2023/february/outdoor-research-promotes-three-team-members-to-new-senior-leadership-positions/', 'https://www.bizjournals.com/buffalo/bizwomen/news/profiles-strategies/2026/06/stanley-1913-kat-schoewe-quencher-cup.html?page=5'] },
     ],
-    notes: 'Also known as Kat Schoewe. Earlier design roles include Pearl Izumi and Lands’ End; subsequently vice president of product innovation and design at Stanley 1913. Those brands are not currently in the dataset.',
+    notes: 'Also known as Kat Schoewe. Earlier design roles include Pearl Izumi; subsequently vice president of product innovation and design at Stanley 1913. Those brands are not currently in the dataset.',
   },
   peterAskulv: {
     name: 'Peter Askulv',
@@ -18455,8 +18457,9 @@ export const designers = {
       { house: 'nexusVII', role: 'Founder', roleDetail: 'Founder and designer', start: 2001, end: null, sources: ['https://www.fashion-press.net/brands/4769'] },
       { house: 'originalFake', role: 'Creative Director', roleDetail: 'Apparel director', start: 2007, end: 2013 },
       { house: 'huf', role: 'Other', roleDetail: 'Design team, later design director', start: 2014, notes: 'Joined the HUF design team in 2014 and worked at its headquarters; HUF describes him as a past design director. End year unconfirmed.', sources: ['https://www.hufworldwide.jp/blogs/what/20-years-of-huf-hardcover-book-interviews-11'] },
+      { house: 'medicomToy', role: 'Other', roleDetail: 'Creative director, Sync.', sources: ['https://www.syncstore.jp/about/'] },
     ],
-    notes: 'Founder and designer of NEXUSVII; subsequently creative director of MEDICOM TOY’s Sync. label.',
+    notes: 'Founder and designer of NEXUSVII.',
     sources: ['https://www.syncstore.jp/about/', 'https://www.hufworldwide.jp/blogs/what/20-years-of-huf-hardcover-book-interviews-11'],
   },
   yixiChen: {
@@ -18822,6 +18825,13 @@ export const designers = {
     notes: 'Studied textile design at Chelsea College of Arts in London.',
     sources: ['https://rakutenfashionweektokyo.com/en/brands/detail/noma-t-d/', 'https://hypebeast.com/2026/6/nomarhythm-textiles-magazine-feature-issue-37-2026'],
   },
+  hiroyukiSasaki: {
+    name: 'Hiroyuki Sasaki',
+    career: [
+      { house: 'tomorrowland', role: 'Founder', start: 1978, end: null, notes: 'Remains the company’s representative director and chairman.', sources: ['https://www.surfacemag.com/?p=64405', 'https://www.tomorrowland.co.jp/company/'] },
+    ],
+    notes: '佐々木啓之. Raised in Yokohama, he worked for a textile exporting company before starting TOMORROWLAND with classic French and American styles in mind.',
+  },
   takumaSasaki: {
     name: 'Takuma Sasaki',
     nationality: 'Japanese',
@@ -18843,6 +18853,7 @@ export const designers = {
       { house: 'georgeCox', role: 'Other', roleDetail: 'Shoe designer', start: 1996 },
       { house: 'trickers', role: 'Other', roleDetail: 'Maker of the bespoke line', start: 1998 },
       { house: 'footTheCoacher', role: 'Founder', roleDetail: 'Founder, designer', start: 2000, end: null },
+      { house: 'beautifulShoes', role: 'Founder', roleDetail: 'Founder, designer', start: 2010, end: null },
       { house: 'ppaco', role: 'Founder', roleDetail: 'Founder, designer', start: 2024, end: null },
     ],
     notes: 'Also written Toshiyuki Takegahara (竹ヶ原敏之介). Began making shoes while at art university; launched his eponymous dress-shoe label in 1994, later renamed AUTHENTIC SHOE & Co., and returned to Japan in 1999. Later labels include BEAUTIFUL SHOES (2010) and Footstock Originals (2014). His shoes entered the Northampton Museum and Art Gallery collection in 2004.',
@@ -22263,8 +22274,8 @@ export const designers = {
       { house: 'sperry', role: 'Other', roleDetail: 'Senior role', sources: ['https://www.seattlemag.com/article/preppy-and-proud-tommy-bahamas-bradley-obrien'] },
       { house: 'oldNavy', role: 'Other', roleDetail: 'Senior role' },
       { house: 'tommyBahama', role: 'Head Designer', roleDetail: 'Executive vice president of design and product development', start: 2014 },
+      { house: 'landsEnd', role: 'Other', roleDetail: 'Senior role' },
     ],
-    notes: 'Also held a senior role at Lands’ End.',
   },
   dawnBrandl: {
     name: 'Dawn Brandl',
@@ -22843,6 +22854,27 @@ export const designers = {
       { house: 'americanGiant', role: 'Other', roleDetail: 'Designer of the original Classic Full Zip hoodie' },
     ],
     notes: 'Former industrial engineer at Apple.',
+  },
+  landonClaytonKing: {
+    name: 'Landon Clayton King',
+    died: 1954,
+    career: [
+      { house: 'pointerBrand', role: 'Founder', roleDetail: 'Founder', start: 1913, end: 1954 },
+    ],
+    notes: 'Named Pointer Brand after the bird dogs he bred. Was still working at the factory he founded when he died.',
+  },
+  garethSkewis: {
+    name: 'Gareth Skewis',
+    career: [
+      { house: 'pointerFootwear', role: 'Founder', roleDetail: 'Founder', start: 2004 },
+    ],
+    notes: 'Former co-owner of Slam City Skates who left Silas to start Pointer.',
+  },
+  hollieWhite: {
+    name: 'Hollie White',
+    career: [
+      { house: 'pointerFootwear', role: 'Head Designer' },
+    ],
   },
   tonyPatella: {
     name: 'Tony Patella',
@@ -23519,6 +23551,39 @@ export const designers = {
       { house: 'petitBateau', role: 'Creative Director', start: 2023 },
     ],
     notes: 'Joined Petit Bateau in autumn 2023; her first collection was Spring/Summer 2025.',
+  },
+  garyComer: {
+    name: 'Gary Comer',
+    born: 1927,
+    died: 2006,
+    nationality: 'American',
+    career: [{ house: 'landsEnd', role: 'Founder', start: 1963 }],
+    notes: 'Chicago advertising copywriter and competitive sailor before starting the mail-order business with partners.',
+  },
+  kymMaas: {
+    name: 'Kym Maas',
+    career: [{ house: 'landsEnd', role: 'Creative Director', roleDetail: 'President and chief creative officer', start: 2025, end: null }],
+    sources: ['https://sgbonline.com/lands-end-promotes-kym-maas-to-president-chief-creative-officer/'],
+  },
+  edsonMatsuo: {
+    name: 'Edson Matsuo',
+    nationality: 'Brazilian',
+    career: [{ house: 'melissa', role: 'Creative Director', roleDetail: 'Creative director and head of research and development', notes: 'Dates are unconfirmed.' }],
+    sources: ['https://www.pittimmagine.com/en/pittimmagine/archive/pittibimbo90/exhibitors/M/melissa', 'https://beopenfuture.com/community/edson-matsuo/'],
+  },
+  tatsuhikoAkashi: {
+    name: 'Tatsuhiko Akashi',
+    nationality: 'Japanese',
+    career: [{ house: 'medicomToy', role: 'Founder', roleDetail: 'Founder and representative director', start: 1996, end: null }],
+    notes: 'Also known as Ryu Akashi. Worked at a vintage clothing shop and as a magazine editor before the toy business.',
+    sources: ['https://medicomtoy.co.jp/en/pages/company', 'https://deeptokyo.jp/en/anime_manga/11203/'],
+  },
+  giorgioGalli: {
+    name: 'Giorgio Galli',
+    nationality: 'Italian',
+    career: [{ house: 'timex', role: 'Creative Director', roleDetail: 'Global creative director, Timex Group', notes: 'Sources differ on the start of the role (2013 or 2016).' }],
+    notes: 'Watch designer who runs the Milan studio behind Timex Group’s watches; earlier designed for Swatch, Citizen, Ebel and Seiko.',
+    sources: ['https://en.wikipedia.org/wiki/Giorgio_Galli_(watchmaker)', 'https://www.gallidesign.com/about/'],
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 

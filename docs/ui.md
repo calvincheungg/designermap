@@ -119,6 +119,9 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
     columns. Repeat partnerships share one row, grouped by the exact set of
     partner brands; a year selector defaults to the latest recorded release.
     Keep individual release years in the data and group only in the interface.
+    Above the table, a line graph (`YearChart` with `lines`, in `ui/year-chart.tsx`, shared with Statistics) counts every
+    recorded release per year through the selected year. It appears from two release years up; clicking a
+    column puts that year in the Find box (shown then even for short lists), clicking it again clears it.
     Search opens Google in a new tab for the selected brand × all partner brands
     plus the release year. Do not display collection names or source links.
 - Brand profile descriptions, creative directors, other roles, collaboration history and tags

@@ -12,6 +12,7 @@ import { frameIcon, initialsIcon, logoInfo } from '../graph/icons';
 import { tagLabel } from './labels';
 import type { HouseFilters } from '../data/tags';
 import { matchingItems, SelectBox } from './listbox';
+import { TOTAL_SCHEME, YearChart } from './year-chart';
 import { FavoritesContext } from './favorites';
 
 export type Selection = GraphSelection;
@@ -209,8 +210,11 @@ function ItemActions({ item, onShowOnMap, onHideOnMap, shownOnMap, onCopyLink }:
   </div>;
 }
 
-/** Collaboration partners, with a Find box once the list is long enough to scroll. A year finds that year's releases. */
-function CollaborationTable({ house, partnerships, onSelect }: { house: House; partnerships: ReadonlyMap<string, Collaboration[]>; onSelect: Actions['onSelect'] }) {
+/**
+ * A line graph of releases per year (from two years up) over the collaboration partners, with a Find box once the list
+ * is long enough to scroll. A year finds that year's releases; clicking a column puts its year in the Find box.
+ */
+function CollaborationTable({ house, collaborations, partnerships, onSelect }: { house: House; collaborations: readonly Collaboration[]; partnerships: ReadonlyMap<string, Collaboration[]>; onSelect: Actions['onSelect'] }) {
   const [query, setQuery] = useState('');
   const rows = useMemo(() => {
     const text = query.trim(), list = [...partnerships];
@@ -226,8 +230,14 @@ function CollaborationTable({ house, partnerships, onSelect }: { house: House; p
     const matches = new Set(matchingItems(items, text, Infinity).map((item) => item.value));
     return list.filter((row) => matches.has(row));
   }, [house.id, partnerships, query]);
+  const years = useMemo(() => new Set(collaborations.map((project) => project.year)), [collaborations]);
+  const queriedYear = years.has(Number(query.trim())) ? Number(query.trim()) : undefined;
   return <>
-    {partnerships.size > COLLABORATION_ROWS && <div className="field-row collaboration-find">
+    {years.size > 1 && <div className="collaboration-chart">
+      <YearChart lines releases={collaborations} scheme={TOTAL_SCHEME} label={`${house.name} collaborations per year`} selected={queriedYear}
+        onPick={(picked) => setQuery(picked === queriedYear ? '' : String(picked))} onFocus={() => {}} />
+    </div>}
+    {(partnerships.size > COLLABORATION_ROWS || query) && <div className="field-row collaboration-find">
       <input type="text" aria-label="Find a collaboration" placeholder="Find a brand or year" value={query} onChange={(event) => setQuery(event.target.value)}
         autoComplete="off" spellCheck={false} data-1p-ignore="" data-lpignore="true" data-bwignore="true" data-form-type="other" />
       {query.trim() && <span role="status">{rows.length} of {partnerships.size}</span>}
@@ -291,7 +301,7 @@ function HouseProfile({ house, year, onSelect, onTag, onOpenPlace, onShowOnMap, 
     {!!business.length && <fieldset><legend>Business leadership</legend><TenureTable list={business} business onSelect={onSelect} /></fieldset>}
     {!!team.length && <ProfileSection title={`Other roles (${team.length})`} defaultOpen={false}><TenureTable list={team} supporting onSelect={onSelect} /></ProfileSection>}
     <ProfileSection title={`Collaboration history (${collaborations.length}\u00a0\u00a0|\u00a0\u00a0Unique: ${partnerships.size})`}>
-      {collaborations.length ? <CollaborationTable house={house} partnerships={partnerships} onSelect={onSelect} /> : <p className="hint">No collaborations recorded{Number.isFinite(year) ? ` through ${year}` : ''}.</p>}
+      {collaborations.length ? <CollaborationTable house={house} collaborations={collaborations} partnerships={partnerships} onSelect={onSelect} /> : <p className="hint">No collaborations recorded{Number.isFinite(year) ? ` through ${year}` : ''}.</p>}
     </ProfileSection>
     <Description text={notes} defaultOpen />
     <ProfileSection title="Tags" className="house-tags" fold>{tagGroups.map(([group, label, values]) =>

@@ -2,7 +2,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { collaborations, houses } from '../data';
-import { MIN_SHARE_RELEASES, StatisticsContent, chartedReleases, yearShare } from './statistics';
+import { StatisticsContent, chartedReleases } from './statistics';
+import { MIN_SHARE_RELEASES, yearShare } from './year-chart';
 
 beforeEach(() => localStorage.setItem('designer-map:stats-tab', 'collaborations'));
 afterEach(() => { cleanup(); localStorage.clear(); });

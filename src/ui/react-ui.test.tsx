@@ -131,6 +131,25 @@ describe('React interface interactions', () => {
     expect(history.getByText('No collaborations match.')).toBeTruthy();
   });
 
+  it('charts collaborations per year and filters the list to a clicked year', async () => {
+    const user = userEvent.setup();
+    const view = render(<PanelContent selection={{ kind: 'house', id: 'humanMade' }} year={2021} onSelect={() => {}} onTag={() => {}} />);
+    const chart = within(screen.getByRole('group', { name: /^Human Made collaborations per year/ }));
+    const columns = chart.getAllByRole('button').map((column) => column.getAttribute('aria-label')!);
+    const total = Number(screen.getByText(/^Collaboration history/).textContent!.match(/\d+/)![0]);
+    expect(columns.reduce((sum, label) => sum + Number(label.match(/: (\d+)/)![1]), 0)).toBe(total);
+    const history = within(screen.getByRole('group', { name: /^Collaboration history/ }));
+    const all = history.getAllByRole('row').length;
+    const column = chart.getByRole('button', { name: /^2019:/ });
+    await user.click(column);
+    expect(column.getAttribute('aria-pressed')).toBe('true');
+    expect(history.getByRole<HTMLInputElement>('textbox', { name: 'Find a collaboration' }).value).toBe('2019');
+    for (const row of history.getAllByRole('row').slice(1)) expect(within(row).getAllByRole('cell')[0]!.textContent).toBe('2019');
+    await user.click(column);
+    expect(history.getAllByRole('row')).toHaveLength(all);
+    view.unmount();
+  });
+
   it('consolidates repeat partners and searches the chosen release year', async () => {
     const user = userEvent.setup();
     render(<PanelContent selection={{ kind: 'house', id: 'humanMade' }} onSelect={() => {}} onTag={() => {}} />);

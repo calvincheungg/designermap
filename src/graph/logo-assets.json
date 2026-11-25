@@ -55,6 +55,14 @@
     "background": "rgb(238, 238, 238)",
     "bytes": 5632
   },
+  "24karats.jpeg": {
+    "hash": "f7db381aec29bd91",
+    "backgroundVersion": 2,
+    "file": "f7db381aec29bd91.webp",
+    "ratio": 2.8322147651006713,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 16900
+  },
   "3_paradis.jpeg": {
     "hash": "b5618fbef1e75a49",
     "backgroundVersion": 2,
@@ -590,6 +598,14 @@
     "ratio": 1.1748120300751879,
     "background": "#ffffff",
     "bytes": 13602
+  },
+  "american_giant.png": {
+    "hash": "329b195ec695ccf2",
+    "backgroundVersion": 2,
+    "file": "329b195ec695ccf2.webp",
+    "ratio": 1,
+    "background": "#ffffff",
+    "bytes": 7064
   },
   "ami.png": {
     "hash": "3373dc18a89e807e",
@@ -1783,6 +1799,14 @@
     "background": "rgb(242, 242, 242)",
     "bytes": 6880
   },
+  "buscemi.webp": {
+    "hash": "dadb50aa77a2a723",
+    "backgroundVersion": 2,
+    "file": "dadb50aa77a2a723.webp",
+    "ratio": 2.1164021164021163,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 17912
+  },
   "butter_goods.png": {
     "hash": "33b01137d95e8262",
     "backgroundVersion": 2,
@@ -1870,6 +1894,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 5190
+  },
+  "camp_high.jpeg": {
+    "hash": "b77c177d567c072d",
+    "backgroundVersion": 2,
+    "file": "b77c177d567c072d.webp",
+    "ratio": 1.0059880239520957,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 22106
   },
   "camper.png": {
     "hash": "967a99cadb642043",
@@ -2318,6 +2350,14 @@
     "ratio": 1,
     "background": "#ffffff",
     "bytes": 134101
+  },
+  "chrome_industries.jpg": {
+    "hash": "482d149fc830ec2f",
+    "backgroundVersion": 2,
+    "file": null,
+    "ratio": 1,
+    "background": "rgb(204, 33, 41)",
+    "bytes": 11653
   },
   "churchs.png": {
     "hash": "fdd101d7e9ea7ba6",
@@ -2975,6 +3015,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 2788
   },
+  "dsptch.jpeg": {
+    "hash": "bcf849accab8a528",
+    "backgroundVersion": 2,
+    "file": "bcf849accab8a528.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 39812
+  },
   "dsquared2.jpg": {
     "hash": "251f823c716e5ee5",
     "backgroundVersion": 2,
@@ -3527,6 +3575,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 4076
   },
+  "fitted.webp": {
+    "hash": "d035835346a4e8d9",
+    "backgroundVersion": 2,
+    "file": "d035835346a4e8d9.webp",
+    "ratio": 1,
+    "background": "rgb(0, 0, 0)",
+    "bytes": 9234
+  },
   "fjallraven.png": {
     "hash": "77e41d238155be14",
     "backgroundVersion": 2,
@@ -3646,6 +3702,22 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 14080
+  },
+  "frame.png": {
+    "hash": "3ca48aa39abf255a",
+    "backgroundVersion": 2,
+    "file": "3ca48aa39abf255a.webp",
+    "ratio": 6.173633440514469,
+    "background": "rgb(24, 24, 25)",
+    "bytes": 2412
+  },
+  "frame.webp": {
+    "hash": "0c7b248f7d367f4a",
+    "backgroundVersion": 2,
+    "file": "0c7b248f7d367f4a.webp",
+    "ratio": 3.4057971014492754,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 1486
   },
   "frank_and_oak.png": {
     "hash": "f129b030a9c43142",
@@ -4079,6 +4151,14 @@
     "background": "#ffffff",
     "bytes": 10960
   },
+  "greta_constantine.jpeg": {
+    "hash": "99f90ff45590ed58",
+    "backgroundVersion": 2,
+    "file": "99f90ff45590ed58.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 2600
+  },
   "ground_y.png": {
     "hash": "b576ede0d286237c",
     "backgroundVersion": 2,
@@ -4126,6 +4206,14 @@
     "ratio": 0.841796875,
     "background": "rgb(255, 255, 255)",
     "bytes": 5008
+  },
+  "gustin.png": {
+    "hash": "6f9ed88d7e3368f3",
+    "backgroundVersion": 2,
+    "file": "6f9ed88d7e3368f3.webp",
+    "ratio": 1.910828025477707,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 6404
   },
   "guy_laroche.png": {
     "hash": "c2a4c12f9069fd48",
@@ -4607,6 +4695,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 1954
   },
+  "illest.png": {
+    "hash": "7930f6727b02fd39",
+    "backgroundVersion": 2,
+    "file": "7930f6727b02fd39.webp",
+    "ratio": 2.7180555555555554,
+    "background": "#ffffff",
+    "bytes": 6494
+  },
   "im_men.jpeg": {
     "hash": "7431a61b9984f2e5",
     "backgroundVersion": 2,
@@ -4886,6 +4982,14 @@
     "ratio": 5.313725490196078,
     "background": "rgb(241, 243, 244)",
     "bytes": 8062
+  },
+  "joe_boxer.png": {
+    "hash": "204451c561336a0c",
+    "backgroundVersion": 2,
+    "file": "204451c561336a0c.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 14730
   },
   "john_elliott.png": {
     "hash": "381687dade288de3",
@@ -5343,6 +5447,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 3550
   },
+  "koi.png": {
+    "hash": "d22a194898fa5782",
+    "backgroundVersion": 2,
+    "file": "d22a194898fa5782.webp",
+    "ratio": 1.91640866873065,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 8334
+  },
   "kolor.png": {
     "hash": "7f9429799029d274",
     "backgroundVersion": 2,
@@ -5462,6 +5574,14 @@
     "ratio": 3.481981981981982,
     "background": "rgb(255, 255, 255)",
     "bytes": 3266
+  },
+  "lane_crawford.png": {
+    "hash": "01ab2c1b144038f8",
+    "backgroundVersion": 2,
+    "file": "01ab2c1b144038f8.webp",
+    "ratio": 3.967741935483871,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 8396
   },
   "lanvin.png": {
     "hash": "687a64c587bab3cb",
@@ -5670,6 +5790,14 @@
     "ratio": 1.7688442211055277,
     "background": "rgb(255, 255, 255)",
     "bytes": 6642
+  },
+  "loopwheeler.webp": {
+    "hash": "0d8472fbbeab5981",
+    "backgroundVersion": 2,
+    "file": "0d8472fbbeab5981.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 13390
   },
   "loro_piana.png": {
     "hash": "b73fc7f83e7720c3",
@@ -6903,6 +7031,14 @@
     "background": "#ffffff",
     "bytes": 3978
   },
+  "nude_project.png": {
+    "hash": "34386c94e5a3a318",
+    "backgroundVersion": 2,
+    "file": "34386c94e5a3a318.webp",
+    "ratio": 5.386904761904762,
+    "background": "rgb(78, 36, 28)",
+    "bytes": 11026
+  },
   "nudie_jeans.jpg": {
     "hash": "a30b67dcbb82d697",
     "backgroundVersion": 2,
@@ -6950,6 +7086,14 @@
     "ratio": 0.6713483146067416,
     "background": "#ffffff",
     "bytes": 11766
+  },
+  "odd_future.png": {
+    "hash": "cd152eb46ab29526",
+    "backgroundVersion": 2,
+    "file": "cd152eb46ab29526.webp",
+    "ratio": 1.349264705882353,
+    "background": "#ffffff",
+    "bytes": 23498
   },
   "off_white.png": {
     "hash": "d9f455dcb8f619ea",
@@ -8023,6 +8167,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 8976
   },
+  "rebel8.jpeg": {
+    "hash": "04ae533f04142ec9",
+    "backgroundVersion": 2,
+    "file": "04ae533f04142ec9.webp",
+    "ratio": 0.6038251366120219,
+    "background": "rgb(0, 0, 0)",
+    "bytes": 12080
+  },
   "recto.jpeg": {
     "hash": "53055fe24d20f090",
     "backgroundVersion": 2,
@@ -9055,6 +9207,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 12822
   },
+  "spunge.png": {
+    "hash": "5e1ad54469481929",
+    "backgroundVersion": 2,
+    "file": "5e1ad54469481929.webp",
+    "ratio": 1.2242268041237114,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 7292
+  },
   "spyder.png": {
     "hash": "60121043030aeaae",
     "backgroundVersion": 2,
@@ -9383,6 +9543,14 @@
     "background": "rgb(237, 28, 36)",
     "bytes": 4192
   },
+  "suspicious_antwerp.webp": {
+    "hash": "994c9e684d3969cb",
+    "backgroundVersion": 2,
+    "file": "994c9e684d3969cb.webp",
+    "ratio": 4.3925,
+    "background": "#ffffff",
+    "bytes": 4214
+  },
   "swanndri.png": {
     "hash": "14df21e511ec8a3c",
     "backgroundVersion": 2,
@@ -9494,6 +9662,14 @@
     "ratio": 1.0172413793103448,
     "background": "rgb(254, 254, 254)",
     "bytes": 8804
+  },
+  "tellason.png": {
+    "hash": "9b5f676df12fa23b",
+    "backgroundVersion": 2,
+    "file": "9b5f676df12fa23b.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 7346
   },
   "templa.png": {
     "hash": "9bb9d1f945279403",
@@ -9743,6 +9919,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 3988
   },
+  "tilley.png": {
+    "hash": "116a6893dd48fa2f",
+    "backgroundVersion": 2,
+    "file": "116a6893dd48fa2f.webp",
+    "ratio": 1.268733850129199,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 8642
+  },
   "timberland.png": {
     "hash": "5912266b0c4b0c19",
     "backgroundVersion": 2,
@@ -9878,6 +10062,14 @@
     "ratio": 4.832512315270936,
     "background": "rgb(255, 255, 255)",
     "bytes": 2702
+  },
+  "tori_richard.png": {
+    "hash": "7740b9ecbf60fbc4",
+    "backgroundVersion": 2,
+    "file": "7740b9ecbf60fbc4.webp",
+    "ratio": 1.4986301369863013,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 8688
   },
   "tory_burch.jpg": {
     "hash": "0fa397a1951bb295",
@@ -10062,6 +10254,14 @@
     "ratio": 3.0232558139534884,
     "background": "#ffffff",
     "bytes": 4544
+  },
+  "upper_playground.webp": {
+    "hash": "70261f95ad85e575",
+    "backgroundVersion": 2,
+    "file": "70261f95ad85e575.webp",
+    "ratio": 1,
+    "background": "rgb(238, 238, 238)",
+    "bytes": 5448
   },
   "urban_research.png": {
     "hash": "94f0cd8de7e2e57f",

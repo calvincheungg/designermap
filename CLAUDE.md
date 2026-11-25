@@ -56,6 +56,7 @@ src/ui/desktop-icon.tsx draggable Win98 desktop icon (on the desktop, left colum
 src/ui/share-link.ts  shareable view in the URL hash: #brand=…&year=…&<filter>=a,b
 src/ui/spreadsheet/     Spreadsheet window: Excel 2000-style workbook (data.ts sheets, select.ts, xlsx.ts writer, grid.tsx, use-* hooks, dialogs, chart, pivot)
 src/ui/statistics.tsx  Statistics window (Start menu): filtered totals, tiers, countries, cities, top lists
+src/ui/year-chart.tsx  releases-per-year chart, columns or lines (Statistics and brand Properties)
 src/ui/settings.tsx   Settings window, in tabs: Map, Connections, Appearance, Accessibility, General (DEFAULT_SETTINGS)
 src/ui/explorer-menu.tsx Explorer's File / Edit / View / Go / Favorites / Help menu bar (favorites.ts, use-selection-history.ts)
 src/ui/place-path.tsx location path in place windows (Europe ▸ France ▸ Paris)

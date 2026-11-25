@@ -37,6 +37,7 @@ export enum GroupId {
   AnchorInc = 'anchorInc',
   WPLavori = 'wpLavori',
   Alpargatas = 'alpargatas',
+  Grendene = 'grendene',
   AssociatedBritishFoods = 'associatedBritishFoods',
   CottonOn = 'cottonOn',
   Debenhams = 'debenhams',
@@ -374,6 +375,11 @@ export const groups = {
     name: 'Alpargatas',
     description: 'Brazilian footwear company based in São Paulo, creator and owner of Havaianas.',
     website: 'https://www.alpargatas.com.br',
+  },
+  [GroupId.Grendene]: {
+    name: 'Grendene',
+    description: 'Listed Brazilian footwear manufacturer founded in Farroupilha in 1971, maker of Melissa, Ipanema, Grendha and Rider.',
+    website: 'https://www.grendene.com.br',
   },
   [GroupId.AssociatedBritishFoods]: {
     name: 'Associated British Foods',

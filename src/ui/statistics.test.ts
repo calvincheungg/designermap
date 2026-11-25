@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { BrandCategory, collaborations, getHouse, houses } from '../data';
 import { MarketPositioning } from '../data/tags';
 import type { Collaboration } from '../types';
-import { CHART_GAP_YEARS, chartColumns, matchesSeries, pairingKind, partnerType, seriesKey, seriesLabel } from './statistics';
+import { matchesSeries, pairingKind, partnerType, seriesKey, seriesLabel } from './statistics';
+import { CHART_GAP_YEARS, chartColumns } from './year-chart';
 
 describe('chartColumns', () => {
   it('keeps short empty runs as zero-count years', () => {

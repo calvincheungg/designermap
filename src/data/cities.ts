@@ -145,6 +145,7 @@ export const cities = {
   Biella: [45.5629, 8.0583],
   Annecy: [45.8992, 6.1294],
   Arteixo: [43.303, -8.51],
+  Bristol: [36.5951, -82.1887],
   Knoxville: [35.9606, -83.9207],
   Beaverton: [45.4871, -122.8037],
   Herzogenaurach: [49.5683, 10.8829],
@@ -392,6 +393,10 @@ export const cities = {
   'North Conway': [44.0537, -71.1284],
   'Virginia Beach': [36.8529, -75.978],
   Lewiston: [44.1004, -70.2148],
+  Dodgeville: [42.9603, -90.1301],
+  Farroupilha: [-29.2253, -51.3419],
+  Shelton: [41.3165, -73.0932],
+  Waterbury: [41.5582, -73.0515],
 } satisfies Record<string, LatLng>;
 
 export type CityName = keyof typeof cities;
@@ -399,6 +404,9 @@ export type CityName = keyof typeof cities;
 /** State/province metadata is separate from stable map keys and coordinates. */
 export const cityRegions: Partial<Record<CityName, { country: CountryCode; region: string }>> = {
   Cincinnati: { country: CountryCode.UnitedStates, region: 'Ohio' },
+  Dodgeville: { country: CountryCode.UnitedStates, region: 'Wisconsin' },
+  Shelton: { country: CountryCode.UnitedStates, region: 'Connecticut' },
+  Waterbury: { country: CountryCode.UnitedStates, region: 'Connecticut' },
   Dayton: { country: CountryCode.UnitedStates, region: 'Ohio' },
   'Lake Forest': { country: CountryCode.UnitedStates, region: 'California' },
   Honolulu: { country: CountryCode.UnitedStates, region: 'Hawaii' },
@@ -502,6 +510,7 @@ export const cityRegions: Partial<Record<CityName, { country: CountryCode; regio
   'Huntington Beach': { country: CountryCode.UnitedStates, region: 'California' },
   'Rochester Hills': { country: CountryCode.UnitedStates, region: 'Michigan' },
   Rochester: { country: CountryCode.UnitedStates, region: 'New York' },
+  Bristol: { country: CountryCode.UnitedStates, region: 'Tennessee' },
   Knoxville: { country: CountryCode.UnitedStates, region: 'Tennessee' },
   Beaverton: { country: CountryCode.UnitedStates, region: 'Oregon' },
   Boston: { country: CountryCode.UnitedStates, region: 'Massachusetts' },

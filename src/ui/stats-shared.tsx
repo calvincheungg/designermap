@@ -2,6 +2,7 @@ import { oneOf, readSetting, writeSetting } from './storage';
 import { Fragment, useMemo, useState, type ReactNode } from 'react';
 import { BrandCategory, getHouse } from '../data';
 import type { Collaboration } from '../types';
+import { tally } from './year-chart';
 import { ProfileSection, RowLimitedPanel } from './panel';
 import { SelectBox } from './listbox';
 
@@ -41,11 +42,7 @@ export function LimitedSection({ title, children, controls }: {
 
 export const top = <T,>(entries: Iterable<readonly [T, number]>, limit = STATS_TOP) =>
   [...entries].sort((a, b) => b[1] - a[1]).slice(0, limit);
-export const tally = <T,>(values: Iterable<T>) => {
-  const counts = new Map<T, number>();
-  for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
-  return counts;
-};
+export { tally };
 
 /** A Win98 table of counts with a navy bar scaled to the largest row. */
 export function BarTable({ heading, rows, label, countHeading = 'Count', columns = [], ranked = true }: {

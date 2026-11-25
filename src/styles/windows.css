@@ -160,6 +160,9 @@
 .item-actions button { min-width: 0; min-height: 22px; padding: 0 8px; font-size: 12px; }
 /* Wide enough for either label, so Show on Map / Hide doesn't move the buttons. */
 .item-actions .item-map { min-width: 8.2em; }
+/* Releases per year above a brand's collaborations: Statistics' year chart as a line, shorter. */
+.collaboration-chart { margin: 0 0 6px; }
+.side-window .collaboration-chart .stats-chart { height: 100px; }
 .collaboration-find { margin: 0 0 6px; gap: 6px; }
 .collaboration-find input { flex: 1; min-width: 0; }
 .city-search { flex: none; position: relative; z-index: 1; }
