@@ -3762,7 +3762,9 @@ export const designers = {
     nationality: 'French',
     career: [
       { house: 'balmain', role: 'Other', roleDetail: 'Design studio under Olivier Rousteing', start: 2013, end: 2016, approximate: true, notes: 'Dates from memory; not confirmed by a source.' },
-      { house: 'annDemeulemeester', role: 'Creative Director', start: 2022, end: 2023, approximate: true },
+      { house: 'ludovicDeSaintSerninLabel', role: 'Founder', roleDetail: 'Founder, creative director', start: 2017, end: null },
+      { house: 'annDemeulemeester', role: 'Creative Director', start: 2022, end: 2023 },
+      { house: 'jeanPaulGaultier', role: 'Other', roleDetail: 'Guest couture designer', start: 2025, end: 2025 },
     ],
   },
   stefanoGallici: {
@@ -8704,8 +8706,9 @@ export const designers = {
         notes: 'Appointed October 2017; left March 2024 to become Nike’s global VP of design.',
       },
       { house: 'nike', role: 'Other', roleDetail: 'Vice President of men’s apparel design', start: 2024, notes: 'Appointment confirmed by a Nike spokesperson in March 2024. Exact end date unconfirmed.', sources: ['https://www.fashiondive.com/news/nike-tim-hamilton-vice-president-mens-apparel-design/711175/'] },
+      { house: 'madewell', role: 'Other', roleDetail: 'Earlier role, title unconfirmed' },
     ],
-    notes: 'Also worked at Gap, J.Crew and Madewell, and ran his own label.',
+    notes: 'Also worked at Gap and J.Crew, and ran his own label.',
   },
   /* ---------- Selected design and business leaders of recently added houses ---------- */
   mariaErixonLevin: {
@@ -23584,6 +23587,57 @@ export const designers = {
     career: [{ house: 'timex', role: 'Creative Director', roleDetail: 'Global creative director, Timex Group', notes: 'Sources differ on the start of the role (2013 or 2016).' }],
     notes: 'Watch designer who runs the Milan studio behind Timex Group’s watches; earlier designed for Swatch, Citizen, Ebel and Seiko.',
     sources: ['https://en.wikipedia.org/wiki/Giorgio_Galli_(watchmaker)', 'https://www.gallidesign.com/about/'],
+  },
+  dainKim: {
+    name: 'Dain Kim',
+    nationality: 'South Korean',
+    career: [{ house: 'matinKim', role: 'Founder', roleDetail: 'Founder and chief executive', start: 2018, end: 2023, notes: 'Began selling through a blog around 2015; resigned in October 2023.' }],
+    notes: 'Also written Kim Da-in. Founded the Seoul label DEINET after leaving Matin Kim.',
+    sources: ['https://www.i-boss.co.kr/ab-6141-67568', 'https://hbx.com/journal/2025/02/hbx-dain-kim-deinet-interview-korean-streetwear'],
+  },
+  somsackSikhounmuong: {
+    name: 'Somsack Sikhounmuong',
+    career: [
+      { house: 'jCrew', role: 'Other', roleDetail: 'Design team', start: 2001, end: 2012, approximate: true },
+      { house: 'madewell', role: 'Head Designer', roleDetail: 'Head of design', start: 2012, end: 2015, approximate: true, notes: 'Sources give 2012 or 2013 as the start.' },
+      { house: 'jCrew', role: 'Womenswear Director', roleDetail: 'Head of women’s design, later chief design officer', start: 2015, end: 2017 },
+    ],
+    notes: 'Later joined Alex Mill.',
+    sources: ['https://www.businessoffashion.com/articles/news-analysis/jenna-lyons-replacement-departs-j-crew/', 'https://fashionista.com/2019/11/somsack-sikhounmuong-fashion-designer-alex-mill-career'],
+  },
+  joyceLee: {
+    name: 'Joyce Lee',
+    career: [
+      { house: 'michaelKors', role: 'Other', roleDetail: 'Design role' },
+      { house: 'marcJacobs', role: 'Other', roleDetail: 'Design role' },
+      { house: 'madewell', role: 'Other', roleDetail: 'Design team', start: 2008, end: 2015, approximate: true },
+      { house: 'madewell', role: 'Head Designer', roleDetail: 'Head of women’s design', start: 2015, notes: 'End date unconfirmed.' },
+    ],
+    sources: ['https://us.fashionnetwork.com/news/J-crew-restructures,539750.html'],
+  },
+  kateMulleavy: {
+    name: 'Kate Mulleavy',
+    nationality: 'American',
+    career: [{ house: 'rodarte', role: 'Founder', roleDetail: 'Co-founder, co-designer', start: 2005, end: null }],
+    notes: 'Founded Rodarte with her sister Laura; they also design film costumes and wrote and directed Woodshock (2017).',
+    sources: ['https://cfda.com/member/kate-mulleavy/', 'https://en.wikipedia.org/wiki/Kate_and_Laura_Mulleavy'],
+  },
+  lauraMulleavy: {
+    name: 'Laura Mulleavy',
+    nationality: 'American',
+    career: [{ house: 'rodarte', role: 'Founder', roleDetail: 'Co-founder, co-designer', start: 2005, end: null }],
+    notes: 'Founded Rodarte with her sister Kate; they also design film costumes and wrote and directed Woodshock (2017).',
+    sources: ['https://en.wikipedia.org/wiki/Kate_and_Laura_Mulleavy'],
+  },
+  nobuhikoSato: {
+    name: 'Nobuhiko Sato',
+    nationality: 'Japanese',
+    career: [
+      { house: 'ifSixWasNine', role: 'Founder', start: 1997, end: null },
+      { house: 'lgb', role: 'Founder', start: 1999, end: null },
+    ],
+    notes: 'Japanese designer (佐藤信彦, also romanized Satoh) and head of MANIAC Corporation in Tokyo, which makes IF SIX WAS NINE and L.G.B. He keeps a deliberately low public profile.',
+    sources: ['https://circusbymaniac.shop/', 'https://www.grailed.com/designers/if-six-was-nine'],
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 
