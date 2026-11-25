@@ -1,4 +1,5 @@
-import { Fragment, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useNotes } from './use-notes';
+import { Fragment, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   careerOf, collaborationsOf, countryNames, formatTenureYears, foundersOf, getDesigner, getGroup,
   getHouse, housesInGroup, isBusinessLeadership, labelsOf, logoUrl, movesOf, parentHouseOf, regionalHousesInGroup, tenuresAt,
@@ -10,7 +11,8 @@ import { mapLocationForCity } from '../graph/locations';
 import { frameIcon, initialsIcon, logoInfo } from '../graph/icons';
 import { tagLabel } from './labels';
 import type { HouseFilters } from '../data/tags';
-import { SelectBox } from './listbox';
+import { matchingItems, SelectBox } from './listbox';
+import { FavoritesContext } from './favorites';
 
 export type Selection = GraphSelection;
 /** A place window: a map location's brands, or a country's. */
@@ -22,6 +24,12 @@ export interface Actions {
   onOpenPlace?: (place: Place) => void;
   /** Select and frame an item on the map (the brand logo); the logo is a plain image without it. */
   onShowOnMap?: (selection: NonNullable<Selection>) => void;
+  /** Stop showing the item on the map. */
+  onHideOnMap?: () => void;
+  /** The map is showing this item, so Show on Map becomes Hide. */
+  shownOnMap?: boolean;
+  /** Copy a link to an item; resolves to whether it worked. */
+  onCopyLink?: (selection: NonNullable<Selection>) => Promise<boolean>;
 }
 
 /** A city or country name that opens its window of brands. */
@@ -175,9 +183,66 @@ function CollaborationRow({ house, projects, onSelect }: {
   </tr>;
 }
 
-function HouseProfile({ house, year, onSelect, onTag, onOpenPlace, onShowOnMap }: { house: House; year: number } & Actions) {
-  const collaborations = collaborationsOf(house.id).filter((project) => project.year <= year).toReversed();
-  const partnerships = Map.groupBy(collaborations, (project) => project.houses.filter((id) => id !== house.id).toSorted().join('|'));
+/** The row of commands at the top of a brand, designer or group window. */
+function ItemActions({ item, onShowOnMap, onHideOnMap, shownOnMap, onCopyLink }: { item: NonNullable<Selection> } & Omit<ProfileActions, 'onSelect'>) {
+  const hide = !!shownOnMap && !!onHideOnMap;
+  // Pressing the button in a background window focuses it, which selects the item; the click still does what the button said.
+  const pressed = useRef<boolean | null>(null);
+  const favorites = useContext(FavoritesContext);
+  const [copied, setCopied] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (copied === null) return;
+    const timer = window.setTimeout(() => setCopied(null), 2000);
+    return () => clearTimeout(timer);
+  }, [copied]);
+  if (!favorites && !onCopyLink) return null;
+  const on = !!favorites?.has(item);
+  return <div className="item-actions" role="toolbar" aria-label="Commands">
+    {favorites && <button type="button" aria-pressed={on} title={on ? 'Remove from Favorites' : 'Add to Favorites'} onClick={() => favorites.set([item], !on)}><span aria-hidden="true">{on ? '★' : '☆'} </span>Favorite</button>}
+    {onShowOnMap && <button type="button" className="item-map" onPointerDown={() => { pressed.current = hide; }} onClick={(event) => {
+      // A keyboard click (detail 0) has no press before it.
+      const hiding = event.detail && pressed.current !== null ? pressed.current : hide;
+      pressed.current = null;
+      if (hiding) onHideOnMap?.(); else onShowOnMap(item);
+    }}>{hide ? 'Hide' : 'Show on Map'}</button>}
+    {onCopyLink && <button type="button" onClick={() => void onCopyLink(item).then(setCopied)}><span role="status">{copied === null ? 'Copy Link' : copied ? 'Copied' : 'Could not copy'}</span></button>}
+  </div>;
+}
+
+/** Collaboration partners, with a Find box once the list is long enough to scroll. A year finds that year's releases. */
+function CollaborationTable({ house, partnerships, onSelect }: { house: House; partnerships: ReadonlyMap<string, Collaboration[]>; onSelect: Actions['onSelect'] }) {
+  const [query, setQuery] = useState('');
+  const rows = useMemo(() => {
+    const text = query.trim(), list = [...partnerships];
+    if (!text) return list;
+    if (/^\d{4}$/.test(text)) {
+      const inYear = list.flatMap(([key, projects]) => { const found = projects.filter((project) => project.year === Number(text)); return found.length ? [[key, found] as [string, Collaboration[]]] : []; });
+      if (inYear.length) return inYear;
+    }
+    const items = list.map((row) => {
+      const partners = row[1][0]!.houses.filter((id) => id !== house.id).map((id) => getHouse(id));
+      return { label: partners.map((partner) => partner?.name ?? '').join(' '), aliases: partners.flatMap((partner) => [partner?.name ?? '', ...(partner?.aliases ?? [])]), value: row };
+    });
+    const matches = new Set(matchingItems(items, text, Infinity).map((item) => item.value));
+    return list.filter((row) => matches.has(row));
+  }, [house.id, partnerships, query]);
+  return <>
+    {partnerships.size > COLLABORATION_ROWS && <div className="field-row collaboration-find">
+      <input type="text" aria-label="Find a collaboration" placeholder="Find a brand or year" value={query} onChange={(event) => setQuery(event.target.value)}
+        autoComplete="off" spellCheck={false} data-1p-ignore="" data-lpignore="true" data-bwignore="true" data-form-type="other" />
+      {query.trim() && <span role="status">{rows.length} of {partnerships.size}</span>}
+    </div>}
+    {rows.length ? <RowLimitedPanel rows={COLLABORATION_ROWS}><table className="interactive">
+      <thead><tr><th>Year</th><th>With</th><th></th></tr></thead>
+      <tbody>{rows.map(([partners, projects]) => <CollaborationRow key={`${house.id}:${partners}`} house={house} projects={projects} onSelect={onSelect} />)}</tbody>
+    </table></RowLimitedPanel> : <p className="hint">No collaborations match.</p>}
+  </>;
+}
+
+function HouseProfile({ house, year, onSelect, onTag, onOpenPlace, onShowOnMap, onHideOnMap, shownOnMap, onCopyLink }: { house: House; year: number } & Actions) {
+  const notes = useNotes('houses', house.id, house.notes);
+  const collaborations = useMemo(() => collaborationsOf(house.id).filter((project) => project.year <= year).toReversed(), [house.id, year]);
+  const partnerships = useMemo(() => Map.groupBy(collaborations, (project) => project.houses.filter((id) => id !== house.id).toSorted().join('|')), [collaborations, house.id]);
   const parent = parentHouseOf(house.id);
   const labels = labelsOf(house.id);
   const founderLinks: ReactNode[] = foundersOf(house.id).map((designer) =>
@@ -199,6 +264,7 @@ function HouseProfile({ house, year, onSelect, onTag, onOpenPlace, onShowOnMap }
     ['product', 'Primary Products', house.tags.product],
   ];
   return <>
+    <ItemActions item={{ kind: 'house', id: house.id }} onShowOnMap={onShowOnMap} onHideOnMap={onHideOnMap} shownOnMap={shownOnMap} onCopyLink={onCopyLink} />
     <div className="identity">{onShowOnMap
       ? <button type="button" className="logo-button" title="Show on Map" aria-label={`Show ${house.name} on the map`}
         onClick={() => onShowOnMap({ kind: 'house', id: house.id })}><HouseLogo key={`${house.id}:${house.logo}`} house={house} /></button>
@@ -225,13 +291,9 @@ function HouseProfile({ house, year, onSelect, onTag, onOpenPlace, onShowOnMap }
     {!!business.length && <fieldset><legend>Business leadership</legend><TenureTable list={business} business onSelect={onSelect} /></fieldset>}
     {!!team.length && <ProfileSection title={`Other roles (${team.length})`} defaultOpen={false}><TenureTable list={team} supporting onSelect={onSelect} /></ProfileSection>}
     <ProfileSection title={`Collaboration history (${collaborations.length}\u00a0\u00a0|\u00a0\u00a0Unique: ${partnerships.size})`}>
-      {collaborations.length ? <>
-        <RowLimitedPanel rows={COLLABORATION_ROWS}><table className="interactive">
-        <thead><tr><th>Year</th><th>With</th><th></th></tr></thead>
-        <tbody>{[...partnerships].map(([partners, projects]) => <CollaborationRow key={`${house.id}:${partners}`} house={house} projects={projects} onSelect={onSelect} />)}</tbody>
-      </table></RowLimitedPanel></> : <p className="hint">No collaborations recorded{Number.isFinite(year) ? ` through ${year}` : ''}.</p>}
+      {collaborations.length ? <CollaborationTable house={house} partnerships={partnerships} onSelect={onSelect} /> : <p className="hint">No collaborations recorded{Number.isFinite(year) ? ` through ${year}` : ''}.</p>}
     </ProfileSection>
-    <Description text={house.notes} defaultOpen />
+    <Description text={notes} defaultOpen />
     <ProfileSection title="Tags" className="house-tags" fold>{tagGroups.map(([group, label, values]) =>
       <div className="tag-group" key={group}><p>{label}</p><div className="tag-list">{values.map((value) =>
         <button key={value} className="tag" data-tag-kind={group} data-tag-value={value} title={`Filter by ${tagLabel(value)}`} onClick={() => onTag(group, value)}>{tagLabel(value)}</button>
@@ -239,12 +301,13 @@ function HouseProfile({ house, year, onSelect, onTag, onOpenPlace, onShowOnMap }
   </>;
 }
 
-function GroupProfile({ id, onSelect }: { id: string; onSelect: Actions['onSelect'] }) {
+type ProfileActions = Pick<Actions, 'onSelect' | 'onShowOnMap' | 'onHideOnMap' | 'shownOnMap' | 'onCopyLink'>;
+function GroupProfile({ id, onSelect, onShowOnMap, onHideOnMap, shownOnMap, onCopyLink }: { id: string } & ProfileActions) {
   const group = getGroup(id);
   if (!group) return <p>No group with id “{id}”.</p>;
   const brands = housesInGroup(id);
   const regionalBrands = regionalHousesInGroup(id);
-  return <><h2>{group.name}</h2><Fields rows={[["Official Website", <Website url={group.website} />]]} />
+  return <><ItemActions item={{ kind: 'group', id: group.id }} onShowOnMap={onShowOnMap} onHideOnMap={onHideOnMap} shownOnMap={shownOnMap} onCopyLink={onCopyLink} /><h2>{group.name}</h2><Fields rows={[["Official Website", <Website url={group.website} />]]} />
     <fieldset><legend>Current Brands in This Map ({brands.length})</legend>
       <p className="hint">Current ownership recorded in this map. The official website has more information on the wider portfolio.</p>
       <ul className="tree-view">{brands.map((house) => <li key={house.id}><EntityLink kind="house" id={house.id} onSelect={onSelect}>{house.name}</EntityLink></li>)}</ul>
@@ -259,11 +322,12 @@ function GroupProfile({ id, onSelect }: { id: string; onSelect: Actions['onSelec
     <Description text={[group.description, group.notes].filter(Boolean).join('\n\n')} /></>;
 }
 
-function DesignerProfile({ id, onSelect }: { id: string; onSelect: Actions['onSelect'] }) {
+function DesignerProfile({ id, onSelect, onShowOnMap, onHideOnMap, shownOnMap, onCopyLink }: { id: string } & ProfileActions) {
   const designer = getDesigner(id);
+  const notes = useNotes('designers', id, designer?.notes);
   if (!designer) return <p>No designer with id “{id}”.</p>;
   const career = careerOf(id), moves = movesOf(id);
-  return <><h2>{designer.name}</h2><Fields rows={[
+  return <><ItemActions item={{ kind: 'designer', id }} onShowOnMap={onShowOnMap} onHideOnMap={onHideOnMap} shownOnMap={shownOnMap} onCopyLink={onCopyLink} /><h2>{designer.name}</h2><Fields rows={[
     ['Born', designer.born ? `${designer.born}${designer.died ? `–${designer.died}` : ''}` : undefined], ['Nationality', designer.nationality],
   ]} /><fieldset><legend>Career</legend><div className="sunken-panel"><table className="interactive"><thead><tr><th>Years</th><th>House</th><th>Role</th></tr></thead><tbody>
     {career.map((tenure, index) => <tr key={index}><td className="nowrap">{formatTenureYears(tenure)}</td>
@@ -274,7 +338,7 @@ function DesignerProfile({ id, onSelect }: { id: string; onSelect: Actions['onSe
         <span className="hint">(alongside <EntityLink kind="house" id={move.from.house} onSelect={onSelect}>{getHouse(move.from.house)?.name ?? move.from.house}</EntityLink>)</span></> : <>
         <EntityLink kind="house" id={move.from.house} onSelect={onSelect}>{getHouse(move.from.house)?.name ?? move.from.house}</EntityLink>{' → '}
         <EntityLink kind="house" id={move.to.house} onSelect={onSelect}>{getHouse(move.to.house)?.name ?? move.to.house}</EntityLink></>}
-    </li>)}</ul> : <p className="hint">No moves between houses recorded.</p>}</fieldset><Description text={designer.notes} /></>;
+    </li>)}</ul> : <p className="hint">No moves between houses recorded.</p>}</fieldset><Description text={notes} /></>;
 }
 
 export function panelTitle(selection: Selection): string {
@@ -283,14 +347,14 @@ export function panelTitle(selection: Selection): string {
   return name ?? 'Not found';
 }
 
-export function PanelContent({ selection, year = Infinity, onSelect, onTag, onOpenPlace, onShowOnMap }: {
+export function PanelContent({ selection, year = Infinity, onSelect, onTag, onOpenPlace, onShowOnMap, onHideOnMap, shownOnMap, onCopyLink }: {
   selection: Selection; year?: number;
 } & Actions) {
   if (selection?.kind === 'house') {
     const house = getHouse(selection.id);
-    return house ? <HouseProfile key={house.id} house={house} year={year} onSelect={onSelect} onTag={onTag} onOpenPlace={onOpenPlace} onShowOnMap={onShowOnMap} /> : <p>No house with id “{selection.id}”.</p>;
+    return house ? <HouseProfile key={house.id} house={house} year={year} onSelect={onSelect} onTag={onTag} onOpenPlace={onOpenPlace} onShowOnMap={onShowOnMap} onHideOnMap={onHideOnMap} shownOnMap={shownOnMap} onCopyLink={onCopyLink} /> : <p>No house with id “{selection.id}”.</p>;
   }
-  if (selection?.kind === 'designer') return <DesignerProfile id={selection.id} onSelect={onSelect} />;
-  if (selection?.kind === 'group') return <GroupProfile id={selection.id} onSelect={onSelect} />;
+  if (selection?.kind === 'designer') return <DesignerProfile key={selection.id} id={selection.id} onSelect={onSelect} onShowOnMap={onShowOnMap} onHideOnMap={onHideOnMap} shownOnMap={shownOnMap} onCopyLink={onCopyLink} />;
+  if (selection?.kind === 'group') return <GroupProfile key={selection.id} id={selection.id} onSelect={onSelect} onShowOnMap={onShowOnMap} onHideOnMap={onHideOnMap} shownOnMap={shownOnMap} onCopyLink={onCopyLink} />;
   return <p className="hint">Nothing selected.</p>;
 }

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { StrictMode } from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, afterEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { GraphCallbacks } from './graph/graph';
@@ -10,8 +10,8 @@ const mocks = vi.hoisted(() => ({ instances: [] as {
   setYear: ReturnType<typeof vi.fn>; setShowMoves: ReturnType<typeof vi.fn>;
   setShowCollaborations: ReturnType<typeof vi.fn>; setConnectionFilter: ReturnType<typeof vi.fn>;
   setAllExpanded: ReturnType<typeof vi.fn>; fit: ReturnType<typeof vi.fn>; destroy: ReturnType<typeof vi.fn>; houseAt: ReturnType<typeof vi.fn>;
-  showCities: ReturnType<typeof vi.fn>; setNight: ReturnType<typeof vi.fn>; setTextScale: ReturnType<typeof vi.fn>;
-  locationBox: ReturnType<typeof vi.fn>;
+  showCities: ReturnType<typeof vi.fn>; setNight: ReturnType<typeof vi.fn>; setTextScale: ReturnType<typeof vi.fn>; setPulses: ReturnType<typeof vi.fn>;
+  locationBox: ReturnType<typeof vi.fn>; restoreView: ReturnType<typeof vi.fn>;
 }[] }));
 vi.mock('./graph/graph', () => ({
   DesignerGraph: class {
@@ -25,15 +25,23 @@ vi.mock('./graph/graph', () => ({
     setConnectionFilter = vi.fn();
     setNight = vi.fn();
     setTextScale = vi.fn();
+    setPulses = vi.fn();
     houseAt = vi.fn((): string | undefined => 'dior');
     fit = vi.fn();
-    showCities = vi.fn();
+    zoomBy = vi.fn();
+    showBrands = vi.fn();
+    picture = vi.fn(async () => new Blob(['png']));
+    private open = new Set<string>();
+    showCities = vi.fn((cities: string[]) => { for (const c of cities) this.open.add(c); this.callbacks.onExpandChange?.(this.open.size, 10, [...this.open]); });
+    hideCities = vi.fn((cities: string[]) => { for (const c of cities) this.open.delete(c); this.callbacks.onExpandChange?.(this.open.size, 10, [...this.open]); });
+    viewState = vi.fn(() => ({ zoom: 2, x: 100, y: 50, open: ['Paris'] }));
+    restoreView = vi.fn();
     locationBox = vi.fn((): { left: number; top: number; right: number; bottom: number } | undefined => undefined);
     refreshStyle = vi.fn();
     destroy = vi.fn();
     setAllExpanded = vi.fn((open: boolean) => {
       this.allExpanded = open;
-      this.callbacks.onExpandChange?.(open ? 10 : 0, 10);
+      this.callbacks.onExpandChange?.(open ? 10 : 0, 10, []);
     });
     constructor(_host: HTMLElement, private callbacks: GraphCallbacks) { mocks.instances.push(this); }
   },
@@ -42,8 +50,12 @@ import { App } from './App';
 import { cityWindowSize } from './ui/city-window';
 import { clampRect, defaultRect } from './ui/side-panel';
 import { GroupId } from './data/groups';
+import { preloadWindows } from './ui/lazy-window';
 
 const openStart = (user: ReturnType<typeof userEvent.setup>) => user.click(screen.getByRole('button', { name: 'Start' }));
+/** Settings' options are in tabs. */
+const settingsTab = (user: ReturnType<typeof userEvent.setup>, name: string) =>
+  user.click(within(screen.getByRole('dialog', { name: 'Settings' })).getByRole('tab', { name }));
 /** My Computer starts closed; the Start menu opens it. */
 const openComputer = async (user: ReturnType<typeof userEvent.setup>) => {
   await openStart(user);
@@ -53,6 +65,7 @@ const openComputer = async (user: ReturnType<typeof userEvent.setup>) => {
 afterEach(() => {
   cleanup();
   localStorage.clear();
+  sessionStorage.clear();
   // Share links write the view into the URL hash; start each test from a plain URL.
   history.replaceState(null, '', '/');
   mocks.instances.length = 0;
@@ -63,6 +76,9 @@ afterEach(() => {
 const openYear = () => {
   if (!screen.queryByRole('slider')) fireEvent.click(screen.getByRole('button', { name: /Year:/ }));
 };
+
+// Windows download separately; have them ready, as they are once the map is up.
+beforeAll(async () => { await preloadWindows(); });
 
 describe('React app graph integration', () => {
   it('persists the collaboration toggle independently from career lines', async () => {
@@ -205,7 +221,7 @@ describe('React app graph integration', () => {
     render(<App />);
     const graph = mocks.instances[0]!;
     const bar = within(screen.getByRole('search'));
-    const address = bar.getByRole('combobox', { name: 'Address' });
+    const address = bar.getByRole('combobox', { name: 'Find on map' });
     // Go opens the best match, exact names first.
     await user.type(address, 'dior');
     await user.keyboard('{Escape}');
@@ -346,19 +362,23 @@ describe('React app graph integration', () => {
     expect(graph.setNight).toHaveBeenLastCalledWith(false);
     await user.click(screen.getByTitle('Open Settings (drag to move)'));
     const settings = screen.getByRole('dialog', { name: 'Settings' });
+    await settingsTab(user, 'Appearance');
     await user.click(within(settings).getByRole('radio', { name: 'Night' }));
     expect(graph.setNight).toHaveBeenLastCalledWith(true);
     expect(localStorage.getItem('designer-map:map-theme')).toBe('night');
     // Text size scales the map labels and, through --text-zoom, the window contents.
+    await settingsTab(user, 'Accessibility');
     await user.selectOptions(within(settings).getByRole('combobox', { name: 'Font size:' }), 'large');
     expect(graph.setTextScale).toHaveBeenLastCalledWith(1.25);
     expect(document.documentElement.style.getPropertyValue('--text-zoom')).toBe('1.25');
     expect(localStorage.getItem('designer-map:text-size')).toBe('large');
     await user.selectOptions(within(settings).getByRole('combobox', { name: 'Font size:' }), 'normal');
     // The Settings checkboxes drive the same options as the Start menu.
+    await settingsTab(user, 'Connections');
     await user.click(within(settings).getByRole('checkbox', { name: 'Show move lines' }));
     expect(graph.setShowMoves).toHaveBeenLastCalledWith(false);
     await user.click(within(settings).getByRole('checkbox', { name: 'Show move lines' }));
+    await settingsTab(user, 'Appearance');
     await user.click(within(settings).getByRole('radio', { name: 'Day' }));
     expect(graph.setNight).toHaveBeenLastCalledWith(false);
     await user.click(within(settings).getByRole('radio', { name: 'Night' }));
@@ -497,7 +517,7 @@ describe('React app graph integration', () => {
     await user.click(screen.getByRole('option', { name: 'Large Icons' }));
     await openStart(user);
     await user.click(screen.getByRole('button', { name: "What's Missing" }));
-    expect(within(screen.getByRole('dialog', { name: "What's Missing" })).getByRole('button', { name: /^No founder or creative director \(\d+\)$/ })).toBeTruthy();
+    expect(within(screen.getByRole('dialog', { name: "What's Missing" })).getByRole('button', { name: /^No founder \(\d+\)$/ })).toBeTruthy();
   });
 
   it('plays and stops the timeline and cleans up playback and clock timers on unmount', () => {
@@ -810,7 +830,7 @@ describe('City windows', () => {
     expect(eight.width).toBe(one.width);
     expect(eight.height).toBeGreaterThan(one.height);
     expect(sixteen.height).toBe(twenty.height);
-    // The scrollbar's gutter is always reserved, so scrolling windows keep the same width.
+    // There is always room for a scrollbar, so scrolling windows keep the same width.
     expect(twenty.width).toBe(sixteen.width);
     expect(cityWindowSize(200)).toEqual(sixteen);
     // A one-brand window isn't widened to the Properties window minimum.
@@ -895,7 +915,7 @@ describe('City windows', () => {
     const grid = () => within(screen.getByRole('dialog', { name: 'Paris' })).getByRole('list', { name: 'Brands in Paris' });
     fireEvent.contextMenu(within(grid()).getByRole('button', { name: 'Dior' }), { clientX: 50, clientY: 50 });
     let menu = screen.getByRole('menu', { name: 'Dior actions' });
-    expect(within(menu).getAllByRole('menuitem').map((item) => item.textContent)).toEqual(['Open', 'Show on Map', 'Open France']);
+    expect(within(menu).getAllByRole('menuitem').map((item) => item.textContent)).toEqual(['Open', 'Show on Map', 'Add to Favorites', 'Open France']);
     await user.click(within(menu).getByRole('menuitem', { name: 'Show on Map' }));
     // Selected and revealed on the map, without a Properties window.
     expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
@@ -907,7 +927,7 @@ describe('City windows', () => {
     const france = within(screen.getByRole('dialog', { name: 'France' })).getByRole('list', { name: 'Brands in France' });
     fireEvent.contextMenu(within(france).getByRole('button', { name: 'Dior' }), { clientX: 50, clientY: 50 });
     expect(within(screen.getByRole('menu', { name: 'Dior actions' })).getAllByRole('menuitem').map((item) => item.textContent))
-      .toEqual(['Open', 'Show on Map', 'Open Paris']);
+      .toEqual(['Open', 'Show on Map', 'Add to Favorites', 'Open Paris']);
     await user.click(within(screen.getByRole('menu', { name: 'Dior actions' })).getByRole('menuitem', { name: 'Open' }));
     expect(screen.getByRole('dialog', { name: 'Dior' })).toBeTruthy();
   });
@@ -919,12 +939,38 @@ describe('City windows', () => {
     openCity('Paris');
     await user.click(within(screen.getByRole('dialog', { name: 'Paris' })).getByRole('button', { name: 'Show on Map' }));
     expect(graph.showCities).toHaveBeenLastCalledWith(['Paris']);
+    const toggle = () => within(screen.getByRole('dialog', { name: 'Paris' })).getByRole('button', { name: /^(Hide|Show on Map)$/ });
+    await user.click(toggle());
+    expect(toggle().textContent).toBe('Show on Map');
+    await user.click(toggle());
+    expect(toggle().textContent).toBe('Hide');
     await user.click(within(screen.getByRole('dialog', { name: 'Paris' })).getByRole('button', { name: 'Dior' }));
     await user.click(within(screen.getByRole('dialog', { name: 'Dior' })).getByRole('link', { name: 'France' }));
     await user.click(within(screen.getByRole('dialog', { name: 'France' })).getByRole('button', { name: 'Show on Map' }));
     const cities = graph.showCities.mock.lastCall![0] as string[];
     expect(cities).toContain('Paris');
     expect(new Set(cities).size).toBe(cities.length);
+  });
+
+  it('turns Show on Map into Hide while a brand is selected on the map', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const graph = mocks.instances[0]!;
+    openCity('Paris');
+    await user.click(within(screen.getByRole('dialog', { name: 'Paris' })).getByRole('button', { name: 'Dior' }));
+    const toggle = () => within(screen.getByRole('dialog', { name: 'Dior' })).getByRole('button', { name: /^(Hide|Show on Map)$/ });
+    await user.click(toggle());
+    expect(graph.select.mock.lastCall![0]).toBeNull();
+    expect(toggle().textContent).toBe('Show on Map');
+    await user.click(toggle());
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    expect(toggle().textContent).toBe('Hide');
+    // A background window's button does what it said when pressed, though the press focuses the window and selects its item.
+    await user.click(within(screen.getByRole('dialog', { name: 'Paris' })).getByRole('button', { name: 'Chanel' }));
+    expect(toggle().textContent).toBe('Show on Map');
+    await user.click(toggle());
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    expect(toggle().textContent).toBe('Hide');
   });
 
   it('opens each city once, focusing an open city instead of repeating it', () => {
@@ -944,6 +990,7 @@ describe('City windows', () => {
     const graph = mocks.instances[0]! as typeof mocks.instances[0] & { toggleCity: ReturnType<typeof vi.fn> };
     graph.toggleCity = vi.fn();
     await user.click(screen.getByTitle('Open Settings (drag to move)'));
+    await settingsTab(user, 'Map');
     await user.click(within(screen.getByRole('dialog', { name: 'Settings' })).getByRole('radio', { name: 'On map' }));
     openCity('Paris');
     expect(graph.toggleCity).toHaveBeenCalledWith('Paris');
@@ -1052,6 +1099,41 @@ describe('Start menu commands', () => {
     const help = screen.getByRole('dialog', { name: 'Help' });
     expect(within(help).getByText('Connection lines')).toBeTruthy();
     expect(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('button', { name: 'Help' })).toBeTruthy();
+  });
+
+  it('keeps windows, Explorer and the map view through a refresh', async () => {
+    const user = userEvent.setup();
+    render(<StrictMode><App /></StrictMode>);
+    await openComputer(user);
+    fireEvent.click(screen.getByRole('button', { name: 'Launch Notepad' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Minimize Untitled - Notepad' }));
+    fireEvent.click(within(document.querySelector<HTMLElement>('#map-window')!).getByRole('button', { name: 'Minimize' }));
+    window.dispatchEvent(new Event('pagehide'));
+    cleanup();
+    mocks.instances.length = 0;
+    render(<StrictMode><App /></StrictMode>);
+    expect(screen.getByRole('dialog', { name: 'My Computer' })).toBeTruthy();
+    expect(screen.queryByRole('dialog', { name: 'Untitled - Notepad' })).toBeNull();
+    expect(within(document.querySelector<HTMLElement>('.taskbar')!).getByRole('button', { name: 'Untitled - Notepad' })).toBeTruthy();
+    expect(document.querySelector('#map-window')!.getAttribute('aria-hidden')).toBe('true');
+    expect(mocks.instances.at(-1)!.restoreView).toHaveBeenCalledWith({ zoom: 2, x: 100, y: 50, open: ['Paris'] });
+  });
+
+  it('reselects after a refresh without reopening a closed window, but opens a different link', () => {
+    history.replaceState(null, '', '/#brand=dior');
+    render(<StrictMode><App /></StrictMode>);
+    fireEvent.click(screen.getByRole('button', { name: 'Minimize Dior' }));
+    window.dispatchEvent(new Event('pagehide'));
+    cleanup();
+    expect(location.hash).toBe('#brand=dior');
+    render(<StrictMode><App /></StrictMode>);
+    expect(location.hash).toBe('#brand=dior');
+    expect(screen.queryByRole('dialog', { name: 'Dior' })).toBeNull();
+    window.dispatchEvent(new Event('pagehide'));
+    cleanup();
+    history.replaceState(null, '', '/#brand=chanel');
+    render(<StrictMode><App /></StrictMode>);
+    expect(screen.getByRole('dialog', { name: 'Chanel' })).toBeTruthy();
   });
 
   it('Reset View clears the selection, filters, year and windows, and shows the whole map', async () => {
@@ -1192,7 +1274,7 @@ describe('Windows features', () => {
     const create = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:note');
     const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) { downloads.push(this.download); });
     try {
-      await user.click(screen.getByRole('menuitem', { name: 'File' }));
+      await user.click(within(screen.getByRole('menubar', { name: 'Notepad menu' })).getByRole('menuitem', { name: 'File' }));
       await user.click(screen.getByRole('menuitem', { name: 'Save As…' }));
       const save = within(screen.getByRole('dialog', { name: 'Save As' }));
       const name = save.getByRole('textbox', { name: 'File name:' });
@@ -1206,13 +1288,13 @@ describe('Windows features', () => {
       expect(screen.queryByRole('dialog', { name: 'Save As' })).toBeNull();
     } finally { create.mockRestore(); click.mockRestore(); }
     // File ▸ New asks before discarding the text; No clears it.
-    await user.click(screen.getByRole('menuitem', { name: 'File' }));
+    await user.click(within(screen.getByRole('menubar', { name: 'Notepad menu' })).getByRole('menuitem', { name: 'File' }));
     await user.click(screen.getByRole('menuitem', { name: 'New' }));
     const confirm = within(screen.getByRole('alertdialog', { name: 'Notepad' }));
     expect(confirm.getByText(/Moodboard file has changed/)).toBeTruthy();
     await user.click(confirm.getByRole('button', { name: 'No' }));
     expect((text as HTMLTextAreaElement).value).toBe('');
-    await user.click(screen.getByRole('menuitem', { name: 'File' }));
+    await user.click(within(screen.getByRole('menubar', { name: 'Notepad menu' })).getByRole('menuitem', { name: 'File' }));
     await user.click(screen.getByRole('menuitem', { name: 'Exit' }));
     expect(screen.queryByRole('dialog', { name: 'Untitled - Notepad' })).toBeNull();
     localStorage.removeItem('designer-map:notepad');
@@ -1227,7 +1309,7 @@ describe('Notepad font size', () => {
     await user.click(screen.getByTitle('Open Notepad (drag to move)'));
     const text = () => screen.getByRole('textbox', { name: 'Notepad text' });
     expect(text().style.fontSize).toBe('16px');
-    await user.click(screen.getByRole('menuitem', { name: 'Edit' }));
+    await user.click(within(screen.getByRole('menubar', { name: 'Notepad menu' })).getByRole('menuitem', { name: 'Edit' }));
     await user.click(screen.getByRole('menuitem', { name: 'Set Font…' }));
     const font = within(screen.getByRole('dialog', { name: 'Font' }));
     await user.selectOptions(font.getByRole('listbox', { name: 'Size:' }), '24');
@@ -1236,10 +1318,241 @@ describe('Notepad font size', () => {
     expect(localStorage.getItem('designer-map:notepad-font-size')).toBe('24');
     // Settings ▸ Notepad edits the same size.
     await user.click(screen.getByTitle('Open Settings (drag to move)'));
+    await settingsTab(user, 'General');
     const notepadSize = screen.getByRole('combobox', { name: 'Notepad font size:' }) as HTMLSelectElement;
     expect(notepadSize.value).toBe('24');
     await user.selectOptions(notepadSize, '12');
     expect(text().style.fontSize).toBe('12px');
     localStorage.removeItem('designer-map:notepad-font-size');
+  });
+});
+
+describe('Settings tabs', () => {
+  const open = async (tab: string) => {
+    const user = userEvent.setup();
+    const view = render(<App />);
+    await user.click(screen.getByTitle('Open Settings (drag to move)'));
+    await settingsTab(user, tab);
+    return { user, view, settings: within(screen.getByRole('dialog', { name: 'Settings' })), graph: mocks.instances.at(-1)! };
+  };
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('remembers its tab and restores defaults after confirming, keeping the note', async () => {
+    localStorage.setItem('designer-map:notepad', 'hello');
+    const { user, settings } = await open('Appearance');
+    expect(localStorage.getItem('designer-map:settings-tab')).toBe('appearance');
+    await user.selectOptions(settings.getByRole('combobox', { name: 'Wallpaper:' }), 'houndstooth');
+    await user.selectOptions(settings.getByRole('combobox', { name: 'Colour:' }), 'navy');
+    expect(document.documentElement.dataset).toMatchObject({ wallpaper: 'houndstooth', desktopColor: 'navy' });
+    await user.click(settings.getByRole('button', { name: 'Restore Defaults…' }));
+    await user.click(settings.getByRole('button', { name: 'Cancel' }));
+    expect(document.documentElement.dataset.wallpaper).toBe('houndstooth');
+    await user.click(settings.getByRole('button', { name: 'Restore Defaults…' }));
+    await user.click(settings.getByRole('button', { name: 'Restore' }));
+    expect(document.documentElement.dataset).toMatchObject({ wallpaper: 'none', desktopColor: 'teal' });
+    expect(localStorage.getItem('designer-map:notepad')).toBe('hello');
+  });
+
+  it('follows the system theme when automatic', async () => {
+    let dark = true;
+    const listeners = new Set<() => void>();
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      get matches() { return query.includes('dark') && dark; },
+      addEventListener: (_: string, f: () => void) => listeners.add(f), removeEventListener: (_: string, f: () => void) => listeners.delete(f),
+    }));
+    const { user, settings, graph } = await open('Appearance');
+    expect(graph.setNight).toHaveBeenLastCalledWith(false);
+    await user.click(settings.getByRole('radio', { name: 'Automatic (follow system)' }));
+    expect(graph.setNight).toHaveBeenLastCalledWith(true);
+    dark = false;
+    act(() => listeners.forEach((f) => f()));
+    expect(graph.setNight).toHaveBeenLastCalledWith(false);
+  });
+
+  it('turns animations and pulses off separately', async () => {
+    const { user, settings, graph } = await open('Accessibility');
+    await user.click(settings.getByRole('radio', { name: 'Always off' }));
+    expect(document.documentElement.dataset.motion).toBe('reduced');
+    await user.click(settings.getByRole('radio', { name: 'Always on' }));
+    expect(document.documentElement.dataset.motion).toBeUndefined();
+    expect(graph.setPulses).toHaveBeenLastCalledWith(true);
+    await settingsTab(user, 'Connections');
+    await user.click(settings.getByRole('checkbox', { name: 'Show moving blocks along lines' }));
+    expect(graph.setPulses).toHaveBeenLastCalledWith(false);
+    expect(mocks.instances).toHaveLength(1);
+  });
+
+  it('sets the clock to 24-hour time', async () => {
+    vi.useFakeTimers({ toFake: ['Date'], now: new Date(2026, 0, 2, 15, 5) });
+    const { user, settings } = await open('General');
+    await user.selectOptions(settings.getByRole('combobox', { name: 'Time format:' }), '24');
+    expect(document.getElementById('clock')!.textContent).toBe('15:05');
+    await user.selectOptions(settings.getByRole('combobox', { name: 'Time format:' }), '12');
+    expect(document.getElementById('clock')!.textContent).toMatch(/^3:05/);
+  });
+
+  it('opens folders in the chosen view, without overwriting the last used one', async () => {
+    const { user, settings } = await open('General');
+    await user.click(screen.getByTitle('Open Recycle Bin (drag to move)'));
+    const bin = () => screen.getByRole('dialog', { name: 'Recycle Bin' });
+    expect(within(bin()).queryByRole('table')).toBeNull();
+    await user.selectOptions(settings.getByRole('combobox', { name: 'Open folders as:' }), 'details');
+    expect(within(bin()).getByRole('table')).toBeTruthy();
+    expect(localStorage.getItem('designer-map:recycle-view')).toBe('icons');
+  });
+
+  it('clears the note, documents and positions', async () => {
+    localStorage.setItem('designer-map:notepad', 'hello');
+    localStorage.setItem('designer-map:desktop-icon:settings', '{"x":200,"y":90}');
+    localStorage.setItem('designer-map:recent', '[{"kind":"house","id":"dior"}]');
+    const { user, settings } = await open('General');
+    await user.click(screen.getByTitle('Open Notepad (drag to move)'));
+    const text = screen.getByRole<HTMLTextAreaElement>('textbox', { name: 'Notepad text' });
+    await user.click(settings.getByRole('button', { name: 'Clear Notepad…' }));
+    expect(text.value).toBe('hello');
+    await user.click(settings.getByRole('button', { name: 'Clear' }));
+    expect(text.value).toBe('');
+    await user.click(settings.getByRole('button', { name: 'Reset Window and Icon Positions' }));
+    expect(localStorage.getItem('designer-map:desktop-icon:settings')).toBeNull();
+    expect(screen.getByTitle('Open Settings (drag to move)').style.left).toBe('');
+    await user.click(settings.getByRole('button', { name: 'Clear Documents' }));
+    expect(localStorage.getItem('designer-map:recent')).toBe('[]');
+  });
+
+  it('opens where the last visit left off only when asked', async () => {
+    const { user, settings, view } = await open('General');
+    await user.click(settings.getByRole('radio', { name: 'Open where I left off' }));
+    view.unmount();
+    sessionStorage.clear();
+    const again = render(<App />);
+    const restored = screen.getByRole('dialog', { name: 'Settings' });
+    await user.click(within(restored).getByRole('radio', { name: 'Start fresh' }));
+    expect(localStorage.getItem('designer-map:last-session')).toBeNull();
+    again.unmount();
+    sessionStorage.clear();
+    render(<App />);
+    expect(screen.queryByRole('dialog', { name: 'Settings' })).toBeNull();
+  });
+});
+
+describe('Explorer menu bar', () => {
+  it('goes back and forward, keeps favorites and toggles its bars', async () => {
+    const user = userEvent.setup();
+    const view = render(<App />);
+    const graph = mocks.instances.at(-1)! as typeof mocks.instances[0] & { zoomBy: ReturnType<typeof vi.fn> };
+    const choose = async (menu: string, item: string) => {
+      await user.click(within(screen.getByRole('menubar', { name: 'Explorer menu' })).getByRole('menuitem', { name: menu }));
+      await user.click(within(screen.getByRole('menu', { name: `${menu} menu` })).getByText(item));
+    };
+    const pick = async (text: string, option: string) => {
+      const box = screen.getByRole('combobox', { name: 'Find on map' });
+      await user.clear(box);
+      await user.type(box, text);
+      await user.click(screen.getByRole('option', { name: option }));
+    };
+    await pick('dior', 'Dior house');
+    await choose('Favorites', 'Add to Favorites');
+    await pick('lemaire', 'Lemaire house');
+    await choose('Go', 'Back');
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    await choose('Go', 'Forward');
+    expect(graph.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'lemaire' }, true);
+    await choose('Edit', 'Clear Selection');
+    expect(graph.select).toHaveBeenLastCalledWith(null, false);
+    await choose('View', 'Zoom In');
+    expect(graph.zoomBy).toHaveBeenCalledWith(1.5);
+    await choose('View', 'Status Bar');
+    expect(document.getElementById('status-counts')).toBeNull();
+    await choose('View', 'Address Bar');
+    expect(screen.queryByRole('combobox', { name: 'Find on map' })).toBeNull();
+    view.unmount();
+    render(<App />);
+    await choose('Favorites', 'Dior');
+    expect(mocks.instances.at(-1)!.select).toHaveBeenLastCalledWith({ kind: 'house', id: 'dior' }, true);
+    await choose('Favorites', 'Organize Favorites…');
+    await user.click(screen.getByRole('button', { name: 'Remove Dior' }));
+    expect(localStorage.getItem('designer-map:favorites')).toBe('[]');
+    await user.click(screen.getByRole('button', { name: 'Close Organize Favorites' }));
+    await choose('Edit', 'Find…');
+    expect(screen.getByRole('combobox', { name: 'Find on map' })).toBeTruthy();
+  });
+});
+
+describe('Explorer and window extras', () => {
+  type Extra = typeof mocks.instances[0] & { showBrands: ReturnType<typeof vi.fn>; picture: ReturnType<typeof vi.fn>; callbacks: GraphCallbacks; zoomBy: ReturnType<typeof vi.fn> };
+  const start = () => { const user = userEvent.setup(); render(<App />); return { user, graph: mocks.instances.at(-1)! as Extra }; };
+  const choose = async (user: ReturnType<typeof userEvent.setup>, menu: string, item: string) => {
+    await user.click(within(screen.getByRole('menubar', { name: 'Explorer menu' })).getByRole('menuitem', { name: menu }));
+    await user.click(within(screen.getByRole('menu', { name: `${menu} menu` })).getByText(item));
+  };
+
+  it('filters brands from View', async () => {
+    const { user, graph } = start();
+    await choose(user, 'View', 'Filter Brands…');
+    const dialog = within(screen.getByRole('dialog', { name: 'Filter Brands' }));
+    await user.click(dialog.getByRole('checkbox', { name: 'Budget' }));
+    expect(graph.setHouseFilter.mock.lastCall![0]).toBeInstanceOf(Set);
+    await user.click(dialog.getByRole('button', { name: 'Clear All' }));
+    expect(graph.setHouseFilter).toHaveBeenLastCalledWith(undefined);
+  });
+
+  it('saves the map as a picture', async () => {
+    const { user, graph } = start();
+    await choose(user, 'File', 'Save Map as Picture…');
+    await user.click(within(screen.getByRole('dialog', { name: 'Save As' })).getByRole('button', { name: 'Save' }));
+    expect(graph.picture).toHaveBeenCalled();
+    expect(await screen.findByText('Picture saved')).toBeTruthy();
+  });
+
+  it('favorites brands from their window and the map, and shows them all', async () => {
+    const { user, graph } = start();
+    act(() => graph.callbacks.onSelect({ kind: 'house', id: 'dior' }));
+    const bar = within(screen.getByRole('dialog', { name: 'Dior' })).getByRole('toolbar', { name: 'Commands' });
+    await user.click(within(bar).getByRole('button', { name: 'Favorite' }));
+    expect(within(bar).getByRole('button', { name: 'Favorite' }).getAttribute('aria-pressed')).toBe('true');
+    await user.click(within(bar).getByRole('button', { name: 'Copy Link' }));
+    expect(await navigator.clipboard.readText()).toContain('#brand=dior');
+    await choose(user, 'Favorites', 'Show All on Map');
+    expect(graph.select).toHaveBeenLastCalledWith(null, false);
+    expect(graph.showBrands).toHaveBeenLastCalledWith(['dior']);
+    fireEvent.contextMenu(document.getElementById('graph')!, { clientX: 5, clientY: 5 });
+    await user.click(screen.getByRole('menuitem', { name: 'Remove from Favorites' }));
+    expect(localStorage.getItem('designer-map:favorites')).toBe('[]');
+  });
+
+  it('zooms from the map corner and shows tooltips after a pause', () => {
+    vi.useFakeTimers();
+    render(<App />);
+    const graph = mocks.instances.at(-1)! as Extra;
+    fireEvent.click(screen.getByRole('button', { name: 'Zoom Out' }));
+    expect(graph.zoomBy).toHaveBeenCalledWith(1 / 1.5);
+    act(() => graph.callbacks.onHover!({ lines: ['Dior', 'Paris, France'], x: 10, y: 10 }));
+    expect(screen.queryByRole('tooltip')).toBeNull();
+    act(() => { vi.advanceTimersByTime(500); });
+    expect(screen.getByRole('tooltip').textContent).toBe('DiorParis, France');
+    act(() => graph.callbacks.onHover!(null));
+    expect(screen.queryByRole('tooltip')).toBeNull();
+  });
+
+  it('selects several brands in a place window and follows its path', async () => {
+    const { user, graph } = start();
+    act(() => graph.callbacks.onOpenCity!('Paris'));
+    const paris = () => within(screen.getByRole('dialog', { name: 'Paris' }));
+    const tiles = within(paris().getByRole('list', { name: 'Brands in Paris' })).getAllByRole('button');
+    fireEvent.click(tiles[0]!, { ctrlKey: true });
+    fireEvent.click(tiles[2]!, { shiftKey: true });
+    expect(paris().getByText(/3 selected/)).toBeTruthy();
+    expect(screen.getAllByRole('dialog')).toHaveLength(1);
+    fireEvent.contextMenu(tiles[1]!, { clientX: 5, clientY: 5 });
+    await user.click(screen.getByRole('menuitem', { name: 'Show on Map' }));
+    expect(graph.showBrands.mock.lastCall![0]).toHaveLength(3);
+    fireEvent.contextMenu(tiles[1]!, { clientX: 5, clientY: 5 });
+    await user.click(screen.getByRole('menuitem', { name: 'Open 3 Brands' }));
+    expect(screen.getAllByRole('dialog')).toHaveLength(4);
+    await user.click(paris().getByRole('button', { name: 'Cities in France' }));
+    expect(within(screen.getByRole('menu', { name: 'Cities in France' })).getByRole('menuitem', { name: 'Paris' })).toBeTruthy();
+    await user.keyboard('{Escape}');
+    await user.click(paris().getByRole('button', { name: 'France' }));
+    expect(screen.getByRole('dialog', { name: 'France' })).toBeTruthy();
   });
 });

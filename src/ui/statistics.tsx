@@ -1,14 +1,16 @@
+import { readJson, readSetting, writeJson, writeSetting } from './storage';
 import { Fragment, useId, useMemo, useState, type ReactNode } from 'react';
 import { allMoves, BrandCategory, collaborations, countryNames, designers, getDesigner, getHouse, groups, isBusinessLeadership, marketPositionings, tenuresAt, type CountryCode } from '../data';
 import type { Collaboration, House } from '../types';
 import { MarketPositioning } from '../data/tags';
 import { mapLocationForCity } from '../graph/locations';
+import { Tabs } from './tabs';
 import { EntityLink, Fields, PlaceLink, ProfileSection, RowLimitedPanel, type Actions } from './panel';
 import { SearchBox, SelectBox, type ListItem } from './listbox';
 import { filterFields, type FilterGroup } from './filters';
 import { tagLabel } from './labels';
 import { DIMENSIONS, dimensionValues, diversityRows, partnersByBrand, type Dimension, type DiversityMode } from './collab-diversity';
-import { BarTable, houseName, involvesRetailer, LimitedSection, readSetting, RetailerToggle, STATS_TOP, STATS_VISIBLE_ROWS, tally, top, useRememberedToggle, writeSetting } from './stats-shared';
+import { BarTable, houseName, involvesRetailer, LimitedSection, RetailerToggle, STATS_TOP, STATS_VISIBLE_ROWS, tally, top, useRememberedChoice, useRememberedToggle } from './stats-shared';
 import { DegreesSection, HeatmapSection, PairingsSection } from './stats-connections';
 import { DecadesSection, IncubatorsSection, RelocationsSection, TrendsSection } from './stats-trends';
 
@@ -149,13 +151,11 @@ const validTag = (ref: unknown): ref is TagRef => !!ref && typeof ref === 'objec
   && filterFields.some(([group, , options]) => group === (ref as TagRef).group && (options as readonly string[]).includes((ref as TagRef).value));
 
 function readTagSeries(): TagSeries[] {
-  try {
-    const stored: unknown = JSON.parse(localStorage.getItem(TAG_SERIES_KEY) ?? '[]');
-    if (!Array.isArray(stored)) return [];
-    const valid = stored.filter((series): series is TagSeries => Array.isArray(series)
-      && (series.length === 1 || series.length === 2) && series.every(validTag));
-    return valid.filter((series, i) => valid.findIndex((other) => seriesKey(other) === seriesKey(series)) === i).slice(0, MAX_TAG_SERIES);
-  } catch { return []; }
+  const stored = readJson(TAG_SERIES_KEY);
+  if (!Array.isArray(stored)) return [];
+  const valid = stored.filter((series): series is TagSeries => Array.isArray(series)
+    && (series.length === 1 || series.length === 2) && series.every(validTag));
+  return valid.filter((series, i) => valid.findIndex((other) => seriesKey(other) === seriesKey(series)) === i).slice(0, MAX_TAG_SERIES);
 }
 
 function hasTag(id: string, { group, value }: TagRef) {
@@ -352,38 +352,20 @@ function YearSection({ releases: all, house }: { releases: readonly Collaboratio
   const thisYear = new Date().getFullYear();
   const releases = useMemo(() => chartedReleases(all, thisYear), [all, thisYear]);
   const upcoming = all.length - releases.length;
-  const [scale, setScale] = useState<YearScale>(() => {
-    try { return localStorage.getItem(SCALE_KEY) === 'share' ? 'share' : 'count'; } catch { return 'count'; }
-  });
-  const [style, setStyle] = useState<YearStyle>(() => {
-    try { return localStorage.getItem(STYLE_KEY) === 'lines' ? 'lines' : 'bars'; } catch { return 'bars'; }
-  });
-  const pickStyle = (next: YearStyle) => {
-    setStyle(next);
-    try { localStorage.setItem(STYLE_KEY, next); } catch { /* storage unavailable */ }
-  };
-  const pickScale = (next: YearScale) => {
-    setScale(next);
-    try { localStorage.setItem(SCALE_KEY, next); } catch { /* storage unavailable */ }
-  };
-  const [breakdown, setBreakdown] = useState<YearBreakdown>(() => {
-    try {
-      const stored = localStorage.getItem(BREAKDOWN_KEY);
-      return BREAKDOWN_VALUES.find((value) => value === stored) ?? 'total';
-    } catch { return 'total'; }
-  });
+  const [scale, pickScale] = useRememberedChoice<YearScale>(SCALE_KEY, ['count', 'share'], 'count');
+  const [style, pickStyle] = useRememberedChoice<YearStyle>(STYLE_KEY, ['bars', 'lines'], 'bars');
+  const [breakdown, setBreakdown] = useRememberedChoice<YearBreakdown>(BREAKDOWN_KEY, BREAKDOWN_VALUES, 'total');
   const [tagSeries, setTagSeries] = useState<TagSeries[]>(readTagSeries);
   // The one colour shown on its own (a segment key of the current breakdown), if any.
   const [focus, setFocus] = useState<string>();
   const pickBreakdown = (next: YearBreakdown) => {
     setBreakdown(next);
     setFocus(undefined);
-    try { localStorage.setItem(BREAKDOWN_KEY, next); } catch { /* storage unavailable */ }
   };
   const changeSeries = (next: TagSeries[]) => {
     setTagSeries(next);
     setFocus(undefined);
-    try { localStorage.setItem(TAG_SERIES_KEY, JSON.stringify(next)); } catch { /* storage unavailable */ }
+    writeJson(TAG_SERIES_KEY, next);
   };
   const scheme = useMemo(() => breakdown === 'tags' ? tagScheme(tagSeries) : builtInScheme(breakdown), [breakdown, tagSeries]);
   // The year picked on the chart; dropped when the filters leave it without releases.
@@ -692,32 +674,6 @@ export type StatsTab = 'overview' | 'collaborations' | 'connections' | 'people' 
 const TABS: readonly (readonly [StatsTab, string])[] = [['overview', 'Overview'], ['collaborations', 'Collaborations'], ['connections', 'Connections'], ['people', 'People'], ['places', 'Brands & places']];
 const TAB_KEY = 'designer-map:stats-tab';
 
-/** Win98 tabs. A panel mounts when first opened and stays mounted, so its settings survive switching. */
-function StatsTabs({ panels }: { panels: Record<StatsTab, () => ReactNode> }) {
-  const id = useId();
-  const [tab, setTab] = useState<StatsTab>(() => readSetting(TAB_KEY, (stored) => TABS.find(([key]) => key === stored)?.[0], 'overview'));
-  const [visited, setVisited] = useState<readonly StatsTab[]>([tab]);
-  const pick = (next: StatsTab) => {
-    setTab(next);
-    setVisited((keys) => keys.includes(next) ? keys : [...keys, next]);
-    writeSetting(TAB_KEY, next);
-  };
-  return <div className="stats-tabs">
-    <menu role="tablist" aria-label="Statistics" onKeyDown={(event) => {
-      const at = TABS.findIndex(([key]) => key === tab);
-      const to = event.key === 'ArrowRight' ? (at + 1) % TABS.length : event.key === 'ArrowLeft' ? (at + TABS.length - 1) % TABS.length
-        : event.key === 'Home' ? 0 : event.key === 'End' ? TABS.length - 1 : -1;
-      if (to < 0) return;
-      event.preventDefault();
-      pick(TABS[to]![0]);
-      (event.currentTarget.children[to] as HTMLElement).focus();
-    }}>{TABS.map(([key, text]) => <li key={key} role="tab" id={`${id}-${key}-tab`} aria-controls={`${id}-${key}`} aria-selected={key === tab}
-      tabIndex={key === tab ? 0 : -1} onClick={() => pick(key)}>{text}</li>)}</menu>
-    {TABS.filter(([key]) => visited.includes(key)).map(([key]) => <div key={key} role="tabpanel" className="stats-tabpanel" id={`${id}-${key}`}
-      aria-labelledby={`${id}-${key}-tab`} hidden={key !== tab}>{panels[key]()}</div>)}
-  </div>;
-}
-
 /**
  * Statistics for the brands the year and tag filters show: totals, market
  * tiers, countries, cities and the most connected people
@@ -772,7 +728,7 @@ export function StatisticsContent({ visibleHouses, year, filtered, onSelect, onO
     <h2>Statistics</h2>
     <p className="hint">{filtered ? `For the brands matching the current ${year === Infinity ? '' : 'year and '}filters.`
       : year === Infinity ? 'For every brand on the map.' : `For brands founded by ${year}.`}</p>
-    <StatsTabs panels={{
+    <Tabs label="Statistics" tabs={TABS} storageKey={TAB_KEY} panels={{
       overview: () => <>
       <ProfileSection title="Overview">
         <Fields rows={[

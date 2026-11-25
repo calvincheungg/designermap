@@ -25,6 +25,18 @@ export function rootOf(houses, id) {
   return id;
 }
 
+/** Years already recorded between a house's family and each other family, by family root. */
+export function recordedYears(houses, collaborations, id) {
+  const family = rootOf(houses, id);
+  const years = new Map();
+  for (const { houses: ids, year } of Object.values(collaborations)) {
+    const roots = new Set(ids.map((house) => rootOf(houses, house)));
+    if (!roots.delete(family)) continue;
+    for (const root of roots) years.set(root, (years.get(root) ?? new Set()).add(year));
+  }
+  return years;
+}
+
 /** `--name value` from the command line. */
 export function option(name, fallback) {
   const index = process.argv.indexOf(`--${name}`);

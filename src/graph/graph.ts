@@ -1,13 +1,16 @@
 import { minesweeperColour } from './minesweeper';
 import cytoscape, { type Collection, type Core, type EdgeSingular, type NodeSingular, type SingularElementArgument } from 'cytoscape';
+import { reducedMotion } from '../motion';
 import { allMoves, collaborationsOf, careerOf, getHouse, houses, housesInGroup, type GroupId } from '../data';
 import { collaborationEdges, mapElements, moveEdges, nodeId } from './elements';
-import { countryCenter, housesByMapLocation, LABEL_PX, layoutMap, MAP_HEIGHT, MAP_MIN_ZOOM, MAP_WIDTH, mapSvgMarkup, pinScale, project, ringLayout, type Point } from './geo';
+import { countryCenter, housesByMapLocation, LABEL_PX, layoutMap, MAP_HEIGHT, MAP_MIN_ZOOM, MAP_WIDTH, mapSvgMarkup, pinScale } from './geo';
 import { cityMarkerIcon, frameIcon, logoInfo, logoSize, PIN_H, PIN_W } from './icons';
 import { graphStyle, nightStyle, textStyle, NIGHT_BLUE, NIGHT_RED } from './style';
-import { areaLabel, clusterLabel, mapHousePath, mapLocationCoordinates, mapLocationForCity, mapLocationForHouse } from './locations';
+import { areaLabel, clusterLabel, mapHousePath, mapLocationForCity, mapLocationForHouse } from './locations';
 import { placeMarkers } from './markers';
 import { cityRegions, type CityName } from '../data/cities';
+import { mapPicture } from './picture';
+import { tooltipLines } from './tooltip';
 import { buildClusterLevels, clusterLevel, type PinCluster } from './clusters';
 
 export type ConnectionFilter = 'all' | 'designers' | 'collaborations';
@@ -16,15 +19,6 @@ export type Selection = { kind: 'house' | 'designer'; id: string } | { kind: 'gr
 
 /** Elements that are scenery, never faded. */
 const SCENERY = '[kind = "marker"], [kind = "leader"], [kind = "grid"]';
-
-/** Night city lights: locations with at least this many shown main brands glow. */
-export const CITY_LIGHT_MIN = 3;
-/** On-screen glow radius in px for a location showing `count` main brands, at full size. */
-export const cityLightRadius = (count: number): number => Math.min(96, 8 + 6.5 * Math.sqrt(count));
-/** Glow strength (0–1): busier cities shine brighter. */
-export const cityLightOpacity = (count: number): number => Math.min(1, 0.45 + count / 40);
-/** Below this zoom the glows shrink with the map; above it they keep their screen size. */
-const CITY_LIGHT_ZOOM = 0.6;
 
 /** How far past each map edge it can be dragged, as a fraction of the view. */
 const OVERSCROLL = 0.4;
@@ -58,6 +52,8 @@ function setClass<E extends SingularElementArgument>(
 /** A box in viewport (client) pixels. */
 /** Half a city pin's largest on-screen size. */
 const PIN_HALF = 13;
+/** The closest `showBrands` zooms in. */
+const SHOWN_MAX_ZOOM = 1.5;
 /** Room for a brand icon's label under it, in screen pixels. */
 const LABEL_HEIGHT = 16;
 
@@ -66,14 +62,21 @@ export interface ScreenBox { left: number; top: number; right: number; bottom: n
 export interface GraphCallbacks {
   onSelect: (sel: Selection) => void;
   onConnectionHover?: (label: string | null) => void;
-  /** Fired when cities expand/collapse, so the toolbar can update its toggle. */
-  onExpandChange?: (expandedCount: number, totalCities: number) => void;
+  /** Tooltip lines for what the mouse is over, at a viewport point; null when there is nothing. */
+  onHover?: (tip: { lines: string[]; x: number; y: number } | null) => void;
+  /** Fired when cities expand/collapse; `fullyOpen` are whole grids, not the brands a selection reveals. */
+  onExpandChange?: (expandedCount: number, totalCities: number, fullyOpen: readonly string[]) => void;
   /**
    * Clicking a city pin: the app shows the city's brands in a window, placed
    * beside `pin` (the pin's box in viewport pixels). Without it, the pin expands on the map.
    */
   onOpenCity?: (city: string, pin?: ScreenBox) => void;
 }
+
+/** A map view that survives a page refresh. `x` and `y` are the map point at the centre. */
+export interface MapViewState { zoom: number; x: number; y: number; open: readonly string[] }
+/** How long after a restore resizes keep the view instead of fitting the map (ms). */
+const RESTORE_SETTLE = 1500;
 
 /**
  * Wrapper around Cytoscape: builds the world map, filters by year,
@@ -95,12 +98,15 @@ export class DesignerGraph {
   private pulseLayer: SVGSVGElement;
   private pulseGroup: SVGGElement;
   private pulseTimer: ReturnType<typeof setTimeout> | undefined;
+  private showPulses = true;
   /** Running pulses by edge id; `hover` marks ones added only while a line is hovered. */
   private pulses = new Map<string, Pulse>();
   /** Copies of pulsing lines, drawn beneath their blocks (the canvas lines are made transparent). */
   private traceGroup: SVGGElement;
   private blockGroup: SVGGElement;
   private selection: Selection = null;
+  /** Brands shown together without a selection (showBrands), until the next select(). */
+  private shownBrands: ReadonlySet<string> | null = null;
   /** Where a running reveal animation will leave the view, so windows can open beside places that are still moving. */
   /** Where each node was last placed, so a running move animation's destination is known. */
   private placedAt = new Map<string, { x: number; y: number }>();
@@ -122,8 +128,6 @@ export class DesignerGraph {
   /** Group inside the map SVG that carries the pan/zoom transform. */
   private mapGroup: SVGGElement;
   private pinLeaders: SVGGElement;
-  /** Night-only warm glows under the busiest cities (CSS hides them by day). */
-  private cityLights: SVGGElement;
   private markerTips = new Map<string, { x: number; y: number }>();
   private markerTimer: ReturnType<typeof setTimeout> | undefined;
   private clusterLevels: readonly (readonly PinCluster[])[] = [];
@@ -133,6 +137,8 @@ export class DesignerGraph {
   private canvasHost: HTMLElement;
   private resizeObserver: ResizeObserver;
   private pendingImages = new Set<HTMLImageElement>();
+  /** A view put back after a page refresh, and until when resizes keep it. */
+  private restored: { view: MapViewState; until: number } | undefined;
   private disposed = false;
   /** The un-damped pan of the drag in progress, the pan last shown, and the zoom it started at. */
   private dragPan: { x: number; y: number } | null = null;
@@ -150,16 +156,9 @@ export class DesignerGraph {
     // An SVG transform (not a CSS one) so `non-scaling-stroke` keeps borders hairline at any zoom.
     this.mapGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     this.mapGroup.innerHTML = mapSvgMarkup();
-    this.cityLights = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    this.cityLights.setAttribute('class', 'city-lights');
-    this.cityLights.innerHTML = '<defs><radialGradient id="city-light-glow">'
-      + '<stop offset="0" stop-color="#fff4c2" stop-opacity="0.95"/>'
-      + '<stop offset="0.18" stop-color="#ffd966" stop-opacity="0.75"/>'
-      + '<stop offset="0.5" stop-color="#ffb020" stop-opacity="0.28"/>'
-      + '<stop offset="1" stop-color="#ff9000" stop-opacity="0"/></radialGradient></defs>';
     this.pinLeaders = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     this.pinLeaders.setAttribute('class', 'pin-leaders');
-    this.mapGroup.append(this.cityLights, this.pinLeaders);
+    this.mapGroup.append(this.pinLeaders);
     this.mapLayer.append(this.mapGroup);
 
     const canvasHost = document.createElement('div');
@@ -218,18 +217,28 @@ export class DesignerGraph {
       callbacks.onConnectionHover?.(null);
       this.removeHoverPulses();
     });
+    this.cy.on('mouseover', 'node[kind = "house"], edge[kind = "move"], edge[kind = "collaboration"]', (e) => {
+      const event = e.originalEvent as MouseEvent | undefined;
+      // Only a mouse really over the map: not a touch, nor a window above it.
+      if (!event || !event.type.startsWith('mouse') || !canvasHost.contains(event.target as Node)) return;
+      const lines = tooltipLines(e.target);
+      if (lines.length) callbacks.onHover?.({ lines, x: event.clientX, y: event.clientY });
+    });
+    this.cy.on('mouseout', 'node, edge', () => callbacks.onHover?.(null));
+    this.cy.on('viewport tapstart', () => callbacks.onHover?.(null));
+    canvasHost.addEventListener('mouseleave', () => callbacks.onHover?.(null));
     this.cy.on('viewport', () => {
       // A press that moves the map shows the closed Win98 hand until release.
       if (this.dragPan) canvasHost.classList.add('grabbing');
       this.clampPan();
       this.syncMapLayer();
     });
-    this.cy.on('tapstart', () => this.grabPan());
+    this.cy.on('tapstart', () => { this.restored = undefined; this.grabPan(); });
+    canvasHost.addEventListener('wheel', () => { this.restored = undefined; }, { capture: true, passive: true });
     this.cy.on('tapend', () => { canvasHost.classList.remove('grabbing'); this.releasePan(); });
     this.cy.on('zoom', () => {
       // Keep sizes responsive while zooming; resolve collisions once the gesture settles.
       this.sizeMarkers(false);
-      this.sizeCityLights();
       this.scalePulses();
       clearTimeout(this.markerTimer);
       this.markerTimer = setTimeout(() => this.sizeMarkers(), 90);
@@ -240,7 +249,9 @@ export class DesignerGraph {
       if (this.disposed) return;
       this.cy.resize();
       this.applyZoomLimit();
-      this.cy.fit(this.cy.elements(':visible'), 30);
+      // The map window settles over a few resizes while the page loads; a restored view stays put through them.
+      if (this.restored && performance.now() < this.restored.until) this.applyView(this.restored.view);
+      else this.cy.fit(this.cy.elements(':visible'), 30);
     });
     this.resizeObserver.observe(canvasHost);
     // Cytoscape caches the canvas's screen rect and refreshes it only on resize, so after the map
@@ -340,7 +351,7 @@ export class DesignerGraph {
   /** Show only what existed up to (and including) `year`. */
   setYear(year: number) {
     this.year = year;
-    if (this.selection) {
+    if (this.selection || this.shownBrands) {
       this.refreshSelection(false, true);
       return;
     }
@@ -350,13 +361,36 @@ export class DesignerGraph {
   /** Tag filters apply to houses, city counts, and both ends of each move. */
   setHouseFilter(ids: ReadonlySet<string> | undefined) {
     this.matchingHouseIds = ids;
-    if (this.selection) this.refreshSelection(false, true);
+    if (this.selection || this.shownBrands) this.refreshSelection(false, true);
     else this.relayoutMap(false);
   }
 
   select(sel: Selection, reveal = false) {
     this.selection = sel;
+    this.shownBrands = null;
     this.refreshSelection(reveal);
+  }
+
+  /** Reveal just these brands and frame them, with nothing selected (Favorites, several brands in a place window). */
+  showBrands(ids: Iterable<string>) {
+    this.selection = null;
+    this.shownBrands = new Set(ids);
+    this.refreshSelection(true);
+    const cy = this.cy;
+    const focus = cy.nodes('[kind = "house"]').filter((node) => this.shownBrands!.has(node.data('refId'))).not('.hidden, .collapsed');
+    if (focus.empty()) return;
+    cy.stop(true, false);
+    // One or two brands shouldn't fill the map.
+    const box = focus.boundingBox();
+    const zoom = Math.max(cy.minZoom(), Math.min(SHOWN_MAX_ZOOM, (cy.width() - 160) / Math.max(1, box.w), (cy.height() - 160) / Math.max(1, box.h)));
+    const pan = { x: cy.width() / 2 - (box.x1 + box.x2) / 2 * zoom, y: cy.height() / 2 - (box.y1 + box.y2) / 2 * zoom };
+    if (reducedMotion()) cy.viewport({ zoom, pan });
+    else cy.animate({ zoom, pan }, { duration: 400 });
+  }
+
+  /** The map as it looks now, as a PNG. */
+  picture(): Promise<Blob> {
+    return mapPicture(this.cy, getComputedStyle(this.canvasHost.parentElement!).backgroundColor, [this.mapLayer, this.pulseLayer]);
   }
 
   private refreshSelection(reveal: boolean, forceLayout = false) {
@@ -371,13 +405,13 @@ export class DesignerGraph {
     this.revealedLabels.clear();
     this.connectionPartners.clear();
 
-    if (sel) {
-      const ids = new Set(sel.kind === 'house' ? [sel.id]
+    if (sel || this.shownBrands) {
+      const ids = new Set(!sel ? this.shownBrands! : sel.kind === 'house' ? [sel.id]
         : sel.kind === 'group' ? housesInGroup(sel.id).map((house) => house.id)
         : careerOf(sel.id).map((t) => t.house));
       // The selected brand, its ancestry and direct labels (not connection partners).
       const family = new Set<string>();
-      if (sel.kind === 'house') {
+      if (sel?.kind === 'house') {
         // Direct children open with their parent. Nested labels open one level at a time.
         for (const house of houses) if (house.parentHouse === sel.id) ids.add(house.id);
         for (const id of ids) for (const ancestor of mapHousePath(id)) this.revealedLabels.add(ancestor);
@@ -403,8 +437,8 @@ export class DesignerGraph {
         const house = getHouse(id);
         if (!house || !context.has(id) || (house.founded ?? -Infinity) > this.year) continue;
         // A partner label opens on its own; its parent shows only if it is involved too.
-        const path = sel.kind === 'house' && !family.has(id) ? [id] : mapHousePath(id);
-        if (sel.kind !== 'group') for (const ancestor of path) this.revealedLabels.add(ancestor);
+        const path = sel?.kind === 'house' && !family.has(id) ? [id] : mapHousePath(id);
+        if (sel?.kind !== 'group') for (const ancestor of path) this.revealedLabels.add(ancestor);
         const city = mapLocationForHouse(id);
         if (!this.expanded.has(city)) {
           this.expanded.add(city);
@@ -450,8 +484,21 @@ export class DesignerGraph {
       .filter((node) => node.visible());
     if (focus.empty()) return;
     cy.stop(true, false);
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) cy.fit(focus, 80);
+    if (reducedMotion()) cy.fit(focus, 80);
     else cy.animate({ fit: { eles: focus, padding: 80 } }, { duration: 400 });
+  }
+
+  /** A place window's Hide: close these locations' grids, leaving the view and what a selection reveals. */
+  hideCities(cities: Iterable<string>) {
+    for (const city of cities) {
+      this.autoRevealed.delete(mapLocationForCity(city));
+      this.expanded.delete(mapLocationForCity(city));
+    }
+    if (this.selection || this.shownBrands) this.refreshSelection(false, true);
+    else {
+      this.relayoutMap(true);
+      this.notifyExpand();
+    }
   }
 
   setAllExpanded(open: boolean) {
@@ -461,6 +508,34 @@ export class DesignerGraph {
     this.notifyExpand();
     this.cy.stop(true, false);
     this.cy.fit(this.cy.elements(':visible'), 30);
+  }
+
+  /** What a page refresh keeps: zoom, the map point at the centre, and the cities the user opened (not ones a selection reveals). */
+  viewState(): MapViewState {
+    const zoom = this.cy.zoom(), pan = this.cy.pan();
+    return { zoom, x: (this.cy.width() / 2 - pan.x) / zoom, y: (this.cy.height() / 2 - pan.y) / zoom,
+      open: this.fullyOpen() };
+  }
+
+  private fullyOpen(): string[] {
+    return [...this.expanded].filter((city) => !this.autoRevealed.has(city));
+  }
+
+  /** Put back a `viewState`, at whatever size the map is now. */
+  restoreView(view: MapViewState) {
+    const open = view.open.filter((city) => this.allCities.includes(city));
+    if (open.length) {
+      for (const city of open) { this.autoRevealed.delete(city); this.expanded.add(city); }
+      this.relayoutMap(false);
+      this.notifyExpand();
+    }
+    this.restored = { view, until: performance.now() + RESTORE_SETTLE };
+    this.applyView(view);
+  }
+
+  private applyView({ zoom: wanted, x, y }: MapViewState) {
+    const zoom = Math.min(this.cy.maxZoom(), Math.max(this.cy.minZoom(), wanted));
+    this.cy.viewport({ zoom, pan: { x: this.cy.width() / 2 - x * zoom, y: this.cy.height() / 2 - y * zoom } });
   }
 
   /** Show or hide move connections for the selected brand or designer. */
@@ -474,7 +549,7 @@ export class DesignerGraph {
   setShowCollaborations(on: boolean) {
     if (this.showCollaborations === on) return;
     this.showCollaborations = on;
-    if (this.selection) this.refreshSelection(false, true);
+    if (this.selection || this.shownBrands) this.refreshSelection(false, true);
     else this.relayoutMap(false);
   }
 
@@ -502,9 +577,19 @@ export class DesignerGraph {
     return this.expanded.size === this.allCities.length;
   }
 
+  /** Zoom about the middle of the view. */
+  zoomBy(factor: number) {
+    const cy = this.cy;
+    this.restored = undefined;
+    cy.stop(true, false);
+    cy.zoom({ level: Math.min(cy.maxZoom(), Math.max(cy.minZoom(), cy.zoom() * factor)), renderedPosition: { x: cy.width() / 2, y: cy.height() / 2 } });
+  }
+
   fit() {
     const visible = this.cy.elements(':visible');
-    if (visible.nonempty()) this.cy.animate({ fit: { eles: visible, padding: 30 } }, { duration: 300 });
+    if (visible.empty()) return;
+    if (reducedMotion()) this.cy.fit(visible, 30);
+    else this.cy.animate({ fit: { eles: visible, padding: 30 } }, { duration: 300 });
   }
 
   /** Scale brand and city labels on the map (Settings ▸ Text size). */
@@ -569,7 +654,7 @@ export class DesignerGraph {
     this.clearPulses();
     this.callbacks.onConnectionHover?.(null);
     const cy = this.cy;
-    animate = animate && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    animate = animate && !reducedMotion();
     const houseNodes = cy.nodes('[kind = "house"]');
     // Interrupt from the current position, rather than queuing or jumping to an old target.
     houseNodes.stop(true, false);
@@ -596,8 +681,11 @@ export class DesignerGraph {
     const anchor = focusedLocation && selectedNode?.nonempty() && !selectedNode.hasClass('collapsed')
       && !selectedNode.hasClass('hidden') && openLocations.has(focusedLocation)
       ? { houseId: selectedId!, position: previousPositions.get(selectedId!)! } : undefined;
-    const layout = layoutMap(this.expanded, byCity, anchor);
-    for (const [id, position] of this.selectionRing(layout.houses, selectedId, selectedLocation)) layout.houses.set(id, position);
+    const focus = selectedId && selectedLocation && this.expanded.has(selectedLocation) ? {
+      houseId: selectedId, location: selectedLocation, revealed: new Set(this.autoRevealed.keys()),
+      ring: this.ringPartners(byCity.get(selectedLocation) ?? []),
+    } : undefined;
+    const layout = layoutMap(this.expanded, byCity, anchor, focus);
 
     cy.batch(() => {
       cy.nodes('[kind = "marker"][!isCluster]').forEach((marker) => {
@@ -651,21 +739,9 @@ export class DesignerGraph {
    * too close to read their lines, so they ring the brand instead (until the
    * selection changes and the grid is restored).
    */
-  private selectionRing(positions: ReadonlyMap<string, Point>, selectedId?: string, location?: string): Map<string, Point> {
-    const center = selectedId && positions.get(selectedId);
-    if (!center || !location) return new Map();
-    const local: string[] = [];
-    const avoid: number[] = [];
-    for (const id of this.connectionPartners) {
-      const sameCity = mapLocationForHouse(id) === location;
-      const pin = sameCity ? undefined : this.cy.getElementById(nodeId.city(mapLocationForHouse(id)));
-      const at = positions.get(id) ?? (pin?.nonempty() ? pin.position() : undefined);
-      if (!at) continue;
-      if (sameCity) local.push(id);
-      else avoid.push(Math.atan2(at.y - center.y, at.x - center.x));
-    }
-    local.sort((a, b) => (getHouse(a)?.name ?? a).localeCompare(getHouse(b)?.name ?? b));
-    return ringLayout(center, local, avoid);
+  private ringPartners(local: readonly { id: string; name: string }[]): string[] {
+    return local.filter((house) => this.connectionPartners.has(house.id))
+      .sort((a, b) => a.name.localeCompare(b.name)).map((house) => house.id);
   }
 
   /** Only display membership/counts change with filters; the geographic hierarchy is cached. */
@@ -755,7 +831,7 @@ export class DesignerGraph {
       Math.max(1, cy.height() - 120) / Math.max(32, y2 - y1)));
     const pan = { x: cy.width() / 2 - (x1 + x2) / 2 * zoom, y: cy.height() / 2 - (y1 + y2) / 2 * zoom };
     cy.stop(true, false);
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) cy.viewport({ zoom, pan });
+    if (reducedMotion()) cy.viewport({ zoom, pan });
     else cy.animate({ zoom, pan }, { duration: 300 });
     // Full membership, so cities a filter brings back later stay individual too.
     const cluster = this.clusterLevels.flat().find(c => c.id === marker.id());
@@ -788,7 +864,9 @@ export class DesignerGraph {
         || a.id().localeCompare(b.id()));
 
     if (reposition) {
-      const obstacles = this.cy.nodes('[kind = "grid"]').not('.collapsed, .hidden').map((grid) => {
+      // A selected brand's grid can surround its city, so its pin only avoids the icons themselves.
+      const solid = this.selection?.kind === 'house' ? 'house' : 'grid';
+      const obstacles = this.cy.nodes(`[kind = "${solid}"]`).not('.collapsed, .hidden').map((grid) => {
         const box = grid.boundingBox();
         return { center: { x: (box.x1 + box.x2) / 2, y: (box.y1 + box.y2) / 2 }, w: box.w, h: box.h };
       });
@@ -883,7 +961,7 @@ export class DesignerGraph {
   }
 
   private notifyExpand() {
-    this.callbacks.onExpandChange?.(this.expanded.size, this.allCities.length);
+    this.callbacks.onExpandChange?.(this.expanded.size, this.allCities.length, this.fullyOpen());
   }
 
   /** The SVG map is drawn in model coordinates; mirror Cytoscape's pan + zoom onto it. */
@@ -940,7 +1018,7 @@ export class DesignerGraph {
     const [minY, maxY] = this.panRange(this.cy.height(), MAP_HEIGHT * zoom);
     const target = { x: Math.min(maxX, Math.max(minX, pan.x)), y: Math.min(maxY, Math.max(minY, pan.y)) };
     if (Math.abs(target.x - pan.x) < 0.5 && Math.abs(target.y - pan.y) < 0.5) return;
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { this.cy.pan(target); return; }
+    if (reducedMotion()) { this.cy.pan(target); return; }
     this.panBouncing = true;
     this.cy.animate({
       pan: target, duration: 450, easing: 'spring(380, 20)' as cytoscape.Css.TransitionTimingFunction,
@@ -990,37 +1068,13 @@ export class DesignerGraph {
       setClass(cy.elements('[kind = "grid"], [kind = "leader"]'), 'hidden', (el) =>
         cy.getElementById(nodeId.city(el.data('city'))).data('shown') === 0);
     });
-    this.updateCityLights();
   }
 
-  /** One glow per busy map location, sized by the main brands shown there for the year and filters. */
-  private updateCityLights() {
-    const lights: SVGCircleElement[] = [];
-    for (const [location, hs] of housesByMapLocation()) {
-      const count = hs.filter((h) => !h.parentHouse && this.mapContext.has(h.id)).length;
-      if (count < CITY_LIGHT_MIN) continue;
-      const { x, y } = project(mapLocationCoordinates(location));
-      const light = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      light.setAttribute('cx', String(x));
-      light.setAttribute('cy', String(y));
-      light.setAttribute('fill', 'url(#city-light-glow)');
-      light.setAttribute('opacity', cityLightOpacity(count).toFixed(2));
-      light.dataset.radius = String(cityLightRadius(count));
-      lights.push(light);
-    }
-    // Smaller glows last, so a busy city's bright core never buries a neighbour's.
-    lights.sort((a, b) => Number(b.dataset.radius) - Number(a.dataset.radius));
-    this.cityLights.replaceChildren(this.cityLights.firstChild!, ...lights);
-    this.sizeCityLights();
-  }
-
-  /** Glows keep a fixed screen size when zoomed in and shrink with the map when zoomed out. */
-  private sizeCityLights() {
-    const z = this.cy.zoom();
-    const k = Math.sqrt(Math.min(1, z / CITY_LIGHT_ZOOM)) / z;
-    for (const light of this.cityLights.querySelectorAll('circle')) {
-      light.setAttribute('r', (Number(light.dataset.radius) * k).toFixed(2));
-    }
+  /** Show moving blocks along lines; also call it again when animations are switched, to stop or restart them. */
+  setPulses(on: boolean) {
+    this.showPulses = on;
+    this.clearPulses();
+    this.playPulses();
   }
 
   private clearPulses() {
@@ -1122,7 +1176,7 @@ export class DesignerGraph {
 
   /** Native SVG motion follows the rendered Bezier route without restyling Cytoscape per frame. */
   private addPulse(edge: EdgeSingular, hover: boolean) {
-    if (this.disposed || this.pulses.has(edge.id()) || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    if (this.disposed || !this.showPulses || this.pulses.has(edge.id()) || reducedMotion()) return;
     if (!edge.visible() || edge.removed()) return;
     const route = renderedRoute(edge);
     if (!route) return;
@@ -1262,7 +1316,8 @@ export class DesignerGraph {
       const target = (cy as unknown as { getFitViewport(eles: cytoscape.CollectionArgument, padding: number): { zoom: number; pan: { x: number; y: number } } | undefined })
         .getFitViewport(focus, 80);
       this.viewTarget = target ? { ...target, until: performance.now() + 500 } : null;
-      cy.animate({ fit: { eles: focus, padding: 80 } }, { duration: 400 });
+      if (reducedMotion()) cy.fit(focus, 80);
+      else cy.animate({ fit: { eles: focus, padding: 80 } }, { duration: 400 });
     }
   }
 }

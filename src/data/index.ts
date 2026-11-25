@@ -58,18 +58,28 @@ const collaborationById = new Map(collaborations.map((collaboration) => [collabo
 
 export const getCollaboration = (id: string): Collaboration | undefined => collaborationById.get(id);
 
+/** Each brand's projects, in date order, indexed once: scanning every project per call made per-brand loops quadratic. */
+let collaborationIndex: Map<string, Collaboration[]> | undefined;
+function collaborationsByHouse(): Map<string, Collaboration[]> {
+  if (collaborationIndex) return collaborationIndex;
+  const index = new Map<string, Collaboration[]>();
+  for (const collaboration of collaborations) for (const house of new Set<string>(collaboration.houses)) {
+    const list = index.get(house);
+    if (list) list.push(collaboration); else index.set(house, [collaboration]);
+  }
+  return collaborationIndex = index;
+}
 /** Projects involving a brand, optionally restricted to a release year. */
-export const collaborationsOf = (houseId: string, year?: number): Collaboration[] => collaborations
-  .filter((collaboration) => collaboration.houses.includes(houseId)
-    && (year === undefined || collaboration.year === year));
+export const collaborationsOf = (houseId: string, year?: number): Collaboration[] => (collaborationsByHouse().get(houseId) ?? [])
+  .filter((collaboration) => year === undefined || collaboration.year === year);
 
 export const collaborationsInYear = (year: number): Collaboration[] => collaborations
   .filter((collaboration) => collaboration.year === year);
 
 /** Direct labels in a house's brand family; ownership remains a separate relationship. */
-export const labelsOf = (houseId: string): House[] => houses
-  .filter((house) => house.parentHouse === houseId)
-  .sort((a, b) => a.name.localeCompare(b.name));
+let labelIndex: Map<string, House[]> | undefined;
+export const labelsOf = (houseId: string): House[] => [...(labelIndex ??= Map.groupBy(
+  houses.filter((house) => house.parentHouse).sort((a, b) => a.name.localeCompare(b.name)), (house) => house.parentHouse as string)).get(houseId) ?? []];
 
 export const parentHouseOf = (houseId: string): House | undefined => {
   const parentId = getHouse(houseId)?.parentHouse;

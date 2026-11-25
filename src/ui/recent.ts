@@ -1,3 +1,4 @@
+import { readJson, writeJson } from './storage';
 import { cities } from '../data/cities';
 import { countryNames, getDesigner, getGroup, getHouse, type CountryCode } from '../data';
 import type { Place, Selection } from './panel';
@@ -7,13 +8,13 @@ export type RecentItem = NonNullable<Selection> | Place;
 export const RECENT_KEY = 'designer-map:recent';
 export const MAX_RECENT = 10;
 
-const exists = (item: RecentItem) => item.kind === 'house' ? !!getHouse(item.id)
+export const itemExists = (item: RecentItem) => item.kind === 'house' ? !!getHouse(item.id)
   : item.kind === 'designer' ? !!getDesigner(item.id)
   : item.kind === 'group' ? !!getGroup(item.id)
-  : item.kind === 'city' ? item.id in cities
-  : item.id in countryNames;
+  : item.kind === 'city' ? Object.hasOwn(cities, item.id)
+  : Object.hasOwn(countryNames, item.id);
 
-const isRecentItem = (value: unknown): value is RecentItem => {
+export const isRecentItem = (value: unknown): value is RecentItem => {
   if (!value || typeof value !== 'object') return false;
   const { kind, id } = value as { kind?: unknown; id?: unknown };
   return typeof id === 'string' && ['house', 'designer', 'group', 'city', 'country'].includes(kind as string);
@@ -21,14 +22,12 @@ const isRecentItem = (value: unknown): value is RecentItem => {
 
 /** Saved recents, dropping anything malformed or no longer in the data. */
 export function readRecent(): RecentItem[] {
-  try {
-    const value: unknown = JSON.parse(localStorage.getItem(RECENT_KEY) ?? '[]');
-    return Array.isArray(value) ? value.filter(isRecentItem).filter(exists).slice(0, MAX_RECENT) : [];
-  } catch { return []; }
+  const value = readJson(RECENT_KEY);
+  return Array.isArray(value) ? value.filter(isRecentItem).filter(itemExists).slice(0, MAX_RECENT) : [];
 }
 
 export function saveRecent(list: readonly RecentItem[]) {
-  try { localStorage.setItem(RECENT_KEY, JSON.stringify(list.map(({ kind, id }) => ({ kind, id })))); } catch { /* storage unavailable */ }
+  writeJson(RECENT_KEY, list.map(({ kind, id }) => ({ kind, id })));
 }
 
 /** Move `item` to the front, keeping at most MAX_RECENT entries. Returns the same list when nothing changes. */

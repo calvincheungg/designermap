@@ -1,6 +1,7 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { Dialog, useTitleBarDrag } from '../dialog';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CUSTOM_OPS, FORMAT_COLORS, SUBTOTAL_FNS, type CellFormat, type FindOptions, type SubtotalFn, type Subtotals, type ColumnFilter, type ColumnInfo, type Condition, type CustomOp, type ListSort } from './list-view-data';
+import { CUSTOM_OPS, FORMAT_COLORS, SUBTOTAL_FNS, type CellFormat, type FindOptions, type SubtotalFn, type Subtotals, type ColumnFilter, type ColumnInfo, type Condition, type CustomOp, type ListSort } from './data';
 
 /** Pop-ups and dialogs of the Spreadsheet workbook, after Excel 2000's. */
 
@@ -98,28 +99,6 @@ export function DropList({ anchor, entries, selected, label = 'AutoFilter', tick
   </div>, document.body);
 }
 
-/** A small modal Win98 dialog over the workbook; Escape or Cancel closes it. */
-function Dialog({ title, id, onSubmit, onCancel, children, extra, disabled = false, message = false }: {
-  title: string; id: string; onSubmit: () => void; onCancel: () => void; children: ReactNode;
-  /** More buttons, before OK. */
-  extra?: ReactNode; disabled?: boolean;
-  /** A message box: OK only. */
-  message?: boolean;
-}) {
-  const form = useRef<HTMLFormElement>(null);
-  useEffect(() => { form.current?.querySelector<HTMLElement>('[data-autofocus]')?.focus(); }, []);
-  return <div className="xl-dialog-backdrop" onKeyDown={(event) => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onCancel(); } }}>
-    <div className="window xl-dialog" role="dialog" aria-labelledby={id}>
-      <div className="title-bar"><div className="title-bar-text" id={id}>{title}</div>
-        <div className="title-bar-controls"><button className="close" aria-label={`Close ${title}`} onClick={onCancel} /></div></div>
-      <form ref={form} className="window-body xl-dialog-body" onSubmit={(event) => { event.preventDefault(); onSubmit(); }}>
-        {children}
-        <div className="xl-dialog-buttons">{extra}<button type="submit" disabled={disabled} data-autofocus={message || undefined}>OK</button>{!message && <button type="button" onClick={onCancel}>Cancel</button>}</div>
-      </form>
-    </div>
-  </div>;
-}
-
 /** (Custom...): one or two conditions on one column, joined by And or Or, as in Excel 2000. */
 export function CustomFilterDialog({ column, initial, suggestions, onApply, onCancel }: {
   column: ColumnInfo; initial?: ColumnFilter; suggestions: readonly string[];
@@ -132,7 +111,7 @@ export function CustomFilterDialog({ column, initial, suggestions, onApply, onCa
   const [join, setJoin] = useState<'and' | 'or'>(start?.join ?? 'and');
   const apply = () => onApply({ kind: 'custom', join, conditions: second.op ? [first, { op: second.op, operand: second.operand }] : [first] });
   const ops = CUSTOM_OPS.map(([value, label]) => <option key={value} value={value}>{label}</option>);
-  return <Dialog title="Custom AutoFilter" id="xl-custom-title" onSubmit={apply} onCancel={onCancel}>
+  return <Dialog title="Custom AutoFilter" onSubmit={apply} onCancel={onCancel}>
     <p>Show rows where:</p>
     <fieldset><legend>{column.label}</legend>
       <div className="field-row">
@@ -168,7 +147,7 @@ export function TopTenDialog({ column, initial, onApply, onCancel }: {
   const [amount, setAmount] = useState(String(start?.amount ?? 10));
   const [percent, setPercent] = useState(start?.percent ?? false);
   const value = Math.max(1, Math.min(percent ? 100 : 500, Math.round(Number(amount)) || 10));
-  return <Dialog title="Top 10 AutoFilter" id="xl-top-title" onSubmit={() => onApply({ kind: 'top', bottom, amount: value, percent })} onCancel={onCancel}>
+  return <Dialog title="Top 10 AutoFilter" onSubmit={() => onApply({ kind: 'top', bottom, amount: value, percent })} onCancel={onCancel}>
     <fieldset><legend>Show ({column.label})</legend>
       <div className="field-row">
         <select aria-label="Top or bottom" value={bottom ? 'bottom' : 'top'} onChange={(event) => setBottom(event.target.value === 'bottom')}>
@@ -194,7 +173,7 @@ export function SortDialog({ columns, sort, onApply, onCancel }: {
     const chosen = keys.filter((key) => key.column);
     onApply(chosen.filter((key, i) => chosen.findIndex((other) => other.column === key.column) === i));
   };
-  return <Dialog title="Sort" id="xl-sort-title" onSubmit={apply} onCancel={onCancel}>
+  return <Dialog title="Sort" onSubmit={apply} onCancel={onCancel}>
     {keys.map((key, i) => {
       const name = i === 0 ? 'Sort by' : 'Then by';
       return <fieldset key={i} className="xl-sort-key"><legend>{name}</legend>
@@ -246,13 +225,13 @@ export function ZoomSlider({ anchor, value, min, max, presets, onChange, onClose
 
 /** A message box, like Excel's alerts. */
 export function MessageDialog({ text, onClose }: { text: string; onClose: () => void }) {
-  return <Dialog title="Spreadsheet" id="xl-message-title" onSubmit={onClose} onCancel={onClose} message><p role="alert">{text}</p></Dialog>;
+  return <Dialog title="Spreadsheet" onSubmit={onClose} onCancel={onClose} message><p role="alert">{text}</p></Dialog>;
 }
 
 /** Edit ▸ Go To… (Ctrl+G, F5). */
 export function GoToDialog({ onGo, onCancel }: { onGo: (reference: string) => void; onCancel: () => void }) {
   const [text, setText] = useState('');
-  return <Dialog title="Go To" id="xl-goto-title" onSubmit={() => onGo(text)} onCancel={onCancel} disabled={!text.trim()}>
+  return <Dialog title="Go To" onSubmit={() => onGo(text)} onCancel={onCancel} disabled={!text.trim()}>
     <div className="field-row"><label htmlFor="xl-goto">Reference:</label>
       <input data-autofocus id="xl-goto" type="text" value={text} spellCheck={false} onChange={(event) => setText(event.target.value)} /></div>
     <p className="hint">A cell (D200), range (A1:C50), column (B:D) or rows (5:9).</p>
@@ -269,7 +248,7 @@ export function SubtotalDialog({ columns, initial, onApply, onRemove, onCancel }
   // Sums and averages need numbers, and the grouping column holds the group's name.
   const offered = columns.filter((column) => column.id !== by && (fn === 'count' || column.numeric));
   const picked = offered.filter((column) => chosen.includes(column.id)).map((column) => column.id);
-  return <Dialog title="Subtotal" id="xl-subtotal-title" disabled={!picked.length} onCancel={onCancel}
+  return <Dialog title="Subtotal" disabled={!picked.length} onCancel={onCancel}
     onSubmit={() => { if (picked.length) onApply({ by, fn, columns: picked }); }} extra={onRemove && <button type="button" onClick={onRemove}>Remove All</button>}>
     <div className="field-row"><label htmlFor="xl-subtotal-by">At each change in:</label>
       <select data-autofocus id="xl-subtotal-by" value={by} onChange={(event) => setBy(event.target.value)}>
@@ -308,7 +287,7 @@ export function ConditionalFormatDialog({ column, initial, onApply, onCancel }: 
     ['values', 'A colour for each value'], ['highlight', 'Cells that match…'],
   ];
   const format: CellFormat = kind === 'bars' ? { kind, color } : kind === 'highlight' ? { kind, condition, color } : { kind };
-  return <Dialog title="Conditional Formatting" id="xl-format-title" onSubmit={() => onApply(format)} onCancel={onCancel}
+  return <Dialog title="Conditional Formatting" onSubmit={() => onApply(format)} onCancel={onCancel}
     disabled={kind === 'highlight' && !condition.operand.trim()}
     extra={initial && <button type="button" onClick={() => onApply(undefined)}>Delete</button>}>
     <fieldset><legend>{column.label}</legend>
@@ -331,7 +310,7 @@ export const TAB_COLORS = [['No Color', ''], ['Red', '#ff0000'], ['Orange', '#ff
 /** A sheet tab's right-click ▸ Tab Color…. */
 export function TabColorDialog({ name, initial, onApply, onCancel }: { name: string; initial: string; onApply: (color: string) => void; onCancel: () => void }) {
   const [color, setColor] = useState(initial);
-  return <Dialog title="Format Tab Color" id="xl-tab-color-title" onSubmit={() => onApply(color)} onCancel={onCancel}>
+  return <Dialog title="Format Tab Color" onSubmit={() => onApply(color)} onCancel={onCancel}>
     <fieldset><legend>{name}</legend><Swatches colors={TAB_COLORS} name="Tab color" value={color} onChange={setColor} /></fieldset>
   </Dialog>;
 }
@@ -344,23 +323,17 @@ export function FindDialog({ initial, onFind, onClose }: {
 }) {
   const [options, setOptions] = useState(initial);
   const [missing, setMissing] = useState(false);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const drag = useRef<{ x: number; y: number } | null>(null);
+  const drag = useTitleBarDrag();
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => { input.current?.focus(); input.current?.select(); }, []);
   const set = (change: Partial<FindOptions>) => { setOptions((current) => ({ ...current, ...change })); setMissing(false); };
   const find = (backwards: boolean) => { if (options.text.trim()) setMissing(!onFind(options, backwards)); };
-  return <div className="window xl-find" role="dialog" aria-labelledby="xl-find-title" style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
+  return <div className="window xl-find" role="dialog" aria-labelledby="xl-find-title" style={drag.style}
     onKeyDown={(event) => {
       if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose(); }
       else if (event.key === 'Enter' && event.target instanceof HTMLInputElement) { event.preventDefault(); find(event.shiftKey); }
     }}>
-    <div className="title-bar" onPointerDown={(event) => {
-      if (event.button !== 0 || (event.target as Element).closest('button')) return;
-      event.currentTarget.setPointerCapture?.(event.pointerId);
-      drag.current = { x: event.clientX - offset.x, y: event.clientY - offset.y };
-    }} onPointerMove={(event) => { if (drag.current) setOffset({ x: event.clientX - drag.current.x, y: event.clientY - drag.current.y }); }}
-      onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }}>
+    <div className="title-bar" {...drag.bar}>
       <div className="title-bar-text" id="xl-find-title">Find</div>
       <div className="title-bar-controls"><button className="close" aria-label="Close Find" onClick={onClose} /></div></div>
     <div className="window-body xl-dialog-body">

@@ -1,5 +1,6 @@
+import { useTitleBarDrag } from '../dialog';
 import { useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
-import { valueCounts, type BucketCount, type ColumnFilter, type Sheet, type SheetRow } from './list-view-data';
+import { valueCounts, type BucketCount, type ColumnFilter, type Sheet, type SheetRow } from './data';
 
 /**
  * Insert ▸ Chart…: an Excel 2000 chart object floating over the sheet. It counts
@@ -42,8 +43,7 @@ export function ChartWindow({ sheet, rows, options, onOptions, onFilter, onClose
   const ticks = Array.from({ length: Math.round(scale.max / scale.step) + 1 }, (_, i) => i * scale.step);
   const multiValued = rows.some((row) => row.cells[col]!.length > 1);
   const [tip, setTip] = useState<{ x: number; y: number; text: string } | null>(null);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const drag = useRef<{ x: number; y: number; start: { x: number; y: number } } | null>(null);
+  const drag = useTitleBarDrag();
   const plot = useRef<HTMLDivElement>(null);
   const set = (change: Partial<ChartOptions>) => onOptions({ ...options, ...change });
   const showTip = (event: ReactPointerEvent, bar: BucketCount) => {
@@ -55,15 +55,8 @@ export function ChartWindow({ sheet, rows, options, onOptions, onFilter, onClose
   const barButton = (bar: BucketCount, children: ReactNode, className: string) => <button type="button" key={bar.key} className={className} aria-label={`${bar.label}: ${bar.count}. Filter the sheet to it`}
       onPointerMove={(event) => showTip(event, bar)} onPointerLeave={() => setTip(null)} onClick={() => onFilter(col, bar.filter)}>{children}</button>;
 
-  return <div className="window xl-chart" role="dialog" aria-labelledby="xl-chart-title" style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}>
-    <div className="title-bar" onPointerDown={(event) => {
-      if ((event.target as Element).closest('button')) return;
-      event.currentTarget.setPointerCapture?.(event.pointerId);
-      drag.current = { x: event.clientX, y: event.clientY, start: offset };
-    }} onPointerMove={(event) => {
-      const current = drag.current;
-      if (current) setOffset({ x: current.start.x + event.clientX - current.x, y: current.start.y + event.clientY - current.y });
-    }} onPointerUp={() => { drag.current = null; }}>
+  return <div className="window xl-chart" role="dialog" aria-labelledby="xl-chart-title" style={drag.style}>
+    <div className="title-bar" {...drag.bar}>
       <div className="title-bar-text" id="xl-chart-title">Chart - {sheet.name}</div>
       <div className="title-bar-controls"><button className="close" aria-label="Close Chart" onClick={onClose} /></div>
     </div>

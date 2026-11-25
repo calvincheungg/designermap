@@ -37,6 +37,7 @@ src/data/cities.ts    city → [lat, lng]; every house city must be listed here
 src/data/index.ts     derived queries: tenuresAt, movesOf, allMoves, yearRange…
 src/data/validate.ts  sanity checks (also run in tests + logged in browser)
 src/graph/geo.ts      projection, world SVG markup, city-box placement + overlap removal
+src/graph/focus-layout.ts placing a selected brand's partners near their cities
 src/graph/locations.ts display-only regional pin groups and their anchor cities
 src/graph/            Cytoscape: elements.ts (per view), style.ts, icons.ts, graph.ts
 src/ui/panel.tsx      React Properties components for house / designer / group
@@ -53,15 +54,29 @@ src/ui/run-dialog.tsx Start ▸ Run… box: open a brand, designer, group, city,
 src/ui/recent.ts      Start ▸ Documents: recently opened items (localStorage)
 src/ui/desktop-icon.tsx draggable Win98 desktop icon (on the desktop, left column)
 src/ui/share-link.ts  shareable view in the URL hash: #brand=…&year=…&<filter>=a,b
-src/ui/list-view.tsx   Spreadsheet window: Excel 2000-style workbook (sheets in list-view-data.ts, selection maths in list-view-select.ts, .xlsx writer in list-view-xlsx.ts, dialogs, chart, pivot)
+src/ui/spreadsheet/     Spreadsheet window: Excel 2000-style workbook (data.ts sheets, select.ts, xlsx.ts writer, grid.tsx, use-* hooks, dialogs, chart, pivot)
 src/ui/statistics.tsx  Statistics window (Start menu): filtered totals, tiers, countries, cities, top lists
-src/ui/settings.tsx   Settings window: map colours (day/night), text size, Show brands at, Open cities, connection lines
+src/ui/settings.tsx   Settings window, in tabs: Map, Connections, Appearance, Accessibility, General (DEFAULT_SETTINGS)
+src/ui/explorer-menu.tsx Explorer's File / Edit / View / Go / Favorites / Help menu bar (favorites.ts, use-selection-history.ts)
+src/ui/place-path.tsx location path in place windows (Europe ▸ France ▸ Paris)
+src/graph/picture.ts, tooltip.ts File ▸ Save Map as Picture… and the map's tooltips
+src/ui/tabs.tsx       shared Win98 tabs (Settings, Statistics)
+src/motion.ts         reducedMotion(): system setting or Settings ▸ Animations
 src/ui/city-window.tsx place windows: scrollable Large Icons grid of a city's or country's main brands
 src/ui/map-view.tsx   React lifecycle boundary for DesignerGraph and its context menu
 src/ui/start-menu.tsx Win98 taskbar Start menu: lines + connection filter, brand filters, map commands
+src/text.ts           shared sorting and accent helpers
+src/styles/           stylesheet parts, imported in order by style.css
+src/ui/storage.ts     all localStorage access: readSetting, useSetting, useSwitch
+src/ui/session.ts     what a page refresh keeps: windows, Explorer, selection, map view (sessionStorage)
+src/ui/dialog.tsx     shared modal Dialog and title-bar dragging
+src/ui/desk-windows.tsx window titles, icons, sizes and desktop shortcuts
+src/ui/use-settings.ts remembered Settings and their effect on the graph
+src/ui/lazy-window.tsx windows downloaded separately (lazy-windows.ts lists them)
+src/data/notes.ts     descriptions, filled in by production builds only (useNotes)
 src/App.tsx           interface state and synchronization with the graph API
 src/main.tsx          React root and startup data validation
-scripts/collab/       collaboration research tools: crawl, house lookup, duplicate-safe add
+scripts/collab/       collaboration research tools: todo list, crawl (one or a batch), headline filter, Fashion Press, house lookup, duplicate-safe add, research log
 docs/brand-research.md brand and collaboration research workflow
 docs/ui.md            map, window and styling behaviour
 ```
@@ -96,7 +111,7 @@ Key rules:
   every house has the field, `''` when unknown, like `logo`),
   and `logo` (file in public/logos/ or full URL; falls back to the initials square).
   When researching any brand, look up both its official website and Instagram.
-- A house with nobody linked yet is fine: `researchTodos()` lists it in the browser
+- A house with no founder yet is fine: `researchTodos()` lists it in the browser
   console instead of failing tests. Don't invent founders to fill it.
 - **Map and interface behaviour is documented in [docs/ui.md](docs/ui.md).** Read the
   matching section before changing `src/graph`, `src/ui`, `src/App.tsx` or
@@ -114,7 +129,7 @@ Key rules:
   - Use 98.css classes before custom CSS, and the `--cursor-*` tokens rather than bare
     `default`/`pointer`. The palette is Windows 98's.
   - Any new map colour needs a night counterpart, and layouts must work at phone width.
-  - Respect reduced motion.
+  - Respect reduced motion through `reducedMotion()` / `data-motion`, never the media query directly.
 - A move = starting at a new house. Same-house title changes aren't moves;
   `from` is the house they left that year if any; `concurrent` = kept the old role.
 - Logos: `public/logos/<file>`, referenced by `logo:` on the house; missing logos

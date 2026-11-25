@@ -1,0 +1,270 @@
+/* ---------- main window (ui/map-window.tsx): floats on the desktop, moves and resizes ---------- */
+.main-window {
+  position: absolute;
+  z-index: 1;
+  /* Until measured (first paint, tests): right of the desktop icon column. */
+  inset: 12px 12px 12px 96px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff, 3px 3px 0 rgb(0 0 0 / 0.35);
+}
+.main-window[data-placed] { right: auto; bottom: auto; }
+.main-window.maximized { box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff; }
+/* Minimized or closed: kept laid out (so the map keeps its size) but invisible. */
+.main-window[aria-hidden] { visibility: hidden; }
+.main-window > .title-bar { flex: none; user-select: none; touch-action: none; cursor: move; }
+.main-window.maximized > .title-bar { cursor: var(--cursor-default); }
+.main-window > .title-bar:focus-visible { outline: 1px dotted #fff; outline-offset: -3px; }
+.browser-icon { display: block; width: 32px; height: 32px; }
+.title-bar-text { display: flex; align-items: center; gap: 4px; }
+.title-bar-icon, .task-icon { flex: none; display: block; }
+.map-task { display: flex; align-items: center; gap: 4px; }
+.main-window > .window-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  padding: 4px 2px 6px;
+  border-bottom: 1px solid #808080;
+  box-shadow: 0 1px 0 #fff;
+}
+.toolbar:empty { display: none; }
+.toolbar .field-row { margin: 0; }
+/* Same 14px as the Properties window (98.css defaults to 11px). */
+.toolbar label,
+.toolbar select,
+.toolbar input,
+.toolbar button,
+.toolbar output { font-size: 14px; }
+.toolbar input[type='text'] { width: 220px; height: 26px; }
+.toolbar select { height: 26px; background-position: right 2px center; }
+.toolbar button { min-height: 26px; }
+
+
+/* Explorer's menu bar (explorer-menu.tsx) shares Spreadsheet's look; long Favorites scroll. */
+.main-window .explorer-menu { margin: -4px 0 -4px; }
+.explorer-menu button { font-size: 13px; cursor: var(--cursor-default); }
+.map-context-menu { max-height: calc(100vh - 8px); overflow-y: auto; }
+.favorites-list { max-height: 180px; margin: 0; padding: 2px; overflow: auto; list-style: none; background: #fff; }
+.favorites-list li { display: flex; align-items: center; gap: 6px; padding: 2px 4px; color: #000; }
+.favorites-list span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.explorer-dialogs { position: absolute; inset: 0; z-index: 1500; }
+.explorer-dialogs .xl-dialog { zoom: var(--text-zoom, 1); }
+.filter-dialog-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 4px 10px; max-height: 190px; overflow-y: auto; }
+.filter-dialog-options .field-row { margin: 0; }
+.filter-dialog .xl-dialog-buttons { align-items: center; }
+.filter-dialog .xl-dialog-buttons span { flex: 1; }
+
+/* Explorer's address bar: an etched band with "Address", a drop-down box led by the
+   page icon, and a Go button (Internet Explorer 4/5). */
+.address-bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 2px 4px;
+  border-bottom: 1px solid #808080;
+  box-shadow: 0 1px 0 #fff;
+}
+.address-bar > .field-row { flex: 1; min-width: 0; margin: 0; }
+.address-bar .w98-combo-caption { flex: none; padding: 0 2px 0 4px; font-size: 13px; color: #000; }
+.address-bar .w98-combo { flex: 1; min-width: 0; display: block; }
+.address-bar input[type='text'] { width: 100%; height: 22px; font-size: 13px; }
+.w98-combo.has-icon > input[type='text'] { padding-left: 24px; }
+.w98-combo.has-drop > input[type='text'] { padding-right: 20px; }
+.w98-combo-icon { position: absolute; left: 5px; top: 50%; transform: translateY(-50%); display: flex; pointer-events: none; }
+.w98-combo-icon img { display: block; width: 16px; height: 16px; }
+.w98-combo-drop {
+  position: absolute; top: 2px; right: 2px; bottom: 2px;
+  width: 16px; min-width: 0; min-height: 0; padding: 0;
+}
+.w98-combo-drop::before {
+  content: ''; position: absolute; left: 50%; top: 50%; margin: -2px 0 0 -4px;
+  border: 4px solid transparent; border-bottom: 0; border-top-color: #000;
+}
+.w98-combo-drop:active::before { margin: -1px 0 0 -3px; }
+.address-bar .w98-listbox { width: 100%; }
+.address-go { flex: none; display: flex; align-items: center; gap: 3px; min-width: 0; min-height: 22px; padding: 0 8px 0 4px; font-size: 13px; }
+.address-go-icon { display: block; flex: none; }
+
+.active-filters { display: flex; flex: 1 1 320px; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; font-size: 13px; }
+.active-filters .selected-filter-list { display: flex; flex-wrap: wrap; gap: 4px; max-height: 56px; overflow-y: auto; min-width: 0; }
+.filter-chip { min-width: 0; min-height: 22px; white-space: nowrap; padding: 0 6px; }
+#clear-filters { min-height: 22px; min-width: 0; }
+.tag-group + .tag-group { margin-top: 10px; }
+.tag-group p { margin: 0 0 5px; color: #404040; }
+.tag-list { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag-list .tag { min-width: 0; padding: 3px 7px; font-size: 12px; }
+
+/* Win98 drop-down list (search suggestions, View menu); see src/ui/listbox.ts. */
+.w98-combo { position: relative; display: inline-block; }
+.w98-listbox {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid #000;
+  font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: none;
+}
+.w98-listbox li {
+  padding: 2px 6px;
+  white-space: nowrap;
+  cursor: var(--cursor-default);
+}
+.w98-listbox li .hint { color: #808080; font-size: 12px; }
+.w98-listbox li.active { background: var(--navy); color: #fff; }
+.w98-listbox li.active .hint { color: #c0c0c0; }
+.w98-listbox li.empty { color: #808080; }
+.w98-select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 78px;
+  height: 26px;
+  padding: 2px 2px 2px 6px;
+  background: #fff;
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #808080, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
+  font-size: 14px;
+  text-align: left;
+}
+.w98-select:not(:disabled):active {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #808080, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
+  padding: 2px 2px 2px 6px;
+}
+.w98-select-arrow {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 22px;
+  background: var(--face);
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+}
+.w98-select-arrow::after {
+  content: '';
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #000;
+}
+.w98-select-text { display: grid; min-width: 0; }
+.w98-select-text > span { grid-area: 1 / 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.w98-select-text > .w98-select-sizer { visibility: hidden; }
+.w98-select-sizer::before { content: attr(data-text); }
+.w98-select-arrow { flex: none; }
+/* As wide as its longest option (never narrower than the button), so nothing scrolls sideways. */
+.w98-select-options { position: fixed; width: max-content; overflow-x: hidden; }
+.w98-select-options li { line-height: 20px; }
+.year-row input[type='range'] { width: 180px; }
+.year-row output { min-width: 3.5em; font-variant-numeric: tabular-nums; }
+
+.content {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+
+/* Zoom buttons in the map's corner, and the tooltip (map-view.tsx). */
+.map-workspace { position: relative; }
+.map-zoom { position: absolute; right: 10px; bottom: 10px; display: grid; gap: 2px; zoom: var(--text-zoom, 1); }
+.map-zoom button { width: 24px; min-width: 0; height: 24px; min-height: 0; padding: 0; font-size: 16px; line-height: 1; }
+.map-tooltip { position: fixed; z-index: 1900; max-width: min(300px, calc(100vw - 8px)); padding: 3px 5px; background: #ffffe1; border: 1px solid #000; color: #000; pointer-events: none;
+  font-family: "Pixelated MS Sans Serif", Arial, sans-serif; -webkit-font-smoothing: none; }
+.map-tooltip-text { font-size: 12px; line-height: 1.35; zoom: var(--text-zoom, 1); }
+.map-workspace { display: flex; flex-direction: column; flex: 1; min-width: 0; min-height: 0; }
+.pulse-layer { position: absolute; inset: 2px; width: calc(100% - 4px); height: calc(100% - 4px); pointer-events: none; overflow: hidden; }
+:root[data-motion='reduced'] .pulse-layer { display: none; }
+
+/* White "sunken" client area, like an Explorer window. */
+.graph-pane {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  box-shadow:
+    inset -1px -1px #fff,
+    inset 1px 1px #808080,
+    inset -2px -2px #dfdfdf,
+    inset 2px 2px #0a0a0a;
+}
+
+/* Cytoscape canvas sits inside the bevel; the world map sits under it. */
+.cy-layer {
+  position: absolute;
+  inset: 2px;
+}
+
+/* World map in the Windows reserved palette: sky blue sea, money green land. */
+.map-layer {
+  position: absolute;
+  inset: 2px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  pointer-events: none;
+  display: none;
+}
+.graph-pane.is-map { background: #a6caf0; }
+.graph-pane.is-map .map-layer { display: block; }
+.map-context-menu {
+  position: fixed;
+  z-index: 2000;
+  min-width: 155px;
+  padding: 3px;
+  display: grid;
+}
+.map-context-menu[hidden] { display: none; }
+.map-context-menu button {
+  padding: 6px 12px;
+  text-align: left;
+  font-size: 14px;
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+}
+.map-context-menu button.primary { font-weight: bold; }
+.map-context-menu button:disabled { color: #808080; text-shadow: 1px 1px 0 #fff; }
+.map-context-menu .menu-separator { width: 100%; margin: 3px 0; border: 0; border-top: 1px solid #808080; border-bottom: 1px solid #fff; }
+.map-context-menu button:not(:disabled):hover,
+.map-context-menu button:not(:disabled):focus {
+  background: var(--navy);
+  color: #fff;
+  outline: none;
+  box-shadow: none;
+}
+.map-layer path { vector-effect: non-scaling-stroke; }
+.map-layer .sphere { fill: #a6caf0; }
+.map-layer .graticule { fill: none; stroke: #fff; stroke-opacity: 0.6; stroke-width: 0.5; }
+.map-layer .land { fill: #c0dcc0; stroke: #808080; stroke-width: 0.75; }
+.map-layer .borders { fill: none; stroke: #a0a0a4; stroke-width: 0.5; }
+.map-layer .subdivision-borders { fill: none; stroke: #808080; stroke-width: 0.5; stroke-opacity: 0.7; }
+.map-layer .pin-leaders line { stroke: #000080; stroke-width: 1; stroke-dasharray: 2 2; vector-effect: non-scaling-stroke; pointer-events: none; }
+/* Night mode (Settings ▸ Map colours): dark sea and land in the same reserved-palette spirit. */
+.graph-pane.is-map.night { background: #000040; }
+.graph-pane.night .map-layer .sphere { fill: #000040; }
+.graph-pane.night .map-layer .graticule { stroke: #a6caf0; stroke-opacity: 0.15; }
+.graph-pane.night .map-layer .land { fill: #203828; stroke: #4a6a54; }
+.graph-pane.night .map-layer .borders { stroke: #4a6a54; }
+.graph-pane.night .map-layer .subdivision-borders { stroke: #3a5444; }
+.graph-pane.night .map-layer .pin-leaders line { stroke: #a6caf0; }
+
+

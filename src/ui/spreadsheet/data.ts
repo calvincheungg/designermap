@@ -1,18 +1,17 @@
-import { collaborations, CountryCode, countryNames, designers, getDesigner, getGroup, getHouse, groups, houses, housesInGroup, isBusinessLeadership, MarketPositioning, regionalHousesInGroup, tenuresAt } from '../data';
-import { cities, cityRegions, type CityName } from '../data/cities';
-import type { Collaboration, Designer, House, Tenure } from '../types';
-import { mapLocationForCity } from '../graph/locations';
-import { tagLabel } from './labels';
-import type { Place } from './panel';
+import { byName, collator, fold } from '../../text';
+import { collaborations, collaborationsOf, CountryCode, countryNames, designers, getDesigner, getGroup, getHouse, groups, houses, housesInGroup, isBusinessLeadership, labelsOf, MarketPositioning, regionalHousesInGroup, tenuresAt } from '../../data';
+import { cities, cityRegions, type CityName } from '../../data/cities';
+import type { Collaboration, Designer, House, Tenure } from '../../types';
+import { mapLocationForCity } from '../../graph/locations';
+import { tagLabel } from '../labels';
+import type { Place } from '../panel';
 
 /**
  * The Spreadsheet workbook's data: one sheet per kind of record, and the sheet
  * operations (sort, AutoFilter, search, CSV, AutoFit). Nothing here touches the
- * map or React; ui/list-view.tsx draws it.
+ * map or React; ui/spreadsheet/ draws it.
  */
 
-const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
-const fold = (text: string) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim();
 
 /** What a cell links to: a Properties window, a place window or an outside page. */
 export type CellLink = { kind: 'house' | 'designer' | 'group'; id: string } | { kind: 'place'; place: Place } | { kind: 'url'; href: string };
@@ -79,26 +78,15 @@ const cityLink = (city: string): CellLink => ({ kind: 'place', place: { kind: 'c
 const countryLink = (country: CountryCode): CellLink => ({ kind: 'place', place: { kind: 'country', id: country } });
 /** "https://www.loewe.com/" → "loewe.com", as a sheet would show a pasted link. */
 export const websiteLabel = (url: string) => url.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '');
-const byName = (a: { name: string }, b: { name: string }) => collator.compare(a.name, b.name);
 
 /* Brand family, collaboration and creative-director look-ups, indexed once (scanning per brand would be quadratic). */
-let labelIndex: Map<string, House[]> | undefined;
-const labelsOfHouse = (id: string) => (labelIndex ??= Map.groupBy([...houses].sort(byName).filter((h) => h.parentHouse), (h) => h.parentHouse!)).get(id) ?? [];
-let collabIndex: Map<string, Collaboration[]> | undefined;
-function collabsOf(id: string): Collaboration[] {
-  if (!collabIndex) {
-    collabIndex = new Map();
-    for (const c of collaborations) for (const house of new Set<string>(c.houses)) collabIndex.set(house, [...(collabIndex.get(house) ?? []), c]);
-  }
-  return collabIndex.get(id) ?? [];
-}
 /** Creative leadership only: design-team (Other) roles and business appointments never count as creative direction. */
 const directorTenures = (id: string) => tenuresAt(id).filter((t) => t.role !== 'Other' && !isBusinessLeadership(t));
 const designerName = (id: string) => getDesigner(id)?.name ?? id;
 /** Collaboration partners, most releases first, as "Nike (4)". */
 function partnerEntries(id: string): MenuEntry[] {
   const counts = new Map<string, number>();
-  for (const c of collabsOf(id)) for (const other of new Set<string>(c.houses)) if (other !== id) counts.set(other, (counts.get(other) ?? 0) + 1);
+  for (const c of collaborationsOf(id)) for (const other of new Set<string>(c.houses)) if (other !== id) counts.set(other, (counts.get(other) ?? 0) + 1);
   return [...counts].sort((a, b) => b[1] - a[1] || collator.compare(houseName(a[0]), houseName(b[0])))
     .map(([other, n]) => ({ label: `${houseName(other)} (${n})`, link: { kind: 'house', id: other } }));
 }
@@ -124,9 +112,9 @@ const brandSheet = defineSheet('brands', 'Brands', () => houses, (h) => ({ key: 
     values: (h) => unique(directorTenures(h.id).filter((t) => t.end === null).map((t) => t.designerId)).map(designerName),
     links: (h) => unique(directorTenures(h.id).filter((t) => t.end === null).map((t) => t.designerId)).map((id): CellLink => ({ kind: 'designer', id })) },
   { id: 'directors', label: 'Creative directors', width: 120, numeric: true, values: (h) => count(new Set(directorTenures(h.id).map((t) => t.designerId)).size) },
-  { id: 'collaborations', label: 'Collaborations', width: 116, numeric: true, values: (h) => count(collabsOf(h.id).length), menu: (h) => partnerEntries(h.id) },
-  { id: 'sublabels', label: 'Sublabels', width: 90, numeric: true, values: (h) => count(labelsOfHouse(h.id).length),
-    menu: (h) => labelsOfHouse(h.id).map((label) => ({ label: label.name, link: { kind: 'house', id: label.id } })) },
+  { id: 'collaborations', label: 'Collaborations', width: 116, numeric: true, values: (h) => count(collaborationsOf(h.id).length), menu: (h) => partnerEntries(h.id) },
+  { id: 'sublabels', label: 'Sublabels', width: 90, numeric: true, values: (h) => count(labelsOf(h.id).length),
+    menu: (h) => labelsOf(h.id).map((label) => ({ label: label.name, link: { kind: 'house', id: label.id } })) },
   { id: 'instagram', label: 'Instagram', width: 140, values: (h) => h.instagram ? [`@${h.instagram}`] : [],
     links: (h) => h.instagram ? [{ kind: 'url', href: `https://www.instagram.com/${h.instagram}/` }] : [] },
 ]);

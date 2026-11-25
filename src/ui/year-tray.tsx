@@ -1,29 +1,26 @@
+import { formatTime, type ClockFormat } from './clock';
 import { useEffect, useRef, useState } from 'react';
 
 /** The current time, short date and long date (Win98's clock tooltip), refreshed every 10 seconds. */
-function useClock() {
-  const format = () => {
-    const now = new Date();
-    return {
-      time: now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
-      date: now.toLocaleDateString([], { day: 'numeric', month: 'numeric', year: 'numeric' }),
-      longDate: now.toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
-    };
+function useClock(format: ClockFormat) {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => { const timer = window.setInterval(() => setNow(new Date()), 10_000); return () => clearInterval(timer); }, []);
+  return {
+    time: formatTime(now, format),
+    date: now.toLocaleDateString([], { day: 'numeric', month: 'numeric', year: 'numeric' }),
+    longDate: now.toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
   };
-  const [clock, setClock] = useState(format);
-  useEffect(() => { const timer = window.setInterval(() => setClock(format()), 10_000); return () => clearInterval(timer); }, []);
-  return clock;
 }
 
 /**
  * The taskbar tray: the clock, which opens the year slider like Win98's
  * Date/Time pop-up. The clock shows the time and date; while a year is set, the tray shows it beside them.
  */
-export function YearTray({ year, minYear, maxYear, playing, onYear, onPlay }: {
-  year: number; minYear: number; maxYear: number; playing: boolean;
+export function YearTray({ clock = 'auto', year, minYear, maxYear, playing, onYear, onPlay }: {
+  clock?: ClockFormat; year: number; minYear: number; maxYear: number; playing: boolean;
   onYear: (year: number) => void; onPlay: () => void;
 }) {
-  const { time, date, longDate } = useClock();
+  const { time, date, longDate } = useClock(clock);
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);

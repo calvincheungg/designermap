@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode, type RefObject } from 'react';
+import { readJson, writeJson, useSettingsCleared } from './storage';
 
 export const DEFAULT_PANEL_WIDTH = 400;
 export const MIN_PANEL_WIDTH = 260;
@@ -12,19 +13,13 @@ const KEY_STEP = 10;
 export interface WindowRect { x: number; y: number; width: number; height: number }
 export interface Size { width: number; height: number }
 
-function read(key: string): string | null {
-  try { return localStorage.getItem(key); } catch { return null; }
-}
-export function write(key: string, value: string) {
-  try { localStorage.setItem(key, value); } catch { /* storage unavailable */ }
-}
 export function storedRect(key: string | undefined): WindowRect | null {
-  if (!key) return null;
-  try {
-    const value = JSON.parse(read(key) ?? 'null') as Partial<WindowRect> | null;
-    return value && [value.x, value.y, value.width, value.height].every(Number.isFinite) ? value as WindowRect : null;
-  } catch { return null; }
+  const value = key ? readJson(key) as Partial<WindowRect> | null | undefined : null;
+  return value && [value.x, value.y, value.width, value.height].every(Number.isFinite) ? value as WindowRect : null;
 }
+
+/** Cleared (clearSettings) to send every open window back to its usual place. */
+export const WINDOW_PLACES = 'designer-map:window-places';
 
 /** Steps between cascaded windows, like Win98's Cascade Windows. */
 const CASCADE = 28;
@@ -135,7 +130,7 @@ export function useWindowGestures(placed: WindowRect | null, update: (next: Wind
  * maximizes or restores it (without `onMaximize`, it restores the default
  * placement). Pressing anywhere in it brings it to the front.
  */
-export function PropertiesWindow({ id, titleId, bodyId, title, icon, minimized, maximized = false, onMaximize, active, zIndex, cascade = 0, anchor, align = 'right', preferredSize, minSize = MIN_SIZE, fitHeight = false, storageKey, scrollKey,
+export function PropertiesWindow({ id, titleId, bodyId, title, icon, minimized, maximized = false, onMaximize, active, zIndex, cascade = 0, anchor, align = 'right', preferredSize, minSize = MIN_SIZE, fitHeight = false, storageKey, initialRect, onRect, scrollKey,
   className, onMinimize, onClose, onFocus, children }: {
   id: string; titleId: string; bodyId: string; title: string; minimized: boolean;
   /** A 16px application icon before the title, like Win98's window menu icon. */
@@ -144,7 +139,9 @@ export function PropertiesWindow({ id, titleId, bodyId, title, icon, minimized, 
   maximized?: boolean;
   /** Shows the Maximize / Restore button; double-clicking the title bar toggles it too. */
   onMaximize?: () => void; active: boolean; zIndex: number;
-  cascade?: number; align?: 'left' | 'right'; storageKey?: string; scrollKey: unknown; className?: string;
+  cascade?: number; align?: 'left' | 'right'; storageKey?: string;
+  /** Where the user had put the window before a refresh; `onRect` reports each later change (null = back to its default place). */
+  initialRect?: WindowRect; onRect?: (rect: WindowRect | null) => void; scrollKey: unknown; className?: string;
   /** Open beside this box (viewport pixels, e.g. the clicked city pin) instead of cascading. A new anchor moves the window there again. */
   anchor?: { left: number; top: number; right: number; bottom: number };
   /** Default size before the user moves or resizes the window (still kept inside the desktop area). */
@@ -158,7 +155,11 @@ export function PropertiesWindow({ id, titleId, bodyId, title, icon, minimized, 
   const win = useRef<HTMLDivElement>(null);
   const body = useRef<HTMLDivElement>(null);
   const area = useParentSize(win);
-  const [rect, setRect] = useState<WindowRect | null>(() => storedRect(storageKey));
+  const [rect, setRect] = useState<WindowRect | null>(() => initialRect ?? storedRect(storageKey));
+  useSettingsCleared((keys) => { if (keys.includes(WINDOW_PLACES)) setRect(null); });
+  const reportRect = useRef(onRect);
+  reportRect.current = onRect;
+  useEffect(() => reportRect.current?.(rect), [rect]);
   // The anchor in the desktop area's coordinates; a new anchor (another pin click) drops any manual position.
   const [localAnchor, setLocalAnchor] = useState<WindowRect | null>(null);
   useLayoutEffect(() => {
@@ -168,7 +169,7 @@ export function PropertiesWindow({ id, titleId, bodyId, title, icon, minimized, 
     setLocalAnchor({ x: anchor.left - origin.left, y: anchor.top - origin.top, width: anchor.right - anchor.left, height: anchor.bottom - anchor.top });
     setRect(null);
   }, [anchor]);
-  useEffect(() => { if (rect && storageKey) write(storageKey, JSON.stringify(rect)); }, [rect, storageKey]);
+  useEffect(() => { if (rect && storageKey) writeJson(storageKey, rect); }, [rect, storageKey]);
   useLayoutEffect(() => { if (body.current) body.current.scrollTop = 0; }, [scrollKey]);
 
   // Measure the content's natural height: the body itself stretches to the window, so use its last child's bottom edge.

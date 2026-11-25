@@ -1,9 +1,7 @@
-import { columnLetter } from './list-view-data';
-
 /**
  * Selection arithmetic for the Spreadsheet's grid, in rows (-1 is the field-name
  * row, otherwise an index into the listed rows) and positions among the shown
- * columns. No React; ui/list-view.tsx owns the state.
+ * columns. No React; ui/spreadsheet/ owns the state.
  */
 export interface Rect { r0: number; r1: number; p0: number; p1: number }
 export const rectOf = (r: number, p: number, r2 = r, p2 = p): Rect =>
@@ -66,4 +64,3 @@ export function parseReference(text: string): ReferencePart[] | undefined {
   }
   return out;
 }
-export const referenceOf = (column: number, row: number) => `${columnLetter(column)}${row}`;

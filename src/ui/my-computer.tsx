@@ -1,3 +1,5 @@
+import { readJson, writeJson } from './storage';
+import { collator, stripAccents } from '../text';
 import { useCallback, useEffect, useMemo, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
 import type { House } from '../types';
 import { countryNames, designers, getHouse, groups, housesInGroup, type GroupId } from '../data';
@@ -6,9 +8,11 @@ import { cityRegions, type CityName } from '../data/cities';
 import { mapLocationForCity } from '../graph/locations';
 import { ContextMenu, type MenuAction } from './context-menu';
 import { SelectBox } from './listbox';
-import { BrandIcon, useStoredChoice } from './city-window';
+import { BrandIcon } from './city-window';
+import { FOLDER_VIEWS, useFolderView } from './folder-view';
 import { marketPositionings } from '../data/tags';
 import { StartIcon } from './start-icons';
+import { FOLDER_ICON, MY_COMPUTER_ICON } from './window-icons';
 import type { Place, Selection } from './panel';
 
 /**
@@ -16,12 +20,10 @@ import type { Place, Selection } from './panel';
  * continents ▸ countries ▸ cities ▸ brands, Brands (D:) market-position folders,
  * Groups (E:) each group's brands and Designers (F:) designers filed A–Z. USA and Canada folders hold states / provinces, each listing all its brands. Everything follows the year and tag filters.
  */
-const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 const byName = <T extends { name: string }>(list: readonly T[]) => [...list].sort((a, b) => collator.compare(a.name, b.name));
 const PATH_KEY = 'designer-map:computer-path';
 const VIEW_KEY = 'designer-map:computer-view';
-const VIEWS = [['icons', 'Large Icons'], ['details', 'Details']] as const;
-type View = (typeof VIEWS)[number][0];
+const VIEWS = FOLDER_VIEWS;
 export const DRIVES = { C: 'Locations', D: 'Brands', E: 'Groups', F: 'Designers' } as const;
 type Drive = keyof typeof DRIVES;
 
@@ -37,7 +39,7 @@ export interface Folder { name: string; address: string; entries: Entry[] }
 const plural = (n: number, word: string) => `${n} ${n === 1 ? word : `${word}s`}`;
 /** A–Z by the name's first letter, ignoring accents; anything else files under #. */
 export function letterOf(name: string) {
-  const letter = name.normalize('NFD').replace(/[̀-ͯ]/g, '').charAt(0).toUpperCase();
+  const letter = stripAccents(name).charAt(0).toUpperCase();
   return /[A-Z]/.test(letter) ? letter : '#';
 }
 const houseEntry = (house: House): Entry => {
@@ -169,16 +171,10 @@ export function nearestFolder(path: ComputerPath, visibleHouses: readonly House[
 }
 
 function readPath(): ComputerPath {
-  try {
-    const value: unknown = JSON.parse(localStorage.getItem(PATH_KEY) ?? '[]');
-    return Array.isArray(value) && value.every((part) => typeof part === 'string') ? value : [];
-  } catch { return []; }
+  const value = readJson(PATH_KEY);
+  return Array.isArray(value) && value.every((part) => typeof part === 'string') ? value : [];
 }
 
-/** Win98's yellow folder (public/assets/folder.webp, cut from folder.jpg). */
-export const FOLDER_ICON = '/assets/folder.webp';
-/** Win98's 48px My Computer icon, cut from my_computer.jpg (its teal background made transparent). */
-export const MY_COMPUTER_ICON = '/assets/my_computer.webp';
 const folderImage = (size: number, className?: string) => <img className={className} src={FOLDER_ICON} alt="" width={size} height={size} draggable={false} />;
 
 function EntryIcon({ entry }: { entry: Entry }) {
@@ -202,11 +198,11 @@ export function MyComputerContent({ visibleHouses, onSelect, onShowOnMap, onOpen
 }) {
   const [history, setHistory] = useState<{ back: ComputerPath[]; forward: ComputerPath[] }>({ back: [], forward: [] });
   const [wanted, setWanted] = useState<ComputerPath>(readPath);
-  const [view, setView] = useStoredChoice<View>(VIEW_KEY, VIEWS, 'icons');
+  const [view, setView] = useFolderView(VIEW_KEY);
   const [menu, setMenu] = useState<{ x: number; y: number; entry: Entry } | null>(null);
   const closeMenu = useCallback(() => setMenu(null), []);
   const { path, folder: current } = useMemo(() => nearestFolder(wanted, visibleHouses), [wanted, visibleHouses]);
-  useEffect(() => { try { localStorage.setItem(PATH_KEY, JSON.stringify(path)); } catch { /* storage unavailable */ } }, [path]);
+  useEffect(() => writeJson(PATH_KEY, path), [path]);
 
   const go = (next: ComputerPath) => {
     if (next.join('/') === path.join('/')) return;

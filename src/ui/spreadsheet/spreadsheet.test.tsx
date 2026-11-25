@@ -2,9 +2,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { collaborations, collaborationsOf, designers, groups, houses, isBusinessLeadership, labelsOf, tenuresAt } from '../data';
-import { chartBars, niceScale } from './list-view-chart';
-import { LAYOUT_KEY, readLayout, autoFitWidth, pivotTable, rangeStats, rangeTsv, valueCounts, columnLetter, columnValues, filterSheet, getSheet, ListViewContent, matchesColumnFilter, MIN_COLUMN_WIDTH, searchSheet, sheetCsv, sortSheet, websiteLabel, type Condition } from './list-view';
+import { collaborations, collaborationsOf, designers, groups, houses, isBusinessLeadership, labelsOf, tenuresAt } from '../../data';
+import { chartBars, niceScale } from './chart';
+import { LAYOUT_KEY, readLayout, autoFitWidth, pivotTable, rangeStats, rangeTsv, valueCounts, columnLetter, columnValues, filterSheet, getSheet, SpreadsheetContent, matchesColumnFilter, MIN_COLUMN_WIDTH, searchSheet, sheetCsv, sortSheet, websiteLabel, type Condition } from './spreadsheet';
 
 afterEach(() => { cleanup(); localStorage.clear(); });
 const brands = getSheet('brands');
@@ -184,10 +184,10 @@ describe('Spreadsheet computed columns, charts, pivots and ranges', () => {
   });
 });
 
-describe('ListViewContent', () => {
+describe('SpreadsheetContent', () => {
   const setup = () => {
     const onSelect = vi.fn(), onOpenPlace = vi.fn();
-    render(<ListViewContent onSelect={onSelect} onOpenPlace={onOpenPlace} onHelp={() => {}} onClose={() => {}} />);
+    render(<SpreadsheetContent onSelect={onSelect} onOpenPlace={onOpenPlace} onHelp={() => {}} onClose={() => {}} />);
     return { onSelect, onOpenPlace, user: userEvent.setup() };
   };
   const table = (name = 'Brands') => screen.getByRole('table', { name });
@@ -314,7 +314,7 @@ describe('ListViewContent', () => {
 
   it('filters by a right-clicked cell and offers Show on Map', async () => {
     const onShowOnMap = vi.fn();
-    render(<ListViewContent onSelect={() => {}} onOpenPlace={() => {}} onShowOnMap={onShowOnMap} onHelp={() => {}} onClose={() => {}} />);
+    render(<SpreadsheetContent onSelect={() => {}} onOpenPlace={() => {}} onShowOnMap={onShowOnMap} onHelp={() => {}} onClose={() => {}} />);
     const user = userEvent.setup();
     const cityCell = firstRow().querySelectorAll('td')[1]!;
     const city = cityCell.textContent!;
@@ -406,7 +406,7 @@ describe('ListViewContent', () => {
   });
 
   it('asks for a file name before Save As CSV, keeping the .csv extension', async () => {
-    render(<ListViewContent onSelect={() => {}} onOpenPlace={() => {}} onHelp={() => {}} onClose={() => {}} />);
+    render(<SpreadsheetContent onSelect={() => {}} onOpenPlace={() => {}} onHelp={() => {}} onClose={() => {}} />);
     const user = userEvent.setup();
     const downloads: string[] = [];
     const create = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:sheet');
@@ -429,7 +429,7 @@ describe('ListViewContent', () => {
 
   it('toggles Full Screen from the View menu', async () => {
     const onFullScreen = vi.fn();
-    render(<ListViewContent onSelect={() => {}} onOpenPlace={() => {}} onHelp={() => {}} onClose={() => {}} onFullScreen={onFullScreen} />);
+    render(<SpreadsheetContent onSelect={() => {}} onOpenPlace={() => {}} onHelp={() => {}} onClose={() => {}} onFullScreen={onFullScreen} />);
     const user = userEvent.setup();
     await user.click(screen.getByRole('menuitem', { name: 'View' }));
     await user.click(screen.getByRole('menuitemcheckbox', { name: 'Full Screen' }));

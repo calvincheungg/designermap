@@ -485,6 +485,7 @@ export const designers = {
     born: 1973,
     nationality: 'Belgian',
     "career": [
+      { house: 'ruffoResearch', role: 'Womenswear Director', roleDetail: 'Womenswear designer', start: 1998, end: 1999 },
       { house: 'veroniqueBranquinhoLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 1997, end: 2017, notes: 'Label stopped 2009–2012.' },
       {
         "house": "delvaux",
@@ -1880,6 +1881,7 @@ export const designers = {
   matsRombaut: {
     name: 'Mats Rombaut',
     career: [
+      { house: 'bothParis', role: 'Creative Director', start: 2026, end: null, notes: 'Announced as a return; the dates of the earlier stint are unconfirmed.', sources: ['https://fuckingyoung.es/both-paris-opens-a-new-concept-store-and-welcomes-back-mats-rombaut/'] },
       { house: 'damirDoma', role: 'Other', roleDetail: 'Product development and production', sources: ['https://businessoffashion-businessoffashion-prod.web.arc-cdn.net/articles/sustainability/mats-rombauts-natural-approach/'] },
       { house: 'rombaut', role: 'Founder', roleDetail: 'Founder and creative director', start: 2013, end: null, sources: ['https://rombaut.com/pages/about'] },
       { house: 'lanvin', role: 'Other', roleDetail: 'Menswear accessories and sneaker design', start: 2008, sources: ['https://rombaut.com/pages/about'] },
@@ -3142,6 +3144,7 @@ export const designers = {
     born: 1974,
     nationality: 'Italian',
     career: [
+      { house: 'ruffoResearch', role: 'Creative Director', roleDetail: 'Designer for the cancelled Spring/Summer 2005 relaunch', start: 2004, end: 2004 },
       { house: 'givenchy', role: 'Creative Director', start: 2005, end: 2017 },
       { house: 'burberry', role: 'Creative Director', start: 2018, end: 2022 },
     ],
@@ -3190,6 +3193,7 @@ export const designers = {
     born: 1968,
     nationality: 'Belgian',
     career: [
+      { house: 'ruffoResearch', role: 'Menswear Director', roleDetail: 'Menswear designer', start: 1998, end: 1999 },
       { house: 'jilSander', role: 'Creative Director', start: 2005, end: 2012 },
       { house: 'dior', role: 'Artistic Director', start: 2012, end: 2015 },
       {
@@ -3909,9 +3913,10 @@ export const designers = {
   daoYiChow: {
     name: 'Dao-Yi Chow',
     nationality: 'American',
-    notes: 'Previously vice president of marketing and creative director at Sean John, where he met Maxwell Osborne. Sean John is not separately represented.',
+    notes: 'Met Maxwell Osborne while working at Sean John.',
     sources: ['https://cfda.com/wp-content/uploads/2025/06/2013-CFDA-Annual-Report-Hi_Optimized.pdf'],
     career: [
+      { house: 'seanJohn', role: 'Other', roleDetail: 'Vice president of marketing and creative director', notes: 'Before Public School; dates unconfirmed.' },
       { house: 'sergioTacchini', role: 'Creative Director', roleDetail: 'Global creative director', start: 2019, notes: 'Confirmed in 2019; departure year and current status are unconfirmed.', sources: ['https://www.vogue.com/article/dao-yi-chow-sergio-tacchini-tennis-collection'] },
       { house: 'publicSchool', role: 'Founder', roleDetail: 'Co-founder and co-designer with Maxwell Osborne', start: 2008, end: null, notes: 'The label resumed runway collections in 2026 after a prolonged hiatus.', sources: ['https://cfda.com/member/maxwell-osborne/', 'https://www.gq.com/story/public-school-comeback-fall-2026'] },
       { house: 'dkny', role: 'Co-Creative Director', roleDetail: 'with Maxwell Osborne', start: 2015, end: 2017 },
@@ -3920,9 +3925,10 @@ export const designers = {
   maxwellOsborne: {
     name: 'Maxwell Osborne',
     nationality: 'American',
-    notes: 'Previously oversaw woven design at Sean John, where he met Dao-Yi Chow. Sean John is not separately represented.',
+    notes: 'Met Dao-Yi Chow while working at Sean John.',
     sources: ['https://cfda.com/wp-content/uploads/2025/06/2013-CFDA-Annual-Report-Hi_Optimized.pdf'],
     career: [
+      { house: 'seanJohn', role: 'Other', roleDetail: 'Woven design', notes: 'Before Public School; dates unconfirmed.' },
       { house: 'publicSchool', role: 'Founder', roleDetail: 'Co-founder and co-designer with Dao-Yi Chow', start: 2008, end: null, notes: 'The label resumed runway collections in 2026 after a prolonged hiatus.', sources: ['https://cfda.com/member/maxwell-osborne/', 'https://www.gq.com/story/public-school-comeback-fall-2026'] },
       { house: 'dkny', role: 'Co-Creative Director', roleDetail: 'with Dao-Yi Chow', start: 2015, end: 2017 },
     ],
@@ -3935,7 +3941,9 @@ export const designers = {
   haiderAckermann: {
     name: 'Haider Ackermann',
     nationality: 'French',
-    career: [{ house: 'tomFord', role: 'Creative Director', start: 2024, end: null },
+    career: [
+      { house: 'ruffoResearch', role: 'Creative Director', roleDetail: 'Designer', start: 2002, end: 2003 },
+     { house: 'tomFord', role: 'Creative Director', start: 2024, end: null },
       { house: 'jeanPaulGaultier', role: 'Other', roleDetail: 'Guest couture designer', start: 2023, end: 2023 },
       { house: 'canadaGoose', role: 'Creative Director', start: 2023, end: 2024 },
       { house: 'berluti', role: 'Creative Director', start: 2016, end: 2018 },
@@ -4010,6 +4018,7 @@ export const designers = {
     nationality: 'American',
     career: [
       { house: 'amiri', role: 'Founder', roleDetail: 'Founder, creative director', start: 2014, end: null },
+      { house: 'buscemi', role: 'Head Designer', roleDetail: 'Head designer, ready-to-wear and accessories', start: 2014, sources: ['https://prnewswire.com/news-releases/global-luxury-brand-buscemi-appoints-mike-amiri-as-head-designer-of-ready-to-wear-and-accessories-300003837.html'] },
     ],
   },
   jamesJebbia: {
@@ -5755,6 +5764,7 @@ export const designers = {
     career: [
       { house: 'patou', role: 'Head Designer', start: 1981, end: 1987, notes: 'Joined in November 1981; left to establish his own couture house.', sources: ['https://www.fhcm.paris/en/news/jean-jacques-picart-fashion-is-but-the-expression-of-the-spirit-of-the-times', 'https://www.comitecolbert.com/en/members/patou/'] },
       { house: 'emilioPucci', role: 'Creative Director', start: 2002, end: 2005 },
+      { house: 'desigual', role: 'Other', roleDetail: 'Ongoing guest designer, Desigual by Christian Lacroix', start: 2011 },
     ],
   },
   matthewWilliamson: {
@@ -5860,6 +5870,7 @@ export const designers = {
     nationality: 'French',
     career: [
       { house: 'maisonKitsune', role: 'Founder', roleDetail: 'Co-founder with Masaya Kuroki', start: 2002, end: null },
+      { house: 'petitBateau', role: 'Artistic Director', roleDetail: 'Artistic director of the adult collections', start: 2013, notes: 'Departure year is unconfirmed.' },
     ],
   },
   masayaKuroki: {
@@ -5867,6 +5878,7 @@ export const designers = {
     nationality: 'Japanese',
     career: [
       { house: 'maisonKitsune', role: 'Founder', roleDetail: 'Co-founder with Gildas Loaëc', start: 2002, end: null },
+      { house: 'petitBateau', role: 'Artistic Director', roleDetail: 'Artistic director of the adult collections', start: 2013, notes: 'Departure year is unconfirmed.' },
     ],
   },
   erdemMoralioglu: {
@@ -5927,6 +5939,7 @@ export const designers = {
     name: 'Willy Chavarria',
     nationality: 'American',
     career: [
+      { house: 'joeBoxer', role: 'Other', roleDetail: 'Designer; earlier intern with Nicholas Graham', notes: 'Before 1999; exact years unconfirmed.' },
       { house: 'ralphLauren', role: 'Other', roleDetail: 'Designer, initially RLX; subsequently other categories', start: 1999, end: 2004, approximate: true, notes: 'Fashionista’s first-person account dates his move to New York and Ralph Lauren to 1999. The CFDA reports five years there; 2004 is an estimated end derived from that duration, rather than a separately documented departure.', sources: ['https://fashionista.com/2017/07/willy-chavarria-interview-spring-2018-collection', 'https://cfda.com/member/willy-chavarria/'] },
       { house: 'americanEagle', role: 'Other', roleDetail: 'Design director', notes: 'Followed Ralph Lauren and ended before his namesake label launched in 2015. The CFDA places the role within 2002–2012, which conflicts with the 1999 Ralph Lauren start and reported five-year duration; exact dates remain unresolved. This was a design-director position within the company, not confirmed brand-wide creative leadership.', sources: ['https://fashionista.com/2017/07/willy-chavarria-interview-spring-2018-collection', 'https://cfda.com/member/willy-chavarria/'] },
       { house: 'dickies', role: 'Creative Director', roleDetail: 'Dickies Construct, licensed premium menswear line at Whispering Smith', start: 2014, notes: 'The December 2014 company announcement names Chavarria as creative director for the new ongoing line, targeting a fall/winter 2015 debut. Departure date is unconfirmed. Separate from the Dickies 1922 / Palmer Trading Company capsules.', sources: ['https://www.prnewswire.com/news-releases/williamson-dickie-mfg-co-signs-new-mens-premium-apparel-license-300004741.html'] },
@@ -5934,7 +5947,7 @@ export const designers = {
       { house: 'calvinKlein', role: 'Other', roleDetail: 'Senior vice president of design, North America and Global Essentials menswear', start: 2021, end: 2024, sources: ['https://www.nssmag.com/en/fashion/25805/willy-chavarria-calvin-klein', 'https://www.wallpaper.com/fashion-beauty/willy-chavarria-interview-ss-2025'] },
       { house: 'willyChavarria', role: 'Founder', roleDetail: 'Founder, designer', start: 2015, end: null, sources: ['https://fashionista.com/2017/07/willy-chavarria-interview-spring-2018-collection', 'https://www.wallpaper.com/fashion-beauty/willy-chavarria-interview-ss-2025'] },
     ],
-    notes: 'Earlier design employment at Joe Boxer (following shipping work and an internship with Nicholas Graham) and cycling-apparel maker Voler is documented in his first-person Fashionista career account; exact years are unconfirmed. He also opened Palmer Trading Company in 2010 and developed its in-house label before launching Willy Chavarria. Those businesses are not currently houses in this dataset.',
+    notes: 'Earlier design employment at cycling-apparel maker Voler is documented in his first-person Fashionista career account; exact years are unconfirmed. He also opened Palmer Trading Company in 2010 and developed its in-house label before launching Willy Chavarria. Those businesses are not currently houses in this dataset.',
     sources: ['https://fashionista.com/2017/07/willy-chavarria-interview-spring-2018-collection', 'https://cfda.com/member/willy-chavarria/'],
   },
   telfarClemens: {
@@ -6051,7 +6064,8 @@ export const designers = {
     name: 'Harris Reed',
     nationality: 'British',
     career: [
-      { house: 'ninaRicci', role: 'Creative Director', start: 2022, approximate: true },
+      { house: 'harrisReedLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2019, end: null },
+      { house: 'ninaRicci', role: 'Creative Director', start: 2022, end: 2026 },
     ],
   },
   hiromichiOchiai: {
@@ -7974,6 +7988,7 @@ export const designers = {
   bartKyzar: {
     name: 'Bart Kyzar',
     career: [
+      { house: 'chromeIndustries', role: 'Founder', roleDetail: 'Co-founder', start: 1995 },
       { house: 'missionWorkshop', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
     ],
     notes: 'Co-founded Chrome bags in the mid-1990s and sold it before starting Mission Workshop.',
@@ -7981,6 +7996,7 @@ export const designers = {
   markFalvai: {
     name: 'Mark Falvai',
     career: [
+      { house: 'chromeIndustries', role: 'Founder', roleDetail: 'Co-founder', start: 1995 },
       { house: 'missionWorkshop', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
     ],
     notes: 'Co-founded Chrome bags in the mid-1990s with Doug Hudson and sold it before starting Mission Workshop.',
@@ -9219,6 +9235,9 @@ export const designers = {
     name: 'Chip Wilson',
     nationality: 'Canadian',
     career: [{
+      house: 'westbeach', role: 'Founder', start: 1979, end: 1997,
+      notes: 'Reacquired the brand rights before its 2025 relaunch.',
+    }, {
       house: 'lululemon', role: 'Founder', start: 1998,
       notes: 'Founded Lululemon in Vancouver; this entry records the founding, not an ongoing executive appointment.',
       sources: ['https://www.lululemon.com.hk/en-hk/content/history/history.html', 'https://corporate.lululemon.com/about-us/our-history'],
@@ -10362,6 +10381,7 @@ export const designers = {
     name: 'Sophia Kokosalaki',
     nationality: 'Greek',
     career: [
+      { house: 'ruffoResearch', role: 'Creative Director', roleDetail: 'Designer', start: 2001, end: 2001, approximate: true },
       {
         house: 'vionnet',
         role: 'Creative Director',
@@ -10872,6 +10892,7 @@ export const designers = {
   geneMontesano: {
     name: 'Gene Montesano',
     career: [
+      { house: 'bongo', role: 'Founder', roleDetail: 'Co-founder', start: 1982 },
       {
         house: 'luckyBrand',
         role: 'Founder',
@@ -11303,7 +11324,9 @@ export const designers = {
   },
   joeMimran: {
     name: 'Joe Mimran',
-    career: [{
+    career: [
+      { house: 'tilley', role: 'Creative Director', roleDetail: 'Chairman and creative director', start: 2020 },
+     {
       house: 'clubMonaco',
       role: 'Founder',
       roleDetail: 'Co-founder',
@@ -12322,6 +12345,7 @@ export const designers = {
         notes: 'Helped develop the label alongside Bari and Rocky; exact tenure dates are unconfirmed.',
         sources: ['https://www.highsnobiety.com/p/asap-rocky-asap-bari-vlone-brand/', 'https://www.wwdjapan.com/articles/1447851'],
       },
+      { house: 'emotionallyUnavailable', role: 'Founder', roleDetail: 'Co-founder', start: 2013, end: null },
       { house: 'juice', role: 'Founder', roleDetail: 'Co-founder', sources: ['https://mcdn.i-scmp.com/magazines/style/celebrity/article/3216183/i-want-be-supreme-successful-clot-founder-edison-chen-going-cantopop-streetwear-king-his-hong-kong'] },
     ],
     notes: 'Co-founder of CLOT and a contributor to VLONE’s early creative development.',
@@ -12530,6 +12554,7 @@ export const designers = {
   tylerTheCreator: {
     name: 'Tyler, the Creator',
     career: [
+      { house: 'oddFuture', role: 'Founder', roleDetail: 'Co-founder of the collective', start: 2007 },
       {
         house: 'golfWang',
         role: 'Founder',
@@ -12841,6 +12866,7 @@ export const designers = {
         start: 1999,
         sources: ['https://hypebeast.com/2019/10/alife-rob-cristafaro-treis-hill-interview-business-of-hype-jeffstaple-episode-58', 'https://alifenewyork.com/pages/about'],
       },
+      { house: 'buscemi', role: 'Other', roleDetail: 'Artistic director', start: 2016, sources: ['https://fashionunited.com/news/people/streetwear-designer-tony-arcabascio-joins-buscemi/2016072612160'] },
     ],
   },
   tammyBrainard: {
@@ -14836,8 +14862,9 @@ export const designers = {
     career: [
       { house: 'burton', role: 'Creative Director', roleDetail: 'Senior vice president and creative director of product; later chief creative officer', start: 2006, end: 2017, notes: 'Joined Burton earlier in an entry-level role; the 2006 date marks the documented senior product-creative appointment.', sources: ['https://sgbonline.com/burton-reorganizes-senior-management/', 'https://shop-eat-surf-outdoor.com/news/content-greg-dacyshyn-exits-burton/24287/'] },
       { house: 'burton', role: 'Creative Director', roleDetail: 'External creative direction for product and marketing through Camp High', start: 2017, notes: 'Continued as an appointed creative partner after leaving the in-house position; exact end year unconfirmed.', sources: ['https://shop-eat-surf-outdoor.com/news/content-greg-dacyshyn-exits-burton/24287/'] },
+      { house: 'campHigh', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2018 },
     ],
-    notes: 'Founded the Camp High agency in 2017 and helped create Analog with Jeff Anderson. Neither is currently a separate house in the dataset.',
+    notes: 'Founded the Camp High agency in 2017, followed by the clothing label with Greg Johnsen. Helped create Analog with Jeff Anderson.',
   },
   /* ---------- Mountain Hardwear ---------- */
   jackGilbert: {
@@ -17269,9 +17296,17 @@ export const designers = {
     notes: 'Seamstress who developed Birdwell’s two-ply nylon surf shorts in her Santa Ana home. Later family generations continued the business; the exact end of her involvement is unconfirmed.',
     sources: ['https://www.birdwell.com/pages/the-story-of-surfnyl', 'https://www.birdwell.com/blogs/birdwell-blog/wm-brown-magazine'],
   },
+  erikBrunetti: {
+    name: 'Erik Brunetti',
+    career: [
+      { house: 'fuct', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1990, end: 2002, notes: 'Stepped away in 2002 to focus on his art.', sources: ['https://en.wikipedia.org/wiki/FUCT_(clothing)'] },
+      { house: 'fuct', role: 'Creative Director', start: 2005, end: null, notes: 'Returned to the brand in 2005.', sources: ['https://en.wikipedia.org/wiki/FUCT_(clothing)'] },
+    ],
+  },
   natasKaupas: {
     name: 'Natas Kaupas',
     career: [
+      { house: 'fuct', role: 'Founder', roleDetail: 'Co-founder', start: 1990, notes: 'Left shortly after FUCT Designs was registered in 1991; exact departure year unconfirmed.', sources: ['https://en.wikipedia.org/wiki/FUCT_(clothing)'] },
       { house: 'quiksilver', role: 'Other', roleDetail: 'Freelance T-shirt designer and advertising art director', notes: 'Described his progression from freelance shirts into advertising in a 2004 interview; exact dates unconfirmed.', sources: ['https://www.caughtinthecrossfire.com/skate/features/natas-kaupas-interview/'] },
       { house: 'quiksilver', role: 'Creative Director', roleDetail: 'Global creative director; also vice president of marketing, Americas, from 2006', notes: 'Global creative leadership confirmed in the 2006 appointment announcement; exact tenure boundaries unconfirmed.', sources: ['https://sgbonline.com/quiksilver-promotes-kaupas-to-vp-marketing/'] },
       { house: 'element', role: 'Other', roleDetail: 'Art direction and graphic design', sources: ['https://sgbonline.com/quiksilver-promotes-kaupas-to-vp-marketing/'] },
@@ -20146,6 +20181,7 @@ export const designers = {
     name: 'An Vandevorst',
     nationality: 'Belgian',
     career: [
+      { house: 'ruffoResearch', role: 'Creative Director', roleDetail: 'Co-designer with Filip Arickx', start: 1999, end: 2000, approximate: true },
       { house: 'driesVanNoten', role: 'Other', roleDetail: 'Assistant to Dries Van Noten', notes: 'About six years.' },
       { house: 'afVandevorst', role: 'Founder', roleDetail: 'Co-founder, designer', start: 1997, end: 2020 },
     ],
@@ -20154,6 +20190,7 @@ export const designers = {
     name: 'Filip Arickx',
     nationality: 'Belgian',
     career: [
+      { house: 'ruffoResearch', role: 'Creative Director', roleDetail: 'Co-designer with An Vandevorst', start: 1999, end: 2000, approximate: true },
       { house: 'bikkembergs', role: 'Other', roleDetail: 'Assistant to Dirk Bikkembergs' },
       { house: 'afVandevorst', role: 'Founder', roleDetail: 'Co-founder, designer', start: 1997, end: 2020 },
     ],
@@ -20278,7 +20315,10 @@ export const designers = {
   salBarbier: {
     name: 'Sal Barbier',
     nationality: 'American',
-    career: [{ house: 'elwood', role: 'Founder', roleDetail: 'Co-founder', start: 1996 }],
+    career: [
+      { house: 'elwood', role: 'Founder', roleDetail: 'Co-founder', start: 1996 },
+      { house: 'etnies', role: 'Creative Director', roleDetail: 'SLB by etnies line', start: 2024 },
+    ],
     notes: 'Professional skateboarder.',
   },
   lucianoMor: {
@@ -20376,9 +20416,10 @@ export const designers = {
     name: 'Ron Herman',
     nationality: 'American',
     career: [
+      { house: 'ronHerman', role: 'Founder', start: 1976, end: 2019 },
       { house: 'agolde', role: 'Founder', roleDetail: 'Co-founder', start: 1993 },
     ],
-    notes: 'Los Angeles retailer behind the Ron Herman stores.',
+    notes: 'Los Angeles retailer behind the Ron Herman stores. Former Fred Segal buyer and president; stayed as a consultant until January 2020 after selling the company in 2019.',
     sources: ['https://www.harrods.com/en-gb/designers/agolde'],
   },
   adrianoGoldschmied: {
@@ -20660,11 +20701,13 @@ export const designers = {
     born: 1983,
     nationality: 'Japanese',
     career: [
+      { house: 'huntsman', role: 'Other', roleDetail: 'Apprentice tailor' },
+      { house: 'garethPughLabel', role: 'Other', roleDetail: 'Designer; exact position unconfirmed' },
       { house: 'givenchy', role: 'Other', roleDetail: 'Studio designer under Riccardo Tisci' },
       { house: 'goldenGoose', role: 'Other', roleDetail: 'Designer', notes: 'Just before founding Setchu.' },
       { house: 'setchu', role: 'Founder', roleDetail: 'Founder and creative director', start: 2020, end: null },
     ],
-    notes: 'Born near Kyoto; moved to London at 21, studied at Central Saint Martins and apprenticed at H. Huntsman & Sons on Savile Row. Also worked for Gareth Pugh, for Edun in New York and with Kanye West in Paris. Named artistic director of the Aigle by Setchu capsule in 2026.',
+    notes: 'Born near Kyoto; moved to London at 21, studied at Central Saint Martins and apprenticed on Savile Row. Also worked for Edun in New York and with Kanye West in Paris. Named artistic director of the Aigle by Setchu capsule in 2026.',
     sources: ['https://en.wikipedia.org/wiki/Satoshi_Kuwata', 'https://numero.com/?p=137100'],
   },
   danielDelCore: {
@@ -21003,8 +21046,10 @@ export const designers = {
   yutongJiang: {
     name: 'Yutong Jiang',
     nationality: 'Chinese',
-    career: [{ house: 'shushuTong', role: 'Founder', roleDetail: 'Co-founder (marketing and clients, with design input)', start: 2015, end: null }],
-    notes: 'Born in Chengdu. Studied at Donghua University in Shanghai and took an MA at London College of Fashion; interned with Gareth Pugh (not in the dataset).',
+    career: [
+      { house: 'garethPughLabel', role: 'Other', roleDetail: 'Intern' },
+     { house: 'shushuTong', role: 'Founder', roleDetail: 'Co-founder (marketing and clients, with design input)', start: 2015, end: null }],
+    notes: 'Born in Chengdu. Studied at Donghua University in Shanghai and took an MA at London College of Fashion.',
   },
   markGong: {
     name: 'Mark Gong',
@@ -22116,6 +22161,7 @@ export const designers = {
     name: 'Antonio Berardi',
     nationality: 'British',
     career: [
+      { house: 'ruffoResearch', role: 'Creative Director', roleDetail: 'Designer of the first collection', start: 1998, end: 1998 },
       { house: 'lesCopains', role: 'Creative Director', roleDetail: 'Trend Les Copains', start: 2005, approximate: true, notes: 'First collection Spring/Summer 2006.' },
     ],
   },
@@ -22183,6 +22229,1296 @@ export const designers = {
       { house: 'mandarinaDuck', role: 'Creative Director', roleDetail: 'Chief designer and communication officer', start: 2012 },
     ],
     notes: 'Earlier work included Vogue, Iceberg, Sissi Rossi and Redwall.',
+  },
+  tonyMargolis: {
+    name: 'Tony Margolis',
+    career: [
+      { house: 'tommyBahama', role: 'Founder', roleDetail: 'Co-founder', start: 1993, end: 2008, approximate: true },
+    ],
+  },
+  bobEmfield: {
+    name: 'Bob Emfield',
+    career: [
+      { house: 'tommyBahama', role: 'Founder', roleDetail: 'Co-founder', start: 1993, end: 2008, approximate: true },
+    ],
+  },
+  lucioDallaGasperina: {
+    name: 'Lucio Dalla Gasperina',
+    career: [
+      { house: 'tommyBahama', role: 'Founder', roleDetail: 'Co-founder; led design and production', start: 1993, end: 2008, approximate: true },
+    ],
+    notes: 'Earlier worked at Unionbay Sportswear.',
+  },
+  joeyRodolfo: {
+    name: 'Joey Rodolfo',
+    career: [
+      { house: 'tommyBahama', role: 'Menswear Director', roleDetail: 'Senior vice president of men’s design', start: 2005, end: 2015 },
+    ],
+    notes: 'Earlier worked at Unionbay and Catalina swimwear.',
+  },
+  bradleyOBrien: {
+    name: 'Bradley O’Brien',
+    career: [
+      { house: 'ralphLauren', role: 'Other', roleDetail: 'Senior role' },
+      { house: 'sperry', role: 'Other', roleDetail: 'Senior role', sources: ['https://www.seattlemag.com/article/preppy-and-proud-tommy-bahamas-bradley-obrien'] },
+      { house: 'oldNavy', role: 'Other', roleDetail: 'Senior role' },
+      { house: 'tommyBahama', role: 'Head Designer', roleDetail: 'Executive vice president of design and product development', start: 2014 },
+    ],
+    notes: 'Also held a senior role at Lands’ End.',
+  },
+  dawnBrandl: {
+    name: 'Dawn Brandl',
+    career: [
+      { house: 'sperry', role: 'Other', roleDetail: 'Creative director and vice president of design, men’s and women’s apparel', sources: ['https://content.tommybahama.com/content/dam/tommy/pressroom/pdf/press/Tommy%20Bahama%20Names%20Dawn%20Brandl%20as%20Sr%20%20VP%20of%20Men\'s%20Design%20-%20FINAL.pdf'] },
+      { house: 'tommyBahama', role: 'Menswear Director', roleDetail: 'Senior vice president of men’s design and product development', start: 2016 },
+    ],
+  },
+  reynMcCullough: {
+    name: 'Reyn McCullough',
+    career: [
+      { house: 'reynSpooner', role: 'Founder', roleDetail: 'Co-founder', start: 1956 },
+    ],
+    notes: 'Bought a men’s shop in Avalon, Catalina Island, in 1949 and renamed it Reyn’s Men’s Wear.',
+  },
+  ruthSpooner: {
+    name: 'Ruth Spooner',
+    career: [
+      { house: 'reynSpooner', role: 'Founder', roleDetail: 'Co-founder; seamstress', start: 1956 },
+    ],
+  },
+  jadeHowe: {
+    name: 'Jade Howe',
+    career: [
+      { house: 'reynSpooner', role: 'Creative Director', roleDetail: 'Initially a design consultant', start: 2016 },
+    ],
+  },
+  ryanArakaki: {
+    name: 'Ryan Arakaki',
+    career: [
+      { house: 'in4mation', role: 'Founder', roleDetail: 'Co-founder', start: 2002 },
+    ],
+  },
+  toddShimabuku: {
+    name: 'Todd Shimabuku',
+    career: [
+      { house: 'lrg', role: 'Other', roleDetail: 'Sales representative for Hawaii' },
+      { house: 'in4mation', role: 'Founder', roleDetail: 'Co-founder', start: 2002 },
+    ],
+  },
+  junJo: {
+    name: 'Jun Jo',
+    career: [
+      { house: 'in4mation', role: 'Founder', roleDetail: 'Co-founder', start: 2002 },
+    ],
+    notes: 'Former professional surfer.',
+  },
+  keithKanagusuku: {
+    name: 'Keith Kanagusuku',
+    career: [
+      { house: 'in4mation', role: 'Founder', roleDetail: 'Co-founder', start: 2002 },
+      { house: 'in4mation', role: 'Creative Director' },
+    ],
+  },
+  rhandyTambio: {
+    name: 'Rhandy Tambio',
+    career: [
+      { house: 'in4mation', role: 'Creative Director' },
+    ],
+    notes: 'Designed IN4MATION’s Spring 2008 collection with Elska Sandor. One profile also lists Rhandy Tambio among the founders.',
+  },
+  georgeBrangier: {
+    name: 'George Brangier',
+    career: [
+      { house: 'kahala', role: 'Founder', roleDetail: 'Co-founder', start: 1936 },
+    ],
+  },
+  natNorfleet: {
+    name: 'Nat Norfleet',
+    career: [
+      { house: 'kahala', role: 'Founder', roleDetail: 'Co-founder', start: 1936 },
+    ],
+  },
+  daleHope: {
+    name: 'Dale Hope',
+    career: [
+      { house: 'kahala', role: 'Creative Director', roleDetail: 'Former owner-designer', start: 1986, approximate: true },
+    ],
+    notes: 'Bought Kahala in 1986, sold it in 1990 and stayed on as creative director. Sources disagree on when the role ended.',
+  },
+  mortFeldman: {
+    name: 'Mort Feldman',
+    died: 2004,
+    career: [
+      { house: 'toriRichard', role: 'Founder', roleDetail: 'Co-founder', start: 1956 },
+    ],
+  },
+  janiceMoody: {
+    name: 'Janice Moody',
+    career: [
+      { house: 'toriRichard', role: 'Founder', roleDetail: 'Co-founder', start: 1956 },
+    ],
+  },
+  mitsueAka: {
+    name: 'Mitsue Aka',
+    career: [
+      { house: 'toriRichard', role: 'Founder', roleDetail: 'Co-founder; pattern maker', start: 1956 },
+    ],
+  },
+  joshFeldman: {
+    name: 'Josh Feldman',
+    career: [
+      { house: 'toriRichard', role: 'Other', roleDetail: 'Product and print development', start: 1994 },
+      { house: 'toriRichard', role: 'CEO', roleDetail: 'President and CEO', start: 2004, end: null },
+    ],
+  },
+  tamarHassingWong: {
+    name: 'Tamar Hassing Wong',
+    career: [
+      { house: 'toriRichard', role: 'Other', roleDetail: 'Womenswear designer', start: 2006, approximate: true },
+    ],
+  },
+  jessicaBurgess: {
+    name: 'Jessica Burgess',
+    career: [
+      { house: 'toriRichard', role: 'Other', roleDetail: 'Womenswear designer' },
+    ],
+  },
+  jimRichards: {
+    name: 'Jim Richards',
+    career: [
+      { house: 'mauiJim', role: 'Founder', start: 1980 },
+    ],
+  },
+  reneMatthyssen: {
+    name: 'Rene Matthyssen',
+    career: [
+      { house: 'fittedHawaii', role: 'Founder', roleDetail: 'Co-founder', start: 2005 },
+    ],
+    notes: 'Former professional skateboarder.',
+  },
+  keolaRapozo: {
+    name: 'Keola Nakaʻahiki Rapozo',
+    career: [
+      { house: 'toriRichard', role: 'Other', roleDetail: 'Designer', start: 2000, end: 2005, approximate: true },
+      { house: 'fittedHawaii', role: 'Founder', roleDetail: 'Co-founder, owner and designer', start: 2005, end: null },
+    ],
+  },
+  pierreAndreSenizergues: {
+    name: 'Pierre-André Senizergues',
+    career: [
+      { house: 'etnies', role: 'Founder', roleDetail: 'Founder and footwear designer', start: 1986 },
+      { house: 'etnies', role: 'CEO', roleDetail: 'CEO under Nidecker', start: 2024 },
+    ],
+    notes: 'Former professional skateboarder; founded Sole Technology in 1996.',
+  },
+  markArcenal: {
+    name: 'Mark Arcenal',
+    career: [
+      { house: 'illest', role: 'Founder', start: 2006 },
+    ],
+    notes: 'Earlier worked at Nike and founded Fatlace in 1999.',
+  },
+  joeCastrucci: {
+    name: 'Joe Castrucci',
+    career: [
+      { house: 'habitat', role: 'Founder', roleDetail: 'Co-founder, graphic designer and filmmaker', start: 2000 },
+    ],
+  },
+  brennanConroy: {
+    name: 'Brennan Conroy',
+    career: [
+      { house: 'habitat', role: 'Founder', roleDetail: 'Co-founder', start: 2000 },
+    ],
+  },
+  kikuoIbe: {
+    name: 'Kikuo Ibe',
+    career: [
+      { house: 'gShock', role: 'Other', roleDetail: 'Engineer and creator of the original design', start: 1983 },
+    ],
+  },
+  ryusukeMoriai: {
+    name: 'Ryusuke Moriai',
+    career: [
+      { house: 'gShock', role: 'Head Designer', roleDetail: 'Chief designer', start: 1995, approximate: true },
+    ],
+    notes: 'Joined Casio as a watch designer in 1985 and designed the F-91W.',
+  },
+  dougBurkman: {
+    name: 'Doug Burkman',
+    career: [
+      { house: 'reynSpooner', role: 'Creative Director', start: 2019, approximate: true },
+    ],
+    notes: 'Trained in print, pattern and textile design; previously ran an independent New York label for ten years.',
+  },
+  charlesWong: {
+    name: 'Charles Wong',
+    career: [
+      { house: 'charlesKeith', role: 'Founder', roleDetail: 'Co-founder', start: 1996, end: null },
+    ],
+  },
+  keithWong: {
+    name: 'Keith Wong',
+    career: [
+      { house: 'charlesKeith', role: 'Founder', roleDetail: 'Co-founder', start: 1996, end: null },
+    ],
+    notes: 'Reported in the 2010s as overseeing the creative team.',
+  },
+  rachelLim: {
+    name: 'Rachel Lim',
+    career: [
+      { house: 'loveBonito', role: 'Founder', roleDetail: 'Co-founder; branding and product design', start: 2005 },
+    ],
+  },
+  veldaTan: {
+    name: 'Velda Tan',
+    career: [
+      { house: 'loveBonito', role: 'Founder', roleDetail: 'Co-founder', start: 2005, end: 2013 },
+    ],
+  },
+  violaTan: {
+    name: 'Viola Tan',
+    career: [
+      { house: 'loveBonito', role: 'Founder', roleDetail: 'Co-founder; business development and finance', start: 2005 },
+    ],
+  },
+  rebeccaTing: {
+    name: 'Rebecca Ting',
+    career: [
+      { house: 'beyondTheVines', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2015, end: null },
+    ],
+  },
+  danielChew: {
+    name: 'Daniel Chew',
+    career: [
+      { house: 'beyondTheVines', role: 'Founder', roleDetail: 'Co-founder', start: 2015, end: null },
+    ],
+  },
+  taufiqIskandar: {
+    name: 'Taufiq Iskandar',
+    career: [
+      { house: 'youthsInBalaclava', role: 'Founder', roleDetail: 'Founding member and creative director', start: 2014, end: null, approximate: true },
+    ],
+  },
+  spencerYeo: {
+    name: 'Spencer Yeo',
+    career: [
+      { house: 'youthsInBalaclava', role: 'Founder', roleDetail: 'Founding member', start: 2014, approximate: true },
+    ],
+  },
+  longYiChen: {
+    name: 'Long Yi Chen',
+    career: [
+      { house: 'youthsInBalaclava', role: 'Founder', roleDetail: 'Founding member', start: 2014, approximate: true },
+    ],
+  },
+  nicholasTan: {
+    name: 'Nicholas Tan',
+    career: [
+      { house: 'aupen', role: 'Founder', roleDetail: 'Founder', start: 2022, end: null },
+    ],
+    notes: 'Former Singapore national swimmer who ran a fashion showroom before AUPEN.',
+  },
+  andrewLoh: {
+    name: 'Andrew Loh',
+    career: [
+      { house: 'depression', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2006, end: null },
+    ],
+    notes: 'Former advertising art director.',
+  },
+  kennyLim: {
+    name: 'Kenny Lim',
+    career: [
+      { house: 'depression', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2006, end: null },
+    ],
+    notes: 'Former advertising copywriter.',
+  },
+  robHarris: {
+    name: 'Rob Harris',
+    career: [
+      { house: 'alltimers', role: 'Founder', roleDetail: 'Co-founder', start: 2013, end: 2024 },
+    ],
+  },
+  pryceHolmes: {
+    name: 'Pryce Holmes',
+    career: [
+      { house: 'alltimers', role: 'Founder', roleDetail: 'Co-founder', start: 2013, end: 2024 },
+    ],
+  },
+  joelFuller: {
+    name: 'Joel Fuller',
+    career: [
+      { house: 'fortyOzNyc', role: 'Founder', roleDetail: 'Founder', start: 2012 },
+    ],
+    notes: 'Known as 40oz Van.',
+  },
+  ankurAmin: {
+    name: 'Ankur Amin',
+    career: [
+      { house: 'extraButter', role: 'Founder', roleDetail: 'Co-founder', start: 2007 },
+    ],
+  },
+  bernieGross: {
+    name: 'Bernie Gross',
+    career: [
+      { house: 'extraButter', role: 'Founder', roleDetail: 'Co-founder', start: 2007 },
+    ],
+  },
+  jasonFaustino: {
+    name: 'Jason Faustino',
+    career: [
+      { house: 'extraButter', role: 'Founder', roleDetail: 'Co-founder', start: 2007 },
+    ],
+  },
+  alfredGitman: {
+    name: 'Alfred Gitman',
+    career: [
+      { house: 'gitmanBros', role: 'Founder', roleDetail: 'Co-founder', start: 1978 },
+    ],
+  },
+  sheldonGitman: {
+    name: 'Sheldon Gitman',
+    career: [
+      { house: 'gitmanBros', role: 'Founder', roleDetail: 'Co-founder', start: 1978 },
+    ],
+    notes: 'Known as Shelly; twin brother of Alfred Gitman.',
+  },
+  nazzarenoDiRosa: {
+    name: 'Nazzareno Di Rosa',
+    career: [
+      { house: 'officineCreative', role: 'Founder', start: 1998, approximate: true },
+    ],
+    notes: 'Established the Montegranaro shoemaking workshop behind Officine Creative in 1968.',
+  },
+  miroslavaDuma: {
+    name: 'Miroslava Duma',
+    career: [
+      { house: 'pangaia', role: 'Founder', roleDetail: 'Member of the founding collective', start: 2018 },
+    ],
+  },
+  takashiIesaki: {
+    name: 'Takashi Iesaki',
+    career: [
+      { house: 'taion', role: 'Founder', roleDetail: 'Founder and representative', start: 2016, end: null },
+    ],
+  },
+  justinLiu: {
+    name: 'Justin Liu',
+    career: [
+      { house: 'capsule', role: 'Founder', roleDetail: 'Founder and owner', start: 2003 },
+    ],
+  },
+  williamDonmoyer: {
+    name: 'William A. Donmoyer',
+    career: [
+      { house: 'saucony', role: 'Founder', roleDetail: 'Co-founder', start: 1898, sources: ['https://en.wikipedia.org/wiki/Saucony'] },
+    ],
+  },
+  thomasLevan: {
+    name: 'Thomas S. Levan',
+    career: [
+      { house: 'saucony', role: 'Founder', roleDetail: 'Co-founder', start: 1898, sources: ['https://en.wikipedia.org/wiki/Saucony'] },
+    ],
+  },
+  walterSnyder: {
+    name: 'Walter C.C. Snyder',
+    career: [
+      { house: 'saucony', role: 'Founder', roleDetail: 'Co-founder', start: 1898, sources: ['https://en.wikipedia.org/wiki/Saucony'] },
+    ],
+  },
+  benjaminReider: {
+    name: 'Benjamin F. Reider',
+    career: [
+      { house: 'saucony', role: 'Founder', roleDetail: 'Co-founder', start: 1898, sources: ['https://en.wikipedia.org/wiki/Saucony'] },
+    ],
+  },
+  marcoBoglione: {
+    name: 'Marco Boglione',
+    nationality: 'Italian',
+    career: [
+      { house: 'kappa', role: 'Founder', roleDetail: 'Founder of the sportswear branch', start: 1978, sources: ['https://en.wikipedia.org/wiki/Kappa_(brand)', 'https://www.basic.net/Pages/History/History.aspx'] },
+    ],
+  },
+  mikhailBortnik: {
+    name: 'Mikhail Bortnik',
+    career: [
+      { house: 'mishka', role: 'Founder', roleDetail: 'Co-founder', start: 2003 },
+    ],
+    notes: 'Later started the separate label Psychic Hearts.',
+  },
+  gregRivera: {
+    name: 'Greg Rivera',
+    career: [
+      { house: 'mishka', role: 'Founder', roleDetail: 'Co-founder and president', start: 2003 },
+    ],
+  },
+  gregJohnsen: {
+    name: 'Greg Johnsen',
+    career: [
+      { house: 'supreme', role: 'Other', roleDetail: 'Designer; one of the label’s first' },
+      { house: 'unionLosAngeles', role: 'Other', roleDetail: 'Buyer' },
+      { house: 'stussy', role: 'Other', roleDetail: 'Designer' },
+      { house: 'campHigh', role: 'Founder', roleDetail: 'Co-founder and creative partner', start: 2018 },
+    ],
+    notes: 'Streetwear designer known as “Bald Head Greg” or “BHG”. Founded Situationnormal in 1996.',
+  },
+  tetsushiOgawa: {
+    name: 'Tetsushi Ogawa',
+    career: [
+      { house: 'tommyHilfiger', role: 'Other', roleDetail: 'Designer, Tommy Hilfiger Japan' },
+      { house: 'twentyFourKarats', role: 'Other', roleDetail: 'Founding-era contract designer; later LDH apparel president' },
+    ],
+    notes: 'Began helping LDH with BOIS BOIS in 2005 while at Tommy Hilfiger Japan, then joined the project that became 24karats in 2007. Costume producer for HiGH&LOW.',
+  },
+  garyTam: {
+    name: 'Gary Tam',
+    career: [
+      { house: 'californiaArts', role: 'Founder', roleDetail: 'Founder', start: 2021, end: null },
+    ],
+    notes: 'Left a corporate job to start the label.',
+  },
+  tomHolmes: {
+    name: 'Tom Holmes',
+    career: [
+      { house: 'waxLondon', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2015, end: null },
+    ],
+  },
+  steffyNeceva: {
+    name: 'Steffy Neceva',
+    career: [
+      { house: 'waxLondon', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2015 },
+    ],
+    notes: 'Of Bulgarian heritage. Documented as creative director in 2021; current role unconfirmed.',
+  },
+  richardSingh: {
+    name: 'Richard Singh',
+    career: [
+      { house: 'waxLondon', role: 'Founder', roleDetail: 'Co-founder', start: 2015, end: null },
+    ],
+  },
+  christianWijnants: {
+    name: 'Christian Wijnants',
+    nationality: 'Belgian',
+    career: [
+      { house: 'driesVanNoten', role: 'Other', roleDetail: 'Assistant to Dries Van Noten' },
+      { house: 'christianWijnants', role: 'Founder', roleDetail: 'Founder, designer', start: 2003, end: null },
+    ],
+    notes: 'Studied at the Royal Academy of Fine Arts in Antwerp and won the Hyères Grand Prix. Also worked for Angelo Tarlazzi in Paris.',
+  },
+  cedricCharlier: {
+    name: 'Cédric Charlier',
+    nationality: 'Belgian',
+    career: [
+      { house: 'celine', role: 'Other', roleDetail: 'Designer under Michael Kors' },
+      { house: 'lanvin', role: 'Other', roleDetail: 'Designer under Alber Elbaz' },
+      { house: 'cedricCharlier', role: 'Founder', roleDetail: 'Founder, designer', start: 2012 },
+    ],
+    notes: 'Studied at La Cambre. Led womenswear at Cacharel from 2009 to 2011.',
+  },
+  stephanSchneider: {
+    name: 'Stephan Schneider',
+    nationality: 'German',
+    career: [
+      { house: 'stephanSchneider', role: 'Founder', roleDetail: 'Founder, designer', start: 1994 },
+    ],
+    notes: 'Born in Duisburg and graduated from the Royal Academy of Fine Arts in Antwerp in 1994.',
+  },
+  dilanLurr: {
+    name: 'Dilan Lurr',
+    career: [
+      { house: 'namacheko', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2017, end: null },
+    ],
+    notes: 'Born in Kurdistan and raised in Halmstad, Sweden. Studied civil engineering in Lund.',
+  },
+  lezanLurr: {
+    name: 'Lezan Lurr',
+    career: [
+      { house: 'namacheko', role: 'Founder', roleDetail: 'Co-founder', start: 2017 },
+    ],
+    notes: 'Born in Kurdistan and raised in Sweden. Studied civil engineering in Lund.',
+  },
+  philipeLibert: {
+    name: 'Philipe Libert',
+    career: [
+      { house: 'suspiciousAntwerp', role: 'Founder', roleDetail: 'Co-founder', start: 2017 },
+    ],
+  },
+  frederikJanssens: {
+    name: 'Frederik Janssens',
+    career: [
+      { house: 'suspiciousAntwerp', role: 'Founder', roleDetail: 'Co-founder', start: 2017 },
+    ],
+  },
+  bertonyDaSilva: {
+    name: 'Bertony Da Silva',
+    career: [
+      { house: 'arteAntwerp', role: 'Founder', roleDetail: 'Founder, designer', start: 2009, end: null },
+    ],
+    notes: 'Born in Luanda and moved to Antwerp at 14. Studied graphic design.',
+  },
+  florenceCools: {
+    name: 'Florence Cools',
+    career: [
+      { house: 'laCollection', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2017 },
+    ],
+    notes: 'Also behind the Antwerp boutique Damoy.',
+  },
+  arturTadevosian: {
+    name: 'Artur Tadevosian',
+    career: [
+      { house: 'laCollection', role: 'Founder', roleDetail: 'Co-founder', start: 2017 },
+    ],
+  },
+  esfanEghtessadi: {
+    name: 'Esfan Eghtessadi',
+    career: [
+      { house: 'essentielAntwerp', role: 'Founder', roleDetail: 'Co-founder', start: 1999 },
+    ],
+  },
+  ingeOnsea: {
+    name: 'Inge Onsea',
+    career: [
+      { house: 'essentielAntwerp', role: 'Founder', roleDetail: 'Co-founder, designer', start: 1999 },
+    ],
+    notes: 'Formerly a model for brands including Max Mara and Thierry Mugler.',
+  },
+  sterlingRuby: {
+    name: 'Sterling Ruby',
+    career: [
+      { house: 'srStudio', role: 'Founder', roleDetail: 'Founder, designer', start: 2019, end: null },
+    ],
+    notes: 'Los Angeles artist and longtime Raf Simons collaborator.',
+  },
+  alexandreMorgado: {
+    name: 'Alexandre Morgado',
+    career: [
+      { house: 'ruffoResearch', role: 'Creative Director', roleDetail: 'Co-designer, as the Alexandre Matthieu duo', start: 2001, end: 2002, approximate: true },
+    ],
+    notes: 'Half of the Paris label Alexandre Matthieu.',
+  },
+  matthieuBureau: {
+    name: 'Matthieu Bureau',
+    career: [
+      { house: 'ruffoResearch', role: 'Creative Director', roleDetail: 'Co-designer, as the Alexandre Matthieu duo', start: 2001, end: 2002, approximate: true },
+    ],
+    notes: 'Half of the Paris label Alexandre Matthieu.',
+  },
+  richardLiu: {
+    name: 'Richard Liu',
+    career: [
+      { house: 'threeSixteen', role: 'Other', roleDetail: 'Earlier role; exact position unconfirmed' },
+      { house: 'dsptch', role: 'Founder', roleDetail: 'Founder, designer', start: 2010 },
+    ],
+    notes: 'Also worked at the San Jose shop Purist.',
+  },
+  joshGustin: {
+    name: 'Josh Gustin',
+    career: [
+      { house: 'gustin', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2005 },
+    ],
+    notes: 'Taught himself to make jeans while studying for an MBA at Berkeley.',
+  },
+  stephenPowell: {
+    name: 'Stephen Powell',
+    career: [
+      { house: 'gustin', role: 'Founder', roleDetail: 'Co-founder', start: 2005 },
+    ],
+  },
+  mattRevelli: {
+    name: 'Matt Revelli',
+    career: [
+      { house: 'upperPlayground', role: 'Founder', roleDetail: 'Founder', start: 1999 },
+    ],
+    notes: 'Artist. Started the original shop with help from Matt Yep and Dennis Kennedy.',
+  },
+  bayardWinthrop: {
+    name: 'Bayard Winthrop',
+    career: [
+      { house: 'chromeIndustries', role: 'Other', roleDetail: 'Former head of the company' },
+      { house: 'americanGiant', role: 'Founder', roleDetail: 'Founder', start: 2012 },
+    ],
+  },
+  philipeManoux: {
+    name: 'Philipe Manoux',
+    career: [
+      { house: 'americanGiant', role: 'Other', roleDetail: 'Designer of the original Classic Full Zip hoodie' },
+    ],
+    notes: 'Former industrial engineer at Apple.',
+  },
+  tonyPatella: {
+    name: 'Tony Patella',
+    career: [
+      { house: 'tellason', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
+    ],
+  },
+  peteSearson: {
+    name: 'Pete Searson',
+    career: [
+      { house: 'tellason', role: 'Founder', roleDetail: 'Co-founder', start: 2009 },
+    ],
+  },
+  joshD: {
+    name: 'Josh D',
+    career: [
+      { house: 'rebel8', role: 'Founder', roleDetail: 'Founder', start: 2003 },
+    ],
+    notes: 'Also known as Joshy D.',
+  },
+  mikeGiant: {
+    name: 'Mike Giant',
+    career: [
+      { house: 'rebel8', role: 'Founder', roleDetail: 'Co-founder and artist', start: 2003 },
+    ],
+    notes: 'Tattoo and graffiti artist who illustrated the label’s original graphics.',
+  },
+  alexTilley: {
+    name: 'Alex Tilley',
+    born: 1938,
+    died: 2025,
+    nationality: 'Canadian',
+    career: [{ house: 'tilley', role: 'Founder', roleDetail: 'Founder', start: 1980, end: 2015 }],
+    notes: 'Sold the company in 2015.',
+  },
+  garyLenett: {
+    name: 'Gary Lenett',
+    career: [{ house: 'duer', role: 'Founder', roleDetail: 'Founder and CEO', start: 2015, end: null }],
+  },
+  alanYiu: {
+    name: 'Alan Yiu',
+    career: [{ house: 'westcomb', role: 'Founder', roleDetail: 'Founder, designer', start: 2005 }],
+    notes: 'Studied costume design at London College of Fashion.',
+  },
+  kirkPickersgill: {
+    name: 'Kirk Pickersgill',
+    career: [{ house: 'gretaConstantine', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2006, end: null }],
+    notes: 'Born in Jamaica and raised in Canada. Worked in styling, fashion direction and merchandising in Milan for nearly two decades.',
+  },
+  stephenWong: {
+    name: 'Stephen Wong',
+    career: [{ house: 'gretaConstantine', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2006, end: 2020 }],
+    notes: 'Left for costume design, including Star Trek: Strange New Worlds. Competed on the first season of Project Runway Canada.',
+  },
+  bradenParker: {
+    name: 'Braden Parker',
+    career: [{ house: 'westbeach', role: 'CEO', roleDetail: 'CEO and minority owner', start: 2025, end: null, approximate: true }],
+    notes: 'Formerly chief executive of Casca Footwear.',
+  },
+  danielSwarovski: {
+    name: 'Daniel Swarovski',
+    career: [
+      { house: 'swarovski', role: 'Founder', roleDetail: 'Co-founder', start: 1895 },
+    ],
+    notes: 'Patented the crystal-cutting process behind the company.',
+  },
+  armandKosmann: {
+    name: 'Armand Kosmann',
+    career: [
+      { house: 'swarovski', role: 'Founder', roleDetail: 'Co-founder', start: 1895 },
+    ],
+  },
+  franzWeis: {
+    name: 'Franz Weis',
+    career: [
+      { house: 'swarovski', role: 'Founder', roleDetail: 'Co-founder', start: 1895 },
+    ],
+    notes: 'Brother-in-law of Daniel Swarovski.',
+  },
+  nathalieColin: {
+    name: 'Nathalie Colin',
+    nationality: 'French',
+    career: [
+      { house: 'swarovski', role: 'Creative Director', roleDetail: 'Consumer goods division', start: 2006, end: 2020 },
+    ],
+  },
+  giovannaEngelbert: {
+    name: 'Giovanna Engelbert',
+    nationality: 'Italian',
+    career: [
+      { house: 'swarovski', role: 'Creative Director', roleDetail: 'B2B division', start: 2016, end: 2020 },
+      { house: 'swarovski', role: 'Creative Director', roleDetail: 'Global creative director', start: 2020, end: null },
+    ],
+    notes: 'Also known as Giovanna Battaglia Engelbert. First company-wide creative director of Swarovski.',
+  },
+  alfredVanCleef: {
+    name: 'Alfred Van Cleef',
+    career: [
+      { house: 'vanCleefArpels', role: 'Founder', roleDetail: 'Co-founder', start: 1906 },
+    ],
+  },
+  charlesArpels: {
+    name: 'Charles Arpels',
+    career: [
+      { house: 'vanCleefArpels', role: 'Founder', roleDetail: 'Co-founder', start: 1906 },
+    ],
+    notes: 'Also recorded as Salomon Arpels. Brother-in-law of Alfred Van Cleef.',
+  },
+  julienArpels: {
+    name: 'Julien Arpels',
+    career: [
+      { house: 'vanCleefArpels', role: 'Founder', roleDetail: 'Co-founder', start: 1906 },
+    ],
+    notes: 'Brother-in-law of Alfred Van Cleef.',
+  },
+  reneePuissant: {
+    name: 'Renée Puissant',
+    career: [
+      { house: 'vanCleefArpels', role: 'Artistic Director', roleDetail: 'Artistic director', start: 1926, end: 1942 },
+    ],
+    notes: 'Daughter of Alfred Van Cleef.',
+  },
+  reneSimLacaze: {
+    name: 'René Sim Lacaze',
+    career: [
+      { house: 'vanCleefArpels', role: 'Other', roleDetail: 'Draftsman and jewellery designer' },
+    ],
+    notes: 'Worked closely with Renée Puissant.',
+  },
+  guyBedarida: {
+    name: 'Guy Bedarida',
+    career: [
+      { house: 'vanCleefArpels', role: 'Other', roleDetail: 'Head designer, American branch' },
+    ],
+    notes: 'Earlier designed at Boucheron; later creative director of John Hardy. Neither is currently in the dataset.',
+  },
+  nicolasBos: {
+    name: 'Nicolas Bos',
+    career: [
+      { house: 'vanCleefArpels', role: 'Creative Director', roleDetail: 'Vice president and creative director', start: 2009 },
+      { house: 'vanCleefArpels', role: 'CEO', roleDetail: 'Global president and CEO', start: 2013, end: 2024 },
+    ],
+    notes: 'Joined in 2000 as international marketing director. Became CEO of Richemont in 2024.',
+  },
+  catherineRenier: {
+    name: 'Catherine Rénier',
+    career: [
+      { house: 'vanCleefArpels', role: 'CEO', roleDetail: 'CEO', start: 2024, end: null },
+    ],
+  },
+  garethPugh: {
+    name: 'Gareth Pugh',
+    nationality: 'British',
+    career: [
+      { house: 'rickOwens', role: 'Other', roleDetail: 'Intern' },
+      { house: 'garethPughLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2005 },
+    ],
+    notes: 'Graduated from Central Saint Martins in 2003. Co-founded the Hard+Shiny studio with Carson McColl in 2018.',
+  },
+  rolandMouret: {
+    name: 'Roland Mouret',
+    nationality: 'French',
+    career: [
+      { house: 'rolandMouretLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 1997, end: 2005 },
+      { house: 'rolandMouretLabel', role: 'Creative Director', roleDetail: 'Designer of RM, later Roland Mouret', start: 2007, end: 2021 },
+      { house: 'rolandMouretLabel', role: 'Creative Director', roleDetail: 'Co-creative director with Han Chong', start: 2022, end: 2025 },
+    ],
+    notes: 'Also creative director of shoe label Robert Clergerie from 2011.',
+  },
+  hanChong: {
+    name: 'Han Chong',
+    career: [
+      { house: 'rolandMouretLabel', role: 'Creative Director', roleDetail: 'Owner; co-creative director, then sole creative director from 2025', start: 2022 },
+    ],
+    notes: 'Founder of Self-Portrait.',
+  },
+  beckyOkell: {
+    name: 'Becky Okell',
+    career: [
+      { house: 'nike', role: 'Other', roleDetail: 'Women’s running team', sources: ['https://www.papersmiths.co.uk/blogs/blog/the-papersmith-series-becky-okell-and-huw-thomas'] },
+      { house: 'paynterJacketCo', role: 'Founder', roleDetail: 'Co-founder', start: 2019 },
+    ],
+  },
+  huwThomas: {
+    name: 'Huw Thomas',
+    career: [
+      { house: 'paynterJacketCo', role: 'Founder', roleDetail: 'Co-founder', start: 2019 },
+    ],
+    notes: 'Previously worked at Hiut Denim.',
+  },
+  oliverSpencer: {
+    name: 'Oliver Spencer',
+    nationality: 'British',
+    career: [
+      { house: 'oliverSpencerLabel', role: 'Founder', roleDetail: 'Founder, creative director', start: 2002, end: null },
+    ],
+    notes: 'Also founder and creative director of the occasionwear label Favourbrook.',
+  },
+  jayWilliams: {
+    name: 'Jay Williams',
+    career: [
+      { house: 'hoodrich', role: 'Founder', roleDetail: 'Founder', start: 2014 },
+    ],
+  },
+  jadeGoulden: {
+    name: 'Jade Goulden',
+    career: [
+      { house: 'asos', role: 'Other', roleDetail: 'Buyer' },
+      { house: 'jadedLondon', role: 'Founder', roleDetail: 'Co-founder; womenswear and swimwear', start: 2013 },
+    ],
+  },
+  grantGoulden: {
+    name: 'Grant Goulden',
+    career: [
+      { house: 'jadedLondon', role: 'Founder', roleDetail: 'Co-founder; menswear', start: 2013 },
+    ],
+    notes: 'Brother of Jade Goulden.',
+  },
+  henryHuntsman: {
+    name: 'Henry Huntsman',
+    career: [
+      { house: 'huntsman', role: 'Founder', roleDetail: 'Founder', start: 1849 },
+    ],
+  },
+  colinHammick: {
+    name: 'Colin Hammick',
+    career: [
+      { house: 'huntsman', role: 'Other', roleDetail: 'Head cutter' },
+    ],
+  },
+  campbellCarey: {
+    name: 'Campbell Carey',
+    career: [
+      { house: 'huntsman', role: 'Creative Director', roleDetail: 'Head cutter and creative director', start: 2016, end: null, approximate: true },
+    ],
+  },
+  darioCarnera: {
+    name: 'Dario Carnera',
+    career: [
+      { house: 'huntsman', role: 'Other', roleDetail: 'Senior cutter, later co-head cutter' },
+    ],
+  },
+  williamLyleFounder: {
+    name: 'William Lyle',
+    died: 1903,
+    career: [
+      { house: 'lyleScott', role: 'Founder', roleDetail: 'Co-founder', start: 1874 },
+    ],
+  },
+  walterScottFounder: {
+    name: 'Walter Scott',
+    career: [
+      { house: 'lyleScott', role: 'Founder', roleDetail: 'Co-founder', start: 1874 },
+    ],
+  },
+  carolynMassey: {
+    name: 'Carolyn Massey',
+    career: [
+      { house: 'lyleScott', role: 'Head Designer', roleDetail: 'Head of design, Vintage and Heritage collections', start: 2012 },
+    ],
+  },
+  edwardGreenFounder: {
+    name: 'Edward Green',
+    career: [
+      { house: 'edwardGreen', role: 'Founder', start: 1890 },
+    ],
+  },
+  johnHlustik: {
+    name: 'John Hlustik',
+    died: 2000,
+    career: [
+      { house: 'edwardGreen', role: 'Head Designer', roleDetail: 'Owner and designer', start: 1982, end: 2000, approximate: true },
+    ],
+  },
+  hilaryFreeman: {
+    name: 'Hilary Freeman',
+    career: [
+      { house: 'edwardGreen', role: 'Managing Director', start: 2000 },
+    ],
+  },
+  tamaraHillNorton: {
+    name: 'Tamara Hill-Norton',
+    career: [
+      { house: 'sweatyBetty', role: 'Founder', roleDetail: 'Co-founder', start: 1998 },
+      { house: 'sweatyBetty', role: 'Creative Director', notes: 'In the role in 2019 and no longer by the August 2021 sale; exact dates unconfirmed.' },
+    ],
+  },
+  simonHillNorton: {
+    name: 'Simon Hill-Norton',
+    career: [
+      { house: 'sweatyBetty', role: 'Founder', roleDetail: 'Co-founder', start: 1998 },
+    ],
+  },
+  antoninSoukup: {
+    name: 'Antonín Soukup',
+    career: [
+      { house: 'laformela', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2010, end: null },
+    ],
+  },
+  miroslavaKohutiarova: {
+    name: 'Miroslava Kohutiarová',
+    career: [
+      { house: 'laformela', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2010, end: null },
+    ],
+  },
+  janCerny: {
+    name: 'Jan Černý',
+    born: 1993,
+    nationality: 'Czech',
+    career: [
+      { house: 'janSociete', role: 'Founder', roleDetail: 'Founder and creative director', start: 2017, end: null },
+      { house: 'cottweiler', role: 'Other', roleDetail: 'Intern', notes: 'After his 2017 Prague show; dates unconfirmed.' },
+      { house: 'louisVuitton', role: 'Other', roleDetail: 'Menswear design intern under Virgil Abloh', start: 2019, end: 2019, approximate: true },
+    ],
+  },
+  miguelBecer: {
+    name: 'Miguel Becer',
+    nationality: 'Spanish',
+    career: [
+      { house: 'maneMane', role: 'Founder', roleDetail: 'Founder and creative director', start: 2012, end: null },
+    ],
+  },
+  domingoRodriguezLazaro: {
+    name: 'Domingo Rodríguez Lázaro',
+    born: 1994,
+    nationality: 'Spanish',
+    career: [
+      { house: 'dominnico', role: 'Founder', roleDetail: 'Founder and creative director', start: 2016, end: null },
+    ],
+  },
+  anaisVauxcelles: {
+    name: 'Anaïs Vauxcelles',
+    born: 1991,
+    nationality: 'Spanish',
+    career: [
+      { house: 'fourOhFourStudio', role: 'Founder', roleDetail: 'Founder and designer', start: 2018, end: null },
+    ],
+  },
+  jaimeCruzVega: {
+    name: 'Jaime Cruz Vega',
+    career: [
+      { house: 'scuffers', role: 'Founder', roleDetail: 'Co-founder', start: 2018 },
+    ],
+  },
+  javierLopezReinoso: {
+    name: 'Javier López Reinoso',
+    career: [
+      { house: 'scuffers', role: 'Founder', roleDetail: 'Co-founder', start: 2018 },
+    ],
+  },
+  brunoCasanovas: {
+    name: 'Bruno Casanovas',
+    nationality: 'Spanish',
+    career: [
+      { house: 'nudeProject', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2019, end: null },
+    ],
+  },
+  alexBenlloch: {
+    name: 'Alex Benlloch',
+    nationality: 'Spanish',
+    career: [
+      { house: 'nudeProject', role: 'Founder', roleDetail: 'Co-founder', start: 2019 },
+    ],
+  },
+  joseAlbaladejo: {
+    name: 'José Albaladejo',
+    career: [
+      { house: 'meermin', role: 'Founder', start: 2001 },
+    ],
+  },
+  pepeAlbaladejo: {
+    name: 'Pepe Albaladejo',
+    career: [
+      { house: 'meermin', role: 'Head of House', roleDetail: 'Runs the brand with his father José' },
+    ],
+  },
+  thomasMeyer: {
+    name: 'Thomas Meyer',
+    nationality: 'Swiss',
+    career: [
+      { house: 'desigual', role: 'Founder', start: 1984, end: null },
+      { house: 'desigual', role: 'Creative Director', start: 2019, end: null, approximate: true },
+    ],
+  },
+  jeanPaulGoude: {
+    name: 'Jean-Paul Goude',
+    nationality: 'French',
+    career: [
+      { house: 'desigual', role: 'Artistic Director', start: 2017, end: 2019, approximate: true },
+    ],
+  },
+  janRivera: {
+    name: 'Jan Rivera',
+    career: [
+      { house: 'mango', role: 'Other', roleDetail: 'Global head of creative and image', notes: 'Dates unconfirmed.' },
+      { house: 'massimoDutti', role: 'Other', roleDetail: 'Online project', notes: 'Dates unconfirmed.' },
+      { house: 'desigual', role: 'Other', roleDetail: 'Image and content director; artistic director from 2024 (excluding product)', start: 2021, notes: 'Has since left; departure year unconfirmed.' },
+    ],
+  },
+  andresVarela: {
+    name: 'Andrés Varela',
+    career: [
+      { house: 'coldCulture', role: 'Founder', roleDetail: 'Co-founder', start: 2021 },
+    ],
+  },
+  martinaMerry: {
+    name: 'Martina Merry-del Val',
+    career: [
+      { house: 'coldCulture', role: 'Founder', roleDetail: 'Co-founder', start: 2021 },
+    ],
+  },
+  israelMyers: {
+    name: 'Israel Myers',
+    died: 1999,
+    career: [
+      { house: 'londonFog', role: 'Founder', start: 1923 },
+    ],
+  },
+  scottLangton: {
+    name: 'Scott Langton',
+    nationality: 'British',
+    career: [
+      { house: 'seanJohn', role: 'Head Designer', start: 1998, end: 2004 },
+      { house: 'seanJohn', role: 'Head Designer', roleDetail: 'Vice president of design', start: 2017 },
+      { house: 'eckoUnltd', role: 'Other', roleDetail: 'Head of design', notes: 'Before founding Artful Dodger; exact dates unconfirmed.' },
+      { house: 'artfulDodger', role: 'Founder', start: 2005, end: 2011, approximate: true },
+      { house: 'artfulDodger', role: 'Creative Director', roleDetail: 'Second stint, under licensee Wilson Brands', start: 2015, approximate: true, notes: 'In the role in October 2015; start and end unconfirmed.' },
+    ],
+  },
+  michaelCaruso: {
+    name: 'Michael Caruso',
+    career: [
+      { house: 'bongo', role: 'Founder', roleDetail: 'Co-founder', start: 1982 },
+    ],
+  },
+  nicholasGraham: {
+    name: 'Nicholas Graham',
+    born: 1958,
+    nationality: 'Canadian',
+    career: [
+      { house: 'joeBoxer', role: 'Founder', roleDetail: 'Founder and creative lead', start: 1985, end: 2005 },
+      { house: 'joeBoxer', role: 'Other', roleDetail: 'Creative consultant', start: 2019 },
+    ],
+  },
+  robertoMuller: {
+    name: 'Roberto Muller',
+    nationality: 'Uruguayan',
+    career: [
+      { house: 'pony', role: 'Founder', start: 1972 },
+    ],
+  },
+  joeyBadass: {
+    name: 'Joey Bada$$',
+    nationality: 'American',
+    career: [
+      { house: 'pony', role: 'Creative Director', start: 2017 },
+    ],
+  },
+  johnLeeUbiq: {
+    name: 'John Lee',
+    career: [
+      { house: 'ubiq', role: 'Founder', start: 2002, end: 2020 },
+    ],
+  },
+  jasonRoss: {
+    name: 'Jason Ross',
+    career: [
+      { house: 'jackThreads', role: 'Founder', start: 2008 },
+    ],
+  },
+  tonyKretten: {
+    name: 'Tony Kretten',
+    career: [
+      { house: 'gap', role: 'Other', roleDetail: 'Global head of men’s design', notes: 'Worked at Gap for 13 years before JackThreads; exact dates unconfirmed.', sources: ['https://www.maxim.com/style/jackthreads-relaunch-fall-fashion-2015-10/'] },
+      { house: 'guess', role: 'Other', roleDetail: 'Guess Jeans', notes: 'Before Gap; title and dates unconfirmed.', sources: ['https://www.maxim.com/style/jackthreads-relaunch-fall-fashion-2015-10/'] },
+      { house: 'jackThreads', role: 'Creative Director', start: 2014, approximate: true, notes: 'Led the 2015 in-house line, a year in the making; departure unconfirmed.', sources: ['https://www.maxim.com/style/jackthreads-relaunch-fall-fashion-2015-10/'] },
+    ],
+  },
+  seanCombs: {
+    name: 'Sean Combs',
+    born: 1969,
+    nationality: 'American',
+    career: [
+      { house: 'seanJohn', role: 'Founder', start: 1998 },
+    ],
+  },
+  damonDash: {
+    name: 'Damon Dash',
+    born: 1971,
+    nationality: 'American',
+    career: [
+      { house: 'rocawear', role: 'Founder', roleDetail: 'Co-founder', start: 1999, end: 2005 },
+    ],
+  },
+  shawnCarter: {
+    name: 'Shawn “Jay-Z” Carter',
+    born: 1969,
+    nationality: 'American',
+    career: [
+      { house: 'rocawear', role: 'Founder', roleDetail: 'Co-founder', start: 1999 },
+      { house: 'paperPlanes', role: 'Founder', roleDetail: 'Co-founder', start: 2014 },
+    ],
+  },
+  emoryJones: {
+    name: 'Emory Jones',
+    nationality: 'American',
+    career: [{ house: 'paperPlanes', role: 'Founder', roleDetail: 'Co-founder, chief marketing officer', start: 2014, end: null }],
+  },
+  pipEdwards: {
+    name: 'Pip Edwards',
+    born: 1980,
+    nationality: 'Australian',
+    career: [
+      { house: 'ksubi', role: 'Other', roleDetail: 'PR manager, later womenswear design team' },
+      { house: 'peNation', role: 'Founder', roleDetail: 'Co-founder, creative director', start: 2016, end: 2024 },
+      { house: 'ksubi', role: 'Creative Director', start: 2024, end: null },
+    ],
+    notes: 'Senior creative and accessories designer at Sass & Bide for five years, then design director at General Pants Co., before founding P.E Nation.',
+  },
+  claireGreaves: {
+    name: 'Claire Greaves',
+    nationality: 'Australian',
+    career: [
+      { house: 'peNation', role: 'Founder', roleDetail: 'Co-founder', start: 2016, end: 2024 },
+      { house: 'peNation', role: 'Creative Director', start: 2025, end: null },
+    ],
+    notes: 'Also known as Claire Tregoning. Worked at Sass & Bide, where Greaves met Pip Edwards. Left day-to-day operations in March 2024 and returned in 2025.',
+  },
+  thomasAshLane: {
+    name: 'Thomas Ash Lane',
+    nationality: 'British',
+    career: [{ house: 'laneCrawford', role: 'Founder', roleDetail: 'Co-founder', start: 1850 }],
+  },
+  ninianCrawford: {
+    name: 'Ninian Crawford',
+    nationality: 'British',
+    career: [{ house: 'laneCrawford', role: 'Founder', roleDetail: 'Co-founder', start: 1850 }],
+  },
+  masatoOgasawara: {
+    name: 'Masato Ogasawara',
+    nationality: 'Japanese',
+    career: [{ house: 'tripster', role: 'Founder', roleDetail: 'Co-founder', start: 2004, end: null }],
+  },
+  kunichiNomura: {
+    name: 'Kunichi Nomura',
+    nationality: 'Japanese',
+    career: [{ house: 'tripster', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2004, end: null }],
+    notes: 'Also an editor, writer, radio presenter and actor.',
+  },
+  wataruYamada: {
+    name: 'Wataru Yamada',
+    nationality: 'Japanese',
+    career: [{ house: 'tripster', role: 'Founder', roleDetail: 'Co-founder', start: 2004, end: null }],
+  },
+  shinyaKozuka: {
+    name: 'Shinya Kozuka',
+    nationality: 'Japanese',
+    career: [{ house: 'shinyakozuka', role: 'Founder', roleDetail: 'Founder, designer', start: 2015, end: null }],
+    notes: 'Graduated in menswear from Central Saint Martins in 2013.',
+  },
+  shimpeiKajiura: {
+    name: 'Shimpei Kajiura',
+    career: [{ house: 'shinyakozuka', role: 'Other', roleDetail: 'Director' }],
+  },
+  naohiroFujisaki: {
+    name: 'Naohiro Fujisaki',
+    nationality: 'Japanese',
+    career: [
+      { house: 'meanswhile', role: 'Founder', roleDetail: 'Founder, designer', start: 2014, end: null },
+      { house: 'theNorthFace', role: 'Other', roleDetail: 'Designer, THE NORTH FACE UE', start: 2023, sources: ['https://store.meanswhile.net/en/pages/concept'] },
+      { house: 'theNorthFace', role: 'Other', roleDetail: 'Design director, APAC team', sources: ['https://store.meanswhile.net/en/pages/concept'] },
+    ],
+    notes: 'Worked in production management at apparel companies before founding meanswhile.',
+  },
+  hiroyukiKondo: {
+    name: 'Hiroyuki Kondo',
+    nationality: 'Japanese',
+    career: [{ house: 'snidel', role: 'Founder', roleDetail: 'Founder, producer', start: 2005 }],
+    notes: 'Founder of Mash. Returned as SNIDEL’s producer for its 2018 rebrand.',
+  },
+  asamiKusugami: {
+    name: 'Asami Kusugami',
+    nationality: 'Japanese',
+    career: [{ house: 'snidel', role: 'Other', roleDetail: 'Designer on the launch team', start: 2005 }],
+    notes: 'Trained and worked as an architectural designer before joining Mash, later becoming vice president of Mash Style Lab.',
+  },
+  kbLee: {
+    name: 'KB Lee',
+    career: [
+      { house: 'emotionallyUnavailable', role: 'Founder', roleDetail: 'Co-founder, designer', start: 2013, end: null },
+      { house: 'undefeated', role: 'Other', roleDetail: 'Head designer', sources: ['https://hypebeast.com/2022/5/essentials-kb-lee-2'], notes: 'In the role in 2012; exact dates are unconfirmed.' },
+      { house: 'stussy', role: 'Other', roleDetail: 'Freelance designer' },
+    ],
+    notes: 'Also written KyuBum Lee and Kybum Lee.',
+  },
+  jonBuscemi: {
+    name: 'Jon Buscemi',
+    born: 1975,
+    nationality: 'American',
+    career: [
+      { house: 'dcShoes', role: 'Other', roleDetail: 'Special projects' },
+      { house: 'oliverPeoples', role: 'Other', roleDetail: 'Brand director', start: 2006 },
+      { house: 'buscemi', role: 'Founder', roleDetail: 'Founder, creative director', start: 2013 },
+    ],
+    notes: 'Co-founded the footwear label Gourmet in 2006 and left in 2013. Sold BUSCEMI to Lion Capital in 2016 and launched the golf label Redan in 2025.',
+  },
+  takeshiOsumi: {
+    name: 'Takeshi Osumi',
+    died: 2021,
+    nationality: 'Japanese',
+    career: [{ house: 'phenomenon', role: 'Founder', roleDetail: 'Founder, designer', start: 2004, end: 2016 }],
+    notes: 'Also known as Big-O of the hip-hop group Shakkazombie. Co-founded Swagger in 1999 and MISTERGENTLEMAN with Yuichi Yoshii in 2012.',
+  },
+  jesseShwayder: {
+    name: 'Jesse Shwayder',
+    nationality: 'American',
+    career: [{ house: 'samsonite', role: 'Founder', start: 1910 }],
+  },
+  georgeZhu: {
+    name: 'George Zhu',
+    career: [{ house: 'bothParis', role: 'Founder', start: 2016 }],
+    notes: 'Chemist credited by Footwear News with founding the rubber company behind both.',
+  },
+  inesDeLaFressange: {
+    name: 'Inès de la Fressange',
+    born: 1957,
+    nationality: 'French',
+    career: [
+      { house: 'inesDeLaFressange', role: 'Founder', start: 1991, end: 1999 },
+      { house: 'inesDeLaFressange', role: 'Artistic Director', start: 2013, end: null },
+    ],
+    notes: 'Former Chanel house model. Lost control of her label in 1999 and returned in 2013 when new investors bought it.',
+  },
+  markMcNairy: {
+    name: 'Mark McNairy',
+    born: 1961,
+    nationality: 'American',
+    career: [
+      { house: 'jPress', role: 'Creative Director', start: 2005, end: 2009, approximate: true, notes: 'Sources give 2009 or 2010 as the end year.' },
+      { house: 'markMcNairy', role: 'Founder', roleDetail: 'Founder, designer', start: 2008 },
+      { house: 'woolrich', role: 'Creative Director', roleDetail: 'Woolrich Woolen Mills', start: 2010 },
+    ],
+    notes: 'Succeeded Daiki Suzuki at Woolrich Woolen Mills. Designed Bee Line with Pharrell Williams for Billionaire Boys Club, and was later named head designer of Five Four.',
+  },
+  hidekiKimura: {
+    name: 'Hideki Kimura',
+    nationality: 'Japanese',
+    career: [{ house: 'deluxe', role: 'Founder', roleDetail: 'Founder, designer', start: 2003 }],
+    notes: 'Known as HUE. Started DELUXE after about four years in New York.',
+  },
+  naotoExile: {
+    name: 'NAOTO',
+    nationality: 'Japanese',
+    career: [{ house: 'studioSeven', role: 'Founder', roleDetail: 'Founder, creative director', start: 2015, end: null }],
+    notes: 'Born Naoto Kataoka; performer with EXILE as EXILE NAOTO, and leader of J SOUL BROTHERS III. Credits NIGO with encouraging him to start STUDIO SEVEN.',
+  },
+  yokoToyoyama: {
+    name: 'Yoko Yamu Toyoyama',
+    nationality: 'Japanese',
+    career: [{ house: 'emmi', role: 'Other', roleDetail: 'Brand director', notes: 'Identified as emmi’s director in 2019; dates are unconfirmed.' }],
+    notes: 'Also led gelato pique, and became president of Mash Beauty Lab in 2023.',
+  },
+  pierreValton: {
+    name: 'Pierre Valton',
+    nationality: 'French',
+    career: [{ house: 'petitBateau', role: 'Founder', start: 1893 }],
+    notes: 'Opened the Valton-Quinquarlet hosiery factory in Troyes. His son Étienne devised the cotton petite culotte and the Petit Bateau name.',
+  },
+  lydieDeBeaupre: {
+    name: 'Lydie de Beaupré',
+    career: [
+      { house: 'mugler', role: 'Other', roleDetail: 'Designer', notes: 'Dates are unconfirmed.' },
+      { house: 'lacoste', role: 'Other', roleDetail: 'Designer', notes: 'Dates are unconfirmed.' },
+      { house: 'petitBateau', role: 'Creative Director', start: 2023 },
+    ],
+    notes: 'Joined Petit Bateau in autumn 2023; her first collection was Spring/Summer 2025.',
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 

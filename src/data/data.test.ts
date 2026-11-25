@@ -4,7 +4,7 @@ import { BrandCategory, ProductTag } from './tags';
 
 /** A house's formal succession: everything except supporting design-team roles. */
 const directorsOf = (house: string) => tenuresAt(house).filter((t) => t.role !== 'Other' && !isBusinessLeadership(t));
-import { validateData } from './validate';
+import { validateData, housesWithoutFounder } from './validate';
 
 describe('data', () => {
   it('records business leadership separately from creative direction and supports executive career moves', () => {
@@ -28,6 +28,11 @@ describe('data', () => {
         year: 2023, concurrent: false,
       }),
     ]));
+  });
+
+  it('counts founding brands, groups and organizations as founders', () => {
+    const missing = new Set(housesWithoutFounder().map((house) => house.id));
+    for (const id of ['houseOfBlanks', 'beamsT', 'bershka', 'capsule']) expect(missing.has(id), id).toBe(false);
   });
 
   it('connects Elizabeth and James to the Olsen founders alongside The Row', () => {

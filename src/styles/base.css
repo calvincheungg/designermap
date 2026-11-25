@@ -1,0 +1,60 @@
+/* Layout + Win98 desktop chrome. Widget styles (buttons, windows, tables,
+   sliders, tree views) come from 98.css, imported in main.tsx. */
+
+:root {
+  --desktop: #008080;
+  --face: #c0c0c0;
+  --navy: #000080;
+  --taskbar-h: 30px;
+  /* Classic Windows cursors (public/assets/cursors): arrow, link-select hand, and the closed hand
+     while the map is being dragged. Hotspots are in CSS px of the 1x image. */
+  --cursor-default: url('/assets/cursors/arrow.png') 0 0, default;
+  --cursor-pointer: url('/assets/cursors/pointer.png') 5 0, pointer;
+  --cursor-grabbing: url('/assets/cursors/grabbing.png') 8 7, grabbing;
+}
+/* Sharp 2x cursors on high-density screens where the browser supports image-set cursors. */
+@supports (cursor: image-set(url('/assets/cursors/arrow.png') 1x) 0 0, default) {
+  :root {
+    --cursor-default: image-set(url('/assets/cursors/arrow.png') 1x, url('/assets/cursors/arrow@2x.png') 2x) 0 0, default;
+    --cursor-pointer: image-set(url('/assets/cursors/pointer.png') 1x, url('/assets/cursors/pointer@2x.png') 2x) 5 0, pointer;
+    --cursor-grabbing: image-set(url('/assets/cursors/grabbing.png') 1x, url('/assets/cursors/grabbing@2x.png') 2x) 8 7, grabbing;
+  }
+  /* Settings ▸ Mouse pointer size (App sets data-cursor-size on the root): a bigger image declared
+     at 1x draws bigger, with the hotspots scaled to match. */
+  :root[data-cursor-size='large'] {
+    --cursor-default: image-set(url('/assets/cursors/arrow@2x.png') 1x) 0 0, default;
+    --cursor-pointer: image-set(url('/assets/cursors/pointer@2x.png') 1x) 10 0, pointer;
+    --cursor-grabbing: image-set(url('/assets/cursors/grabbing@2x.png') 1x) 16 14, grabbing;
+  }
+  :root[data-cursor-size='extra-large'] {
+    --cursor-default: image-set(url('/assets/cursors/arrow@3x.png') 1x) 0 0, default;
+    --cursor-pointer: image-set(url('/assets/cursors/pointer@3x.png') 1x) 15 0, pointer;
+    --cursor-grabbing: image-set(url('/assets/cursors/grabbing@3x.png') 1x) 24 21, grabbing;
+  }
+}
+
+* { box-sizing: border-box; }
+
+/* One arrow at each end: 98.css leaves Chrome's second pair (down at the top, up at the bottom) to the platform. */
+::-webkit-scrollbar-button:vertical:start:increment, ::-webkit-scrollbar-button:vertical:end:decrement,
+::-webkit-scrollbar-button:horizontal:start:increment, ::-webkit-scrollbar-button:horizontal:end:decrement { display: none; }
+
+html, body {
+  margin: 0;
+  cursor: var(--cursor-default);
+  height: 100%;
+  background: var(--desktop);
+  overflow: hidden;
+}
+
+#root { height: 100%; }
+
+.desktop { position: relative; height: 100%; }
+/* Everything above the taskbar: desktop icons, the map window and every other window, which are
+   measured and kept inside it. The taskbar is zoomed with Settings ▸ Text size, so its height is too. */
+.desktop-area {
+  position: absolute;
+  inset: 0 0 calc(var(--taskbar-h) * var(--text-zoom, 1)) 0;
+  overflow: hidden;
+}
+

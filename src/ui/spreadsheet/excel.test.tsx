@@ -2,12 +2,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { houses } from '../data';
-import { formatPainter, getSheet, LAYOUT_KEY, listRows, ListViewContent, rangeHtml, readLayout, subtotalLines, validFormats } from './list-view';
-import { blockEdge, copyBlock, cycle, parseReference, rectOf } from './list-view-select';
-import { crc32, xlsxFiles, zip } from './list-view-xlsx';
+import { houses } from '../../data';
+import { formatPainter, getSheet, LAYOUT_KEY, listRows, SpreadsheetContent, rangeHtml, readLayout, subtotalLines, validFormats } from './spreadsheet';
+import { blockEdge, copyBlock, cycle, parseReference, rectOf } from './select';
+import { crc32, xlsxFiles, zip } from './xlsx';
 
-afterEach(() => { cleanup(); localStorage.clear(); vi.restoreAllMocks(); });
+afterEach(() => { cleanup(); localStorage.clear(); sessionStorage.clear(); vi.restoreAllMocks(); });
 const brands = getSheet('brands');
 const index = (id: string) => brands.columns.findIndex((column) => column.id === id);
 const plain = { sort: brands.defaultSort, filters: {}, search: '', hiddenRows: [], subtotals: null, collapsed: [] };
@@ -105,7 +105,7 @@ describe('Spreadsheet data operations', () => {
 describe('Spreadsheet window', () => {
   const setup = () => {
     const onSelect = vi.fn();
-    render(<ListViewContent onSelect={onSelect} onOpenPlace={() => {}} onHelp={() => {}} onClose={() => {}} />);
+    render(<SpreadsheetContent onSelect={onSelect} onOpenPlace={() => {}} onHelp={() => {}} onClose={() => {}} />);
     const user = userEvent.setup();
     const writeText = vi.fn((_text: string) => Promise.resolve());
     Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
@@ -237,6 +237,19 @@ describe('Spreadsheet window', () => {
     expect(cellAt(1, 1).style.top).toBe('51px');
     await menu(user, 'Window', 'Unfreeze Panes');
     expect(cellAt(1, 1).className).not.toMatch(/xl-pinned|xl-frozen/);
+  });
+
+  it('keeps filters and search through a page refresh, but not closing the window', async () => {
+    const { user } = setup();
+    await user.type(screen.getByRole('textbox', { name: 'Formula Bar' }), 'paris');
+    const found = screen.getByRole('status').textContent;
+    window.dispatchEvent(new Event('pagehide'));
+    cleanup();
+    setup();
+    expect(screen.getByRole('status').textContent).toBe(found);
+    cleanup();
+    setup();
+    expect(screen.getByRole('status').textContent).toBe('Ready');
   });
 
   it('finds the next match and says when there is none', async () => {

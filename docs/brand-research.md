@@ -232,6 +232,28 @@ work in this order to keep searches cheap:
    that aren't houses once, so the user can ask for them to be added. Never
    describe the list as complete: archive crawls read titles only.
 
+### Batch searches
+
+For several brands, use these instead of reading archives row by row. They keep the
+output small and follow the same rules as the steps above:
+
+1. `node scripts/collab/todo.mjs --from 200 --to 250` lists brands without a full search.
+2. `node scripts/collab/batch.mjs <scratch>/crawl slug1 slug2 …` crawls them in turn. Run
+   it in the background, smallest archives first; it falls back to `/tags/`. A brand whose
+   tag page is general news (`air-jordan`) needs its own slug (`jordan-brand`).
+3. `node scripts/collab/filter.mjs <houseId> <scratch>/crawl/<slug>.tsv` shows only
+   headlines naming a house with no record that year. Read each one: names match
+   ordinary words, and pop-ups, customs and stockists still need leaving out. Use
+   `--unmatched` to list partners that aren't houses.
+   Small archives (about 100 rows) are cheap enough to read in full.
+4. Japanese brands: `node scripts/collab/fashion-press.mjs houseId=brandId`
+   (`--find <katakana>` gets the id).
+5. Record with `add.mjs`, then `node scripts/collab/log.mjs <scratch>/crawl houseId=slug …`.
+
+The filter hides repeat releases with a partner already recorded that year, and misses
+spellings that aren't a house's name or alias. Say so in the summary. About 20–30 brands
+per session is a good size.
+
 ### What counts as a collaboration
 
 Record a product made by, or exclusively for, two or more named brands, including

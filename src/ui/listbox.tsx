@@ -92,10 +92,12 @@ export function matchingItems<T>(items: readonly ListItem<T>[], query: string, l
   return [...exact, ...starts, ...contains].slice(0, limit).map(({ item }) => item);
 }
 
-export function SearchBox<T>({ items, value, onChange, onPick, label = 'Find:', inputId = 'search', placeholder = 'House, person or group', limit = 60,
+export function SearchBox<T>({ items, value, onChange, onPick, label = 'Find:', caption, inputId = 'search', placeholder = 'House, person or group', limit = 60,
   previewAll = true, dropUp = false, exactFirst = false, icon, dropButton = false }: {
   items: readonly ListItem<T>[]; value: string; onChange: (value: string) => void; onPick: (item: ListItem<T>) => void;
-  label?: string; inputId?: string; placeholder?: string;
+  label?: string;
+  /** Words shown beside the box instead of its accessible label (Explorer's "Address", which must not look like a postal address to autofill). */
+  caption?: string; inputId?: string; placeholder?: string;
   /** List every item while the box is empty; false shows suggestions only once the user types. */
   previewAll?: boolean;
   /** Open the suggestions above the box (for the taskbar). */
@@ -126,9 +128,10 @@ export function SearchBox<T>({ items, value, onChange, onPick, label = 'Find:', 
   function pick(item: ListItem<T>) {
     onChange(item.label); setOpen(false); onPick(item); input.current?.blur();
   }
-  return <div className="field-row"><label htmlFor={inputId}>{label}</label><div className={`w98-combo${icon ? ' has-icon' : ''}${dropButton ? ' has-drop' : ''}`}>
+  return <div className="field-row">{caption ? <span className="w98-combo-caption" aria-hidden="true">{caption}</span> : <label htmlFor={inputId}>{label}</label>}<div className={`w98-combo${icon ? ' has-icon' : ''}${dropButton ? ' has-drop' : ''}`}>
     {icon && <span className="w98-combo-icon" aria-hidden="true">{icon}</span>}
-    <input id={inputId} ref={input} type="text" placeholder={placeholder} role="combobox" autoComplete="off"
+    <input id={inputId} ref={input} type="text" placeholder={placeholder} role="combobox" autoComplete="off" spellCheck={false}
+      aria-label={caption ? label : undefined} data-1p-ignore="" data-lpignore="true" data-bwignore="true" data-form-type="other"
       aria-autocomplete="list" aria-controls={id} aria-expanded={open} aria-activedescendant={open && activeIndex >= 0 ? `${id}-${activeIndex}` : undefined}
       value={value} onChange={(event) => { onChange(event.target.value); setListAll(false); setActive(0); setOpen(true); }}
       onFocus={(event) => { event.target.select(); setActive(0); setOpen(true); }} onBlur={() => { setOpen(false); setListAll(false); }}

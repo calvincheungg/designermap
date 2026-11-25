@@ -360,6 +360,18 @@ describe('brand selection on the map', () => {
     expect(openHouses()).toEqual(['family', 'standalone']);
   });
 
+  it('shows several brands together until something is selected', () => {
+    vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true })));
+    graph.setYear(2020);
+    graph.showBrands(['standalone', 'label']);
+    expect(openHouses()).toContain('standalone');
+    expect(openHouses()).toContain('label');
+    graph.setYear(2021);
+    expect(openHouses()).toContain('standalone');
+    graph.select(null);
+    expect(openHouses()).toEqual([]);
+  });
+
   it('focuses a brand family in an open city and restores the city on a second tap', () => {
     vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: true })));
     graph.setYear(2020);
@@ -761,6 +773,11 @@ describe('connection presentation', () => {
     expect(host.querySelector('.pulse')).toBe(pulse);
     edge.emit('mouseout');
     expect(host.querySelector('.pulse')).toBe(pulse);
+    graph.setPulses(false);
+    expect(host.querySelector('.pulse')).toBeNull();
+    expect(edge.hasClass('traced')).toBe(false);
+    graph.setPulses(true);
+    expect(host.querySelectorAll('.pulse')).toHaveLength(1);
     graph.select(null);
     expect(host.querySelector('.pulse')).toBeNull();
     expect(host.querySelector('.pulse-trace')).toBeNull();
@@ -780,6 +797,19 @@ describe('connection presentation', () => {
     expect(onOpenCity).toHaveBeenCalledWith('Paris', undefined);
     expect(graph.allExpanded).toBe(false);
     expect(houseNode('connected').hasClass('collapsed')).toBe(true);
+  });
+
+  it('shows and hides a place, reporting which cities are fully open', () => {
+    const onExpandChange = vi.fn();
+    graph.destroy();
+    graph = new DesignerGraph(document.createElement('div'), { onSelect, onExpandChange });
+    graph.showCities(['Paris']);
+    expect(onExpandChange.mock.lastCall![2]).toEqual(['Paris']);
+    graph.select({ kind: 'house', id: 'standalone' });
+    expect(onExpandChange.mock.lastCall![2]).toEqual(['Paris']);
+    graph.hideCities(['Paris']);
+    expect(onExpandChange.mock.lastCall![2]).toEqual([]);
+    expect(openHouses()).toEqual(['standalone']);
   });
 
   it('draws pulses beneath the brand icons', () => {

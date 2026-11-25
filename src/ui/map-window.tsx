@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { clampRect, storedRect, useParentSize, useWindowGestures, write, type Size, type WindowRect } from './side-panel';
+import { clampRect, storedRect, useParentSize, useWindowGestures, type Size, type WindowRect } from './side-panel';
+import { useSettingsCleared, writeJson } from './storage';
 
 export const MAP_RECT_KEY = 'designer-map:map-window-rect';
 const MARGIN = 12;
@@ -28,7 +29,8 @@ export function MapWindowFrame({ title, icon, hidden, maximized, onMinimize, onT
   const frame = useRef<HTMLDivElement>(null);
   const area = useParentSize(frame);
   const [rect, setRect] = useState<WindowRect | null>(() => storedRect(MAP_RECT_KEY));
-  useEffect(() => { if (rect) write(MAP_RECT_KEY, JSON.stringify(rect)); }, [rect]);
+  useSettingsCleared((keys) => { if (keys.includes(MAP_RECT_KEY)) setRect(null); });
+  useEffect(() => { if (rect) writeJson(MAP_RECT_KEY, rect); }, [rect]);
   const placed = area ? maximized ? { x: 0, y: 0, width: area.width, height: area.height }
     : clampRect(rect ?? defaultMapRect(area), area, MAP_MIN_SIZE) : null;
   const { begin, move, end, arrows } = useWindowGestures(maximized ? null : placed, (next) => { if (area) setRect(clampRect(next, area, MAP_MIN_SIZE)); });

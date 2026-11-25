@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useId, useMemo, useState, type MouseEvent } from 'react';
+import { FOLDER_VIEWS, useFolderView, type FolderView } from './folder-view';
+import { oneOf, useSetting } from './storage';
+import { collator } from '../text';
+import { useCallback, useContext, useId, useMemo, useRef, useState, type MouseEvent } from 'react';
+import { MAX_PROPERTY_WINDOWS } from './desktop';
+import { favoriteAction, FavoritesContext } from './favorites';
+import { PlacePath } from './place-path';
 import type { House } from '../types';
 import { housesByMapLocation } from '../graph/geo';
 import { initialsIcon, logoInfo, mapLogoUrl } from '../graph/icons';
@@ -9,7 +15,6 @@ import { mapLocationForCity, mapLocationForHouse } from '../graph/locations';
 import { ContextMenu, type MenuAction } from './context-menu';
 import type { Place, Selection } from './panel';
 
-const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 
 /** Main brands at a map location (labels sit with their parent), within the year and tag filters. */
 export function cityBrands(city: string, visibleIds: ReadonlySet<string>): House[] {
@@ -49,10 +54,10 @@ export const placeTitle = (place: Place) => place.kind === 'city' ? place.id : c
 
 /** Grid cell and window chrome, in px, matching the city window CSS. */
 const CELL = { width: 72, height: 90, columnGap: 2, rowGap: 4 };
-/** Win98 (98.css) scrollbar width: also the padding between the tiles and the grid's border. */
+/** Win98 (98.css) scrollbar width: also the least padding on each side of the tiles. */
 const SCROLLBAR = 16;
-/** Left padding + the right scrollbar gutter; +2px width and +6px height slack so rounding or a wrapped name never overflows. Height includes the Find row and the View/Sort toolbar. */
-const CHROME = { width: 6 + 8 + 4 + 2 * SCROLLBAR + 2, height: 159 };
+/** Padding on both sides + room for a scrollbar; +2px width and +6px height slack so rounding or a wrapped name never overflows. Height includes the location path, the Find row and the View/Sort toolbar. */
+const CHROME = { width: 6 + 8 + 4 + 3 * SCROLLBAR + 2, height: 183 };
 /** City windows are always CITY_GRID_COLUMNS icons wide and open at most CITY_GRID_ROWS tall; bigger places scroll. */
 export const CITY_GRID_COLUMNS = 4;
 export const CITY_GRID_ROWS = 4;
@@ -78,11 +83,11 @@ export function BrandIcon({ house }: { house: House }) {
   </span>;
 }
 
-export type PlaceView = 'icons' | 'details';
+export type PlaceView = FolderView;
 export type PlaceSort = 'name' | 'founded' | 'tier';
 const VIEW_KEY = 'designer-map:place-view';
 const SORT_KEY = 'designer-map:place-sort';
-const VIEWS: readonly (readonly [PlaceView, string])[] = [['icons', 'Large Icons'], ['details', 'Details']];
+const VIEWS = FOLDER_VIEWS;
 const SORTS: readonly (readonly [PlaceSort, string])[] = [['name', 'Name'], ['founded', 'Founded'], ['tier', 'Tier']];
 const VIEW_VALUES = VIEWS.map(([value]) => value);
 const SORT_VALUES = SORTS.map(([value]) => value);
@@ -90,14 +95,7 @@ const TIERS: readonly string[] = Object.values(MarketPositioning);
 
 /** One remembered choice shared by every place window (a per-viewer convenience). */
 export function useStoredChoice<T extends string>(key: string, options: readonly (readonly [T, string])[], fallback: T) {
-  const [value, setValue] = useState<T>(() => {
-    try {
-      const stored = localStorage.getItem(key);
-      return options.some(([option]) => option === stored) ? stored as T : fallback;
-    } catch { return fallback; }
-  });
-  useEffect(() => { try { localStorage.setItem(key, value); } catch { /* storage unavailable */ } }, [key, value]);
-  return [value, setValue] as const;
+  return useSetting<T>(key, oneOf(options.map(([option]) => option)), fallback);
 }
 
 /** Name is alphabetical; Founded runs oldest first and Tier from High Luxury down, unknowns last, ties by name. */
@@ -113,19 +111,29 @@ export function sortPlaceBrands(list: readonly House[], sort: PlaceSort): House[
  * dropdown lists every brand here; picking one, or clicking it, opens its
  * Properties. Right-click a brand for more; Show on Map opens the place on the map.
  */
-export function PlaceWindowContent({ place, visibleIds, onSelect, onShowOnMap, onOpenPlace, onShowPlace }: {
+export function PlaceWindowContent({ place, visibleIds, onSelect, onShowOnMap, onShowBrands, onOpenPlace, onShowPlace, onHidePlace, openCities }: {
   place: Place; visibleIds: ReadonlySet<string>; onSelect: (selection: Selection, reveal?: boolean) => void;
   /** Select a brand on the map without opening its Properties. */
   onShowOnMap: (houseId: string) => void;
+  /** Reveal several brands together on the map. */
+  onShowBrands: (houseIds: readonly string[]) => void;
   onOpenPlace: (place: Place) => void;
   /** Open these map locations' grids on the map and frame them. */
   onShowPlace: (cities: readonly string[]) => void;
+  /** Close these map locations' grids. */
+  onHidePlace: (cities: readonly string[]) => void;
+  /** Map locations with their whole grid open; undefined while the map is hidden. */
+  openCities?: ReadonlySet<string>;
 }) {
   const id = useId();
   const [query, setQuery] = useState('');
-  const [view, setView] = useStoredChoice(VIEW_KEY, VIEWS, 'icons');
+  const [view, setView] = useFolderView(VIEW_KEY);
   const [sort, setSort] = useStoredChoice(SORT_KEY, SORTS, 'name');
-  const [menu, setMenu] = useState<{ x: number; y: number; house: House } | null>(null);
+  const [menu, setMenu] = useState<{ x: number; y: number; list: readonly House[] } | null>(null);
+  const favorites = useContext(FavoritesContext);
+  /** Ctrl/Cmd+click and Shift+click select several brands; a plain click opens one. */
+  const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
+  const rangeFrom = useRef<string | null>(null);
   const closeMenu = useCallback(() => setMenu(null), []);
   const city = placeTitle(place);
   const brands = useMemo(() => placeBrands(place, visibleIds), [place, visibleIds]);
@@ -135,33 +143,70 @@ export function PlaceWindowContent({ place, visibleIds, onSelect, onShowOnMap, o
   const matches = useMemo(() => query.trim() ? new Set(matchingItems(items, query, Infinity).map((item) => item.value)) : null, [items, query]);
   const shown = useMemo(() => sortPlaceBrands(matches ? brands.filter((house) => matches.has(house.id)) : brands, sort), [brands, matches, sort]);
   const shownFounded = useMemo(() => sortPlaceBrands(matches ? founded.filter((house) => matches.has(house.id)) : founded, sort), [founded, matches, sort]);
+  const locations = useMemo(() => [...new Set(brands.map((house) => mapLocationForHouse(house.id)))], [brands]);
+  const onMap = !!locations.length && locations.every((location) => openCities?.has(location));
   const total = brands.length + founded.length;
+  const listed = [...shown, ...shownFounded];
+  const chosen = listed.filter((house) => selected.has(house.id));
+  const clearSelected = () => { if (selected.size) setSelected(new Set()); };
+  const pick = (house: House) => (event: MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    if (event.shiftKey) {
+      const to = listed.indexOf(house), from = Math.max(0, listed.findIndex((other) => other.id === rangeFrom.current));
+      const range = listed.slice(Math.min(from, to), Math.max(from, to) + 1).map((other) => other.id);
+      setSelected(new Set(event.ctrlKey || event.metaKey ? [...selected, ...range] : range));
+    } else if (event.ctrlKey || event.metaKey) {
+      setSelected((current) => {
+        const next = new Set(current);
+        if (!next.delete(house.id)) next.add(house.id);
+        return next;
+      });
+      rangeFrom.current = house.id;
+    } else {
+      clearSelected();
+      rangeFrom.current = house.id;
+      open(house.id);
+    }
+  };
   const open = (houseId: string) => onSelect({ kind: 'house', id: houseId }, true);
   const openMenu = (house: House) => (event: MouseEvent<HTMLElement>) => {
     event.preventDefault();
     // A keyboard context menu (Shift+F10 / Menu key) has no pointer position: use the item's centre.
     const rect = event.currentTarget.getBoundingClientRect();
     const keyboard = event.clientX === 0 && event.clientY === 0;
-    setMenu({ x: keyboard ? rect.left + rect.width / 2 : event.clientX, y: keyboard ? rect.top + rect.height / 2 : event.clientY, house });
+    setMenu({ x: keyboard ? rect.left + rect.width / 2 : event.clientX, y: keyboard ? rect.top + rect.height / 2 : event.clientY, list: selected.has(house.id) ? chosen : [house] });
+    if (!selected.has(house.id)) clearSelected();
   };
-  const menuActions = (house: House): MenuAction[] => {
+  const menuActions = (list: readonly House[]): MenuAction[] => {
+    const favorite = favoriteAction(favorites, list.map(({ id: houseId }) => ({ kind: 'house' as const, id: houseId })));
+    if (list.length > 1) {
+      const opened = list.slice(0, MAX_PROPERTY_WINDOWS);
+      return [
+        { label: opened.length < list.length ? `Open First ${opened.length}` : `Open ${list.length} Brands`, primary: true, run: () => opened.forEach((house) => open(house.id)) },
+        { label: 'Show on Map', run: () => onShowBrands(list.map((house) => house.id)) },
+        ...favorite,
+        { label: 'Clear Selection', separator: true, run: clearSelected },
+      ];
+    }
+    const house = list[0]!;
     const base = mapLocationForCity(house.city);
     return [
       { label: 'Open', primary: true, run: () => open(house.id) },
       { label: 'Show on Map', run: () => onShowOnMap(house.id) },
+      ...favorite,
       ...(place.kind === 'city' && place.id === base ? [] : [{ label: `Open ${base}`, separator: true, run: () => onOpenPlace({ kind: 'city', id: base }) }]),
       ...(place.kind === 'country' && place.id === house.country ? []
         : [{ label: `Open ${countryNames[house.country]}`, separator: place.kind === 'city' && place.id === base, run: () => onOpenPlace({ kind: 'country', id: house.country }) }]),
     ];
   };
   const tile = (house: House) => <li key={house.id}>
-    <button type="button" className="city-icon" title={house.name} onClick={() => open(house.id)} onContextMenu={openMenu(house)}>
+    <button type="button" className={`city-icon${selected.has(house.id) ? ' selected' : ''}`} aria-pressed={selected.has(house.id) || undefined} title={house.name} onClick={pick(house)} onContextMenu={openMenu(house)}>
       <BrandIcon house={house} />
       <span className="city-icon-name">{house.name}</span>
     </button>
   </li>;
-  const row = (house: House) => <tr key={house.id} onClick={() => open(house.id)} onContextMenu={openMenu(house)}>
-    <td><button type="button" className="city-row-name" onClick={(event) => { event.stopPropagation(); open(house.id); }}>{house.name}</button></td>
+  const row = (house: House) => <tr key={house.id} className={selected.has(house.id) ? 'highlighted' : undefined} onClick={pick(house)} onContextMenu={openMenu(house)}>
+    <td><button type="button" className="city-row-name" aria-pressed={selected.has(house.id) || undefined} onClick={pick(house)}>{house.name}</button></td>
     <td>{house.founded ?? '—'}</td>
     <td>{house.tags.marketPositioning}</td>
   </tr>;
@@ -171,7 +216,12 @@ export function PlaceWindowContent({ place, visibleIds, onSelect, onShowOnMap, o
   const label = `Brands in ${city}`;
   const heading = 'Founded here, now based elsewhere';
 
-  return <div className="city-window-content">
+  return <div className="city-window-content" onKeyDown={(event) => {
+    if (event.target instanceof HTMLInputElement) return;
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a') { event.preventDefault(); setSelected(new Set(listed.map((house) => house.id))); }
+    else if (event.key === 'Escape') clearSelected();
+  }}>
+    <PlacePath place={place} visibleIds={visibleIds} onOpenPlace={onOpenPlace} />
     <div className="city-search">
       <SearchBox items={items} value={query} onChange={setQuery} limit={Infinity} label="Find:" inputId={`${id}-find`}
         placeholder={`Brand in ${city}`} onPick={(item) => { setQuery(''); open(item.value); }} />
@@ -181,8 +231,8 @@ export function PlaceWindowContent({ place, visibleIds, onSelect, onShowOnMap, o
         text={(value) => VIEWS.find(([key]) => key === value)![1]} />
       <SelectBox label="Sort by" className="city-choice" values={SORT_VALUES} value={sort} onChange={setSort}
         text={(value) => `By ${SORTS.find(([key]) => key === value)![1]}`} />
-      <button type="button" className="city-map" disabled={!brands.length} title={`Open ${city}'s brands on the map`}
-        onClick={() => onShowPlace([...new Set(brands.map((house) => mapLocationForHouse(house.id)))])}>Show on Map</button>
+      <button type="button" className="city-map" disabled={!brands.length} title={onMap ? `Hide ${city}'s brands on the map` : `Open ${city}'s brands on the map`}
+        onClick={() => (onMap ? onHidePlace : onShowPlace)(locations)}>{onMap ? 'Hide' : 'Show on Map'}</button>
     </div>
     {!shown.length && !shownFounded.length
       ? <p className="hint city-empty">{total ? 'No brands match your search.' : 'No brands here match the current year and filters.'}</p>
@@ -195,7 +245,7 @@ export function PlaceWindowContent({ place, visibleIds, onSelect, onShowOnMap, o
             {shownFounded.map(row)}
           </tbody>
         </table></div>
-        : <ul className="city-grid sunken-panel" aria-label={label}>
+        : <ul className="city-grid sunken-panel" aria-label={label} onClick={(event) => { if (event.target === event.currentTarget) clearSelected(); }}>
           {shown.map(tile)}
           {!!shownFounded.length && <>
             <li className="city-grid-heading" role="presentation">{heading}</li>
@@ -203,7 +253,7 @@ export function PlaceWindowContent({ place, visibleIds, onSelect, onShowOnMap, o
           </>}
         </ul>}
     <p className="status-bar-field city-count">{matches ? `${shown.length + shownFounded.length} of ${total}` : brands.length} {(matches ? total : brands.length) === 1 ? 'brand' : 'brands'}
-      {!matches && !!founded.length && ` · ${founded.length} founded here`}</p>
-    {menu && <ContextMenu x={menu.x} y={menu.y} label={`${menu.house.name} actions`} actions={menuActions(menu.house)} onClose={closeMenu} />}
+      {chosen.length > 0 && ` · ${chosen.length} selected`}{!matches && !!founded.length && ` · ${founded.length} founded here`}</p>
+    {menu && <ContextMenu x={menu.x} y={menu.y} label={menu.list.length > 1 ? `${menu.list.length} brands actions` : `${menu.list[0]!.name} actions`} actions={menuActions(menu.list)} onClose={closeMenu} />}
   </div>;
 }

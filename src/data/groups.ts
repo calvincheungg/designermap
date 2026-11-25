@@ -1,5 +1,6 @@
 /** Stable identifiers; display names can change without changing house references. */
 export enum GroupId {
+  CharlesKeith = 'charlesKeithGroup',
   Samsonite = 'samsonite',
   Franky = 'franky',
   TrendyInternational = 'trendyInternational',
@@ -46,6 +47,7 @@ export enum GroupId {
   HugoBoss = 'hugoBoss',
   Beams = 'beams',
   Tabaya = 'tabaya',
+  LDH = 'ldh',
   Musinsa = 'musinsa',
   KMD = 'kmd',
   Longbeach = 'longbeach',
@@ -155,6 +157,7 @@ export enum GroupId {
   BasicNet = 'basicNet',
   Lululemon = 'lululemon',
   Itochu = 'itochu',
+  MashHoldings = 'mashHoldings',
   LIR = 'lir',
   MistoHoldings = 'mistoHoldings',
   SnowPeak = 'snowPeak',
@@ -177,6 +180,9 @@ export enum GroupId {
   Maeka = 'maeka',
   ELand = 'eLand',
   OVS = 'ovs',
+  Nidecker = 'nidecker',
+  Casio = 'casio',
+  OxfordIndustries = 'oxfordIndustries',
 }
 
 /** Group profiles. Brand membership lives only in houses.ts (parentGroup). */
@@ -473,6 +479,11 @@ export const groups = {
     website: 'https://find-and-update.company-information.service.gov.uk/company/12981062',
     notes: 'Acquisition completion: https://www.singercm.com/29-million-acquisition-of-french-connection-group-plc/',
   },
+  [GroupId.CharlesKeith]: {
+    name: 'Charles & Keith Group',
+    description: 'Singaporean footwear and accessories company owned by the Wong family, with the Charles & Keith and PEDRO brands.',
+    website: 'https://www.charleskeithgroup.com',
+  },
   [GroupId.Shein]: {
     name: 'SHEIN',
     description: 'A global online fashion retailer whose group acquired Everlane in the second quarter of 2026.',
@@ -491,7 +502,7 @@ export const groups = {
   },
   [GroupId.Regent]: {
     name: 'Regent, L.P.',
-    description: 'A private investment firm that acquired Club Monaco from Ralph Lauren in 2021.',
+    description: 'A private investment firm whose fashion holdings include Club Monaco, acquired from Ralph Lauren in 2021, and Petit Bateau, acquired from Groupe Rocher in 2025.',
     website: 'https://www.regentlp.com',
   },
   [GroupId.Aritzia]: {
@@ -605,8 +616,8 @@ export const groups = {
   },
   [GroupId.Iconix]: {
     name: 'Iconix International',
-    description: 'A brand ownership and licensing business whose portfolio includes Umbro.',
-    website: 'https://www.umbro.com/en/terms-and-conditions/',
+    description: 'A brand ownership and licensing business whose portfolio includes Umbro, PONY, Hoodrich, London Fog, Joe Boxer, Bongo, Rocawear and Artful Dodger.',
+    website: 'https://iconixbrand.com/',
     notes: 'Umbro’s website is operated by Iconix Brand UK Ltd. Regional operating and licensing arrangements can differ.',
   },
   [GroupId.BasicNet]: {
@@ -675,7 +686,7 @@ export const groups = {
   },
   [GroupId.WolverineWorldwide]: {
     name: 'Wolverine Worldwide',
-    description: 'A footwear and apparel group whose brands include Saucony, Merrell and Wolverine.',
+    description: 'A footwear and apparel group whose brands include Saucony, Merrell, Sweaty Betty and Wolverine.',
     website: 'https://wolverineworldwide.com/',
   },
   [GroupId.Mizuno]: {
@@ -1151,5 +1162,32 @@ export const groups = {
     description: 'Publicly listed Italian clothing retailer based in Mestre, Venice, whose brands include Piombo, Stefanel and Les Copains.',
     website: 'https://www.ovscorporate.it',
     notes: 'Bought the Les Copains brand out of bankruptcy in 2022 and relaunched it in OVS stores in 2025.',
+  },
+  [GroupId.OxfordIndustries]: {
+    name: 'Oxford Industries',
+    description: 'Publicly listed American apparel group based in Atlanta that owns Tommy Bahama.',
+    website: 'https://www.oxfordinc.com',
+    notes: 'Bought Tommy Bahama in 2003.',
+  },
+  [GroupId.Nidecker]: {
+    name: 'Nidecker Group',
+    description: 'Family-owned Swiss action-sports company based in Rolle that owns etnies, éS, Emerica and ThirtyTwo.',
+    website: 'https://nidecker.com',
+    notes: 'Acquired the four Sole Technology brands in 2024.',
+  },
+  [GroupId.Casio]: {
+    name: 'Casio',
+    description: 'Japanese electronics company that makes G-SHOCK watches.',
+    website: 'https://www.casio.com',
+  },
+  [GroupId.LDH]: {
+    name: 'LDH',
+    description: 'Japanese entertainment company founded around EXILE, whose apparel arm runs 24karats and J.S.B.',
+    website: 'https://www.ldh.co.jp',
+  },
+  [GroupId.MashHoldings]: {
+    name: 'Mash Holdings',
+    description: 'A Japanese fashion, beauty and food group whose womenswear and roomwear labels include SNIDEL, gelato pique, FRAY I.D and LILY BROWN.',
+    website: 'https://mashgroup.jp',
   },
 } satisfies Record<GroupId, GroupData>;

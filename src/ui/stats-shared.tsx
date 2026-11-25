@@ -1,3 +1,4 @@
+import { oneOf, readSetting, writeSetting } from './storage';
 import { Fragment, useMemo, useState, type ReactNode } from 'react';
 import { BrandCategory, getHouse } from '../data';
 import type { Collaboration } from '../types';
@@ -74,13 +75,8 @@ export const involvesRetailer = (project: Pick<Collaboration, 'houses'>) =>
 
 /** An on-by-default checkbox setting remembered in localStorage. */
 export function useRememberedToggle(key: string) {
-  const [on, setOn] = useState(() => {
-    try { return localStorage.getItem(key) !== 'off'; } catch { return true; }
-  });
-  const toggle = (next: boolean) => {
-    setOn(next);
-    try { localStorage.setItem(key, next ? 'on' : 'off'); } catch { /* storage unavailable */ }
-  };
+  const [on, setOn] = useState(() => readSetting(key, (stored) => stored !== 'off', true));
+  const toggle = (next: boolean) => { setOn(next); writeSetting(key, next ? 'on' : 'off'); };
   return [on, toggle] as const;
 }
 
@@ -92,19 +88,9 @@ export function RetailerToggle({ id, checked, onChange }: { id: string; checked:
   </span>;
 }
 
-export const readSetting = <T,>(key: string, parse: (stored: string) => T | undefined, fallback: T): T => {
-  try {
-    const stored = localStorage.getItem(key);
-    return stored === null ? fallback : parse(stored) ?? fallback;
-  } catch { return fallback; }
-};
-export const writeSetting = (key: string, value: string) => {
-  try { localStorage.setItem(key, value); } catch { /* storage unavailable */ }
-};
-
 /** A remembered choice; `parse` returns undefined for values that no longer fit. */
 export function useRememberedChoice<T extends string | number>(key: string, values: readonly T[], fallback: T) {
-  const [value, setValue] = useState<T>(() => readSetting<T>(key, (stored) => values.find((option) => String(option) === stored), fallback));
+  const [value, setValue] = useState<T>(() => readSetting<T>(key, oneOf(values), fallback));
   const pick = (next: T) => { setValue(next); writeSetting(key, String(next)); };
   return [value, pick] as const;
 }

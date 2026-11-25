@@ -12,6 +12,8 @@
  * Map colours (sea, land, city boxes) are skipped; they have their own night
  * rules under `.graph-pane.night`.
  */
+import { readFile } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
 import postcss from 'postcss';
 
 export const NIGHT = '[data-theme="night"]';
@@ -19,8 +21,11 @@ export const NIGHT = '[data-theme="night"]';
 /** 98.css and our own stylesheet. */
 export const CHROME_FILE = /(\/98\.css\/dist\/98\.css|\/src\/style\.css)$/;
 
+/** style.css's own parts: `@import './styles/…css';`. */
+const LOCAL_IMPORT = /^@import '(\.\/[^']+\.css)';$/gm;
+
 /** Map scenery keeps its own day/night rules. */
-const SKIP_SELECTOR = /graph-pane|map-layer|settings-preview|cy-layer|pulse-layer/;
+const SKIP_SELECTOR = /graph-pane|map-layer|settings-preview|data-wallpaper|cy-layer|pulse-layer/;
 
 /** Canonical colour names: 98.css mixes names, short and long hex. */
 const CANON = {
@@ -94,7 +99,9 @@ function mapUri(uri, selector) {
       // A radio button's second white is its field, not a highlight.
       mapped = glyphOnly ? '#1e1e1e' : whites === totalWhites && totalWhites > 1 && /radio/.test(selector) ? '#1e1e1e' : EDGE[c];
     } else mapped = EDGE[c] ?? SURFACE[c] ?? c;
-    return hex ? mapped.replace('#', '%23') : `${quote}${mapped}${quote}`;
+    // A bare # would end the data URI there, so always escape it.
+    const escaped = mapped.replace('#', '%23');
+    return hex ? escaped : `${quote}${escaped}${quote}`;
   });
 }
 
@@ -143,10 +150,18 @@ export function nightChromePlugin() {
   return {
     name: 'designer-map:night-chrome',
     enforce: 'pre',
-    transform(code, id) {
+    async transform(code, id) {
       const file = id.split('?')[0];
       if (!CHROME_FILE.test(file)) return undefined;
-      return { code: addNightChrome(code), map: null };
+      // Join style.css's parts first, so every night twin still follows every day rule.
+      let css = code;
+      for (const [statement, path] of code.matchAll(LOCAL_IMPORT)) {
+        const part = resolve(dirname(file), path);
+        this.addWatchFile(part);
+        const text = await readFile(part, 'utf8');
+        css = css.replace(statement, () => text);
+      }
+      return { code: addNightChrome(css), map: null };
     },
   };
 }

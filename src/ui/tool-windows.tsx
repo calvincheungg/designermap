@@ -1,17 +1,18 @@
+import { collator } from '../text';
 import { useCallback, useMemo, useState, type MouseEvent, type ReactNode } from 'react';
-import { countryNames, designers, getHouse, houses } from '../data';
-import { missingOriginCandidates } from '../data/validate';
+import { countryNames, getHouse, houses } from '../data';
+import { housesWithoutFounder, missingOriginCandidates } from '../data/validate';
 import { minesweeperColour } from '../graph/minesweeper';
 import type { House } from '../types';
 import { BrandIcon, cityWindowSize, useStoredChoice } from './city-window';
+import { FOLDER_VIEWS, useFolderView } from './folder-view';
 import { ContextMenu, type MenuAction } from './context-menu';
 import { SelectBox } from './listbox';
 import { EntityLink, ProfileSection, type Actions, type Selection } from './panel';
 
-const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
 
-/** The bin's header (icon, title, hint) is this much taller than a place window's Find row. */
-const BIN_HEADER_EXTRA = 14;
+/** The bin's header (icon, title, hint) against a place window's path (24px) and Find row. */
+const BIN_HEADER_EXTRA = -10;
 /** Four icons wide like a place window, just tall enough for `count` files up to four rows. */
 export const recycleBinSize = (count: number) => {
   const size = cityWindowSize(count);
@@ -24,9 +25,8 @@ export function endedBrands(visibleHouses: readonly House[], year: number): Hous
     .sort((a, b) => b.closed! - a.closed! || collator.compare(a.name, b.name));
 }
 
-type BinView = 'icons' | 'details';
 type BinSort = 'deleted' | 'name' | 'location';
-const BIN_VIEWS: readonly (readonly [BinView, string])[] = [['icons', 'Large Icons'], ['details', 'Details']];
+const BIN_VIEWS = FOLDER_VIEWS;
 const BIN_SORTS: readonly (readonly [BinSort, string])[] = [['name', 'Name'], ['location', 'Original Location'], ['deleted', 'Date Deleted']];
 const BIN_VIEW_KEY = 'designer-map:recycle-view';
 const BIN_SORT_KEY = 'designer-map:recycle-sort';
@@ -45,7 +45,7 @@ export function RecycleBinContent({ visibleHouses, year, onSelect, onShowOnMap }
   /** Select a brand on the map without opening its Properties. */
   onShowOnMap: (houseId: string) => void;
 }) {
-  const [view, setView] = useStoredChoice(BIN_VIEW_KEY, BIN_VIEWS, 'icons');
+  const [view, setView] = useFolderView(BIN_VIEW_KEY);
   const [sort, setSort] = useStoredChoice(BIN_SORT_KEY, BIN_SORTS, 'deleted');
   const [menu, setMenu] = useState<{ x: number; y: number; house: House } | null>(null);
   const closeMenu = useCallback(() => setMenu(null), []);
@@ -117,16 +117,15 @@ function BrandList({ list, onSelect, detail }: { list: readonly House[]; onSelec
 }
 
 /**
- * Research gaps in the dataset (dev only): brands with nobody linked, likely
+ * Research gaps in the dataset (dev only): brands with no founder, likely
  * missing origins, and missing logos, websites or Instagram handles. Lists all
  * brands, ignoring the map's filters, so the to-do list is complete.
  */
 export function MissingReportContent({ onSelect }: { onSelect: Actions['onSelect'] }) {
   const report = useMemo(() => {
-    const linked = new Set(designers.flatMap((designer) => designer.career.map((tenure) => tenure.house)));
     const byName = (list: House[]) => list.sort((a, b) => collator.compare(a.name, b.name));
     return {
-      unlinked: byName(houses.filter((house) => !linked.has(house.id))),
+      founders: byName(housesWithoutFounder()),
       origins: missingOriginCandidates().sort((a, b) => collator.compare(a.house.name, b.house.name)),
       logos: byName(houses.filter((house) => !house.logo)),
       websites: byName(houses.filter((house) => !house.website)),
@@ -138,7 +137,7 @@ export function MissingReportContent({ onSelect }: { onSelect: Actions['onSelect
   return <>
     <h2>What's Missing</h2>
     <p className="hint">Research gaps across all {houses.length.toLocaleString()} brands. Shown in development only.</p>
-    <ProfileSection title={`No founder or creative director (${report.unlinked.length})`}><BrandList list={report.unlinked} onSelect={onSelect} /></ProfileSection>
+    <ProfileSection title={`No founder (${report.founders.length})`}><BrandList list={report.founders} onSelect={onSelect} /></ProfileSection>
     <ProfileSection title={`Possible missing origin (${report.origins.length})`}>
       <BrandList list={report.origins.map(({ house }) => house)} onSelect={onSelect}
         detail={(house) => `notes say founded in ${places.get(house.id)}; based in ${getHouse(house.id)?.city}`} />
@@ -161,11 +160,11 @@ export function HelpContent() {
     <ProfileSection title="Getting around">
       <ul className="help-list">
         <li>Drag to pan and scroll or pinch to zoom. Search in the taskbar, or use Start ▸ Run… to open anything by name.</li>
-        <li>Click a city pin to see its brands. Choose whether cities open in windows or on the map under Settings ▸ Clicking a city pin opens it.</li>
+        <li>Click a city pin to see its brands. Choose whether cities open in windows or on the map under Settings ▸ Map.</li>
         <li>Click a brand to select it: the map shows its connections and its Properties window opens.</li>
         <li>Use the clock in the taskbar to pick a year, or press Play to watch the map grow over time.</li>
         <li>Start ▸ Spreadsheet lists every brand, group, designer, career role, collaboration and location, one sheet tab each. Right-click a cell to filter by it, drag or shift-click to select and copy a range, try Insert ▸ Chart and the PivotTable tab, and use File ▸ Save As CSV to export. Type in its formula bar to search. Its sorting, filters and search only change that list, never the map.</li>
-        <li>Settings ▸ Map colours switches the map between Day and Night. Settings also sets the text size and holds the other display options.</li>
+        <li>Settings ▸ Appearance switches between Day and Night (or follows your system) and sets the desktop wallpaper; Accessibility sets text size, pointer size and animations.</li>
         <li>My Computer browses everything as folders: Locations (C:) by continent, country and city (states and provinces in the USA and Canada), Brands (D:) by market position, Groups (E:) and Designers (F:) A–Z. Backspace goes up a folder.</li>
         <li>Notepad keeps a note in this browser. Press F5 in it to insert the time and date, or use File ▸ Save As… to download it.</li>
         <li>Start ▸ Documents lists what you opened recently. Start ▸ Reset View clears everything and starts again.</li>
@@ -200,7 +199,7 @@ export function HelpContent() {
         <li>Market positioning runs High Luxury → Luxury → Premium → Mid-market → Budget. These are editorial tiers, not rankings.</li>
         <li>Brands that have closed or paused show an Ended year and appear in the Recycle Bin.</li>
         <li>Other roles are design-team positions; they don't count as creative direction.</li>
-        <li>Settings ▸ Show brands at ▸ Origin moves brands to the city where they were founded.</li>
+        <li>Settings ▸ Map ▸ Show brands at ▸ Origin moves brands to the city where they were founded.</li>
       </ul>
     </ProfileSection>
     <ProfileSection title="Sharing">

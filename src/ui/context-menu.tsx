@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 
 export interface MenuAction {
   label: string; run: () => void;
+  /** Tells apart items with the same label. */
+  key?: string;
   /** Greyed out and skipped by the arrow keys, as in Win98 menus. */
   disabled?: boolean;
   /** Draw an etched separator above this item. */
@@ -28,13 +30,15 @@ export function ContextMenu({ x, y, actions, onClose, label = 'Map Actions', abo
   useEffect(() => {
     const outside = (event: PointerEvent) => { if (!menu.current?.contains(event.target as Node)) onClose(); };
     const close = () => onClose();
+    // A long menu scrolls itself; scrolling anything else closes it.
+    const scrolled = (event: Event) => { if (event.target !== menu.current) onClose(); };
     document.addEventListener('pointerdown', outside, true);
-    document.addEventListener('scroll', close, true);
+    document.addEventListener('scroll', scrolled, true);
     window.addEventListener('resize', close);
     window.addEventListener('blur', close);
     return () => {
       document.removeEventListener('pointerdown', outside, true);
-      document.removeEventListener('scroll', close, true);
+      document.removeEventListener('scroll', scrolled, true);
       window.removeEventListener('resize', close);
       window.removeEventListener('blur', close);
     };
@@ -53,8 +57,8 @@ export function ContextMenu({ x, y, actions, onClose, label = 'Map Actions', abo
       else if (event.key === 'Tab') onClose(true);
     }}>
     {actions.map((action) => [
-      action.separator ? <hr key={`${action.label}-separator`} className="menu-separator" /> : null,
-      <button type="button" role={action.checked === undefined ? 'menuitem' : 'menuitemcheckbox'} aria-checked={action.checked} key={action.label}
+      action.separator ? <hr key={`${action.key ?? action.label}-separator`} className="menu-separator" /> : null,
+      <button type="button" role={action.checked === undefined ? 'menuitem' : 'menuitemcheckbox'} aria-checked={action.checked} key={action.key ?? action.label}
         disabled={action.disabled} className={action.primary ? 'primary' : undefined}
         onClick={() => { onClose(true); action.run(); }}>{action.checked !== undefined && <span className="menu-check" aria-hidden="true">{action.checked ? '✓' : ''}</span>}{action.label}{action.shortcut && <span className="menu-shortcut">{action.shortcut}</span>}</button>,
     ])}

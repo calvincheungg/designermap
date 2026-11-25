@@ -1,3 +1,4 @@
+import { readSetting, writeSetting } from './storage';
 import { useId, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
 import { getHouse, marketPositionings } from '../data';
 import type { Collaboration } from '../types';
@@ -5,7 +6,7 @@ import type { Dimension } from './collab-diversity';
 import { SearchBox, type ListItem } from './listbox';
 import { ProfileSection } from './panel';
 import { cellKey, collaborationNetwork, heatmap, HEATMAP_COUNTRIES, pairYears, shortestChain, splitPair, stepsFrom } from './stats-data';
-import { BarTable, Choice, houseName, involvesRetailer, LimitedSection, readSetting, RetailerToggle, SortTable, useRememberedChoice, useRememberedToggle, writeSetting, type SortRow } from './stats-shared';
+import { BarTable, Choice, houseName, involvesRetailer, LimitedSection, RetailerToggle, SortTable, useRememberedChoice, useRememberedToggle, type SortRow } from './stats-shared';
 
 interface Props { releases: readonly Collaboration[]; house: (id: string) => ReactNode }
 

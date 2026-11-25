@@ -1,0 +1,115 @@
+/* Statistics "My tags" (statistics.tsx TagSeriesPicker): chips for the chart's tags, then two searchable tag boxes and Add. */
+.side-window .stats-tag-picker { margin-bottom: 6px; }
+.side-window .stats-tag-chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 6px; padding: 0; list-style: none; }
+.side-window .stats-tag-chips .filter-chip { display: inline-flex; align-items: center; }
+.side-window .stats-tag-form { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.side-window .stats-tag-form .field-row { margin: 0; }
+.side-window .stats-tag-form input[type='text'] { width: 150px; }
+.side-window .stats-tag-form .w98-listbox { max-height: 200px; }
+.side-window .stats-tag-form button[type='submit'] { min-width: 60px; }
+.side-window .stats-tag-picker .hint { margin: 4px 0 0; }
+/* Statistics: "Include retailer collaborations" checkbox beside the Most collaborations "Show" picker. */
+.side-window .stats-retailers { display: inline-flex; align-items: center; margin-left: 12px; }
+/* Sortable column headings (statistics.tsx CollaborationsSection): the whole heading is the button. */
+.side-window .stats-sort { all: unset; display: block; width: 100%; text-align: right; cursor: var(--cursor-pointer); white-space: nowrap; }
+.side-window .stats-sort:focus-visible { outline: 1px dotted #000; outline-offset: -2px; }
+.side-window .stats-table .stats-rank { width: 1%; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; color: #404040; }
+/* Most diverse collaborators (statistics.tsx DiversitySection): bars only where the window is wide enough. */
+.side-window .stats-diverse { container-type: inline-size; }
+.side-window .stats-diverse .hint { margin: 4px 0; }
+.side-window .stats-diverse-option { display: inline-flex; align-items: center; margin-left: 8px; }
+.side-window .stats-open-row { cursor: var(--cursor-pointer); }
+.side-window .stats-open-toggle { all: unset; padding: 0 4px 0 0; cursor: var(--cursor-pointer); }
+.side-window .stats-open-toggle:focus-visible { outline: 1px dotted currentColor; }
+.stats-diverse-cell { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.stats-diverse-track { flex: none; width: 48px; }
+.stats-diverse-n { min-width: 30px; text-align: right; font-variant-numeric: tabular-nums; }
+.side-window .stats-diverse-breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px 16px; padding: 4px; }
+.side-window .stats-diverse-breakdown ul { margin: 4px 0 0; padding: 0; list-style: none; }
+.side-window .stats-diverse-breakdown li { display: flex; align-items: center; gap: 4px; }
+.stats-diverse-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-window .stats-diverse-sort { display: none; }
+@container (max-width: 640px) {
+  .side-window .stats-diverse-cell .stats-diverse-track { display: none; }
+}
+/* Too narrow for every column: partners and the sorted one, with a Sort by picker. */
+@container (max-width: 440px) {
+  .side-window .stats-diverse-sort { display: flex; }
+  .side-window .stats-diverse table .stats-count { display: none; }
+  .side-window .stats-diverse table .stats-diverse-partners,
+  .side-window .stats-diverse table[data-sort='category'] .stats-diverse-category,
+  .side-window .stats-diverse table[data-sort='market'] .stats-diverse-market,
+  .side-window .stats-diverse table[data-sort='country'] .stats-diverse-country,
+  .side-window .stats-diverse table[data-sort='overall'] .stats-diverse-overall,
+  .side-window .stats-diverse table[data-sort='partners'] .stats-diverse-overall { display: table-cell; }
+}
+/* Statistics and Settings tabs (tabs.tsx): 98.css tabs over one raised panel. */
+.win-tabs menu[role='tablist'] { display: flex; flex-wrap: wrap; margin: 0 0 -2px; padding: 2px 0 0 3px; position: relative; list-style: none; }
+.win-tabs li[role='tab'] { padding: 5px 8px; cursor: var(--cursor-default); white-space: nowrap; }
+.win-tabs li[role='tab']:focus-visible { outline: 1px dotted #000; outline-offset: -4px; }
+.win-tabpanel { padding: 8px; background: #c0c0c0; box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf; }
+.win-tabpanel[hidden] { display: none; }
+.side-window .stats-choice { display: inline-flex; align-items: center; gap: 6px; margin-right: 6px; }
+.win-tabpanel .hint { margin: 4px 0; }
+.side-window .stats-details { padding: 2px 4px 4px 24px; }
+.side-window .stats-details ul { margin: 0; padding: 0; list-style: none; }
+.stats-bar.cooling { background: #800000; box-shadow: inset -1px -1px #400000, inset 1px 1px #c04040; }
+:root[data-theme='night'] .stats-bar.cooling { background: #c04040; box-shadow: inset -1px -1px #802020, inset 1px 1px #ff8080; }
+.side-window .stats-subheading { margin: 8px 0 4px; font-weight: bold; }
+/* Degrees of separation (stats-connections.tsx): the chain of collaborations between two brands. */
+.side-window .stats-degrees-form { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-bottom: 6px; }
+.side-window .stats-degrees-form .field-row { margin: 0; }
+.side-window .stats-degrees-form input[type='text'] { width: 170px; color: #000; }
+.side-window .stats-chain { margin: 4px 0; padding: 6px 8px; list-style: none; background: #fff; box-shadow: inset -1px -1px #fff, inset 1px 1px #808080; }
+.side-window .stats-chain-link { padding: 2px 0 2px 12px; color: #404040; }
+/* Who collaborates with whom: a heatmap of brand pairs. */
+.side-window .stats-heatmap { max-height: none; overflow-x: auto; }
+.side-window .stats-heatmap table { width: 100%; border-collapse: collapse; }
+.side-window .stats-heatmap thead th { vertical-align: bottom; height: auto; padding: 4px 2px; text-align: center; }
+.side-window .stats-heatmap thead th.turned span { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; }
+.side-window .stats-heatmap tbody th { padding: 2px 6px; text-align: left; font-weight: normal; white-space: nowrap; }
+.side-window .stats-heatmap td { padding: 0 !important; }
+.stats-heat { all: unset; display: block; box-sizing: border-box; width: 100%; min-width: 30px; padding: 4px 2px; text-align: center; font-variant-numeric: tabular-nums; color: #000; background: color-mix(in srgb, #000080 calc(var(--heat) * 100%), #ffffff); }
+.stats-heat.hot { color: #fff; }
+button.stats-heat { cursor: var(--cursor-pointer); }
+.stats-heat[aria-pressed='true'], .stats-heat:focus-visible { outline: 2px solid #ff0000; outline-offset: -2px; }
+:root[data-theme='night'] .stats-heat { color: #fff; background: color-mix(in srgb, #5050e0 calc(var(--heat) * 100%), #202020); }
+/* Collaborations by year (statistics.tsx YearChart): one navy column per year on a white plot. */
+.side-window .stats-chart { display: flex; gap: 4px; height: 140px; padding: 6px 6px 4px; background: #fff; overflow: hidden; }
+.stats-chart-scale { display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 14px; font-variant-numeric: tabular-nums; text-align: right; }
+.stats-chart-plot { position: relative; flex: 1; display: flex; align-items: stretch; gap: 1px; min-width: 0; border-left: 1px solid #808080; }
+.stats-chart-col { all: unset; flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
+button.stats-chart-col:not([aria-disabled]) { cursor: var(--cursor-pointer); }
+button.stats-chart-col:focus-visible .stats-chart-track { outline: 1px dotted #000; }
+/* The year whose releases are listed below the chart. */
+.stats-chart-col.selected .stats-chart-track { background: #dfdfdf; }
+.stats-chart-col.selected .stats-chart-year { font-weight: bold; }
+.side-window .stats-year-heading { margin: 6px 0 4px; }
+.stats-tip-row { display: flex; align-items: center; }
+.stats-swatch { display: inline-block; flex: none; width: 9px; height: 9px; margin-right: 4px; border: 1px solid #000; vertical-align: -1px; }
+/* Colour key under a stacked Collaborations by year chart. */
+.side-window .stats-legend { display: flex; flex-wrap: wrap; gap: 2px 12px; margin: 4px 0 0; padding: 0; list-style: none; }
+.side-window .stats-legend li { display: flex; align-items: center; }
+/* Legend entries and the release list's Type cells are buttons: click a colour to show it on its own. */
+.side-window .stats-legend-item, .side-window .stats-type { all: unset; display: inline-flex; align-items: center; padding: 0 2px; cursor: var(--cursor-pointer); white-space: nowrap; }
+.side-window .stats-legend-item:disabled { cursor: var(--cursor-default); color: #808080; }
+.side-window .stats-legend-item:focus-visible, .side-window .stats-type:focus-visible { outline: 1px dotted #000; }
+.side-window .stats-legend.focused .stats-legend-item:not(.on):not(.stats-legend-all) { opacity: 0.5; }
+.side-window .stats-legend-item.on { outline: 1px dotted #000; }
+.side-window .stats-legend-all { text-decoration: underline; color: #0000ff; }
+.stats-chart-seg[data-segment] { cursor: var(--cursor-pointer); }
+.stats-legend-count { margin-left: 4px; color: #404040; font-variant-numeric: tabular-nums; }
+.stats-chart-track { flex: 1; display: flex; align-items: flex-end; border-bottom: 1px solid #808080; }
+.stats-chart-col.hover .stats-chart-bar { filter: brightness(1.6); }
+/* Collapsed run of empty years: a break mark on the axis. */
+.stats-chart-gap .stats-chart-track { align-items: flex-end; justify-content: center; }
+.stats-chart-break { font-size: 11px; line-height: 9px; color: #808080; transform: translateY(5px); background: #fff; }
+/* Hover readout: Win98 tooltip with the exact count, kept inside the plot. */
+.stats-chart-tip { position: absolute; top: 0; display: flex; flex-direction: column; padding: 1px 4px; background: #ffffe1; border: 1px solid #000; color: #000; white-space: nowrap; pointer-events: none; font-variant-numeric: tabular-nums; z-index: 2; }
+.stats-chart-tip.center { transform: translateX(-50%); }
+.stats-chart-tip.end { transform: translateX(-100%); }
+.stats-chart-bar { display: flex; flex-direction: column-reverse; width: 100%; }
+/* One coloured part of a stacked bar (statistics.tsx SEGMENTS), with a slight bevel. */
+.stats-chart-seg { display: block; flex: none; width: 100%; box-shadow: inset -1px 0 rgb(0 0 0 / 0.45), inset 1px 0 rgb(255 255 255 / 0.25); }
+.stats-chart-year { height: 13px; position: relative; left: 50%; width: 0; display: flex; justify-content: center; font-size: 10px; line-height: 13px; white-space: nowrap; }
+

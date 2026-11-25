@@ -1,3 +1,4 @@
+import { oneOf, readJson, storedKeys, useSetting, useSettingsCleared, writeSetting } from './storage';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type PointerEvent, type ReactNode } from 'react';
 import { ContextMenu, type MenuAction } from './context-menu';
 
@@ -13,6 +14,8 @@ export interface DesktopShortcut {
 }
 export type ArrangeBy = 'type' | 'name';
 const ARRANGE_KEY = 'designer-map:desktop-arrange';
+/** Every remembered icon place, and how the icons are arranged. */
+export const iconPlaceKeys = () => [...storedKeys('designer-map:desktop-icon:'), ARRANGE_KEY];
 const TYPE_ORDER = { system: 0, program: 1 } as const;
 /** The icons in slot order: by type (keeping the given order within a type) or alphabetically. */
 export function arrangeIcons<T extends Pick<DesktopShortcut, 'label' | 'type'>>(icons: readonly T[], by: ArrangeBy): T[] {
@@ -21,14 +24,10 @@ export function arrangeIcons<T extends Pick<DesktopShortcut, 'label' | 'type'>>(
 }
 
 function readPoint(key: string): Point | null {
-  try {
-    const value = JSON.parse(localStorage.getItem(key) ?? 'null') as Partial<Point> | null;
-    return value && Number.isFinite(value.x) && Number.isFinite(value.y) ? value as Point : null;
-  } catch { return null; }
+  const value = readJson(key) as Partial<Point> | null | undefined;
+  return value && Number.isFinite(value.x) && Number.isFinite(value.y) ? value as Point : null;
 }
-function writePoint(key: string, point: Point | null) {
-  try { if (point) localStorage.setItem(key, JSON.stringify(point)); else localStorage.removeItem(key); } catch { /* storage unavailable */ }
-}
+const writePoint = (key: string, point: Point | null) => writeSetting(key, point && JSON.stringify(point));
 const overlaps = (a: Rect, b: Rect) => a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
 
 /**
@@ -39,15 +38,13 @@ const overlaps = (a: Rect, b: Rect) => a.x < b.x + b.width && a.x + a.width > b.
  * any selected icon moves them all. Right-click an icon for its Win98 menu, or the bare
  * desktop for Arrange Icons, Line Up Icons, Refresh and the caller's `desktopActions`.
  */
-export function DesktopIcons({ icons: given, className, style, desktopActions = [] }: {
-  icons: readonly DesktopShortcut[]; className?: string; style?: CSSProperties;
+export function DesktopIcons({ icons: given, desktopActions = [] }: {
+  icons: readonly DesktopShortcut[];
   /** Extra commands at the end of the desktop's own right-click menu (New, Properties). */
   desktopActions?: readonly MenuAction[];
 }) {
   const layer = useRef<HTMLDivElement>(null);
-  const [arrange, setArrange] = useState<ArrangeBy>(() => {
-    try { return localStorage.getItem(ARRANGE_KEY) === 'name' ? 'name' : 'type'; } catch { return 'type'; }
-  });
+  const [arrange, setArrange] = useSetting<ArrangeBy>(ARRANGE_KEY, oneOf(['name', 'type']), 'type');
   const icons = arrangeIcons(given, arrange);
   /** Refresh: the icons blink off for a frame, as Win98's desktop redraws. */
   const [refreshing, setRefreshing] = useState(false);
@@ -59,6 +56,7 @@ export function DesktopIcons({ icons: given, className, style, desktopActions = 
   const [desktopMenu, setDesktopMenu] = useState<{ x: number; y: number } | null>(null);
   const [points, setPoints] = useState<Record<string, Point | null>>(() =>
     Object.fromEntries(icons.map((icon) => [icon.storageKey, readPoint(icon.storageKey)])));
+  useSettingsCleared((keys) => setPoints((current) => Object.fromEntries(Object.entries(current).map(([key, point]) => [key, keys.includes(key) ? null : point]))));
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [band, setBand] = useState<Rect | null>(null);
   const [menu, setMenu] = useState<{ x: number; y: number; keys: readonly string[] } | null>(null);
@@ -197,7 +195,6 @@ export function DesktopIcons({ icons: given, className, style, desktopActions = 
   };
   const arrangeBy = (by: ArrangeBy) => {
     setArrange(by);
-    try { localStorage.setItem(ARRANGE_KEY, by); } catch { /* storage unavailable */ }
     lineUp();
   };
   const desktopMenuActions = (): MenuAction[] => [
@@ -223,7 +220,7 @@ export function DesktopIcons({ icons: given, className, style, desktopActions = 
     ];
   };
 
-  return <div ref={layer} className={`desktop-icons${refreshing ? ' refreshing' : ''}${className ? ` ${className}` : ''}`} style={style}>
+  return <div ref={layer} className={`desktop-icons${refreshing ? ' refreshing' : ''}`}>
     {icons.map((icon, slot) => {
       const point = points[icon.storageKey];
       return <button key={icon.storageKey} type="button" data-icon={icon.storageKey}

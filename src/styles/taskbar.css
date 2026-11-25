@@ -1,0 +1,335 @@
+/* ---------- status bar ---------- */
+.status-bar-field { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.status-bar-field:first-child { flex: 2; }
+
+/* ---------- taskbar ---------- */
+.taskbar {
+  position: fixed;
+  inset: auto 0 0 0;
+  height: var(--taskbar-h);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px;
+  background: var(--face);
+  box-shadow: inset 0 1px #dfdfdf, inset 0 2px #fff;
+  /* Above the map window and every window in it, so Search's drop-up and other taskbar pop-ups are never covered. */
+  z-index: 1500;
+}
+.taskbar button { min-height: 22px; }
+.start-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 0 6px;
+}
+.start-logo {
+  /* The flag cropped from public/assets/start_logo.jpg (x 72–223, y 118–248 of 584×375), scaled to 20px. */
+  width: 20px;
+  height: 17px;
+  background: url('/assets/start_logo.jpg') -9.5px -15.5px / 76.8px 49.3px no-repeat;
+}
+.start-button[aria-expanded='true'] {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+}
+
+/* ---------- Start menu (reference: public/assets/start_menu.gif) ---------- */
+.start-menu {
+  position: fixed;
+  left: 2px;
+  bottom: calc(var(--taskbar-h) - 3px);
+  z-index: 2000;
+  display: flex;
+  min-width: 230px;
+  padding: 3px;
+  font-size: 14px;
+}
+/* Navy side banner with a "Windows98"-style wordmark read bottom-to-top. */
+.start-banner {
+  flex: 0 0 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+  background: var(--navy);
+}
+.start-banner span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: #c0c0c0;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  white-space: nowrap;
+}
+.start-banner b { color: #fff; font-weight: 900; }
+.start-items { flex: 1; display: flex; flex-direction: column; padding-left: 1px; }
+.start-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  margin: 0;
+  padding: 0 6px 0 4px;
+  color: #000;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: var(--cursor-default);
+}
+.start-icon { flex: none; image-rendering: pixelated; }
+.start-label { flex: 1; }
+/* Win98 submenu arrow: small black triangle on the right. */
+.start-arrow {
+  width: 0;
+  height: 0;
+  margin-left: 18px;
+  border-block: 4px solid transparent;
+  border-left: 4px solid currentColor;
+}
+/* Highlighted row: navy bar, white text. */
+.start-item:hover,
+.start-parent:focus-within,
+.start-command:focus-visible { background: var(--navy); color: #fff; outline: none; }
+.start-command {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  text-align: left;
+}
+.start-command:active { box-shadow: none; padding: 0 6px 0 4px; }
+.start-command:focus { outline: none; }
+/* Cascading submenus open beside their row on hover or keyboard focus. */
+.start-submenu {
+  position: absolute;
+  top: -3px;
+  left: calc(100% - 2px);
+  display: none;
+  min-width: 210px;
+  margin: 0;
+  padding: 2px;
+  color: #000;
+}
+.start-parent:hover > .start-submenu,
+.start-parent:focus-within > .start-submenu { display: block; }
+.start-subitem { height: 26px; margin: 0; padding: 0 12px 0 26px; }
+.start-subitem:hover, .start-subitem:focus-within { background: var(--navy); }
+.start-subitem:hover > label, .start-subitem:focus-within > label { color: #fff; }
+.start-subitem label { flex: 1; font-size: 14px; line-height: 26px; }
+/* Menu check marks and bullets replace 98.css's boxes and circles. */
+.start-subitem input + label::before { display: none; }
+.start-subitem input:focus + label { outline: none; }
+.start-subitem input:checked + label::after { top: 50%; transform: translateY(-50%); }
+.start-subitem:hover > input:checked + label::after,
+.start-subitem:focus-within > input:checked + label::after { filter: invert(1); }
+/* Second-level cascade (Filter brands ▸ group ▸ options). */
+.start-subparent { position: relative; display: flex; align-items: center; font-size: 14px; cursor: var(--cursor-default); }
+.start-subparent:hover, .start-subparent:focus-within { color: #fff; outline: none; }
+.start-subparent:hover > .start-submenu,
+.start-subparent:focus-within > .start-submenu { display: block; }
+/* Option lists open upward from their row, since the Start menu sits at the bottom. */
+.filter-options { top: auto; bottom: -3px; min-width: 220px; max-height: min(65vh, 520px); overflow-y: auto; }
+.start-subcommand {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 26px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: #000;
+  font-size: 14px;
+  text-align: left;
+}
+.start-subcommand:not(:disabled):hover, .start-subcommand:focus-visible { background: var(--navy); color: #fff; outline: none; }
+.start-subcommand:not(:disabled):active { box-shadow: none; }
+.start-separator {
+  width: calc(100% - 4px);
+  margin: 2px;
+  border: 0;
+  border-top: 1px solid #808080;
+  border-bottom: 1px solid #fff;
+}
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  /* No room to cascade on phones: submenus open over the menu instead. */
+  .start-submenu { left: 30px; top: 100%; z-index: 1; }
+  .start-submenu .start-submenu { left: 12px; top: 100%; bottom: auto; max-height: 45vh; }
+}
+
+.task {
+  width: 160px;
+  min-width: 0;
+  overflow: hidden;
+  text-align: left;
+  padding: 0 8px;
+}
+.task.active {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+  background: repeating-conic-gradient(#fff 0 25%, var(--face) 0 50%) 0 0 / 2px 2px;
+  font-weight: bold;
+}
+.task-label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Grouped task button (ui/taskbar.tsx): count, label and an up arrow; its menu opens above the taskbar. */
+.task-group { position: relative; display: flex; flex: none; }
+.task-group > .task { display: flex; align-items: center; gap: 6px; }
+.task-group .task-label { flex: 1; }
+.task-count { flex: none; min-width: 14px; padding: 0 2px; text-align: center; box-shadow: inset -1px -1px #fff, inset 1px 1px #808080; font-weight: normal; }
+.task-arrow { flex: none; width: 0; height: 0; border-inline: 4px solid transparent; border-bottom: 4px solid currentColor; }
+.task-menu {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 3px);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 100%;
+  max-width: 280px;
+  padding: 4px;
+}
+/* Each window is a raised Win98 button, like the taskbar's own task buttons; its X sits inside on the right. */
+.task-menu-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--face);
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px #808080, inset 2px 2px #dfdfdf;
+}
+.task-menu-row:hover { background: #d4d0c8; }
+/* The active window looks pressed in, matching an active taskbar button. */
+.task-menu-row:has(.task-menu-item.current) {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+  background: repeating-conic-gradient(#fff 0 25%, var(--face) 0 50%) 0 0 / 2px 2px;
+}
+.task-menu-row:has(.task-menu-item:active) {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px #808080;
+}
+.task-menu-row .title-bar-controls { flex: none; padding-right: 5px; }
+/* The list's X matches a window's title-bar X (98.css 16×14), not the taller taskbar buttons. */
+.taskbar .title-bar-controls button { min-height: 14px; min-width: 16px; height: 14px; padding: 0; }
+.task-menu-item {
+  flex: 1;
+  min-width: 0;
+  min-height: 24px;
+  padding: 0 8px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: #000;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.task-menu-item.current { font-weight: bold; }
+.task-menu-item:focus { outline: none; }
+.task-menu-item:focus-visible { outline: 1px dotted #000; outline-offset: -4px; }
+.task-menu-item:not(:disabled):active { box-shadow: none; text-shadow: none; padding: 1px 7px 0 9px; }
+.tray {
+  position: relative;
+  margin-left: auto;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #808080;
+}
+/* The clock is a flat tray button that opens the year slider (ui/year-tray.tsx). */
+.taskbar .tray-clock {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  padding: 0 10px;
+  background: none;
+  box-shadow: none;
+  color: #000;
+  text-shadow: none;
+}
+.taskbar .tray-clock:not(:disabled):active { box-shadow: none; text-shadow: none; }
+.taskbar .tray-clock:focus { outline: 1px dotted #000; outline-offset: -3px; }
+.tray-date { font-variant-numeric: tabular-nums; }
+@media (max-width: 760px) { .tray-date { display: none; } }
+.tray-year { padding: 0 4px; background: var(--navy); color: #fff; font-variant-numeric: tabular-nums; }
+.year-popup {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 5px);
+  z-index: 2000;
+  padding: 10px 12px;
+  white-space: nowrap;
+}
+.year-popup .year-row { margin: 0; gap: 8px; }
+.year-popup .year-row > * + * { margin-left: 0; }
+.year-popup label, .year-popup output, .year-popup button { font-size: 14px; }
+.year-popup button { min-height: 26px; }
+/* Quick Launch (Win98's taskbar toolbar): a grip, then flat 16px shortcuts that raise on hover. */
+.quick-launch {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  height: 100%;
+  padding: 0 4px 0 7px;
+  background: linear-gradient(to right, #fff 0 1px, #808080 1px 2px, transparent 2px) 2px 3px / 3px calc(100% - 6px) no-repeat;
+  border-right: 1px solid #808080;
+  box-shadow: 1px 0 #fff;
+  margin-right: 2px;
+}
+.taskbar .quick-launch-button {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+.taskbar .quick-launch-button:hover { box-shadow: inset -1px -1px #808080, inset 1px 1px #fff; }
+.taskbar .quick-launch-button:not(:disabled):active { box-shadow: inset -1px -1px #fff, inset 1px 1px #808080; padding: 1px 0 0 1px; }
+.taskbar .quick-launch-button:focus-visible { outline: 1px dotted #000; outline-offset: -3px; }
+.quick-launch-button img, .quick-launch-button svg { display: block; width: 16px; height: 16px; image-rendering: pixelated; }
+.quick-launch-button img.xl-icon, .quick-launch-button img.browser-icon { image-rendering: auto; }
+
+/* Find in the taskbar, beside Start: suggestions open upward and only once the user types. */
+.taskbar-search { flex: 0 1 120px; min-width: 60px; }
+.taskbar-search .field-row { margin: 0; }
+.taskbar-search .field-row > * + * { margin-left: 0; }
+.taskbar-search label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.taskbar-search .w98-combo { display: block; width: 100%; }
+.taskbar-search input[type='text'] { width: 100%; height: 22px; font-size: 13px; }
+.w98-listbox.drop-up { top: auto; bottom: calc(100% + 2px); width: max-content; max-width: min(360px, 90vw); max-height: min(320px, 60vh); overflow-x: hidden; padding-right: 16px; }
+
+/* ---------- small screens: stack the properties window under the graph ---------- */
+@media (max-width: 760px) {
+  /* Phones: the map window and the active window stack; the icons live only in Quick Launch. */
+  .desktop-area { display: flex; flex-direction: column; overflow-y: auto; }
+  .desktop-icon { display: none; }
+  .main-window { position: static; flex: 1 1 55%; min-width: 0; min-height: 320px; width: auto !important; height: auto !important; box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff; }
+  .main-window > .title-bar { cursor: var(--cursor-default); }
+  .map-workspace { flex: 1 1 55%; min-height: 200px; }
+  .graph-pane { min-height: 200px; }
+  .side-window { position: static; width: auto !important; height: auto !important; flex: 1 1 45%; min-height: 0; margin-top: 6px; box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff; }
+  .side-window > .title-bar { cursor: var(--cursor-default); }
+  .resize-grip { display: none; }
+  /* One window at a time on phones: the active Properties window, else the Directory. */
+  .side-window:not([data-active]) { display: none; }
+  .task { width: auto; flex: 0 1 140px; }
+  .status-bar-field:not(:first-child) { display: none; }
+}
+.side-window .stats-limit { margin-bottom: 6px; flex-wrap: wrap; }

@@ -138,12 +138,19 @@ export function validateCollaborations(records: readonly Collaboration[] = colla
   return problems;
 }
 
-/** Houses with nobody linked yet: not an error, just research still to do. */
+/**
+ * Houses with no founder of any kind: no founder profiles, no founding house, group
+ * or organization, and nobody with a Founder role in their career.
+ */
+export function housesWithoutFounder(): House[] {
+  const founded = new Set(designers.flatMap((d) => d.career.filter((t) => t.role === 'Founder').map((t) => t.house)));
+  return houses.filter((h) => !h.founders?.length && !h.founderHouse && !h.founderGroup && !h.founderOrganization && !founded.has(h.id));
+}
+
+/** Houses with no founder yet: not an error, just research still to do. */
 export function researchTodos(): string[] {
-  const unlinked = houses
-    .filter((h) => !designers.some((d) => d.career.some((t) => t.house === h.id)))
-    .map((h) => `${h.name}: no founder or creative director recorded yet`);
-  return [...unlinked, ...missingOrigins()];
+  const unfounded = housesWithoutFounder().map((h) => `${h.name}: no founder recorded yet`);
+  return [...unfounded, ...missingOrigins()];
 }
 
 const FOUNDING_PLACE = /\b(?:founded|established|started|began|originated)\b[^.]{0,60}?\bin ([A-Z][\p{L}'’-]+(?:[ -](?:[A-Z][\p{L}'’-]+|sur|de|di|la|le))*)/gu;

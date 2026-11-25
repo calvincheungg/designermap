@@ -59,6 +59,9 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
     house if its city is open, else to the pin. Selecting a brand hides every
     other location's pin and grid leader, while keeping revealed brand icons
     and their connections visible. Clearing selection restores eligible pins.
+    Hidden pins take no room then: each revealed city's brands are centred on that city, or as near
+    as they fit (`focus-layout.ts placeFocused`, through `layoutMap`'s `focus`), around the selected
+    brand, its ring and its pin. Cities the user opened keep their places.
     Selecting a brand reveals its
     direct move connections: `autoRevealed` restricts automatically opened cities
     to those brands. If the user manually opened the selected brand's city,
@@ -180,8 +183,8 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
   open, restore and focus without it; only a new map selection (search, Show on
   Map, links) reopens it. Desktop icons (`desktopShortcuts` in App: My Computer,
   Explorer, Recycle Bin — `type: 'system'` — then Statistics, Spreadsheet, Settings, Notepad) stack down
-  the desktop's left edge under every window, in `arrangeIcons` order (in the `.desktop-icons` layer; with the map maximized that layer
-  covers the map's content area, `useMapContentBounds`, so they sit on the map's top-left above it),
+  the desktop's left edge under every window, in `arrangeIcons` order (in the `.desktop-icons` layer; a maximized map covers them, and
+  Quick Launch and the Start menu still open the same things),
   laid out by `DesktopIcons` (`ui/desktop-icon.tsx`): drag across bare desktop for a dotted rubber band
   (Ctrl/Shift adds; Ctrl+click toggles), dragging a selected icon moves the whole selection, and
   right-click gives a Win98 menu (Open — every selected icon — Select All, Line Up Icons, Reset Position); positions remembered as
@@ -198,13 +201,14 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
   `limit={Infinity}` so its dropdown lists every brand) narrows the grid as you type.
   A city window is always `CITY_GRID_COLUMNS` (4) icons wide and just tall
   enough for its brands, up to `CITY_GRID_ROWS` (4) rows (`cityWindowSize`);
-  larger places scroll inside an always-reserved scrollbar gutter (`scrollbar-gutter: stable`), so rows of four never wrap. Tiles sit
-  close together with a scrollbar's width (16px) of padding to the grid border.
+  larger places scroll. Windows are always wide enough for a scrollbar, so rows of four never wrap, and the columns are centred in
+  what it leaves, so the padding is even (at least 16px a side) with or without one.
   Under Find, a toolbar holds View (Large Icons / Details), Sort by (Name /
   Founded oldest first / Tier from High Luxury down; `sortPlaceBrands`, unknowns
   last, ties by name; each section sorts on its own) and Show on Map, which calls
   `DesignerGraph.showCities` to open the place's map locations as full grids
-  (other open cities stay) and frame them. View and Sort are shared by every
+  (other open cities stay) and frame them. Once all of them are open the button is Hide
+  (`hideCities`; `openCities` in App comes from `onExpandChange`). View and Sort are shared by every
   place window and remembered as `designer-map:place-view` / `designer-map:place-sort`.
   Details is a table (Name, Founded, Tier) whose headers also sort. Right-clicking
   a brand (icon or row) opens a `ContextMenu`: Open (Properties), Show on Map
@@ -225,7 +229,7 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
 - The map always fills its window. Properties windows float on the desktop above it
   (`PropertiesWindow`): drag the title bar to move, the corner grip to resize,
   Maximize / Restore (or double-click the title bar; `PropertyWindow.maximized`,
-  `desktop.ts toggleMaximized`, not remembered); they stay inside the desktop area. Every
+  `desktop.ts toggleMaximized`, kept through a refresh); they stay inside the desktop area. Every
   window has Minimize, Maximize and Close (X). The taskbar (`ui/taskbar.tsx TaskGroup`)
   has one button per window type (Brands, Designers, Locations, each tool): a lone window
   gets a plain button (restore / minimize-if-active / focus, as in Win98); two
@@ -287,12 +291,16 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
     are remembered as `designer-map:recycle-view` / `designer-map:recycle-sort`. Clicking a file opens
     its Properties; right-click offers Properties and Show on Map. What's Missing
     (Start menu, `import.meta.env.DEV` only) lists research gaps across all brands:
-    nobody linked, likely missing origins (`missingOriginCandidates`), and no
+    no founder of any kind (`housesWithoutFounder`: person, brand, group or organization), likely missing origins (`missingOriginCandidates`), and no
     founding year, logo, website or Instagram.
   - Spreadsheet (`desktop.ts LIST_VIEW`, tool type `list`): an Excel 2000 workbook ("Designer Map.xls"),
     opened from the Start menu, its desktop icon or Quick Launch (
-    icon `public/assets/excel.webp`, cropped from `excel.jpg`). `ui/list-view-data.ts` holds the sheets
-    and sheet operations (no React), `ui/list-view-dialogs.tsx` the pop-ups, `ui/list-view.tsx` the window.
+    icon `public/assets/excel.webp`, cropped from `excel.jpg`). The code is in `ui/spreadsheet/`: `data.ts` holds the sheets
+    and sheet operations (no React), `dialogs.tsx` the pop-ups, `spreadsheet.tsx` the window, `grid.tsx` the
+    worksheet. The window's hooks build on each other: `use-workbook` (remembered state), `use-popups`,
+    `use-sheet-view` (columns, listed rows, panes), `use-selection`, `use-commands`, `use-grid-drag`; then
+    `menus.ts` and `keys.ts`. `GridRow` is memoized: give it primitives or stable objects (its handlers go
+    through `useStable`), or every row redraws on each selection change.
     - Sheets (`SHEETS`, each a `defineSheet` of columns with `values`, a default `width` and optional
       per-value `links` / in-cell `menu`, `year` for decade grouping): Brands (incl. Website, Instagram,
       Current creative director, Creative directors, Collaborations and Sublabels — creative counts exclude
@@ -302,7 +310,7 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
       Tabs, arrows or Ctrl+PgUp/PgDn switch. Sort, filters, search, active cell, widths, column order,
       frozen panes, formats and hidden columns are kept per sheet. `listRows` is the one pipeline (sort →
       search → filter → hidden rows → subtotals → collapse) the grid, PivotTable and exports share.
-    - Menus File (Save As Excel Workbook…: every sheet as listed, `list-view-xlsx.ts`, a dependency-free zip
+    - Menus File (Save As Excel Workbook…: every sheet as listed, `xlsx.ts`, a dependency-free zip
       writer keeping links, widths, panes, AutoFilter, outlines, tab colours and formats; Save As CSV… of the
       shown rows/columns), Edit, View (formula bar, gridlines, Full
       Screen, zoom presets 50–200%),
@@ -335,11 +343,11 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
       letters follow position. Column commands act on every selected column (`columnsFor`).
     - Right-click a row number: Open, Show on Map, Copy, Hide / Unhide Rows. Right-click a tab: Hide /
       Unhide, Tab Color…, Save As CSV…, Select All. Opening a hidden sheet shows its tab again.
-    - Insert ▸ Chart… / the Chart Wizard button (`list-view-chart.tsx`): a draggable chart object over
+    - Insert ▸ Chart… / the Chart Wizard button (`chart.tsx`): a draggable chart object over
       the sheet counting the listed rows by one column (bar or column, top N with the rest noted under
       the plot, by count or column order, decades for year columns). It follows filters and search live;
       clicking a bar filters the sheet. Excel 2000 look: grey plot, periwinkle bars, yellow chart tips.
-    - The PivotTable tab (`list-view-pivot.tsx`, `pivotTable`): Count of any sheet's records by a row and an
+    - The PivotTable tab (`pivot.tsx`, `pivotTable`): Count of any sheet's records by a row and an
       optional column field, Grand Totals counting records once, rows by total or label, decades, and
       optionally only the rows the source sheet lists. Clicking a count opens the source sheet filtered to
       exactly those records. Data ▸ PivotTable Report… starts one from the active column.
@@ -377,7 +385,7 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
     `designer-map:stats-retailer-pairs`, on by default) that drops releases with a
     `Retailer`-category participant (`involvesRetailer`) from that table only; the
     overview total, Collaborations by year, the map and Properties keep every release.
-    Win98 tabs (`StatsTabs`, `designer-map:stats-tab`; a panel mounts when first opened and stays mounted): Overview,
+    Win98 tabs (shared `Tabs` in `ui/tabs.tsx`, `designer-map:stats-tab`; a panel mounts when first opened and stays mounted): Overview,
     Collaborations, Connections, People, Brands & places. Shared tables and controls are in `ui/stats-shared.tsx`
     (`SortTable`: sortable columns, openable rows), derived data in `ui/stats-data.ts` (no React), sections in
     `stats-connections.tsx` and `stats-trends.tsx`:
@@ -429,7 +437,7 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
 - Palette: teal desktop `#008080`, face `#c0c0c0`, selection navy `#000080`.
   Map uses the Windows reserved colours: sea `#a6caf0`, land `#c0dcc0`,
   borders `#a0a0a4`, city boxes `#fffbf0`.
-- Night mode ("Map colours: Day / Night" in the Settings window,
+- Night mode ("Map colours: Day / Night / Automatic" — Automatic follows `prefers-color-scheme` — in the Settings window,
   `designer-map:map-theme`) recolours only the map: `DesignerGraph.setNight` toggles
   the pane's `night` class (CSS map colours: sea `#000040`, land `#203828`) and appends
   `nightStyle` (style.ts) to the Cytoscape stylesheet; pulse traces use `traceColours`.
@@ -439,16 +447,25 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
   same specificity, colours mapped to dark greys), so new chrome CSS gets a night look
   automatically; map scenery selectors (`.graph-pane`, `.map-layer`) are skipped. Write a
   hand rule under `:root[data-theme='night']` only where the mapping falls short
-  (e.g. `.stats-bar`). At night the busiest map locations glow warm yellow
-  (`graph.ts updateCityLights`, an SVG `city-lights` group under the pin leaders): main
-  brands shown for the year/filters, from `CITY_LIGHT_MIN` (3) up, radius and brightness
-  growing with the count (`cityLightRadius`, `cityLightOpacity`), a fixed screen size
-  above zoom 0.6. Any new map colour needs a night counterpart.
+  (e.g. `.stats-bar`). Any new map colour needs a night counterpart.
 - Settings (`desktop.ts SETTINGS`, tool type `settings`) is a tool window opened from
   the Start menu, its desktop icon, Quick Launch or the desktop menu's Properties (
   `public/assets/settings.webp`, cut from `settings.jpg`). It is the only home of the map
   display options (Map colours, Show brands at, Open cities); its connection-line options mirror the
   Start menu's Connection lines submenu, and both edit the same App state.
+  Its options are in tabs (`Tabs`, `designer-map:settings-tab`): Map, Connections, Appearance, Accessibility and
+  General. They apply at once, and Restore Defaults… (after confirming) sets each back to `DEFAULT_SETTINGS`;
+  a new option needs a default there and a tab.
+  - Pulses (`designer-map:show-pulses`, `DesignerGraph.setPulses`) turns off only the moving blocks on lines, hover included.
+  - Animations (Same as system / Always on / Always off, `designer-map:motion`): code asks `reducedMotion()`
+    (`src/motion.ts`) and CSS uses `:root[data-motion='reduced']`; never query `prefers-reduced-motion` directly.
+  - Wallpaper (`designer-map:wallpaper`) and desktop colour (`designer-map:desktop-color`) set `data-wallpaper` and
+    `data-desktop-color` on the root. Patterns are see-through CSS over `--desktop`; each colour has a night one (tools.css).
+  - Clock (`designer-map:clock`, `formatTime` in `ui/clock.ts`) covers the taskbar clock and Notepad's Time/Date.
+  - Open folders as (`designer-map:folder-view`): Last used, or always Large Icons / Details for place windows, My Computer
+    and the Recycle Bin (`useFolderView`); with a fixed view, a change in a window lasts until it closes.
+  - Saved data: Clear Documents, Reset Window and Icon Positions, Clear Notepad… (confirmed). `clearSettings` forgets
+    stored keys and tells whatever shows them (`useSettingsCleared`).
   Text size (Normal 100% / Large 125% / Extra large 150%, `designer-map:text-size`)
   sets `--text-zoom` on the root: CSS `zoom` on window contents (not frames, so
   sizing and dragging stay in plain px; Spreadsheet keeps its own Zoom), desktop icon
@@ -463,5 +480,49 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
   Win98. Settings ▸ Mouse pointer size (Normal / Large 2x / Extra large 3x,
   `designer-map:cursor-size`) sets `data-cursor-size` on the root, which swaps the tokens to the
   @2x / @3x images declared at 1x, with scaled hotspots. The map canvas gets `.grabbing` only once a press actually pans the view (`graph.ts`).
+- Explorer has a Win98 menu bar (`ui/explorer-menu.tsx`; its commands are `explorerActions` in App): File, Edit, View
+  (Address Bar and Status Bar toggles, `designer-map:address-bar` / `designer-map:status-bar`, zoom via `DesignerGraph.zoomBy`),
+  Go (Back / Forward through selections, `useSelectionHistory`; Home Page clears the selection and shows the whole map; recent items),
+  Favorites (`ui/favorites.ts`, `designer-map:favorites`: brands, designers and groups) and Help. Items the year or filters hide are greyed.
+- View ▸ Filter Brands… (`FilterDialog`) is the Start menu's filters in tabs. File ▸ Save Map as Picture… draws the SVG layers, then
+  Cytoscape's PNG, at 2x (`graph/picture.ts`; new CSS properties on those layers must be in its `STYLES`; moving blocks are left out).
+  Favorites ▸ Show All on Map and a place window's multiple selection use `DesignerGraph.showBrands`: those brands alone are revealed and
+  framed with nothing selected, until the next `select`.
+- Map tooltips (`graph/tooltip.ts` lines, `MapTooltip`) cover brands and lines, not pins; they wait 400ms and show for the mouse only; zoom buttons sit in the map's corner (`.map-zoom`).
+- Brand, designer and group windows start with `ItemActions` (Favorite, Show on Map, Copy Link); Show on Map becomes Hide, which clears the selection, while the item is selected on an open map. Collaboration histories longer than
+  `COLLABORATION_ROWS` have a Find box (partner name or alias, or a release year).
+- Place windows start with `PlacePath` (Europe ▸ France ▸ Paris; arrows list the level's other places). Ctrl/Cmd+click and Shift+click
+  select several brands (Ctrl+A all, Esc none); right-click acts on them all, opening at most `MAX_PROPERTY_WINDOWS`.
+- Explorer's Address box is a brand/designer/group search. Its accessible name is "Find on map" ("Address" is only a `caption`), and
+  every `SearchBox` opts out of password managers and autofill (`data-1p-ignore` and the like).
 - 98.css trips Vite's CSS minifier, which is why `vite.config.ts` sets `cssMinify: false`.
 - Layout must still work at phone width (the properties window stacks under the graph).
+
+## Page refresh
+
+- `ui/session.ts` keeps a tab's session in sessionStorage: open windows (place, size, stacking, minimized),
+  Explorer's state, the selection, the connection filter and the map view (`DesignerGraph.viewState` /
+  `restoreView`: zoom, centre and user-opened cities). It is saved on changes and on `pagehide`. The year and
+  filters come from the URL; everything read back is validated.
+- Settings ▸ When I come back (`designer-map:startup`): Start fresh, or Open where I left off, which also keeps the session
+  in localStorage (`designer-map:last-session`) for the next visit. A link with a hash opens on its own instead; the
+  year and filters aren't kept.
+- A refresh reselects the URL's item without reopening or refocusing its window; a link to anything else
+  opens as usual. For a moment after a restore, map resizes keep the view instead of fitting the map.
+- Spreadsheet's filters, search, hidden rows, subtotals and active cell are saved on `pagehide` and used once,
+  so closing its window still clears them.
+
+## Downloads and shared pieces
+
+- `style.css` only imports `src/styles/*.css`, in cascade order; `night-chrome.mjs` joins them first, so the
+  night styles still come after every day rule. Keep new rules in the matching file.
+- Production builds are split: each big data file, the libraries and the app are separate files (vite.config.ts),
+  so a release only re-downloads what changed. Spreadsheet, Statistics, My Computer and Notepad are
+  `lazyWindow`s (`ui/lazy-windows.ts`), fetched once the map is idle. Importing one of them directly from
+  App, or from anything App loads, puts it back in the first download.
+- Brand and designer `notes` move to their own file in production (`scripts/split-notes.mjs`,
+  `data/notes.ts`). Show them with `useNotes`; don't read `.notes` elsewhere at runtime.
+- Conditional-format fills keep their colours at night with dark text (`.painted`); data bars dim.
+- Shared helpers: `text.ts` (sorting, accents), `ui/storage.ts` (all localStorage access), `ui/dialog.tsx`
+  (modal dialogs, title-bar dragging), `ui/download.ts`, `ui/use-settings.ts` (Settings' choices),
+  `ui/desk-windows.tsx` (window titles, icons, sizes).

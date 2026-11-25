@@ -116,6 +116,21 @@ describe('React interface interactions', () => {
     expect(total).toBeGreaterThan(unique!);
   });
 
+  it('finds collaborations by brand or year', async () => {
+    const user = userEvent.setup();
+    render(<PanelContent selection={{ kind: 'house', id: 'humanMade' }} onSelect={() => {}} onTag={() => {}} />);
+    const history = within(screen.getByRole('group', { name: /Collaboration history/ }));
+    const find = history.getByRole('textbox', { name: 'Find a collaboration' });
+    await user.type(find, 'adidas');
+    expect(history.getAllByRole('row')).toHaveLength(2);
+    await user.clear(find);
+    await user.type(find, '2019');
+    for (const row of history.getAllByRole('row').slice(1)) expect(within(row).getAllByRole('cell')[0]!.textContent).toBe('2019');
+    await user.clear(find);
+    await user.type(find, 'zzzz');
+    expect(history.getByText('No collaborations match.')).toBeTruthy();
+  });
+
   it('consolidates repeat partners and searches the chosen release year', async () => {
     const user = userEvent.setup();
     render(<PanelContent selection={{ kind: 'house', id: 'humanMade' }} onSelect={() => {}} onTag={() => {}} />);

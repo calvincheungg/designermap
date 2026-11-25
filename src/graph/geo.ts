@@ -1,3 +1,4 @@
+import { byName } from '../text';
 import { geoGraticule10, geoNaturalEarth1, geoPath } from 'd3-geo';
 import { feature, mesh } from 'topojson-client';
 import type { GeometryCollection, Topology } from 'topojson-specification';
@@ -10,6 +11,7 @@ import { getLocationMode, mapLocationCoordinates, mapLocationForHouse, type Loca
 import type { House, LatLng } from '../types';
 import { PIN_H, PIN_W } from './icons';
 import { BoxIndex } from './box-index';
+import { nearestFree, placeFocused } from './focus-layout';
 
 /**
  * World-map geometry, in Cytoscape *model* coordinates: the map SVG and the
@@ -162,8 +164,6 @@ export interface Box {
 }
 
 /** Alphabetical, ignoring case and accents ("Chloé", "mastermind JAPAN", "424" all sort naturally). */
-const collator = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
-const byName = (a: House, b: House) => collator.compare(a.name, b.name);
 
 const byLocationCache = new Map<LocationMode, ReadonlyMap<string, readonly House[]>>();
 
@@ -319,13 +319,76 @@ export function housePositions(grids: Box[], byCity = housesByMapLocation()): Ma
   return out;
 }
 
+/** A selected brand: only its own pin shows, so the brands it reveals can sit on their cities. */
+export interface LayoutFocus {
+  houseId: string;
+  location: string;
+  /** Locations the selection opened; ones the user opened keep their places. */
+  revealed: ReadonlySet<string>;
+  /** Partners in the brand's own city, drawn in a ring around it. */
+  ring: readonly string[];
+}
+
+/** Furthest ring icon from the selected brand, including its cell. */
+const ringReach = (count: number) => count
+  ? Math.max(...[...ringLayout({ x: 0, y: 0 }, Array.from({ length: count }, (_, i) => String(i))).values()].map((p) => Math.hypot(p.x, p.y))) + CELL_W / 2
+  : 0;
+
+function focusedPositions(expanded: ReadonlySet<string>, byCity: ReadonlyMap<string, readonly House[]>, focus: LayoutFocus, anchor?: HouseAnchor): Map<string, Point> {
+  const opened = new Set([...expanded].filter((city) => !focus.revealed.has(city)));
+  const grids = placeGrids(opened, new Map(byCity), anchor && opened.has(focus.location) ? anchor : undefined);
+  const fixed: { center: Point; w: number; h: number }[] = [...grids];
+  const positions = housePositions(grids, new Map(byCity));
+  const pin = pinBox(focus.location, GRID_REF_ZOOM);
+  const reach = ringReach(focus.ring.length);
+  const own = byCity.get(focus.location) ?? [];
+  if (opened.has(focus.location)) {
+    const at = positions.get(focus.houseId);
+    if (at && reach) fixed.push({ center: at, w: reach * 2, h: reach * 2 });
+  } else if (own.some((house) => house.id === focus.houseId)) {
+    // The brand and its labels under its pin; ringed partners don't take a place in that grid.
+    const family = own.filter((house) => house.id === focus.houseId || !focus.ring.includes(house.id));
+    const { cols, rows } = gridSize(family.length);
+    const index = family.findIndex((house) => house.id === focus.houseId);
+    const offset = { x: ((index % cols) - (cols - 1) / 2) * CELL_W, y: (Math.floor(index / cols) - (rows - 1) / 2) * CELL_H };
+    // Centred on the brand, so the ring fits as well as the grid.
+    const w = Math.max(reach * 2, cols * CELL_W + 2 * Math.abs(offset.x));
+    const h = Math.max(reach * 2, rows * CELL_H + 2 * Math.abs(offset.y));
+    const under = { x: pin.home.x, y: pin.home.y + pin.h / 2 + CELL_H / 2 };
+    const at = anchor?.houseId === focus.houseId ? anchor.position : nearestFree(under, w, h, fixed);
+    family.forEach((house, i) => positions.set(house.id, {
+      x: at.x - offset.x + ((i % cols) - (cols - 1) / 2) * CELL_W,
+      y: at.y - offset.y + (Math.floor(i / cols) - (rows - 1) / 2) * CELL_H,
+    }));
+    fixed.push({ center: at, w, h });
+  }
+  fixed.push(pin);
+  const blocks = [...focus.revealed].flatMap((city) => {
+    const count = byCity.get(city)?.length;
+    if (!count || city === focus.location) return [];
+    const { cols, rows } = gridSize(count);
+    return [{ id: city, home: project(mapLocationCoordinates(city)), w: cols * CELL_W, h: rows * CELL_H }];
+  });
+  const centers = placeFocused(blocks, fixed);
+  const placed = blocks.map((block): Box => ({ city: block.id, kind: 'grid', home: block.home, center: centers.get(block.id)!, w: block.w, h: block.h }));
+  for (const [id, at] of housePositions(placed, new Map(byCity))) positions.set(id, at);
+  const center = positions.get(focus.houseId);
+  if (center) {
+    // Lines to other cities, and the brand's own pin, are kept clear.
+    const others = blocks.map((block) => centers.get(block.id)!);
+    const avoid = [...others, pin.center].map((p) => Math.atan2(p.y - center.y, p.x - center.x));
+    for (const [id, at] of ringLayout(center, focus.ring, avoid)) positions.set(id, at);
+  }
+  return positions;
+}
+
 /** Pins at their city or regional anchor + houses for an expansion state. */
-export function layoutMap(expanded: ReadonlySet<string>, byCity = housesByMapLocation(), anchor?: HouseAnchor): MapLayout {
+export function layoutMap(expanded: ReadonlySet<string>, byCity = housesByMapLocation(), anchor?: HouseAnchor, focus?: LayoutFocus): MapLayout {
   const cityLayouts = [...byCity].map(([city, hs]): CityLayout => {
     const at = project(mapLocationCoordinates(city));
     return { city, anchor: at, tip: at, houses: hs };
   });
-  return { cities: cityLayouts, houses: housePositions(placeGrids(expanded, byCity, anchor), byCity) };
+  return { cities: cityLayouts, houses: focus ? focusedPositions(expanded, byCity, focus, anchor) : housePositions(placeGrids(expanded, byCity, anchor), byCity) };
 }
 
 export function boxesOverlap(
