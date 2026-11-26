@@ -73,6 +73,7 @@ export enum AwardId {
   HyeresGrandPrix = 'hyeresGrandPrix',
   SwissTextilesAward = 'swissTextilesAward',
   MainichiFashionGrandPrix = 'mainichiFashionGrandPrix',
+  MainichiNewcomerPrize = 'mainichiNewcomerPrize',
   SoenAward = 'soenAward',
   SpainNationalFashionDesignAward = 'spainNationalFashionDesignAward',
   // Design and arts
@@ -183,6 +184,7 @@ export const awardInfo: Record<AwardId, AwardInfo> = {
   [AwardId.HyeresGrandPrix]: { name: 'Hyères Festival Grand Prix', presenter: 'Festival International de Mode d’Hyères' },
   [AwardId.SwissTextilesAward]: { name: 'Swiss Textiles Award', presenter: 'Swiss Textiles' },
   [AwardId.MainichiFashionGrandPrix]: { name: 'Mainichi Fashion Grand Prix', presenter: 'Mainichi Shimbun' },
+  [AwardId.MainichiNewcomerPrize]: { name: 'Mainichi Fashion Grand Prix Newcomer’s Prize', presenter: 'Mainichi Shimbun' },
   [AwardId.SoenAward]: { name: 'Soen Award', presenter: 'Bunka Publishing Bureau' },
   [AwardId.SpainNationalFashionDesignAward]: { name: 'National Fashion Design Award (Spain)', presenter: 'Government of Spain' },
   [AwardId.RoyalDesignerForIndustry]: { name: 'Royal Designer for Industry', presenter: 'Royal Society of Arts' },

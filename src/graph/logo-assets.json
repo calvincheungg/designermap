@@ -1687,6 +1687,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 1546
   },
+  "bogey_boys.jpeg": {
+    "hash": "0cc642b62d458b78",
+    "backgroundVersion": 2,
+    "file": "0cc642b62d458b78.webp",
+    "ratio": 1,
+    "background": "rgb(3, 48, 25)",
+    "bytes": 38122
+  },
   "boggi_milano.webp": {
     "hash": "480db185f243bc78",
     "backgroundVersion": 2,
@@ -3918,6 +3926,14 @@
     "ratio": 1,
     "background": "rgb(255, 255, 255)",
     "bytes": 4570
+  },
+  "florentini_baker.jpeg": {
+    "hash": "44d3f61f5612b651",
+    "backgroundVersion": 2,
+    "file": "44d3f61f5612b651.webp",
+    "ratio": 1,
+    "background": "rgb(254, 254, 254)",
+    "bytes": 37004
   },
   "floyd.png": {
     "hash": "83ed9ffaf3ef2c13",
@@ -6279,6 +6295,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 3188
   },
+  "lesportsac.webp": {
+    "hash": "0350dd2e49c5cf56",
+    "backgroundVersion": 2,
+    "file": "0350dd2e49c5cf56.webp",
+    "ratio": 1.910828025477707,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 3452
+  },
   "levis.webp": {
     "hash": "94be7dca3c79d040",
     "backgroundVersion": 2,
@@ -6799,6 +6823,14 @@
     "background": "rgb(255, 255, 255)",
     "bytes": 4408
   },
+  "marchesa.jpeg": {
+    "hash": "fb82ffefdfb2bfaa",
+    "backgroundVersion": 2,
+    "file": "fb82ffefdfb2bfaa.webp",
+    "ratio": 1,
+    "background": "rgb(255, 255, 255)",
+    "bytes": 11186
+  },
   "marco_rambaldi.webp": {
     "hash": "4abad383a446fe65",
     "backgroundVersion": 2,
@@ -7158,6 +7190,14 @@
     "ratio": 4.554545454545455,
     "background": "rgb(255, 255, 255)",
     "bytes": 4532
+  },
+  "mina_perhonen.jpg": {
+    "hash": "14ae8f6f66fea1be",
+    "backgroundVersion": 2,
+    "file": "14ae8f6f66fea1be.webp",
+    "ratio": 0.7978723404255319,
+    "background": "rgb(50, 30, 29)",
+    "bytes": 18540
   },
   "minedenim.png": {
     "hash": "70e92ca5ebcc8398",
@@ -11030,6 +11070,14 @@
     "ratio": 5.882352941176471,
     "background": "rgb(255, 255, 255)",
     "bytes": 2128
+  },
+  "timex.png": {
+    "hash": "73f0f73781b097e6",
+    "backgroundVersion": 2,
+    "file": "73f0f73781b097e6.webp",
+    "ratio": 1,
+    "background": "#ffffff",
+    "bytes": 2670
   },
   "tnf_purple_label.jpg": {
     "hash": "5c5211f8e7614417",

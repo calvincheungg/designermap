@@ -2579,6 +2579,7 @@ export const designers = {
       { house: 'toga', role: 'Founder', roleDetail: 'Founder and designer', start: 1997, end: null },
     ],
     awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2003, house: 'toga' },
       { award: AwardId.MainichiFashionGrandPrix, year: 2009, house: 'toga' },
       { award: AwardId.MainichiFashionGrandPrix, year: 2018, house: 'toga' },
     ],
@@ -6566,6 +6567,7 @@ export const designers = {
       { house: 'facetasm', role: 'Founder', roleDetail: 'Founder, designer', start: 2007, end: null },
     ],
     awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2013, house: 'facetasm' },
       { award: AwardId.MainichiFashionGrandPrix, year: 2016, house: 'facetasm' },
     ],
   },
@@ -7090,6 +7092,7 @@ export const designers = {
     nationality: 'Japanese',
     career: [{ house: 'auralee', role: 'Founder', start: 2015, end: null }],
     awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2019, house: 'auralee' },
       { award: AwardId.MainichiFashionGrandPrix, year: 2025, house: 'auralee' },
     ],
   },
@@ -12368,6 +12371,7 @@ export const designers = {
       },
     ],
     awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2014, house: 'mameKurogouchi' },
       { award: AwardId.MainichiFashionGrandPrix, year: 2023, house: 'mameKurogouchi' },
     ],
   },
@@ -19303,6 +19307,9 @@ export const designers = {
     name: 'Arashi Yanagawa',
     nationality: 'Japanese',
     career: [{ house: 'johnLawrenceSullivan', role: 'Founder', roleDetail: 'Founder and designer', start: 2003, end: null }],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2008, house: 'johnLawrenceSullivan' },
+    ],
     notes: 'Japanese name 柳川荒士. Born in Hiroshima in 1975. A former professional boxer and self-taught designer, he won the Tokyo Fashion Award in 2015 and presented John Lawrence Sullivan at Berlin Fashion Week in 2026.',
   },
   patrikErvell: {
@@ -19338,6 +19345,9 @@ export const designers = {
     career: [
       { house: 'christianDada', role: 'Founder', roleDetail: 'Founder and designer', start: 2010, end: 2020 },
       { house: 'hummel', role: 'Other', roleDetail: 'Designer, hummel 00 line', start: 2025 },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2015, house: 'christianDada' },
     ],
     notes: 'Japanese name 森川マサノリ. Trained under Charles Anastase in London before launching CHRISTIAN DADA. Later founded BASICKS in 2021, which is not separately represented, and became designer of the hummel 00 line in 2025.',
   },
@@ -20788,9 +20798,10 @@ export const designers = {
     nationality: 'Japanese',
     career: [{ house: 'anrealage', role: 'Founder', roleDetail: 'Founder, designer', start: 2003, end: null, sources: ['https://www.fhcm.paris/en/house/anrealage', 'https://www.lvmhprize.com/en/anrealage'] }],
     awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2011, house: 'anrealage' },
       { award: AwardId.MainichiFashionGrandPrix, year: 2019, house: 'anrealage' },
     ],
-    notes: 'Born in Tokyo; studied at Waseda University and Vantan Design Institute. Won the Gen Art Avant Garde award in New York (2005) and the Mainichi Fashion Grand Prix for best new designer (2011); LVMH Prize finalist in 2019.',
+    notes: 'Born in Tokyo; studied at Waseda University and Vantan Design Institute. Won the Gen Art Avant Garde award in New York (2005) and was an LVMH Prize finalist in 2019.',
   },
   janJanVanEssche: {
     name: 'Jan-Jan Van Essche',
@@ -25576,6 +25587,286 @@ export const designers = {
     ],
     notes: 'Graduated from Nagoya Mode College in 1980 and was a designer, later chief designer, at TOKIO KUMAGAI in Paris. Returned to Japan to found STIL in 1991, won the Mainichi newcomer award in 1992, and later worked on apparel for MUJI and AEON. Became director of the postgraduate fashion design course at Kanazawa College of Art in 2005.',
     sources: ['https://rakutenfashionweektokyo.com/archive/2005/en/collection/maisons/designer48.html', 'https://www.fashion-press.net/news/137307'],
+  },
+  shinichiroArakawa: {
+    name: 'Shinichiro Arakawa',
+    born: 1966,
+    nationality: 'Japanese',
+    career: [
+      { house: 'shinichiroArakawa', role: 'Founder', roleDetail: 'Founder and designer', start: 1993 },
+    ],
+    awards: [
+      { award: AwardId.AndamGrandPrize, year: 1997, house: 'shinichiroArakawa' },
+      { award: AwardId.MainichiNewcomerPrize, year: 2000, house: 'shinichiroArakawa' },
+    ],
+    notes: 'Japanese name 荒川眞一郎. Born in Kiryu, Gunma, into a family of tailors. Studied at Tokai University, then graduated from Studio Berçot in Paris in 1992 after assisting Christopher Nemeth in London from 1991.',
+    sources: ['https://ja.wikipedia.org/wiki/荒川眞一郎', 'https://www.fashion-headline.com/article/7287'],
+  },
+  tsuyoshiYanagida: {
+    name: 'Tsuyoshi Yanagida',
+    nationality: 'Japanese',
+    career: [
+      { house: 'naiyma', role: 'Founder', roleDetail: 'Founder and designer', start: 1999, end: 2003 },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2001, house: 'naiyma' },
+    ],
+    notes: 'Japanese name 柳田剛.',
+    sources: ['https://fashion-guide.jp/trivia/mainichifashion-grandprix.html'],
+  },
+  naoakiMizuno: {
+    name: 'Naoaki Mizuno',
+    nationality: 'Japanese',
+    career: [
+      { house: 'vetement', role: 'Founder', roleDetail: 'Founder and designer' },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2002, house: 'vetement' },
+    ],
+    notes: 'Japanese name 水野直昭. Also won a Moët & Chandon newcomer award for vetement.',
+    sources: ['https://fashion-guide.jp/trivia/mainichifashion-grandprix.html'],
+  },
+  toshikazuIwaya: {
+    name: 'Toshikazu Iwaya',
+    born: 1974,
+    nationality: 'Japanese',
+    career: [
+      { house: 'dresscamp', role: 'Founder', roleDetail: 'Founder and designer', start: 2002, end: 2008 },
+      { house: 'dresscamp', role: 'Creative Director', roleDetail: 'Designer (returned from the spring/summer 2013 collection)', start: 2012 },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2004, house: 'dresscamp' },
+    ],
+    notes: 'Japanese name 岩谷俊和. Born in Yokohama; graduated from Bunka Fashion College in 1995 and joined AT ONES’ in 1996. Between his DRESSCAMP stints he designed Iwaya for Dress33. Later design director of YUMI KATSURA and founder of the leather-goods label COSTUME PLAY (2021). Also won the Moët & Chandon New Designer Award in 2004.',
+    sources: ['https://rakutenfashionweektokyo.com/', 'https://www.fashionsnap.com/article/2021-05-12/costumeplay-iwaya/'],
+  },
+  taishiNobukuni: {
+    name: 'Taishi Nobukuni',
+    born: 1970,
+    nationality: 'Japanese',
+    career: [
+      { house: 'johnGalliano', role: 'Other', roleDetail: 'Worked under John Galliano', start: 1993, approximate: true },
+      { house: 'taishiNobukuni', role: 'Founder', roleDetail: 'Founder and designer', start: 1998 },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2005, house: 'taishiNobukuni' },
+    ],
+    notes: 'Japanese name 信國太志. Born in Kumamoto and raised in Fukuoka, where he co-founded the select shop Dice & Dice in 1988. Trained in tailoring under Charlie Allen in London and took an MA at Central Saint Martins in 1996. Creative director of TAKEO KIKUCHI from 2004 to 2007.',
+    sources: ['https://ja.wikipedia.org/wiki/信國太志', 'https://www.shift.jp.org/'],
+  },
+  kazuakiTakashima: {
+    name: 'Kazuaki Takashima',
+    born: 1973,
+    nationality: 'Japanese',
+    career: [
+      { house: 'isseyMiyake', role: 'Other', roleDetail: 'Designer, ISSEY MIYAKE collection team', start: 1996, end: 2002 },
+      { house: 'pleatsPlease', role: 'Other', roleDetail: 'Design team', start: 2002, end: 2005 },
+      { house: 'neNet', role: 'Head Designer', roleDetail: 'Designer', start: 2005, end: 2020 },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2006, house: 'neNet' },
+    ],
+    notes: 'Japanese name 髙島一精. Born in Kumamoto; graduated from Bunka Fashion College in 1995. Won the Tokyo New Designer Fashion Grand Prix in 1997. Went independent in 2020 with the character and artwork project "This is not a cat."',
+    sources: ['https://kazuakitakashima.net/', 'https://www.wwdjapan.com/articles/1528910'],
+  },
+  tamaeHirokawa: {
+    name: 'Tamae Hirokawa',
+    nationality: 'Japanese',
+    career: [
+      { house: 'isseyMiyake', role: 'Other', roleDetail: 'Knit designer', start: 1998, end: 2006 },
+      { house: 'somarta', role: 'Founder', roleDetail: 'Founder and designer', start: 2006, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2007, house: 'somarta' },
+    ],
+    notes: 'Japanese name 廣川玉枝. Graduated from Bunka Fashion College. Won the WIRED Audi Innovation Award in 2018.',
+    sources: ['https://rakutenfashionweektokyo.com/', 'https://www.fashionsnap.com/'],
+  },
+  hiroyukiHorihata: {
+    name: 'Hiroyuki Horihata',
+    nationality: 'Japanese',
+    career: [
+      { house: 'commeDesGarcons', role: 'Other', roleDetail: 'Pattern maker, womenswear', start: 1998, end: 2003 },
+      { house: 'matohu', role: 'Founder', roleDetail: 'Co-founder and designer with Makiko Sekiguchi', start: 2005, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2009, house: 'matohu', detail: 'Shared with Makiko Sekiguchi' },
+    ],
+    notes: 'Japanese name 堀畑裕之. Born in Sakai, Osaka; studied German philosophy at Doshisha University before Bunka Fashion College. Worked on Bora Aksu’s London collections from 2003.',
+    sources: ['https://www.matohu.com/about', 'https://ja.wikipedia.org/wiki/堀畑裕之'],
+  },
+  makikoSekiguchi: {
+    name: 'Makiko Sekiguchi',
+    nationality: 'Japanese',
+    career: [
+      { house: 'matohu', role: 'Founder', roleDetail: 'Co-founder and designer with Hiroyuki Horihata', start: 2005, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2009, house: 'matohu', detail: 'Shared with Hiroyuki Horihata' },
+    ],
+    notes: 'Japanese name 関口真希子. Studied law, then Bunka Fashion College, and worked as a pattern maker on Paris and London collections before co-founding matohu.',
+    sources: ['https://www.matohu.com/about'],
+  },
+  aguriSagimori: {
+    name: 'Aguri Sagimori',
+    born: 1985,
+    nationality: 'Japanese',
+    career: [
+      { house: 'agris', role: 'Founder', roleDetail: 'Founder and designer', start: 2008 },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2010, house: 'agris' },
+    ],
+    notes: 'Japanese name 鷺森アグリ. Born in Neyagawa, Osaka; graduated from Vantan Design Institute in 2007.',
+    sources: ['https://www.digital-zasshi.jp/fashion-designer/aguri-sagimori/'],
+  },
+  taroHoriuchi: {
+    name: 'Taro Horiuchi',
+    born: 1982,
+    nationality: 'Japanese',
+    career: [
+      { house: 'taroHoriuchi', role: 'Founder', roleDetail: 'Founder and designer', start: 2009, end: null },
+      { house: 'kolor', role: 'Creative Director', start: 2025, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2012, house: 'taroHoriuchi' },
+    ],
+    notes: 'Japanese name 堀内太郎. Born in Tokyo and moved to the UK at 15; studied photography at Kingston, then graduated top of his class from the Royal Academy of Fine Arts Antwerp in 2007, winning the Diesel Award at ITS that year. Founded th products in 2018. Succeeded Junichi Abe as kolor’s creative director from the spring/summer 2026 collection.',
+    sources: ['https://www.fashionsnap.com/person/horiuchi-taro', 'https://www.fhcm.paris/en/news/kolor-taro-horiuchi'],
+  },
+  keisukeImazaki: {
+    name: 'Keisuke Imazaki',
+    born: 1983,
+    nationality: 'Japanese',
+    career: [
+      { house: 'plastictokyo', role: 'Founder', roleDetail: 'Founder and designer', start: 2013 },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2016, house: 'plastictokyo' },
+    ],
+    notes: 'Japanese name 今崎契助. Born in Kyoto; studied at Bunka Fashion College and Bunka Fashion Graduate University, then co-ran a graphic T-shirt label and worked at an apparel company.',
+    sources: ['http://fashionstudies.org/interview/plastictokyo-201604/'],
+  },
+  yuimaNakazato: {
+    name: 'Yuima Nakazato',
+    born: 1985,
+    nationality: 'Japanese',
+    career: [
+      { house: 'yuimaNakazato', role: 'Founder', roleDetail: 'Founder and designer', start: 2009, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2017, house: 'yuimaNakazato' },
+    ],
+    notes: 'Japanese name 中里唯馬. Born in Tokyo; graduated from the Royal Academy of Fine Arts Antwerp in 2008. Won ITS awards in 2008 and 2009 and the WIRED Audi Innovation Award in 2018; founded the FASHION FRONTIER PROGRAM in 2021.',
+    sources: ['https://en.wikipedia.org/wiki/Yuima_Nakazato'],
+  },
+  akikoAoki: {
+    name: 'Akiko Aoki',
+    born: 1986,
+    nationality: 'Japanese',
+    career: [
+      { house: 'akikoaoki', role: 'Founder', roleDetail: 'Founder and designer', start: 2014, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2018, house: 'akikoaoki' },
+    ],
+    notes: 'Japanese name 青木明子. Born in Tokyo; graduated from Joshibi University of Art and Design in 2009 and studied at Central Saint Martins, then assisted at a Japanese collection brand.',
+    sources: ['https://www.fashionsnap.com/person/aoki-akiko/'],
+  },
+  kotohaYokozawa: {
+    name: 'Kotoha Yokozawa',
+    born: 1991,
+    nationality: 'Japanese',
+    career: [
+      { house: 'kotohayokozawa', role: 'Founder', roleDetail: 'Founder and designer', start: 2015, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2020, house: 'kotohayokozawa' },
+    ],
+    notes: 'Japanese name 横澤琴葉. Born in Aichi; studied at Esmod Tokyo and coconogacco and worked at an apparel company before launching her label. Won the Tokyo Fashion Award in 2025.',
+    sources: ['https://www.fashionsnap.com/person/yokozawa-kotoha/'],
+  },
+  yusukeTakahashi: {
+    name: 'Yusuke Takahashi',
+    born: 1985,
+    nationality: 'Japanese',
+    career: [
+      { house: 'isseyMiyake', role: 'Other', roleDetail: 'Designer; ISSEY MIYAKE MEN from 2013', start: 2010, end: 2020 },
+      { house: 'cfcl', role: 'Founder', roleDetail: 'Founder and creative director', start: 2020, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2021, house: 'cfcl' },
+      { award: AwardId.MainichiFashionGrandPrix, year: 2026, house: 'cfcl' },
+    ],
+    notes: 'Japanese name 高橋悠介. Born in Tokyo; studied at Bunka Fashion Graduate University, where he won the Soen Award with a computer-programmed knit. Won the FASHION PRIZE OF TOKYO in 2021.',
+    sources: ['https://www.fashionsnap.com/article/cfcl-yusuke-takahashi-interview/', 'https://www.fashionsnap.com/article/2026-08-31/mainichi-fashion-2026/'],
+  },
+  fumieTanaka: {
+    name: 'Fumie Tanaka',
+    nationality: 'Japanese',
+    career: [
+      { house: 'unitedArrows', role: 'Other', roleDetail: 'Designer' },
+      { house: 'fumieTanaka', role: 'Founder', roleDetail: 'Founder and designer', start: 2019, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2022, house: 'fumieTanaka' },
+    ],
+    notes: 'Japanese name 田中文江. Studied at Osaka Mode Gakuen. Designed for WORLD (Bildajour), Sazaby League (&A), JUN and other apparel companies, and ran the label THE Dallas from 2015 to 2019. Won the Tokyo Fashion Award in 2019.',
+    sources: ['https://www.fashionsnap.com/person/tanaka-fumie/'],
+  },
+  kazuyaKawasaki: {
+    name: 'Kazuya Kawasaki',
+    born: 1991,
+    nationality: 'Japanese',
+    career: [
+      { house: 'synflux', role: 'Founder', roleDetail: 'Co-founder and CEO', start: 2019, end: null, approximate: true },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2023, house: 'synflux' },
+    ],
+    notes: 'Japanese name 川崎和也. Studied at Keio University’s Graduate School of Media and Governance. Synflux’s team includes designer Kotaro Sano and engineer Yusuke Fujihira. Won the Global Fashion Agenda Trailblazer Programme grand prize in 2026.',
+    sources: ['https://ccbt.rekibun.or.jp/en/players/kawasaki-kazuya', 'https://www.fashionsnap.com/article/2023-10-16/mainichi-fashion-2023/'],
+  },
+  harunobuMurata: {
+    name: 'Harunobu Murata',
+    nationality: 'Japanese',
+    career: [
+      { house: 'jilSander', role: 'Other', roleDetail: 'Womenswear design team', start: 2015, end: 2018 },
+      { house: 'harunobumurata', role: 'Founder', roleDetail: 'Founder and designer', start: 2018, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2024, house: 'harunobumurata' },
+    ],
+    notes: 'Japanese name 村田晴信. Born in Tokyo; studied at Esmod Japon and Istituto Marangoni in Milan, and won the Camera Nazionale della Moda Italiana Next Generation competition in 2012. Designed for John Richmond before Jil Sander. Became womenswear creative director of Plst in 2025.',
+    sources: ['https://www.fashionsnap.com/article/harunobumurata-interview/', 'https://www.fashionsnap.com/article/2025-08-18/plst-murata/'],
+  },
+  emiFunayama: {
+    name: 'Emi Funayama',
+    born: 1986,
+    nationality: 'Japanese',
+    career: [
+      { house: 'christianDada', role: 'Other', roleDetail: 'Womenswear designer' },
+      { house: 'fetico', role: 'Founder', roleDetail: 'Founder and designer', start: 2020, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2025, house: 'fetico' },
+    ],
+    notes: 'Japanese name 舟山瑛美. Born in Ibaraki; studied at Vantan Design Institute, Istituto Marangoni London and Esmod Japon. Won the Tokyo Fashion Award in 2022.',
+    sources: ['https://www.fashionsnap.com/person/funayama-emi/', 'https://www.fashionsnap.com/article/fetico-interview/'],
+  },
+  terumichiNakajima: {
+    name: 'Terumichi Nakajima',
+    nationality: 'Japanese',
+    career: [
+      { house: 'driesVanNoten', role: 'Other', roleDetail: 'Assistant, womenswear', start: 2010 },
+      { house: 'isseyMiyake', role: 'Other', roleDetail: 'Womenswear and menswear design', start: 2014, end: 2020, approximate: true },
+      { house: 'telma', role: 'Founder', roleDetail: 'Founder and designer', start: 2021, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiNewcomerPrize, year: 2026, house: 'telma' },
+    ],
+    notes: 'Japanese name 中島輝道, also romanized Terumasa. Born in Kanazawa; studied product design in Japan and textiles at Goldsmiths, then graduated from the Royal Academy of Fine Arts Antwerp in 2010.',
+    sources: ['https://www.fashionsnap.com/article/telma-nakajima-interview/', 'https://www.fashion-press.net/brands/6163'],
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 
