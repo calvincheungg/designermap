@@ -32,6 +32,7 @@ src/types.ts          data model
 src/data/houses.ts    SOURCE OF TRUTH: houses (key = house id)
 src/data/designers.ts SOURCE OF TRUTH: designers + career tenures
 src/data/collaborations.ts SOURCE OF TRUTH: dated brand collaborations (2+ houses)
+src/data/awards.ts    AwardId enum + awardInfo: the standardized awards designers reference
 src/data/research-log.ts research bookkeeping: brands with a full collaboration search (read at runtime only by Statistics' Rising and cooling)
 src/data/cities.ts    city → [lat, lng]; every house city must be listed here
 src/data/index.ts     derived queries: tenuresAt, movesOf, allMoves, yearRange…
@@ -59,6 +60,7 @@ src/ui/statistics.tsx  Statistics window (Start menu): filtered totals, tiers, c
 src/ui/year-chart.tsx  releases-per-year chart, columns or lines (Statistics and brand Properties)
 src/ui/settings.tsx   Settings window, in tabs: Map, Connections, Appearance, Accessibility, General (DEFAULT_SETTINGS)
 src/ui/explorer-menu.tsx Explorer's File / Edit / View / Go / Favorites / Help menu bar (favorites.ts, use-selection-history.ts)
+src/ui/award-window.tsx an award's window: every recipient with year, designer and brand
 src/ui/place-path.tsx location path in place windows (Europe ▸ France ▸ Paris)
 src/graph/picture.ts, tooltip.ts File ▸ Save Map as Picture… and the map's tooltips
 src/ui/tabs.tsx       shared Win98 tabs (Settings, Statistics)
@@ -77,6 +79,7 @@ src/ui/lazy-window.tsx windows downloaded separately (lazy-windows.ts lists them
 src/data/notes.ts     descriptions, filled in by production builds only (useNotes)
 src/App.tsx           interface state and synchronization with the graph API
 src/main.tsx          React root and startup data validation
+scripts/awards/       fashiondb.mjs: FashionDB award leads for matched designers (review only)
 scripts/collab/       collaboration research tools: todo list, crawl (one or a batch), headline filter, Fashion Press, house lookup, duplicate-safe add, research log
 docs/brand-research.md brand and collaboration research workflow
 docs/ui.md            map, window and styling behaviour

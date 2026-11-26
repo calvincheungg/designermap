@@ -1,5 +1,6 @@
 import type { DesignerData } from '../types';
 import type { HouseId } from './houses';
+import { AwardId } from './awards';
 
 /**
  * Designers and their careers. The object key is the designer id.
@@ -72,12 +73,18 @@ export const designers = {
   justinThornton: {
     name: 'Justin Thornton',
     career: [{ house: 'preen', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1996 }],
+    awards: [
+      { award: AwardId.BfaEstablishmentDesigner, year: 2014, house: 'preen' },
+    ],
     notes: 'Co-founded Preen with Thea Bregazzi. Previously worked for Helen Storey on the 2nd Life recycling range; that label is not represented in the dataset. Current formal role and any departure date are unconfirmed.',
     sources: ['https://preenbythorntonbregazzi.com/pages/about-us', 'https://www.vam.ac.uk/articles/fashion-in-motion-preen-by-thornton-bregazzi', 'https://www.countryandtownhouse.com/style/preen-by-thornton-bregazzi-for-great-british-brands/'],
   },
   theaBregazzi: {
     name: 'Thea Bregazzi',
     career: [{ house: 'preen', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1996 }],
+    awards: [
+      { award: AwardId.BfaEstablishmentDesigner, year: 2014, house: 'preen' },
+    ],
     notes: 'Co-founded Preen with Justin Thornton. Their design work is documented by the official brand history and V&A profile; current formal role and any departure date are unconfirmed.',
     sources: ['https://preenbythorntonbregazzi.com/pages/about-us', 'https://www.vam.ac.uk/articles/fashion-in-motion-preen-by-thornton-bregazzi'],
   },
@@ -85,6 +92,11 @@ export const designers = {
     name: 'Phillip Lim',
     born: 1973,
     career: [{ house: 'phillipLim', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2005, end: 2024 }],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2007, house: 'phillipLim', detail: 'Womenswear' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2012, house: 'phillipLim', detail: 'Menswear' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2013, house: 'phillipLim' },
+    ],
     notes: 'Worked first as an intern and then on Katayone Adeli’s design team, before co-founding Development in Los Angeles. Neither earlier label is currently represented. Departed 3.1 Phillip Lim in November 2024.',
     sources: ['https://cfda.com/member/phillip-lim/', 'https://www.vogue.com/article/31-phillip-lim-ushers-in-new-era-with-creative-director-michelle-rhee'],
   },
@@ -207,6 +219,9 @@ export const designers = {
       { house: 'commeDesGarcons', role: 'Other', roleDetail: 'Patternmaker' },
       { house: 'beautifulPeople', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2006, end: null },
     ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2020, house: 'beautifulPeople' },
+    ],
     notes: 'Studied apparel technology at Bunka Fashion College, worked as a patternmaker at Comme des Garçons and established an independent pattern company before co-founding beautiful people. Continued design leadership confirmed in Casio’s January 2026 collaboration announcement.',
     sources: ['https://beautiful-people.jp/en/pages/history', 'https://gshock.casio.com/ph/g-news/new-releases/2025/beautiful-people-gshock/'],
   },
@@ -276,12 +291,18 @@ export const designers = {
       { house: 'ferragamo', role: 'Other', roleDetail: 'Accessories design consultant' },
       { house: 'marcByMarcJacobs', role: 'Creative Director', start: 2013, end: 2015 },
     ],
+    awards: [
+      { award: AwardId.BfaAccessoriesDesigner, year: 2009 },
+    ],
     notes: 'Longstanding accessories consultant before her creative-director appointment. Also designed for Luella and founded Hillier London and Hillier Bartley; these labels are not currently represented in the dataset. Dates of most consulting roles are unconfirmed.',
     sources: ['https://www.rochelleschool.org/katie-hillier-ltd', 'https://www.vogue.co.uk/article/katie-hillier-interview-victoria-beckham-handbags', 'https://www.standard.co.uk/news/london/marc-jacobs-hires-london-design-duo-8639405.html', 'https://www.vogue.co.uk/article/marc-jacobs-on-marc-by-marc-closure-katie-hillier-luella-bartley'],
   },
   luellaBartley: {
     name: 'Luella Bartley',
     career: [{ house: 'marcByMarcJacobs', role: 'Womenswear Director', roleDetail: 'Design director, womenswear ready-to-wear', start: 2013, end: 2015 }],
+    awards: [
+      { award: AwardId.BfaDesignerOfTheYear, year: 2008 },
+    ],
     notes: 'Previously founded Luella, which closed in 2009, then co-founded Hillier Bartley with Katie Hillier in 2015. Neither label is currently represented in the dataset.',
     sources: ['https://www.standard.co.uk/news/london/marc-jacobs-hires-london-design-duo-8639405.html', 'https://www.interviewmagazine.com/fashion/katie-hillier-and-luella-bartley', 'https://fashionunited.com/news/fashion/katie-hillier-and-luella-bartley-launch-own-label/201504016544'],
   },
@@ -1351,6 +1372,10 @@ export const designers = {
   scottSternberg: {
     name: 'Scott Sternberg',
     career: [{ house: 'bandOfOutsiders', role: 'Founder', roleDetail: 'Founder and creative director', start: 2004, end: 2015 }],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2009, house: 'bandOfOutsiders', detail: 'shared with Italo Zucchelli' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2008, house: 'bandOfOutsiders', detail: 'Menswear' },
+    ],
     notes: 'Former talent agent who founded Band of Outsiders in Los Angeles. Launched the casual clothing label Entireworld in 2018 after leaving Band of Outsiders; Entireworld is not separately represented.',
     sources: ['https://press.nordstrom.com/static-files/5cbaa2c9-db58-4008-9cb8-917e19ec74c8', 'https://www.gq.com/story/scott-sternberg-entireworld-band-of-outsiders-interview'],
   },
@@ -1515,6 +1540,12 @@ export const designers = {
     career: [
       { house: 'anyaHindmarch', role: 'Founder', roleDetail: 'Founder and designer', start: 1987, end: null, sources: ['https://www.anyahindmarch.com/pages/about-anya'] },
     ],
+    awards: [
+      { award: AwardId.BfaAccessoriesDesigner, year: 2001, house: 'anyaHindmarch' },
+      { award: AwardId.BfaBrandOfTheYear, year: 2007, house: 'anyaHindmarch', detail: 'Designer Brand' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 2014, house: 'anyaHindmarch' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, house: 'anyaHindmarch', detail: 'Environment' },
+    ],
     sources: ['https://www.anyahindmarch.com/pages/about-anya'],
   },
   julianDunkerton: {
@@ -1660,6 +1691,9 @@ export const designers = {
     career: [
       { house: 'kateSpade', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1993, end: 2006, sources: ['https://cfda.com/member/kate-spade/'] },
     ],
+    awards: [
+      { award: AwardId.CfdaAccessoriesDesigner, year: 1997, house: 'kateSpade' },
+    ],
     notes: 'Also known as Kate Brosnahan Spade and Kate Valentine. Later co-founded Frances Valentine, which is not separately represented. Her CFDA biography dates the sale and departure to 2006.',
     sources: ['https://cfda.com/member/kate-spade/'],
   },
@@ -1737,6 +1771,10 @@ export const designers = {
     name: 'Jonathan Saunders',
     career: [
       { house: 'kateSpade', role: 'Creative Director', roleDetail: 'Executive creative director', start: 2026, end: null, sources: ['https://tapestry.gcs-web.com/news-releases/news-release-details/kate-spade-new-york-names-jonathan-saunders-executive-creative'] },
+    ],
+    awards: [
+      { award: AwardId.BfaEnterprise, year: 2006 },
+      { award: AwardId.BfaEmergingDesigner, year: 2012, detail: 'Menswear' },
     ],
     notes: 'Previously chief creative officer at Diane von Furstenberg and chief creative director at & Other Stories; those labels and his own namesake label are not separately represented. Earlier print commissions and consulting for Alexander McQueen, Chloé, Pucci, Calvin Klein and Tiffany are documented without sufficient project scope to establish separate sustained employment tenures.',
     sources: ['https://tapestry.gcs-web.com/news-releases/news-release-details/kate-spade-new-york-names-jonathan-saunders-executive-creative'],
@@ -2028,6 +2066,9 @@ export const designers = {
     career: [
       { house: 'tiffanyAndCo', role: 'Other', roleDetail: 'Jewellery and object designer; sustained exclusive designer partnership', start: 1974, end: 2021, sources: ['https://press.tiffany.com/statement-on-behalf-of-tiffany-co-elsa-peretti/'] },
     ],
+    awards: [
+      { award: AwardId.CfdaAccessoriesDesigner, year: 1996, house: 'tiffanyAndCo' },
+    ],
     sources: ['https://press.tiffany.com/statement-on-behalf-of-tiffany-co-elsa-peretti/'],
   },
   palomaPicasso: {
@@ -2136,6 +2177,11 @@ export const designers = {
     name: 'Perry Ellis',
     career: [
       { house: 'perryEllis', role: 'Founder', roleDetail: 'Founder and designer', start: 1976, end: 1986, sources: ['https://www.perryellis.com/pages/about-us'] },
+    ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 1981, house: 'perryEllis', detail: 'shared with Geoffrey Beene and Calvin Klein' },
+      { award: AwardId.CfdaMenswearDesigner, year: 1982, house: 'perryEllis' },
+      { award: AwardId.CfdaMenswearDesigner, year: 1983, house: 'perryEllis' },
     ],
     notes: 'Designed the Portfolio collection for Manhattan Industries from 1976, then established Perry Ellis Sportswear in 1978. Earlier work included John Meyer of Norwich and Vera; those labels are not separately represented.',
     sources: ['https://www.perryellis.com/pages/about-us', 'https://fgd.iuh.edu.vn/wp-content/uploads/2021/04/contemporary-fashion-cleaned-1.pdf'],
@@ -2432,6 +2478,9 @@ export const designers = {
       { house: 'nigelCabourn', role: 'Other', roleDetail: 'Design team', sources: ['https://www.craftscouncil.org.uk/stories/meet-nicholas-daley-designer-merging-fashion-music-and-craft'] },
       { house: 'nicholasDaley', role: 'Founder', roleDetail: 'Founder and designer', start: 2015, end: null },
     ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2020, house: 'nicholasDaley', detail: 'Prize shared among the eight finalists' },
+    ],
     notes: 'Central Saint Martins graduate whose work explores Jamaican-Scottish heritage, Black British music and textile craft. Also worked at Hardy Amies on Savile Row, a house not separately represented here; early employment dates remain unconfirmed.',
     sources: ['https://nicholasdaley.net/pages/about', 'https://www.craftscouncil.org.uk/stories/meet-nicholas-daley-designer-merging-fashion-music-and-craft', 'https://www.thebureaubelfast.com/news/2017/02/interview-with-nicholas-daley/'],
   },
@@ -2439,6 +2488,13 @@ export const designers = {
     name: 'Priya Ahluwalia',
     nationality: 'British',
     career: [{ house: 'ahluwalia', role: 'Founder', roleDetail: 'Founder and designer', start: 2018, end: null }],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2020, house: 'ahluwalia', detail: 'Prize shared among the eight finalists' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, house: 'ahluwalia', detail: 'People' },
+      { award: AwardId.BfaLeaderOfChange, year: 2021, house: 'ahluwalia', detail: 'Environment' },
+      { award: AwardId.BfaLeaderOfChange, year: 2022, house: 'ahluwalia', detail: 'Environment' },
+      { award: AwardId.BfaEmergingDesigner, year: 2024, house: 'ahluwalia', detail: 'New Establishment Menswear' },
+    ],
     notes: 'London designer of Indian-Nigerian heritage. Launched Ahluwalia after completing the University of Westminster’s MA Menswear course; uses vintage and surplus materials alongside photography, publishing and film to explore identity and community.',
     sources: ['https://ahluwalia.world/pages/about', 'https://fashionista.com/2024/05/priya-ahluwalia-designer-career-interview'],
   },
@@ -2509,6 +2565,9 @@ export const designers = {
     name: 'Rejina Pyo',
     nationality: 'South Korean',
     career: [{ house: 'rejinaPyo', role: 'Founder', roleDetail: 'Founder and creative director', start: 2014, end: null }],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2019, house: 'rejinaPyo', detail: 'Womenswear' },
+    ],
     notes: 'Seoul-born designer and painter who moved to London in 2008 and studied at Central Saint Martins. Worked as a designer at Roksanda, a label not separately represented here, before establishing her own house. Current brand history uses 2014; earlier award biographies use 2013.',
     sources: ['https://rejinapyo.com/pages/about', 'https://www.sfdf.co.kr/large/winners/winners_2018_02?lang=en'],
   },
@@ -2518,6 +2577,10 @@ export const designers = {
     career: [
       { house: 'cdg', role: 'Other', roleDetail: 'Part-time patternmaking assistant', notes: 'Worked for eight months after returning from Paris; exact years unconfirmed.', sources: ['https://fashionpost.jp/portraits/121465'] },
       { house: 'toga', role: 'Founder', roleDetail: 'Founder and designer', start: 1997, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2009, house: 'toga' },
+      { award: AwardId.MainichiFashionGrandPrix, year: 2018, house: 'toga' },
     ],
     notes: 'Studied design and patternmaking at Esmod Japon and Esmod Paris. Worked on freelance commercial projects and briefly assisted patternmakers at Comme des Garçons before establishing TOGA in Tokyo.',
     sources: ['https://store.toga.jp/pages/about', 'https://andam.fr/en/laureats/toga-yasuko-furuta/', 'https://fashionpost.jp/portraits/121465', 'https://www.fashionsnap.com/article/my-truly-great-clothes-yasuko-furuta/'],
@@ -2783,6 +2846,14 @@ export const designers = {
     born: 1942,
     nationality: 'Spanish',
     career: [{ house: 'manoloBlahnik', role: 'Founder', roleDetail: 'Founder and creative director', start: 1970, end: null }],
+    awards: [
+      { award: AwardId.CfdaAccessoriesDesigner, year: 1990, house: 'manoloBlahnik' },
+      { award: AwardId.CfdaSpecialAward, year: 1997, house: 'manoloBlahnik', detail: 'Stiletto Award' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 1990, house: 'manoloBlahnik' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 1999, house: 'manoloBlahnik' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 2003, house: 'manoloBlahnik' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2012 },
+    ],
     notes: 'Studied art and set design before learning shoemaking through factory visits. His early runway projects included footwear for Ossie Clark; subsequent runway collaborations are distinct from employment at those labels.',
     sources: ['https://www.manoloblahnik.com/gb/the-company', 'https://www.manoloblahnik.com/int/the-journey', 'https://www.cultura.gob.es/dam/jcr%3Abedb7632-fa54-42b1-a347-ef6586cceca1/cvitaeblahnik.pdf'],
   },
@@ -2853,6 +2924,12 @@ export const designers = {
     career: [
       { house: 'christopherKane', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2006, end: 2023 },
       { house: 'mulberry', role: 'Creative Director', roleDetail: 'Women’s ready-to-wear only', start: 2026, end: null, sources: ['https://www.mulberry.com/plugins/investor_relations/pdf/CK_ANNOUNCEMENT_Press%20Release_EN.pdf'] },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2007, house: 'christopherKane', detail: 'New Generation' },
+      { award: AwardId.BfaCollectionOfTheYear, year: 2009, house: 'christopherKane' },
+      { award: AwardId.BfaNewEstablishment, year: 2011, house: 'christopherKane' },
+      { award: AwardId.BfaBritishWomenswear, year: 2013, house: 'christopherKane' },
     ],
     notes: 'Central Saint Martins graduate who founded his London label with sister Tammy. Also led design at Versus until autumn 2012; that label is not separately represented. Recovered his namesake brand’s intellectual property with Tammy following its 2023 closure. The 2024 Self-Portrait residency was a capsule project.',
     sources: ['https://www.kering.com/en/news/christopher-kane-announce-appointment-ceo/', 'https://www.wallpaper.com/fashion-beauty/christopher-kane-mulberry-debut-show-review-london-fashion-week', 'https://www.nssmag.com/en/fashion/33550/christopher-kane-closes'],
@@ -2981,6 +3058,10 @@ export const designers = {
       { house: 'dior', role: 'Artistic Director', start: 1957, end: 1960 },
       { house: 'saintLaurent', role: 'Founder', start: 1961, end: 2002 },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 1981, house: 'saintLaurent' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 1999, house: 'saintLaurent' },
+    ],
   },
   karlLagerfeld: {
     name: 'Karl Lagerfeld',
@@ -2995,6 +3076,12 @@ export const designers = {
       { house: 'fendi', role: 'Creative Director', start: 1965, end: 2019 },
       { house: 'chanel', role: 'Creative Director', start: 1983, end: 2019 },
       { house: 'chloe', role: 'Head Designer', start: 1992, end: 1997, notes: 'Second stint at Chloé.' },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 1982, house: 'chloe' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 1991, house: 'chanel' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 2002, detail: 'shared with Grace Coddington' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2015 },
     ],
   },
   virginieViard: {
@@ -3044,6 +3131,16 @@ export const designers = {
       },
       { house: 'tomFord', role: 'Founder', roleDetail: 'Founder, creative director', start: 2005, end: 2023 },
     ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2001 },
+      { award: AwardId.CfdaMenswearDesigner, year: 2008, house: 'tomFord' },
+      { award: AwardId.CfdaMenswearDesigner, year: 2015, house: 'tomFord' },
+      { award: AwardId.CfdaInternationalAward, year: 1995, house: 'gucci' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2002, house: 'saintLaurent' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 2014, house: 'tomFord' },
+      { award: AwardId.BfaRedCarpet, year: 2015, house: 'tomFord' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2024, house: 'tomFord' },
+    ],
   },
   hediSlimane: {
     name: 'Hedi Slimane',
@@ -3055,6 +3152,9 @@ export const designers = {
       { house: 'saintLaurent', role: 'Creative Director', start: 2012, end: 2016 },
       { house: 'celine', role: 'Artistic Director', start: 2018, end: 2024 },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2002, house: 'dior', detail: 'for Dior Homme' },
+    ],
   },
   anthonyVaccarello: {
     name: 'Anthony Vaccarello',
@@ -3064,6 +3164,9 @@ export const designers = {
       { house: 'anthonyVaccarelloLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2008, end: 2016 },
       { house: 'versace', role: 'Other', roleDetail: 'Creative director of the Versus Versace line', start: 2015, end: 2016, approximate: true, notes: 'Designed a Versus capsule in 2014 before taking the line over.' },
       { house: 'saintLaurent', role: 'Creative Director', start: 2016, end: null },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2026, house: 'saintLaurent' },
     ],
   },
   phoebePhilo: {
@@ -3076,6 +3179,11 @@ export const designers = {
       { house: 'celine', role: 'Creative Director', start: 2008, end: 2017 },
       { house: 'phoebePhiloLabel', role: 'Founder', roleDetail: 'Founder, creative director', start: 2023, end: null },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2011, house: 'celine' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2004, house: 'chloe' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2010, house: 'celine' },
+    ],
   },
   stellaMcCartney: {
     name: 'Stella McCartney',
@@ -3083,6 +3191,18 @@ export const designers = {
     nationality: 'British',
     career: [{ house: 'chloe', role: 'Creative Director', start: 1997, end: 2001 },
       { house: 'stellaMcCartney', role: 'Founder', roleDetail: 'Founder, creative director', start: 2001, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaGlamourDesigner, year: 2000 },
+      { award: AwardId.BfaEmergingDesigner, year: 2001, detail: 'New Generation' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2007, house: 'stellaMcCartney' },
+      { award: AwardId.BfaRedCarpet, year: 2011, house: 'stellaMcCartney' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2012, house: 'stellaMcCartney' },
+      { award: AwardId.BfaBrandOfTheYear, year: 2012, house: 'stellaMcCartney', detail: 'Designer Brand' },
+      { award: AwardId.BfaBrandOfTheYear, year: 2015, house: 'stellaMcCartney' },
+      { award: AwardId.BfaSpecialRecognition, year: 2017, house: 'stellaMcCartney', detail: 'Innovation' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, house: 'stellaMcCartney', detail: 'Environment' },
+      { award: AwardId.BfaLeaderOfChange, year: 2021, house: 'stellaMcCartney', detail: 'Environment' },
     ],
   },
   clareWaightKeller: {
@@ -3117,6 +3237,9 @@ export const designers = {
         sources: ['https://www.fastretailing.com/eng/group/news/2409041100.html'],
       },
     ],
+    awards: [
+      { award: AwardId.BfaBritishWomenswear, year: 2018, house: 'givenchy' },
+    ],
   },
   alexanderMcQueen: {
     name: 'Alexander McQueen',
@@ -3126,6 +3249,15 @@ export const designers = {
     career: [
       { house: 'alexanderMcQueen', role: 'Founder', start: 1992, end: 2010 },
       { house: 'givenchy', role: 'Creative Director', start: 1996, end: 2001 },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2003, house: 'alexanderMcQueen' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 1996, house: 'alexanderMcQueen' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 1997, detail: 'Shared with John Galliano' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2001, house: 'alexanderMcQueen' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2003, house: 'alexanderMcQueen' },
+      { award: AwardId.BfaBritishMenswear, year: 2004, house: 'alexanderMcQueen' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2010, detail: 'Posthumous' },
     ],
   },
   johnGalliano: {
@@ -3138,6 +3270,14 @@ export const designers = {
       { house: 'dior', role: 'Creative Director', start: 1996, end: 2011 },
       { house: 'maisonMargiela', role: 'Creative Director', start: 2014, end: 2024 },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 1997, house: 'dior' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 1987, house: 'johnGalliano' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 1994, house: 'johnGalliano' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 1995 },
+      { award: AwardId.BfaDesignerOfTheYear, year: 1997, detail: 'Shared with Alexander McQueen' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2009 },
+    ],
   },
   riccardoTisci: {
     name: 'Riccardo Tisci',
@@ -3148,6 +3288,10 @@ export const designers = {
       { house: 'givenchy', role: 'Creative Director', start: 2005, end: 2017 },
       { house: 'burberry', role: 'Creative Director', start: 2018, end: 2022 },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2013, house: 'givenchy' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, house: 'burberry', detail: 'Creativity' },
+    ],
   },
   sarahBurton: {
     name: 'Sarah Burton',
@@ -3157,6 +3301,15 @@ export const designers = {
       { house: 'alexanderMcQueen', role: 'Other', roleDetail: 'Assistant to Lee McQueen, then head of womenswear design', start: 1996, end: 2010 },
       { house: 'alexanderMcQueen', role: 'Creative Director', start: 2010, end: 2023 },
       { house: 'givenchy', role: 'Creative Director', start: 2024, end: null },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2019, house: 'alexanderMcQueen' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2011, house: 'alexanderMcQueen' },
+      { award: AwardId.BfaRedCarpet, year: 2014, house: 'alexanderMcQueen' },
+      { award: AwardId.BfaBrandOfTheYear, year: 2016, house: 'alexanderMcQueen', detail: 'British Brand' },
+      { award: AwardId.BfaTrailblazer, year: 2019 },
+      { award: AwardId.BfaSpecialRecognition, year: 2023 },
+      { award: AwardId.BfaBritishWomenswear, year: 2025, house: 'givenchy' },
     ],
   },
   seanMcGirr: {
@@ -3187,6 +3340,12 @@ export const designers = {
       { house: 'bottegaVeneta', role: 'Creative Director', start: 2018, end: 2021 },
       { house: 'burberry', role: 'Creative Director', start: 2022, end: null },
     ],
+    awards: [
+      { award: AwardId.BfaDesignerOfTheYear, year: 2019, house: 'bottegaVeneta' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 2019, house: 'bottegaVeneta' },
+      { award: AwardId.BfaBritishWomenswear, year: 2019, house: 'bottegaVeneta' },
+      { award: AwardId.BfaBrandOfTheYear, year: 2019, house: 'bottegaVeneta' },
+    ],
   },
   rafSimons: {
     name: 'Raf Simons',
@@ -3212,6 +3371,16 @@ export const designers = {
         end: null,
       },
       { house: 'rafSimonsLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 1995, end: 2022 },
+    ],
+    awards: [
+      { award: AwardId.SwissTextilesAward, year: 2003, sources: ['https://www.businessoffashion.com/people/raf-simons/'] },
+      { award: AwardId.CfdaInternationalAward, year: 2014, house: 'dior', sources: ['https://www.lvmh.com/news-documents/news/raf-simons-honored-by-cfda/'] },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2017, house: 'calvinKlein', sources: ['https://cfda.com/news/the-2017-cfda-fashion-awards-winners', 'https://www.businessoffashion.com/people/raf-simons/'] },
+      { award: AwardId.CfdaMenswearDesigner, year: 2017, house: 'calvinKlein', sources: ['https://cfda.com/news/the-2017-cfda-fashion-awards-winners', 'https://www.businessoffashion.com/people/raf-simons/'] },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2018, house: 'calvinKlein', sources: ['https://cfda.com/news/the-2018-cfda-fashion-awards-winners/', 'https://www.businessoffashion.com/people/raf-simons/'] },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2017, house: 'calvinKlein' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, house: 'prada', detail: 'Creativity; with Miuccia Prada' },
+      { award: AwardId.BfaLeaderOfChange, year: 2022, detail: 'Creativity' },
     ],
   },
   /* ---------- Prada lineage ---------- */
@@ -3242,6 +3411,13 @@ export const designers = {
         start: 2020,
         end: null,
       },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 1993, house: 'prada', detail: 'for accessories' },
+      { award: AwardId.CfdaInternationalAward, year: 2004, house: 'prada' },
+      { award: AwardId.BfaInternationalDesigner, year: 2013, house: 'prada' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2018, house: 'prada' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, house: 'prada', detail: 'Creativity; with Raf Simons' },
     ],
   },
 
@@ -3345,6 +3521,10 @@ export const designers = {
       { house: 'dior', role: 'Artistic Director', start: 2016, end: 2025 },
       { house: 'fendi', role: 'Creative Director', roleDetail: 'Chief creative officer', start: 2025, end: null, notes: 'Named October 2025; began her career at Fendi as an accessories designer.' },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2015, house: 'valentino' },
+      { award: AwardId.BfaPositiveChange, year: 2017, house: 'dior' },
+    ],
   },
   pierpaoloPiccioli: {
     name: 'Pierpaolo Piccioli',
@@ -3356,6 +3536,12 @@ export const designers = {
       { house: 'valentino', role: 'Co-Creative Director', start: 2008, end: 2016 },
       { house: 'valentino', role: 'Creative Director', start: 2016, end: 2024 },
       { house: 'balenciaga', role: 'Creative Director', start: 2025, end: 2026 },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2015, house: 'valentino' },
+      { award: AwardId.CfdaInternationalAward, year: 2020, house: 'valentino', detail: 'International Women’s Designer of the Year' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2018, house: 'valentino' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2022, house: 'valentino' },
     ],
   },
   nicolasGhesquiere: {
@@ -3373,6 +3559,10 @@ export const designers = {
         start: 2013,
         end: null,
       },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2001, house: 'balenciaga' },
+      { award: AwardId.BfaInternationalDesigner, year: 2014, house: 'louisVuitton' },
     ],
   },
   marcJacobs: {
@@ -3393,6 +3583,19 @@ export const designers = {
         end: 2013,
       },
     ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 1992, house: 'perryEllis' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 1997, house: 'marcJacobs' },
+      { award: AwardId.CfdaMenswearDesigner, year: 2002, house: 'marcJacobs' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2010, house: 'marcJacobs' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2016, house: 'marcJacobs' },
+      { award: AwardId.CfdaPerryEllisAward, year: 1987 },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 1999 },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2003 },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2005 },
+      { award: AwardId.CfdaInternationalAward, year: 2009, house: 'louisVuitton' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 2011, house: 'marcJacobs' },
+    ],
   },
 
   rickOwens: {
@@ -3402,6 +3605,11 @@ export const designers = {
     career: [
       { house: 'rickOwens', role: 'Founder', start: 1994, end: null },
       { house: 'drkshdw', role: 'Head Designer', end: null, sources: ['https://cfda.com/member/rick-owens/', 'https://www.rickowens.eu/blogs/interviews/new-order-april-2009'] },
+    ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2019, house: 'rickOwens' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2002, house: 'rickOwens' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 2017, house: 'rickOwens' },
     ],
   },
 
@@ -3415,6 +3623,9 @@ export const designers = {
       { house: 'yohjiYamamotoPourHomme', role: 'Head Designer', start: 1984, end: null, sources: ['https://www.yohjiyamamoto.co.jp/news/detail/yohji-yamamoto-chronicle-yohji-yamamoto-pour-homme/'] },
       { house: 'y3', role: 'Creative Director', start: 2002, end: null },
       { house: 'ys', role: 'Founder', start: 1972, end: null, sources: ['https://hypebeast.com/2022/4/ys-50-years-anniversary-collection-new-release-info'] },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 1999, house: 'yohjiYamamoto' },
     ],
   },
   reiKawakubo: {
@@ -3431,6 +3642,10 @@ export const designers = {
       { house: 'cdgPlay', role: 'Head Designer', end: null, sources: ['https://shop.doverstreetmarket.com/collections/comme-des-garcons-play'] },
       { house: 'cdgGirl', role: 'Head Designer', end: null, sources: ['https://m.ssfshop.com/CDGGIRL/main?brandShopNo=BDMA33A24&brndShopId=CGWCG'] },
       { house: 'cdgCommeDesGarcons', role: 'Head Designer', notes: 'Authorship confirmed in the 2015 collection review; precise tenure dates and present status are unconfirmed.', sources: ['https://www.vogue.com/fashion-shows/fall-2015-ready-to-wear/comme-des-garcons-comme-des-garcons'] },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2012, house: 'commeDesGarcons' },
+      { award: AwardId.BfaIsabellaBlow, year: 2025, house: 'commeDesGarcons', detail: 'Shared with Adrian Joffe and Dickon Bowden' },
     ],
   },
   junyaWatanabe: {
@@ -3459,6 +3674,10 @@ export const designers = {
     died: 2022,
     nationality: 'Japanese',
     career: [{ house: 'isseyMiyake', role: 'Founder', roleDetail: 'Founder, creative director', start: 1970, end: 1999 }],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 1983, house: 'isseyMiyake', detail: 'shared with Giorgio Armani' },
+      { award: AwardId.MainichiFashionGrandPrix, year: 2000, house: 'isseyMiyake', detail: 'Millennium commemorative award' },
+    ],
   },
   junTakahashi: {
     name: 'Jun Takahashi',
@@ -3471,6 +3690,10 @@ export const designers = {
       { house: 'undercoverism', role: 'Creative Director', roleDetail: 'Revived menswear line', start: 2021, end: 2023, sources: ['https://www.highsnobiety.com/p/undercoverism-fw21-collection-lookbook/', 'https://www.fashion-press.net/brands/68'] },
       { house: 'theShepherdUndercover', role: 'Creative Director', start: 2016, end: null, sources: ['https://undercoverism.com/historyofu/', 'https://undercoverism.com/new/20261015_1/newarrival'] },
     ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2001, house: 'undercover' },
+      { award: AwardId.MainichiFashionGrandPrix, year: 2013, house: 'undercover' },
+    ],
   },
   chitoseAbe: {
     name: 'Chitose Abe',
@@ -3480,6 +3703,10 @@ export const designers = {
       { house: 'commeDesGarcons', role: 'Other', roleDetail: 'Pattern-maker', start: 1989, end: 1997, approximate: true },
       { house: 'sacai', role: 'Founder', start: 1999, end: null },
       { house: 'jeanPaulGaultier', role: 'Other', roleDetail: 'Guest couture designer', start: 2021, end: 2021 },
+    ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2007, house: 'sacai' },
+      { award: AwardId.MainichiFashionGrandPrix, year: 2015, house: 'sacai' },
     ],
   },
   junichiAbe: {
@@ -3498,6 +3725,9 @@ export const designers = {
       },
       { house: 'kolor', role: 'Founder', start: 2004, end: null },
     ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2012, house: 'kolor' },
+    ],
     notes: 'Married to sacai founder Chitose Abe; they met while working on Junya Watanabe’s team. This is a family connection, rather than a role at sacai. Co-founded PPCM in 1994 before launching kolor in 2004.',
     sources: ['https://www.interviewmagazine.com/fashion/junichi-abe', 'https://www.cultura.gob.es/mtraje/en/visita/visita-virtual/disenadores-actuales-pasarela/conjunto-kolor.html'],
   },
@@ -3506,6 +3736,9 @@ export const designers = {
     born: 1972,
     nationality: 'Japanese',
     career: [{ house: 'maisonMiharaYasuhiro', role: 'Founder', start: 1997, end: null }],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2024, house: 'maisonMiharaYasuhiro' },
+    ],
   },
   hirokiNakamura: {
     name: 'Hiroki Nakamura',
@@ -3542,6 +3775,9 @@ export const designers = {
       { house: 'humanMade', role: 'Founder', start: 2010, end: null },
       { house: 'nigold', role: 'Founder', roleDetail: 'Founder and designer of the UNITED ARROWS line', start: 2014 },
       { house: 'kenzo', role: 'Artistic Director', start: 2021, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2022, house: 'kenzo' },
     ],
   },
 
@@ -3583,11 +3819,17 @@ export const designers = {
       { house: 'ferragamo', role: 'Creative Director', start: 2016, end: 2021, approximate: true },
       { house: 'sergioRossi', role: 'Creative Director', start: 2024, end: 2026, sources: ['https://fashionunited.uk/news/people/paul-andrew-named-new-creative-director-of-sergio-rossi/2024072476793', 'https://www.shoeintelligence.com/executive-changes/sergio-rossis-creative-director-leaves/119288.article'] },
     ],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2016, detail: 'Accessories' },
+    ],
   },
   maximilianDavis: {
     name: 'Maximilian Davis',
     nationality: 'British',
     career: [{ house: 'ferragamo', role: 'Creative Director', start: 2022, end: null }],
+    awards: [
+      { award: AwardId.BfaBritishWomenswear, year: 2023, house: 'ferragamo' },
+    ],
   },
 
   /* ---------- Roberto Cavalli lineage ---------- */
@@ -3682,6 +3924,9 @@ export const designers = {
       { house: 'saintLaurent', role: 'Womenswear Director', roleDetail: 'YSL Rive Gauche', start: 1998, end: 1999 },
       { house: 'lanvin', role: 'Artistic Director', start: 2001, end: 2015 },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2005, house: 'lanvin' },
+    ],
   },
   bouchraJarrar: {
     name: 'Bouchra Jarrar',
@@ -3723,6 +3968,13 @@ export const designers = {
     died: 2022,
     nationality: 'British',
     career: [{ house: 'vivienneWestwood', role: 'Founder', start: 1971, end: 2022 }],
+    awards: [
+      { award: AwardId.BfaDesignerOfTheYear, year: 1990, house: 'vivienneWestwood' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 1991, house: 'vivienneWestwood' },
+      { award: AwardId.BfaRedCarpet, year: 2006, house: 'vivienneWestwood' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2007 },
+      { award: AwardId.BfaPositiveChange, year: 2018 },
+    ],
   },
   andreasKronthaler: {
     name: 'Andreas Kronthaler',
@@ -3779,6 +4031,9 @@ export const designers = {
     born: 1958,
     nationality: 'Belgian',
     career: [{ house: 'driesVanNoten', role: 'Founder', start: 1986, end: 2024 }],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2008, house: 'driesVanNoten' },
+    ],
   },
   julianKlausner: {
     name: 'Julian Klausner',
@@ -3864,6 +4119,9 @@ export const designers = {
     born: 1977,
     nationality: 'American',
     career: [{ house: 'fearOfGod', role: 'Founder', roleDetail: 'Founder, creative director', start: 2013, end: null }],
+    awards: [
+      { award: AwardId.CfdaInnovationAward, year: 2025, house: 'fearOfGod' },
+    ],
   },
   nobuhikoKitamura: {
     name: 'Nobuhiko Kitamura',
@@ -3882,6 +4140,19 @@ export const designers = {
     career: [
       { house: 'ralphLauren', role: 'Founder', roleDetail: 'Founder, chief creative officer', start: 1967, end: null },
       { house: 'rrl', role: 'Founder', roleDetail: 'Founder of Double RL', start: 1993, notes: 'Launch documented by the official timeline; this records founding rather than a separately dated current line-design appointment.', sources: ['https://www.ralphlauren.com/rl-50th-anniversary-the-timeline'] },
+    ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 1981, house: 'ralphLauren', detail: 'shared with Jhane Barnes and Alexander Julian' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 1995, house: 'ralphLauren' },
+      { award: AwardId.CfdaMenswearDesigner, year: 1996, house: 'ralphLauren' },
+      { award: AwardId.CfdaMenswearDesigner, year: 2007, house: 'ralphLauren' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2025, house: 'ralphLauren' },
+      { award: AwardId.CfdaMenswearDesigner, year: 2026, house: 'ralphLauren' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 1991, house: 'ralphLauren' },
+      { award: AwardId.CfdaHumanitarianAward, year: 1997 },
+      { award: AwardId.CfdaSpecialAward, year: 2007, detail: 'American Fashion Legend Award' },
+      { award: AwardId.CfdaSpecialAward, year: 2018, detail: 'CFDA Members’ Salute' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2016, house: 'ralphLauren' },
     ],
   },
   gregLauren: {
@@ -3911,6 +4182,12 @@ export const designers = {
         end: 2015
       },
     ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 1990, house: 'donnaKaran' },
+      { award: AwardId.CfdaMenswearDesigner, year: 1992, house: 'donnaKaran' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 1996, house: 'donnaKaran' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 2004, house: 'donnaKaran' },
+    ],
   },
   daoYiChow: {
     name: 'Dao-Yi Chow',
@@ -3923,6 +4200,10 @@ export const designers = {
       { house: 'publicSchool', role: 'Founder', roleDetail: 'Co-founder and co-designer with Maxwell Osborne', start: 2008, end: null, notes: 'The label resumed runway collections in 2026 after a prolonged hiatus.', sources: ['https://cfda.com/member/maxwell-osborne/', 'https://www.gq.com/story/public-school-comeback-fall-2026'] },
       { house: 'dkny', role: 'Co-Creative Director', roleDetail: 'with Maxwell Osborne', start: 2015, end: 2017 },
     ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2014, house: 'publicSchool' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2013, house: 'publicSchool', detail: 'Menswear' },
+    ],
   },
   maxwellOsborne: {
     name: 'Maxwell Osborne',
@@ -3933,6 +4214,10 @@ export const designers = {
       { house: 'seanJohn', role: 'Other', roleDetail: 'Woven design', notes: 'Before Public School; dates unconfirmed.' },
       { house: 'publicSchool', role: 'Founder', roleDetail: 'Co-founder and co-designer with Dao-Yi Chow', start: 2008, end: null, notes: 'The label resumed runway collections in 2026 after a prolonged hiatus.', sources: ['https://cfda.com/member/maxwell-osborne/', 'https://www.gq.com/story/public-school-comeback-fall-2026'] },
       { house: 'dkny', role: 'Co-Creative Director', roleDetail: 'with Dao-Yi Chow', start: 2015, end: 2017 },
+    ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2014, house: 'publicSchool' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2013, house: 'publicSchool', detail: 'Menswear' },
     ],
   },
   peterHawkings: {
@@ -3961,6 +4246,12 @@ export const designers = {
       { house: 'brooksBrothers', role: 'Other', roleDetail: 'Black Fleece line', start: 2007, end: 2015, approximate: true },
       { house: 'moncler', role: 'Creative Director', roleDetail: 'Moncler Gamme Bleu (menswear)', start: 2009, end: 2017 },
     ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2006, house: 'thomBrowne' },
+      { award: AwardId.CfdaMenswearDesigner, year: 2013, house: 'thomBrowne' },
+      { award: AwardId.CfdaMenswearDesigner, year: 2016, house: 'thomBrowne' },
+      { award: AwardId.CfdaMenswearDesigner, year: 2025, house: 'thomBrowne' },
+    ],
   },
   maryKateOlsen: {
     name: 'Mary-Kate Olsen',
@@ -3983,6 +4274,15 @@ export const designers = {
         notes: 'Co-creative leadership was confirmed again in the 2019 Kohl’s partnership announcement. Exact end year unconfirmed.',
         sources: ['https://cfda.com/member/ashley-olsen/', 'https://investors.kohls.com/news/news-details/2019/Elizabeth-and-James-and-Kohls-Announce-Exclusive-Partnership-/default.aspx'],
       },
+    ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2012, house: 'theRow' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2015, house: 'theRow' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2014, house: 'theRow' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2018, house: 'theRow' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2019, house: 'theRow' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2023, house: 'theRow' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2025, house: 'theRow' },
     ],
   },
   ashleyOlsen: {
@@ -4007,12 +4307,25 @@ export const designers = {
         sources: ['https://cfda.com/member/ashley-olsen/', 'https://investors.kohls.com/news/news-details/2019/Elizabeth-and-James-and-Kohls-Announce-Exclusive-Partnership-/default.aspx'],
       },
     ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2012, house: 'theRow' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2015, house: 'theRow' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2014, house: 'theRow' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2018, house: 'theRow' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2019, house: 'theRow' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2023, house: 'theRow' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2025, house: 'theRow' },
+    ],
   },
   catherineHolstein: {
     name: 'Catherine Holstein',
     nationality: 'American',
     career: [
       { house: 'khaite', role: 'Founder', roleDetail: 'Founder, creative director', start: 2016, end: null },
+    ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2022, house: 'khaite' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2023, house: 'khaite' },
     ],
   },
   mikeAmiri: {
@@ -4027,6 +4340,9 @@ export const designers = {
     name: 'James Jebbia',
     nationality: 'American',
     career: [{ house: 'supreme', role: 'Founder', start: 1994, end: null }],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2018, house: 'supreme', detail: 'awarded to Supreme' },
+    ],
   },
 
   /* ---------- DSquared2 ---------- */
@@ -4100,6 +4416,9 @@ export const designers = {
       { house: 'patou', role: 'Other', roleDetail: 'Studio designer under Michel Goma', start: 1972, end: 1974, sources: ['https://www.fhcm.paris/en/news/jean-jacques-picart-fashion-is-but-the-expression-of-the-spirit-of-the-times'] },
       { house: 'jeanPaulGaultier', role: 'Founder', roleDetail: 'Founder, creative director', start: 1982, end: 2020 },
       { house: 'hermes', role: 'Womenswear Director', start: 2003, end: 2010 },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2000, house: 'jeanPaulGaultier' },
     ],
   },
   pierreAlexisDumas: {
@@ -4178,6 +4497,9 @@ export const designers = {
       { house: 'duranLantinkLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2019 },
       { house: 'jeanPaulGaultier', role: 'Creative Director', start: 2025, end: null },
     ],
+    awards: [
+      { award: AwardId.LvmhKarlLagerfeldPrize, year: 2024, house: 'duranLantinkLabel' },
+    ],
     notes: 'Born in The Hague; studied at the Gerrit Rietveld Academie and graduated from the Sandberg Instituut in 2017.',
   },
 
@@ -4211,6 +4533,11 @@ export const designers = {
       { house: 'lanvin', role: 'Other', roleDetail: 'Couture assistant to Antonio del Castillo', start: 1961, end: 1963 },
       { house: 'balmain', role: 'Creative Director', roleDetail: 'Haute couture', start: 1993, end: 2002 },
       { house: 'oscarDeLaRentaHouse', role: 'Founder', roleDetail: 'Founder, designer', start: 1965, end: 2014 },
+    ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2000, house: 'oscarDeLaRentaHouse' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2007, house: 'oscarDeLaRentaHouse', detail: 'shared with Lazaro Hernandez and Jack McCollough' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 1989, house: 'oscarDeLaRentaHouse' },
     ],
   },
   laurentMercier: {
@@ -4324,6 +4651,10 @@ export const designers = {
       { house: 'thomBrowne', role: 'Other', roleDetail: 'Design director', start: 2008, end: 2019, approximate: true },
       { house: 'schiaparelli', role: 'Creative Director', start: 2019, end: null },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2024, house: 'schiaparelli' },
+      { award: AwardId.BfaLeaderOfChange, year: 2022, house: 'schiaparelli', detail: 'Creativity' },
+    ],
   },
 
   /* ---------- Alaïa lineage ---------- */
@@ -4351,6 +4682,9 @@ export const designers = {
         notes: 'First appointment under Prada Group ownership; effective 1 July 2026.',
       },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2025, house: 'alaia' },
+    ],
   },
 
   /* ---------- Founder-led Paris labels ---------- */
@@ -4370,6 +4704,9 @@ export const designers = {
       { house: 'commeDesGarcons', role: 'Other', roleDetail: 'Sales associate', start: 2009, end: 2010, approximate: true },
       { house: 'jacquemus', role: 'Founder', roleDetail: 'Founder, creative director', start: 2009, end: null },
     ],
+    awards: [
+      { award: AwardId.LvmhSpecialPrize, year: 2015, house: 'jacquemus' },
+    ],
   },
   marineSerre: {
     name: 'Marine Serre',
@@ -4381,6 +4718,10 @@ export const designers = {
       { house: 'dior', role: 'Other', roleDetail: 'Intern under Raf Simons', start: 2015, end: 2015 },
       { house: 'balenciaga', role: 'Other', roleDetail: 'Junior designer / design assistant under Demna', start: 2016, end: 2017 },
       { house: 'marineSerre', role: 'Founder', roleDetail: 'Founder, creative director', start: 2017, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2017, house: 'marineSerre' },
+      { award: AwardId.BfaLeaderOfChange, year: 2022, house: 'marineSerre', detail: 'Environment' },
     ],
   },
   sotiriosVoulgaris: {
@@ -4423,6 +4764,9 @@ export const designers = {
       },
       { house: 'casablanca', role: 'Founder', roleDetail: 'Founder, creative director', start: 2018, end: null },
     ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2020, house: 'casablanca', detail: 'Prize shared among the eight finalists' },
+    ],
   },
 
   /* ---------- Stockholm & New York ---------- */
@@ -4441,6 +4785,10 @@ export const designers = {
       { house: 'peterDo', role: 'Founder', roleDetail: 'Founder, creative director', start: 2018, end: null },
       { house: 'helmutLang', role: 'Creative Director', start: 2023, end: 2024 },
     ],
+    awards: [
+      { award: AwardId.LvmhGraduatePrize, year: 2014 },
+      { award: AwardId.LvmhPrize, year: 2020, house: 'peterDo', detail: 'Prize shared among the eight finalists' },
+    ],
   },
 
   /* ---------- Italian houses ---------- */
@@ -4453,12 +4801,20 @@ export const designers = {
       { house: 'genny', role: 'Head Designer', start: 1973, notes: 'Also designed the Byblos and Complice lines for the Girombellis; end year unconfirmed.' },
       { house: 'versace', role: 'Founder', start: 1978, end: 1997 },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 1992, house: 'versace' },
+    ],
   },
   donatellaVersace: {
     name: 'Donatella Versace',
     born: 1955,
     nationality: 'Italian',
     career: [{ house: 'versace', role: 'Creative Director', start: 1997, end: 2025 }],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2018, house: 'versace' },
+      { award: AwardId.CfdaPositiveChange, year: 2025 },
+      { award: AwardId.BfaFashionIcon, year: 2017, house: 'versace' },
+    ],
   },
   darioVitale: {
     name: 'Dario Vitale',
@@ -4498,6 +4854,11 @@ export const designers = {
     died: 2025,
     nationality: 'Italian',
     career: [{ house: 'armani', role: 'Founder', roleDetail: 'Founder, creative director', start: 1975, end: 2025 }],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 1983, house: 'armani', detail: 'shared with Issey Miyake' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 1987, house: 'armani' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2019, house: 'armani' },
+    ],
   },
   silvanaArmani: {
     name: 'Silvana Armani',
@@ -4857,6 +5218,13 @@ export const designers = {
     born: 1986,
     nationality: 'Irish',
     career: [{ house: 'simoneRocha', role: 'Founder', roleDetail: 'Founder, creative director', start: 2010, end: null }],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2013, house: 'simoneRocha', detail: 'Womenswear' },
+      { award: AwardId.BfaNewEstablishment, year: 2014, house: 'simoneRocha' },
+      { award: AwardId.BfaBritishWomenswear, year: 2016, house: 'simoneRocha' },
+      { award: AwardId.BfaIndependentDesigner, year: 2021, house: 'simoneRocha' },
+      { award: AwardId.BfaBritishWomenswear, year: 2024, house: 'simoneRocha' },
+    ],
   },
   paulSmithDesigner: {
     name: 'Paul Smith',
@@ -4873,6 +5241,13 @@ export const designers = {
         roleDetail: 'Sales agent for Cricket (later Nigel Cabourn)',
       },
       { house: 'paulSmith', role: 'Founder', roleDetail: 'Founder, creative director', start: 1970, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaBritishMenswear, year: 1997, house: 'paulSmith' },
+      { award: AwardId.BfaBritishMenswear, year: 1999, house: 'paulSmith' },
+      { award: AwardId.BfaClassicDesigner, year: 2001, house: 'paulSmith' },
+      { award: AwardId.BfaContemporaryDesigner, year: 2003, house: 'paulSmith' },
+      { award: AwardId.BfaBritishMenswear, year: 2003, house: 'paulSmith' },
     ],
   },
   margaretHowellDesigner: {
@@ -5003,6 +5378,9 @@ export const designers = {
       { house: 'jasonWuLabel', role: 'Founder', roleDetail: 'Founder and designer', start: 2007, end: null, sources: ['https://jasonwustudio.com/pages/about', 'https://cfda.com/member/jason-wu/'] },
       { house: 'boss', role: 'Artistic Director', roleDetail: 'BOSS womenswear', start: 2013, end: 2018, sources: ['https://group.hugoboss.com/en/investors/publications/financial-releases/publication/jason-wu-presents-his-last-gallery-collection'] },
     ],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2010, house: 'jasonWuLabel', detail: 'Womenswear' },
+    ],
   },
   ingoWilts: {
     name: 'Ingo Wilts',
@@ -5066,6 +5444,10 @@ export const designers = {
     career: [
       { house: 'helmutLang', role: 'Founder', roleDetail: 'Founder, creative director', start: 1986, end: 2005 },
     ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2000, house: 'helmutLang' },
+      { award: AwardId.CfdaInternationalAward, year: 1996, house: 'helmutLang' },
+    ],
   },
   michaelColovos: {
     name: 'Michael Colovos',
@@ -5095,6 +5477,10 @@ export const designers = {
       },
       { house: 'helmutLang', role: 'Other', roleDetail: 'Designer-in-residence', start: 2017, end: 2018, approximate: true },
       { house: 'anonymousClub', role: 'Founder', roleDetail: 'Founder and creative director', start: 2020, end: null, notes: 'First collection released in 2022.', sources: ['https://theshed.org/program/224-headless-the-demonstration'] },
+    ],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2015, house: 'hoodByAir', detail: 'Menswear' },
+      { award: AwardId.LvmhSpecialPrize, year: 2014, house: 'hoodByAir' },
     ],
   },
   carlFranzBally: {
@@ -5326,6 +5712,9 @@ export const designers = {
     name: 'Richard Stark',
     nationality: 'American',
     career: [{ house: 'chromeHearts', role: 'Founder', roleDetail: 'Co-founder, creative director', start: 1988, end: null }],
+    awards: [
+      { award: AwardId.CfdaLifetimeAchievement, year: 2022, house: 'chromeHearts', detail: 'shared with Laurie Lynn Stark' },
+    ],
   },
   gregChait: {
     name: 'Greg Chait',
@@ -5371,6 +5760,9 @@ export const designers = {
     name: 'Eli Russell Linnetz',
     nationality: 'American',
     career: [{ house: 'erl', role: 'Founder', roleDetail: 'Founder, creative director', start: 2018, end: null }],
+    awards: [
+      { award: AwardId.LvmhKarlLagerfeldPrize, year: 2022, house: 'erl' },
+    ],
   },
 
   shawnStussy: {
@@ -5486,6 +5878,10 @@ export const designers = {
     career: [
       { house: 'valentino', role: 'Founder', roleDetail: 'Founder, designer', start: 1960, end: 2008 },
     ],
+    awards: [
+      { award: AwardId.CfdaLifetimeAchievement, year: 2000, house: 'valentino' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2023, house: 'valentino' },
+    ],
   },
   cocoChanel: {
     name: 'Gabrielle "Coco" Chanel',
@@ -5505,12 +5901,19 @@ export const designers = {
       { house: 'schiaparelli', role: 'Other', roleDetail: 'Boutique designer', start: 1947, end: 1951 },
       { house: 'givenchy', role: 'Founder', start: 1952, end: 1995 },
     ],
+    awards: [
+      { award: AwardId.CfdaLifetimeAchievement, year: 1995, house: 'givenchy' },
+    ],
   },
   julienMacdonald: {
     name: 'Julien Macdonald',
     nationality: 'British',
     career: [
       { house: 'givenchy', role: 'Creative Director', start: 2001, end: 2004 },
+    ],
+    awards: [
+      { award: AwardId.BfaGlamourDesigner, year: 2001 },
+      { award: AwardId.BfaGlamourDesigner, year: 2003 },
     ],
   },
   matthewMWilliams: {
@@ -5593,6 +5996,12 @@ export const designers = {
     career: [
       { house: 'gabrielaHearstLabel', role: 'Founder', roleDetail: 'Founder, creative director', start: 2015, end: null },
       { house: 'chloe', role: 'Creative Director', start: 2020, end: 2023 },
+    ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2020, house: 'gabrielaHearstLabel' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, house: 'gabrielaHearstLabel', detail: 'Environment' },
+      { award: AwardId.BfaLeaderOfChange, year: 2021, detail: 'Environment' },
+      { award: AwardId.BfaLeaderOfChange, year: 2022, detail: 'Environment' },
     ],
   },
   chemenaKamali: {
@@ -5683,6 +6092,12 @@ export const designers = {
       { house: 'michaelKors', role: 'Founder', roleDetail: 'Founder, creative director', start: 1981, end: null },
       { house: 'celine', role: 'Creative Director', start: 1997, end: 2004 },
     ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 1999, house: 'michaelKors' },
+      { award: AwardId.CfdaMenswearDesigner, year: 2003, house: 'michaelKors' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 2010, house: 'michaelKors' },
+      { award: AwardId.CfdaPositiveChange, year: 2024 },
+    ],
   },
   michaelRider: {
     name: 'Michael Rider',
@@ -5706,6 +6121,10 @@ export const designers = {
       { house: 'loewe', role: 'Creative Director', start: 2008, end: 2013 },
       { house: 'coach', role: 'Creative Director', roleDetail: 'Executive creative director', start: 2013, end: null },
     ],
+    awards: [
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2017, house: 'coach' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 2006, house: 'mulberry' },
+    ],
   },
   jackMcCollough: {
     name: 'Jack McCollough',
@@ -5715,6 +6134,13 @@ export const designers = {
       { house: 'loewe', role: 'Co-Creative Director', roleDetail: 'with Lazaro Hernandez', start: 2025, end: null },
       { house: 'proenzaSchouler', role: 'Founder', roleDetail: 'Co-founder, co-creative director with Lazaro Hernandez', start: 2002, end: 2025 },
     ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2007, house: 'proenzaSchouler', detail: 'shared with Oscar de la Renta' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2011, house: 'proenzaSchouler' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2013, house: 'proenzaSchouler' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2003, house: 'proenzaSchouler' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2009, house: 'proenzaSchouler' },
+    ],
   },
   lazaroHernandez: {
     name: 'Lazaro Hernandez',
@@ -5723,6 +6149,13 @@ export const designers = {
       { house: 'michaelKors', role: 'Other', roleDetail: 'Design intern', start: 2000, end: 2000, approximate: true, notes: 'While at Parsons; exact year unconfirmed.' },
       { house: 'loewe', role: 'Co-Creative Director', roleDetail: 'with Jack McCollough', start: 2025, end: null },
       { house: 'proenzaSchouler', role: 'Founder', roleDetail: 'Co-founder, co-creative director with Jack McCollough', start: 2002, end: 2025 },
+    ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2007, house: 'proenzaSchouler', detail: 'shared with Oscar de la Renta' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2011, house: 'proenzaSchouler' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2013, house: 'proenzaSchouler' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2003, house: 'proenzaSchouler' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2009, house: 'proenzaSchouler' },
     ],
   },
 
@@ -5758,6 +6191,9 @@ export const designers = {
     career: [
       { house: 'emilioPucci', role: 'Founder', start: 1947, end: 1992 },
     ],
+    awards: [
+      { award: AwardId.CfdaSpecialAward, year: 1990, house: 'emilioPucci' },
+    ],
   },
   christianLacroix: {
     name: 'Christian Lacroix',
@@ -5768,12 +6204,18 @@ export const designers = {
       { house: 'emilioPucci', role: 'Creative Director', start: 2002, end: 2005 },
       { house: 'desigual', role: 'Other', roleDetail: 'Ongoing guest designer, Desigual by Christian Lacroix', start: 2011 },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 1986, house: 'patou' },
+    ],
   },
   matthewWilliamson: {
     name: 'Matthew Williamson',
     nationality: 'British',
     career: [
       { house: 'emilioPucci', role: 'Creative Director', start: 2005, end: 2008 },
+    ],
+    awards: [
+      { award: AwardId.BfaRedCarpet, year: 2008 },
     ],
   },
   massimoGiorgetti: {
@@ -5844,12 +6286,18 @@ export const designers = {
     career: [
       { house: 'moncler', role: 'Other', roleDetail: 'Chairman, creative lead', start: 2003, end: null },
     ],
+    awards: [
+      { award: AwardId.BfaTrailblazer, year: 2024, house: 'moncler' },
+    ],
   },
   masayukiIno: {
     name: 'Masayuki Ino',
     nationality: 'Japanese',
     career: [
       { house: 'doublet', role: 'Founder', roleDetail: 'Founder, designer', start: 2012, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2018, house: 'doublet' },
     ],
   },
   fengChenWangDesigner: {
@@ -5889,6 +6337,13 @@ export const designers = {
     career: [
       { house: 'erdem', role: 'Founder', roleDetail: 'Founder, creative director', start: 2005, end: null },
     ],
+    awards: [
+      { award: AwardId.BfaEnterprise, year: 2007, house: 'erdem' },
+      { award: AwardId.BfaNewEstablishment, year: 2012, house: 'erdem' },
+      { award: AwardId.BfaRedCarpet, year: 2013, house: 'erdem' },
+      { award: AwardId.BfaBritishWomenswear, year: 2014, house: 'erdem' },
+      { award: AwardId.BfaEstablishmentDesigner, year: 2015, house: 'erdem' },
+    ],
   },
   mollyGoddardDesigner: {
     name: 'Molly Goddard',
@@ -5896,12 +6351,18 @@ export const designers = {
     career: [
       { house: 'mollyGoddard', role: 'Founder', roleDetail: 'Founder, designer', start: 2014, end: null },
     ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2016, house: 'mollyGoddard' },
+    ],
   },
   charlesJeffrey: {
     name: 'Charles Jeffrey',
     nationality: 'British',
     career: [
       { house: 'charlesJeffreyLoverboy', role: 'Founder', roleDetail: 'Founder, designer', start: 2015, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2017, house: 'charlesJeffreyLoverboy', detail: 'Menswear' },
     ],
   },
   alfredDunhill: {
@@ -5949,6 +6410,10 @@ export const designers = {
       { house: 'calvinKlein', role: 'Other', roleDetail: 'Senior vice president of design, North America and Global Essentials menswear', start: 2021, end: 2024, sources: ['https://www.nssmag.com/en/fashion/25805/willy-chavarria-calvin-klein', 'https://www.wallpaper.com/fashion-beauty/willy-chavarria-interview-ss-2025'] },
       { house: 'willyChavarria', role: 'Founder', roleDetail: 'Founder, designer', start: 2015, end: null, sources: ['https://fashionista.com/2017/07/willy-chavarria-interview-spring-2018-collection', 'https://www.wallpaper.com/fashion-beauty/willy-chavarria-interview-ss-2025'] },
     ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2023, house: 'willyChavarria' },
+      { award: AwardId.CfdaMenswearDesigner, year: 2024, house: 'willyChavarria' },
+    ],
     notes: 'Earlier design employment at cycling-apparel maker Voler is documented in his first-person Fashionista career account; exact years are unconfirmed. He also opened Palmer Trading Company in 2010 and developed its in-house label before launching Willy Chavarria. Those businesses are not currently houses in this dataset.',
     sources: ['https://fashionista.com/2017/07/willy-chavarria-interview-spring-2018-collection', 'https://cfda.com/member/willy-chavarria/'],
   },
@@ -5957,6 +6422,12 @@ export const designers = {
     nationality: 'Liberian-American',
     career: [
       { house: 'telfar', role: 'Founder', roleDetail: 'Founder, designer', start: 2005, end: null },
+    ],
+    awards: [
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2020, house: 'telfar' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2021, house: 'telfar' },
+      { award: AwardId.CfdaVogueFashionFund, year: 2017, house: 'telfar' },
+      { award: AwardId.BfaLeaderOfChange, year: 2021, house: 'telfar', detail: 'People' },
     ],
   },
 
@@ -5988,6 +6459,11 @@ export const designers = {
       },
       { house: 'proenzaSchouler', role: 'Creative Director', start: 2025, end: null, approximate: true },
     ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2024 },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2026 },
+      { award: AwardId.CfdaEmergingDesigner, year: 2023, detail: 'for Diotima' },
+    ],
   },
   lauraKim: {
     name: 'Laura Kim',
@@ -5996,6 +6472,9 @@ export const designers = {
       { house: 'oscarDeLaRentaHouse', role: 'Other', roleDetail: 'Oscar de la Renta\'s design team, later design director', start: 2003, end: 2015, approximate: true },
       { house: 'oscarDeLaRentaHouse', role: 'Co-Creative Director', roleDetail: 'with Fernando Garcia', start: 2016, end: null },
     ],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2017, detail: 'for Monse' },
+    ],
   },
   fernandoGarcia: {
     name: 'Fernando Garcia',
@@ -6003,6 +6482,9 @@ export const designers = {
     career: [
       { house: 'oscarDeLaRentaHouse', role: 'Other', roleDetail: 'Design team', start: 2009, end: 2015, approximate: true },
       { house: 'oscarDeLaRentaHouse', role: 'Co-Creative Director', roleDetail: 'with Laura Kim', start: 2016, end: null },
+    ],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2017, detail: 'for Monse' },
     ],
   },
   ninaRicciDesigner: {
@@ -6035,6 +6517,9 @@ export const designers = {
       { house: 'theory', role: 'Artistic Director', roleDetail: 'Theory and Theyskens’ Theory', start: 2010, end: 2014, sources: ['https://www.ifmparis.fr/en/faculty/rodica-muravetchi-2'] },
       { house: 'rochas', role: 'Creative Director', start: 2002, end: 2006 },
       { house: 'ninaRicci', role: 'Creative Director', start: 2006, end: 2009 },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2006, house: 'rochas' },
     ],
   },
   guillaumeHenry: {
@@ -6069,12 +6554,19 @@ export const designers = {
       { house: 'harrisReedLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2019, end: null },
       { house: 'ninaRicci', role: 'Creative Director', start: 2022, end: 2026 },
     ],
+    awards: [
+      { award: AwardId.BfaLeaderOfChange, year: 2021, house: 'harrisReedLabel', detail: 'People' },
+      { award: AwardId.BfaLeaderOfChange, year: 2022, house: 'harrisReedLabel', detail: 'Creativity' },
+    ],
   },
   hiromichiOchiai: {
     name: 'Hiromichi Ochiai',
     nationality: 'Japanese',
     career: [
       { house: 'facetasm', role: 'Founder', roleDetail: 'Founder, designer', start: 2007, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2016, house: 'facetasm' },
     ],
   },
   keizoShimizu: {
@@ -6122,6 +6614,15 @@ export const designers = {
       { house: 'gucci', role: 'Other', roleDetail: 'Senior womenswear designer under Tom Ford', start: 1996, end: 2001 },
       { house: 'burberry', role: 'Creative Director', start: 2001, end: 2018 },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2010, house: 'burberry' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2005, house: 'burberry' },
+      { award: AwardId.BfaBritishMenswear, year: 2007, house: 'burberry' },
+      { award: AwardId.BfaBritishMenswear, year: 2008, house: 'burberry' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2009, house: 'burberry' },
+      { award: AwardId.BfaBritishMenswear, year: 2013, house: 'burberry' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2017, house: 'burberry', detail: 'Outstanding Contribution to British Fashion' },
+    ],
   },
 
   /* ---------- London & New York independents ---------- */
@@ -6133,12 +6634,21 @@ export const designers = {
       { house: 'martineRose', role: 'Founder', roleDetail: 'Founder, creative director', start: 2007, end: null },
       { house: 'balenciaga', role: 'Creative Director', start: 2026, end: null},
     ],
+    awards: [
+      { award: AwardId.BfaBritishMenswear, year: 2023, house: 'martineRose' },
+    ],
   },
   craigGreen: {
     name: 'Craig Green',
     nationality: 'British',
     career: [
       { house: 'craigGreen', role: 'Founder', roleDetail: 'Founder, creative director', start: 2012, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2014, house: 'craigGreen', detail: 'Menswear' },
+      { award: AwardId.BfaBritishMenswear, year: 2016, house: 'craigGreen' },
+      { award: AwardId.BfaBritishMenswear, year: 2017, house: 'craigGreen' },
+      { award: AwardId.BfaBritishMenswear, year: 2018, house: 'craigGreen' },
     ],
   },
   graceWalesBonner: {
@@ -6156,11 +6666,25 @@ export const designers = {
         notes: 'Succeeded Véronique Nichanian.',
       },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2021, house: 'walesBonner', detail: 'International Men’s Designer of the Year' },
+      { award: AwardId.BfaEmergingDesigner, year: 2015, house: 'walesBonner', detail: 'Menswear' },
+      { award: AwardId.LvmhPrize, year: 2016, house: 'walesBonner' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, house: 'walesBonner', detail: 'Creativity' },
+      { award: AwardId.BfaIndependentDesigner, year: 2022, house: 'walesBonner' },
+      { award: AwardId.BfaBritishMenswear, year: 2024, house: 'walesBonner' },
+      { award: AwardId.BfaBritishMenswear, year: 2025, house: 'walesBonner' },
+    ],
   },
   emilyAdamsBode: {
     name: 'Emily Adams Bode Aujla',
     nationality: 'American',
     career: [{ house: 'bode', role: 'Founder', roleDetail: 'Founder, creative director', start: 2016, end: null }],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2021, house: 'bode' },
+      { award: AwardId.CfdaMenswearDesigner, year: 2022, house: 'bode' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2019, house: 'bode' },
+    ],
   },
 
   /* ---------- Korean designers ---------- */
@@ -6355,6 +6879,9 @@ export const designers = {
       { house: 'marcJacobs', role: 'Other', roleDetail: 'Design team', start: 2001, approximate: true, notes: 'Joined shortly after graduating from RISD in 2001; title and departure unconfirmed. Later co-designed the New York menswear label Cloak with Alexandre Plokhov until the fall 2004 collection.' },
       { house: 'robertGellerLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2007, end: 2019, notes: 'Debuted at New York Fashion Week in 2007. Paused for three seasons before fall 2019; the label has been on hiatus since 2019.' },
       { house: 'ragAndBone', role: 'Head Designer', roleDetail: 'Head of menswear design', start: 2023, end: 2025, notes: 'Worked at the brand from fall 2023; first collection fall 2024. Succeeded by Swaim Hutson.' },
+    ],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2011, house: 'robertGellerLabel', detail: 'Menswear' },
     ],
     sources: ['https://en.wikipedia.org/wiki/Robert_Geller', 'https://fashionunited.uk/news/people/rag-bone-appoints-new-head-of-menswear/2024011873647', 'https://wwd.com/menswear-news/mens-clothing-furnishings/swaim-hutson-robert-geller-rag-amp-bone-mens-designer-1238424329/'],
   },
@@ -6553,12 +7080,18 @@ export const designers = {
     career: [
       { house: 'doverStreetMarket', role: 'Founder', roleDetail: 'Co-founder and president of Dover Street Market', start: 2004, end: null, sources: ['https://en.wikipedia.org/wiki/Dover_Street_Market'] },
     ],
+    awards: [
+      { award: AwardId.BfaIsabellaBlow, year: 2025, house: 'commeDesGarcons', detail: 'Shared with Rei Kawakubo and Dickon Bowden' },
+    ],
     notes: 'President of Comme des Garçons International and Rei Kawakubo’s husband; that business role is not recorded here as a creative tenure.',
   },
   ryotaIwai: {
     name: 'Ryota Iwai',
     nationality: 'Japanese',
     career: [{ house: 'auralee', role: 'Founder', start: 2015, end: null }],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2025, house: 'auralee' },
+    ],
   },
   toshikiyoHirata: {
     name: 'Toshikiyo Hirata',
@@ -6579,6 +7112,9 @@ export const designers = {
         notes: 'Led a collective design team 2019–2021 before taking the title himself.',
       },
     ],
+    awards: [
+      { award: AwardId.BfaUrbanLuxe, year: 2016, house: 'vetements' },
+    ],
   },
 
   /* ---------- Calvin Klein lineage ---------- */
@@ -6594,6 +7130,14 @@ export const designers = {
         end: 2003,
       },
     ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 1981, house: 'calvinKlein', detail: 'shared with Geoffrey Beene and Perry Ellis' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 1983, house: 'calvinKlein' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 1993, house: 'calvinKlein' },
+      { award: AwardId.CfdaMenswearDesigner, year: 1993, house: 'calvinKlein' },
+      { award: AwardId.CfdaMenswearDesigner, year: 1999, house: 'calvinKlein' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 2001, house: 'calvinKlein' },
+    ],
   },
   franciscoCosta: {
     name: 'Francisco Costa',
@@ -6602,6 +7146,10 @@ export const designers = {
       { house: 'gucci', role: 'Other', roleDetail: 'Senior designer under Tom Ford', start: 1998, end: 2002, approximate: true },
       { house: 'calvinKlein', role: 'Creative Director', roleDetail: "Women's Collection", start: 2003, end: 2016 },
     ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2006, house: 'calvinKlein' },
+      { award: AwardId.CfdaWomenswearDesigner, year: 2008, house: 'calvinKlein' },
+    ],
   },
   italoZucchelli: {
     name: 'Italo Zucchelli',
@@ -6609,6 +7157,9 @@ export const designers = {
       { house: 'jilSander', role: 'Other', roleDetail: 'Menswear designer', start: 1998, end: 2000, approximate: true, notes: 'About two years; exact years unconfirmed.' },
       { house: 'calvinKlein', role: 'Other', roleDetail: 'Menswear designer', start: 2000, end: 2004, approximate: true, notes: 'Sources give 1998–2001 for his start.' },
       { house: 'calvinKlein', role: 'Creative Director', roleDetail: "Calvin Klein Collection men's (sub-label)", start: 2004, end: 2016 },
+    ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2009, house: 'calvinKlein', detail: 'shared with Scott Sternberg; for Calvin Klein Collection' },
     ],
   },
   veronicaLeoni: {
@@ -6679,6 +7230,17 @@ export const designers = {
       { house: 'dior', role: 'Artistic Director', roleDetail: 'Dior Men', start: 2018, end: 2025 },
       { house: 'fendi', role: 'Artistic Director', roleDetail: 'Womenswear & couture', start: 2020, end: 2024 },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2020, house: 'dior', detail: 'International Men’s Designer of the Year' },
+      { award: AwardId.BfaBritishMenswear, year: 2006 },
+      { award: AwardId.BfaBritishMenswear, year: 2009, house: 'dunhill' },
+      { award: AwardId.BfaBritishMenswear, year: 2012, house: 'louisVuitton' },
+      { award: AwardId.BfaTrailblazer, year: 2018 },
+      { award: AwardId.BfaBritishMenswear, year: 2019, house: 'dior' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, detail: 'Creativity' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2021, house: 'dior', detail: 'For Dior Men and Fendi' },
+      { award: AwardId.BfaLeaderOfChange, year: 2021, detail: 'Creativity' },
+    ],
   },
   virgilAbloh: {
     name: 'Virgil Abloh',
@@ -6690,6 +7252,12 @@ export const designers = {
       { house: 'offWhite', role: 'Founder', roleDetail: 'Founder, creative director', start: 2013, end: 2021 },
       { house: 'pyrexVision', role: 'Founder', roleDetail: 'Founder, designer', start: 2012, end: 2013 },
       { house: 'rsvpGallery', role: 'Founder', roleDetail: 'Co-founder and co-owner', start: 2009, end: 2021, notes: 'Co-owner until his death in 2021; his estate retains his share.' },
+    ],
+    awards: [
+      { award: AwardId.CfdaBoardTribute, year: 2022, detail: 'Board of Trustees’ Award, posthumous' },
+      { award: AwardId.BfaUrbanLuxe, year: 2017, house: 'offWhite' },
+      { award: AwardId.BfaUrbanLuxe, year: 2018, house: 'offWhite' },
+      { award: AwardId.BfaLeaderOfChange, year: 2021, detail: 'Creativity; posthumous' },
     ],
   },
   pharrellWilliams: {
@@ -6714,6 +7282,9 @@ export const designers = {
         sources: ['https://www.prnewswire.com/news-releases/pharrell-williams-announced-as-co-owner-of-g-star-raw-300217048.html'],
       },
       { house: 'louisVuitton', role: 'Creative Director', roleDetail: 'Menswear', start: 2023, end: null },
+    ],
+    awards: [
+      { award: AwardId.CfdaFashionIcon, year: 2015 },
     ],
   },
   demna: {
@@ -6742,6 +7313,14 @@ export const designers = {
       },
       { house: 'gucci', role: 'Artistic Director', start: 2025, end: null },
     ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2017, house: 'balenciaga', detail: 'also for Vetements' },
+      { award: AwardId.CfdaInternationalAward, year: 2021, house: 'balenciaga', detail: 'International Women’s Designer of the Year' },
+      { award: AwardId.BfaUrbanLuxe, year: 2016, house: 'vetements' },
+      { award: AwardId.BfaInternationalDesigner, year: 2016, house: 'balenciaga', detail: 'Ready-to-wear' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 2018, house: 'balenciaga' },
+      { award: AwardId.BfaLeaderOfChange, year: 2021, house: 'balenciaga', detail: 'Creativity' },
+    ],
   },
   alessandroMichele: {
     name: 'Alessandro Michele',
@@ -6752,6 +7331,15 @@ export const designers = {
       { house: 'gucci', role: 'Other', roleDetail: 'Accessories designer, then associate creative director', start: 2002, end: 2015 },
       { house: 'gucci', role: 'Creative Director', start: 2015, end: 2022 },
       { house: 'valentino', role: 'Creative Director', start: 2024, end: null },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2016, house: 'gucci' },
+      { award: AwardId.BfaInternationalDesigner, year: 2015, house: 'gucci' },
+      { award: AwardId.BfaInternationalDesigner, year: 2016, house: 'gucci', detail: 'Accessories' },
+      { award: AwardId.BfaBrandOfTheYear, year: 2018, house: 'gucci' },
+      { award: AwardId.BfaTrailblazer, year: 2021, house: 'gucci' },
+      { award: AwardId.BfaLeaderOfChange, year: 2021, house: 'gucci', detail: 'Creativity' },
+      { award: AwardId.BfaLeaderOfChange, year: 2022, detail: 'Creativity' },
     ],
   },
   jonathanAnderson: {
@@ -6771,6 +7359,21 @@ export const designers = {
         notes: 'Recurring collaboration rather than creative direction of Uniqlo as a whole. Exact end date unconfirmed.',
         sources: ['https://www.fastretailing.com/eng/group/news/1707181800.html'],
       },
+    ],
+    awards: [
+      { award: AwardId.CfdaInternationalAward, year: 2023, house: 'loewe', detail: 'also for JW Anderson' },
+      { award: AwardId.BfaEmergingDesigner, year: 2012, house: 'jwAnderson', detail: 'Ready-to-wear' },
+      { award: AwardId.BfaNewEstablishment, year: 2013, house: 'jwAnderson' },
+      { award: AwardId.BfaBritishMenswear, year: 2014, house: 'jwAnderson' },
+      { award: AwardId.BfaBritishMenswear, year: 2015, house: 'jwAnderson' },
+      { award: AwardId.BfaBritishWomenswear, year: 2015, house: 'jwAnderson' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 2017, house: 'loewe' },
+      { award: AwardId.BfaBritishWomenswear, year: 2017, house: 'jwAnderson' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, detail: 'Creativity' },
+      { award: AwardId.BfaLeaderOfChange, year: 2021, detail: 'Creativity' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2023, house: 'loewe', detail: 'For JW Anderson and Loewe' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2024, house: 'loewe', detail: 'For JW Anderson and Loewe' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2025, house: 'dior', detail: 'For Dior and JW Anderson' },
     ],
   },
   antoineAsselin: {
@@ -6810,6 +7413,9 @@ export const designers = {
     name: 'Hardy Blechman',
     nationality: 'British',
     career: [{ house: 'maharishi', role: 'Founder', roleDetail: 'Founder, creative director', start: 1994, end: null }],
+    awards: [
+      { award: AwardId.BfaStreetStyle, year: 2000, house: 'maharishi' },
+    ],
   },
   spencerBaduDesigner: {
     name: 'Spencer Badu',
@@ -6907,6 +7513,11 @@ export const designers = {
       { house: 'tommyHilfiger', role: 'Other', roleDetail: 'Senior VP, marketing and design', start: 1993, end: 1996, approximate: true },
       { house: 'coach', role: 'Creative Director', roleDetail: 'Executive creative director', start: 1996, end: 2013 },
     ],
+    awards: [
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2001, house: 'coach' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2004, house: 'coach' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2012 },
+    ],
   },
   reneLacoste: {
     name: 'René Lacoste',
@@ -6955,6 +7566,11 @@ export const designers = {
     born: 1951,
     nationality: 'American',
     career: [{ house: 'tommyHilfiger', role: 'Founder', roleDetail: 'Founder, principal designer', start: 1985, end: null }],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 1995, house: 'tommyHilfiger' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 2012, house: 'tommyHilfiger' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2021, house: 'tommyHilfiger' },
+    ],
   },
   kerbyJeanRaymond: {
     name: 'Kerby Jean-Raymond',
@@ -6964,12 +7580,19 @@ export const designers = {
       { house: 'pyerMoss', role: 'Founder', roleDetail: 'Founder, creative director', start: 2013, end: null },
       { house: 'reebok', role: 'Creative Director', roleDetail: 'Vice President of Creative Direction', start: 2020, end: 2022, notes: 'Appointed in September 2020; departure effective March 1, 2022. Earlier Reebok collaborations began in 2017.', sources: ['https://cfda.com/news/what-kerby-jean-raymonds-new-role-at-reebok-means-for-fashion/', 'https://fashionista.com/2022/02/kerby-jean-raymond-global-creative-director-departure'] },
     ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2020, house: 'pyerMoss' },
+      { award: AwardId.CfdaVogueFashionFund, year: 2018, house: 'pyerMoss' },
+    ],
   },
   brunelloCucinelli: {
     name: 'Brunello Cucinelli',
     born: 1953,
     nationality: 'Italian',
     career: [{ house: 'brunelloCucinelli', role: 'Founder', roleDetail: 'Founder, creative director', start: 1978, end: null }],
+    awards: [
+      { award: AwardId.BfaOutstandingAchievement, year: 2025, house: 'brunelloCucinelli' },
+    ],
   },
   johnBarbour: {
     name: 'John Barbour',
@@ -7041,6 +7664,11 @@ export const designers = {
         approximate: true,
       },
       { house: 'aColdWall', role: 'Founder', roleDetail: 'Founder, creative director', start: 2015, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2018, house: 'aColdWall', detail: 'Menswear' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, house: 'aColdWall', detail: 'People' },
+      { award: AwardId.BfaLeaderOfChange, year: 2021, house: 'aColdWall', detail: 'People' },
     ],
   },
   ronnieFieg: {
@@ -7380,6 +8008,11 @@ export const designers = {
       { house: 'alexanderWang', role: 'Founder', roleDetail: 'Founder, creative director', start: 2005, end: null },
       { house: 'balenciaga', role: 'Creative Director', start: 2012, end: 2015 },
     ],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2009, house: 'alexanderWang', detail: 'Womenswear' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2010, house: 'alexanderWang', detail: 'Accessories' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2011, house: 'alexanderWang' },
+    ],
   },
   marieLouiseCarven: {
     name: 'Marie-Louise Carven',
@@ -7480,6 +8113,9 @@ export const designers = {
         sources: ['https://www.gapinc.com/es-us/articles/2025/09/the-next-chapter-in-gap-s-legacy-of-iconic-campaig'],
       },
     ],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2004, detail: 'Womenswear' },
+    ],
     notes: 'Later creative director of Gap Inc. (2024).',
   },
   yoonAhn: {
@@ -7523,6 +8159,10 @@ export const designers = {
     career: [
       { house: 'michaelKors', role: 'Other', roleDetail: 'Designer', start: 1990, end: 2002, approximate: true },
       { house: 'tods', role: 'Creative Director', start: 2006, end: 2012 },
+    ],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2005, detail: 'Womenswear' },
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2007 },
     ],
     notes: 'Founded his own label, Derek Lam, in 2003.',
   },
@@ -7702,6 +8342,9 @@ export const designers = {
     career: [
       { house: 'hedMayner', role: 'Founder', roleDetail: 'Founder, designer', start: 2015, end: null },
     ],
+    awards: [
+      { award: AwardId.LvmhSpecialPrize, year: 2019, house: 'hedMayner' },
+    ],
   },
   colmDillane: {
     name: 'Colm Dillane',
@@ -7709,6 +8352,9 @@ export const designers = {
     career: [
       { house: 'kidSuper', role: 'Founder', roleDetail: 'Founder, creative director', start: 2010, end: null },
       { house: 'louisVuitton', role: 'Other', roleDetail: 'Guest designer, menswear Fall/Winter 2023', start: 2023, end: 2023 },
+    ],
+    awards: [
+      { award: AwardId.LvmhKarlLagerfeldPrize, year: 2021, house: 'kidSuper' },
     ],
   },
   eunhyeShin: {
@@ -7755,6 +8401,10 @@ export const designers = {
     career: [
       { house: 'victoriaBeckham', role: 'Founder', roleDetail: 'Founder, creative director', start: 2008, end: null },
     ],
+    awards: [
+      { award: AwardId.BfaBrandOfTheYear, year: 2011, house: 'victoriaBeckham', detail: 'Designer Brand' },
+      { award: AwardId.BfaBrandOfTheYear, year: 2014, house: 'victoriaBeckham' },
+    ],
   },
   marcusWainwright: {
     name: 'Marcus Wainwright',
@@ -7762,12 +8412,20 @@ export const designers = {
     career: [
       { house: 'ragAndBone', role: 'Founder', roleDetail: 'Co-founder; CEO, then chief brand officer', start: 2002, end: 2023 },
     ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2010, house: 'ragAndBone' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2007, house: 'ragAndBone', detail: 'Menswear' },
+    ],
   },
   davidNeville: {
     name: 'David Neville',
     nationality: 'British',
     career: [
       { house: 'ragAndBone', role: 'Founder', roleDetail: 'Co-founder, co-CEO', start: 2002, end: 2016 },
+    ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2010, house: 'ragAndBone' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2007, house: 'ragAndBone', detail: 'Menswear' },
     ],
   },
   brandonSvarc: {
@@ -7811,6 +8469,10 @@ export const designers = {
     nationality: 'American',
     career: [
       { house: 'annaSui', role: 'Founder', roleDetail: 'Founder, designer', start: 1981, end: null },
+    ],
+    awards: [
+      { award: AwardId.CfdaPerryEllisAward, year: 1992, house: 'annaSui' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 2009, house: 'annaSui' },
     ],
   },
   edwinFaeh: {
@@ -7866,6 +8528,9 @@ export const designers = {
     career: [
       { house: 'isseyMiyake', role: 'Head Designer', roleDetail: "Women's collection", start: 2011, end: 2019 },
       { house: 'apocAble', role: 'Head Designer', roleDetail: 'Designer leading the engineering team', start: 2021, end: null, sources: ['https://www.sony.com/en/SonyInfo/design/stories/perspectives12/', 'https://uk.isseymiyake.com/blogs/apocable-dialogues/episode_18'] },
+    ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2014, house: 'isseyMiyake' },
     ],
   },
   satoshiKondo: {
@@ -8690,6 +9355,9 @@ export const designers = {
     born: 1938,
     nationality: 'American',
     career: [{ house: 'patagonia', role: 'Founder', start: 1973, end: null }],
+    awards: [
+      { award: AwardId.BfaOutstandingAchievement, year: 2022, house: 'patagonia' },
+    ],
     notes: 'Founded with his wife Malinda Chouinard; earlier founded Chouinard Equipment.',
   },
   timHamilton: {
@@ -8707,6 +9375,9 @@ export const designers = {
       },
       { house: 'nike', role: 'Other', roleDetail: 'Vice President of men’s apparel design', start: 2024, notes: 'Appointment confirmed by a Nike spokesperson in March 2024. Exact end date unconfirmed.', sources: ['https://www.fashiondive.com/news/nike-tim-hamilton-vice-president-mens-apparel-design/711175/'] },
       { house: 'madewell', role: 'Other', roleDetail: 'Earlier role, title unconfirmed' },
+    ],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2009, detail: 'Menswear' },
     ],
     notes: 'Also worked at Gap and J.Crew, and ran his own label.',
   },
@@ -9059,6 +9730,11 @@ export const designers = {
         notes: 'Returned for a multi-year Fenty x Puma partnership in 2023. Exact end date of the renewed partnership is unconfirmed.',
         sources: ['https://about.puma.com/en/newsroom/news/fenty-x-puma-officially-back-rihanna-launches-avanti', 'https://annual-report.puma.com/2023/en/company-overview/sportstyle/index.html'],
       },
+    ],
+    awards: [
+      { award: AwardId.CfdaSwarovskiAward, year: 2014, detail: 'Menswear' },
+      { award: AwardId.CfdaFashionIcon, year: 2014 },
+      { award: AwardId.BfaUrbanLuxe, year: 2019, house: 'fenty' },
     ],
   },
   hamiltonCarhartt: {
@@ -9587,6 +10263,9 @@ export const designers = {
         sources: ['https://cfda.com/news/michael-bastian-appointed-creative-director-of-brooks-brothers/', 'https://www.brooksbrothers.com/lookbook-spring-summer-2026.html'],
       },
     ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2011 },
+    ],
     notes: 'Also served as interim creative director at Ted Baker in 2020, between the GANT collaboration and Brooks Brothers.',
     sources: ['https://cfda.com/news/michael-bastian-appointed-creative-director-of-brooks-brothers/'],
   },
@@ -9745,6 +10424,11 @@ export const designers = {
         sources: ['https://cfda.com/member/carolina-herrera/'],
       },
     ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2004, house: 'carolinaHerrera' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 2008, house: 'carolinaHerrera' },
+      { award: AwardId.CfdaFounderAward, year: 2018 },
+    ],
   },
   wesGordon: {
     name: 'Wes Gordon',
@@ -9818,6 +10502,9 @@ export const designers = {
         end: 2000,
         sources: ['https://www.vam.ac.uk/articles/introducing-mary-quant'],
       },
+    ],
+    awards: [
+      { award: AwardId.BfaHallOfFame, year: 1990 },
     ],
   },
   alexanderPlunketGreene: {
@@ -10402,6 +11089,9 @@ export const designers = {
         sources: ['https://www.vogue.co.uk/article/sophia-kokosalaki-leaves-diesel-black-gold'],
       },
     ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2003, detail: 'New Generation' },
+    ],
   },
   josVanTilburg: {
     name: 'Jos van Tilburg',
@@ -10604,6 +11294,11 @@ export const designers = {
         notes: 'Continued as founder and chief creative officer following WHP Global’s acquisition of the brand’s intellectual property.',
         sources: ['https://www.verawang.com/pages/about', 'https://www.prnewswire.com/news-releases/whp-global-completes-acquisition-of-vera-wang-brand-302353735.html'],
       },
+    ],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2005, house: 'veraWang' },
+      { award: AwardId.CfdaLifetimeAchievement, year: 2013, house: 'veraWang' },
+      { award: AwardId.CfdaBoardTribute, year: 2023 },
     ],
   },
   ennioCapasa: {
@@ -11672,6 +12367,9 @@ export const designers = {
         sources: ['https://www.mamekurogouchi.com/pages/about', 'https://fashion-prize-of-tokyo.jp/winner_mame.php'],
       },
     ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2023, house: 'mameKurogouchi' },
+    ],
   },
   mikeCirker: {
     name: 'Mike Cirker',
@@ -12328,6 +13026,9 @@ export const designers = {
         notes: 'Identified with Bari and Edison Chen as part of the label’s creative core in a 2016 joint interview. Exact tenure dates and title are unconfirmed.',
         sources: ['https://www.highsnobiety.com/p/asap-rocky-asap-bari-vlone-brand/'],
       },
+    ],
+    awards: [
+      { award: AwardId.CfdaFashionIcon, year: 2025 },
     ],
   },
   edisonChen: {
@@ -14685,6 +15386,12 @@ export const designers = {
     born: 1946,
     nationality: 'French',
     career: [{ house: 'frenchConnection', role: 'Head Designer', roleDetail: 'Head of design studio', start: 1978, notes: 'Museum biography dates the London studio leadership to 1978; earlier freelance work with Stephen Marks is also reported. Exact departure date unconfirmed.', sources: ['https://famm.com/en-gb/artists/nicole-farhi-lady-hare-cbe', 'https://opengatecapital.com/news/opengate-capital-acquires-nicole-farhi-fashion-brand-from-french-connection-group/'] }],
+    awards: [
+      { award: AwardId.BfaClassicDesigner, year: 1989 },
+      { award: AwardId.BfaContemporaryDesigner, year: 1995 },
+      { award: AwardId.BfaContemporaryDesigner, year: 1996 },
+      { award: AwardId.BfaContemporaryDesigner, year: 1997 },
+    ],
     notes: 'Subsequently launched her namesake label with Stephen Marks; later devoted her practice to sculpture. The Nicole Farhi label is not currently in the dataset.',
   },
   helenGallagher: {
@@ -14793,6 +15500,10 @@ export const designers = {
       { house: 'timberland', role: 'Creative Director', roleDetail: 'Global creative director', start: 2018, end: 2022, sources: ['https://www.fashionpress.jp/en/brands/1866', 'https://blueearthsummit.com/speakers/christopher-raeburn'] },
       { house: 'timberland', role: 'Other', roleDetail: 'Collaborator at large', notes: 'Appointed to a continuing role after leaving global creative direction in 2022; exact end year unconfirmed.', sources: ['https://www.fashionpress.jp/en/brands/1866', 'https://www.pambianconews.com/2023/11/15/christopher-raeburn-e-il-primo-global-creative-director-di-napapijri-389521/'] },
       { house: 'napapijri', role: 'Creative Director', roleDetail: 'Global creative director', start: 2023, end: null, notes: 'Appointed November 2023; first full collection Fall/Winter 2025.', sources: ['https://www.pambianconews.com/2023/11/15/christopher-raeburn-e-il-primo-global-creative-director-di-napapijri-389521/', 'https://blueearthsummit.com/speakers/christopher-raeburn'] },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2011, house: 'raeburn', detail: 'Menswear' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, house: 'raeburn', detail: 'Environment' },
     ],
     notes: 'Founded his label in 2009 (renamed RÆBURN in 2019) after showing his first collection in 2008. Continued at Timberland as a collaborator at large after leaving global creative direction; exact dates of that subsequent role remain unconfirmed.',
   },
@@ -15749,6 +16460,9 @@ export const designers = {
     career: [
       { house: 'skims', role: 'Founder', roleDetail: 'Co-founder and chief creative officer', start: 2019, end: null, sources: ['https://am.gs.com/en-gb/advisors/news/press-release/2025/skims', 'https://www.retailtouchpoints.com/news/skims-names-supremes-erin-magee-chief-design-officer-promotes-kim-schraub-to-chief-brand-officer/621152/'] },
     ],
+    awards: [
+      { award: AwardId.CfdaInnovationAward, year: 2022, house: 'skims', detail: 'awarded to SKIMS' },
+    ],
     notes: 'Founding and brand-wide creative leadership are distinct from celebrity campaign appearances and collaborations.',
   },
   jensGrede: {
@@ -16523,6 +17237,10 @@ export const designers = {
       { house: 'toryBurch', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2004, end: null, sources: ['https://cfda.com/member/tory-burch/', 'https://www.toryburchfoundation.org/board-and-staff/'] },
       { house: 'toryBurch', role: 'Creative Director', roleDetail: 'Chief creative officer', end: null, notes: 'Current title confirmed by the official foundation biography. Her move to a predominantly creative remit in 2019 is not assumed to be the first year she held this title.', sources: ['https://www.toryburchfoundation.org/board-and-staff/', 'https://www.vogue.com/article/new-chapter-for-tory-burch'] },
     ],
+    awards: [
+      { award: AwardId.CfdaAccessoriesDesigner, year: 2008, house: 'toryBurch' },
+      { award: AwardId.CfdaPositiveChange, year: 2026 },
+    ],
     notes: 'Earlier worked at Zoran and Harper’s Bazaar, neither currently represented. Her pre-label work at Ralph Lauren, Vera Wang and Loewe was in communications rather than fashion design. Exact calendar dates remain unconfirmed. Tory Sport is represented within the main house.',
     sources: ['https://www.toryburchfoundation.org/board-and-staff/'],
   },
@@ -17219,6 +17937,9 @@ export const designers = {
     name: 'Hideaki Yoshihara',
     born: 1969,
     career: [{ house: 'hyke', role: 'Founder', roleDetail: 'Co-founder and co-designer with Yukiko Ode', start: 2013, end: null }],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2017, house: 'hyke', detail: 'Shared with Yukiko Ode' },
+    ],
     notes: 'Co-founded green with Yukiko Ode in 1998. After suspending that label in 2009, the pair returned as HYKE in 2013.',
     sources: ['https://hyke.jp/pages/story'],
   },
@@ -17226,6 +17947,9 @@ export const designers = {
     name: 'Yukiko Ode',
     born: 1969,
     career: [{ house: 'hyke', role: 'Founder', roleDetail: 'Co-founder and co-designer with Hideaki Yoshihara', start: 2013, end: null }],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2017, house: 'hyke', detail: 'Shared with Hideaki Yoshihara' },
+    ],
     notes: 'Co-founded green with Hideaki Yoshihara in 1998. After suspending that label in 2009, the pair returned as HYKE in 2013.',
     sources: ['https://hyke.jp/pages/story'],
   },
@@ -17644,6 +18368,9 @@ export const designers = {
     name: 'Thebe Magugu',
     nationality: 'South African',
     career: [{ house: 'thebeMagugu', role: 'Founder', roleDetail: 'Founder and creative director', start: 2016, end: null }],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2019, house: 'thebeMagugu' },
+    ],
     notes: 'Studied fashion design, photography and media in Johannesburg. Previously interned at Woolworths, which is not represented as a clothing label here. One-off projects for other fashion houses are not employment tenures.',
     sources: ['https://www.ifc.org/en/contact/profile/thebe-magugu', 'https://www.sowetan.co.za/sundayworld/lifestyle/2019-03-06-thebe-magugu-born-for-and-with-fashion/'],
   },
@@ -17672,6 +18399,9 @@ export const designers = {
     name: 'Kenneth Ize',
     nationality: 'Nigerian-Austrian',
     career: [{ house: 'kennethIze', role: 'Founder', roleDetail: 'Founder and designer', start: 2013, end: null }],
+    awards: [
+      { award: AwardId.BfaLeaderOfChange, year: 2020, detail: 'Community; Emergency Designer Network' },
+    ],
     notes: 'Kenneth Izedonmwen grew up in Austria and trained at the University of Applied Arts Vienna. Interned at Edun in New York before developing a practice centred on Nigerian weaving; Edun is not separately represented. Paused his label while pursuing further study, returning for Spring/Summer 2016.',
     sources: ['https://lagosfashionweek.ng/designers/kenneth-ize', 'https://www.austrianfashionassociation.at/talent/kenneth-ize/', 'https://www.net-a-porter.com/en-bh/porter/article-7ce42b41816c6fb4/fashion/art-of-style/kenneth-ize'],
   },
@@ -17795,6 +18525,10 @@ export const designers = {
     name: 'Giles Deacon',
     nationality: 'British',
     career: [{ house: 'ungaro', role: 'Creative Director', start: 2010, end: 2012, sources: ['https://en.wikipedia.org/wiki/Emanuel_Ungaro'] }],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2004, detail: 'New Designer' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2006 },
+    ],
   },
   marcoColagrossi: {
     name: 'Marco Colagrossi',
@@ -17896,11 +18630,17 @@ export const designers = {
     nationality: 'British',
     died: 2023,
     career: [{ house: 'ymc', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 1995, end: 2023, sources: ['https://www.youmustcreate.com/pages/sage-toda-nation-appointed-creative-director'] }],
+    awards: [
+      { award: AwardId.BfaStreetStyle, year: 1999, house: 'ymc' },
+    ],
   },
   jimmyCollins: {
     name: 'Jimmy Collins',
     nationality: 'British',
     career: [{ house: 'ymc', role: 'Founder', roleDetail: 'Co-founder', start: 1995, end: null, sources: ['https://www.youmustcreate.com/pages/about', 'https://rendez-vous-store.com/a-sit-down-with-sage-toda-nation-of-ymc/'] }],
+    awards: [
+      { award: AwardId.BfaStreetStyle, year: 1999, house: 'ymc' },
+    ],
   },
   simoneCecchetto: {
     name: 'Simone Cecchetto',
@@ -18097,6 +18837,9 @@ export const designers = {
   edmundoCastillo: {
     name: 'Edmundo Castillo',
     career: [{ house: 'sergioRossi', role: 'Creative Director', start: 2004, end: 2008, approximate: true, notes: 'Sources give a 2004 or 2006 start.' }],
+    awards: [
+      { award: AwardId.CfdaPerryEllisAward, year: 2001, detail: 'Accessories' },
+    ],
   },
   francescoRusso: {
     name: 'Francesco Russo',
@@ -18272,6 +19015,9 @@ export const designers = {
     name: 'Bianca Saunders',
     nationality: 'British',
     career: [{ house: 'biancaSaundersLabel', role: 'Founder', roleDetail: 'Founder and designer', start: 2017, end: null }],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2023, house: 'biancaSaundersLabel', detail: 'New Establishment Menswear' },
+    ],
   },
   pariaFarzaneh: {
     name: 'Paria Farzaneh',
@@ -18381,6 +19127,11 @@ export const designers = {
   johnVarvatos: {
     name: 'John Varvatos',
     career: [{ house: 'johnVarvatos', role: 'Founder', start: 2000, end: 2020, notes: 'Left the company in 2020 after its bankruptcy and sale to Lion Capital.' }],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2001, house: 'johnVarvatos' },
+      { award: AwardId.CfdaMenswearDesigner, year: 2005, house: 'johnVarvatos' },
+      { award: AwardId.CfdaPerryEllisAward, year: 2000, house: 'johnVarvatos', detail: 'Menswear' },
+    ],
   },
   lucaBenini: {
     name: 'Luca Benini',
@@ -18818,6 +19569,9 @@ export const designers = {
       { house: 'thomBrowne', role: 'Other', roleDetail: 'Menswear designer', start: 2011, end: 2013 },
       { house: 'kozaburo', role: 'Founder', roleDetail: 'Founder and designer', start: 2016, end: null },
     ],
+    awards: [
+      { award: AwardId.LvmhSpecialPrize, year: 2017, house: 'kozaburo' },
+    ],
     notes: 'Born in Tokyo; studied philosophy at Toyo University before a first-class BFA in menswear at Central Saint Martins (2011) and an MFA at Parsons (2016). Won the 2017 LVMH Prize Special Prize and was a 2023 CFDA/Vogue Fashion Fund finalist.',
     sources: ['https://en.wikipedia.org/wiki/Kozaburo_Akasaka', 'https://www.lvmhprize.com/en/kozaburo', 'https://metalmagazine.eu/en/post/kozaburo-circularity-and-heritage'],
   },
@@ -18911,6 +19665,11 @@ export const designers = {
   emmaChopova: {
     name: 'Emma Chopova',
     career: [{ house: 'chopovaLowena', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2017, end: null }],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2020, house: 'chopovaLowena', detail: 'Prize shared among the eight finalists' },
+      { award: AwardId.BfaEmergingDesigner, year: 2023, house: 'chopovaLowena', detail: 'New Establishment Womenswear' },
+      { award: AwardId.BfaEmergingDesigner, year: 2024, house: 'chopovaLowena', detail: 'BFC Foundation Award' },
+    ],
     notes: 'Born in Bulgaria and raised from age seven in New Jersey; met Laura Lowena at Central Saint Martins, where both completed the MA before launching their label. Her Bulgarian heritage shapes its folk-costume references.',
     sources: ['https://www.lvmhprize.com/en/emma-chopova-and-laura-lowena', 'https://www.luckyscent.com/brands/chopova-lowena'],
   },
@@ -18918,6 +19677,11 @@ export const designers = {
     name: 'Laura Lowena',
     nationality: 'British',
     career: [{ house: 'chopovaLowena', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2017, end: null }],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2020, house: 'chopovaLowena', detail: 'Prize shared among the eight finalists' },
+      { award: AwardId.BfaEmergingDesigner, year: 2023, house: 'chopovaLowena', detail: 'New Establishment Womenswear' },
+      { award: AwardId.BfaEmergingDesigner, year: 2024, house: 'chopovaLowena', detail: 'BFC Foundation Award' },
+    ],
     notes: 'Also known as Laura Lowena-Irons. Grew up in Somerset and met Emma Chopova at Central Saint Martins, where both completed the MA before launching their label.',
     sources: ['https://www.lvmhprize.com/en/emma-chopova-and-laura-lowena', 'https://www.luckyscent.com/brands/chopova-lowena'],
   },
@@ -18997,6 +19761,10 @@ export const designers = {
   billyReid: {
     name: 'Billy Reid',
     career: [{ house: 'billyReid', role: 'Founder', roleDetail: 'Founder and designer', start: 2004, end: null }],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2012, house: 'billyReid' },
+      { award: AwardId.CfdaPerryEllisAward, year: 2001, detail: 'Menswear' },
+    ],
     notes: 'Louisiana-born designer who launched the William Reid menswear line in 1998; it closed after 2001, and he relaunched under his own name in Florence, Alabama. CFDA member and 2010 CFDA/Vogue Fashion Fund winner.',
     sources: ['https://en.wikipedia.org/wiki/Billy_Reid_(fashion_designer)', 'https://cfda.com/member/billy-reid/'],
   },
@@ -19146,6 +19914,9 @@ export const designers = {
   rokHwang: {
     name: 'Rok Hwang',
     nationality: 'South Korean',
+    awards: [
+      { award: AwardId.LvmhSpecialPrize, year: 2018, house: 'rokh' },
+    ],
     notes: 'Born in Seoul and raised in Austin, Texas; studied womenswear at Central Saint Martins. Runner-up special prize, LVMH Prize 2018.',
     career: [
       { house: 'celine', role: 'Other', roleDetail: 'Ready-to-wear designer under Phoebe Philo', notes: 'Joined for Philo’s debut collection; exact years unconfirmed.' },
@@ -20016,6 +20787,9 @@ export const designers = {
     born: 1980,
     nationality: 'Japanese',
     career: [{ house: 'anrealage', role: 'Founder', roleDetail: 'Founder, designer', start: 2003, end: null, sources: ['https://www.fhcm.paris/en/house/anrealage', 'https://www.lvmhprize.com/en/anrealage'] }],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2019, house: 'anrealage' },
+    ],
     notes: 'Born in Tokyo; studied at Waseda University and Vantan Design Institute. Won the Gen Art Avant Garde award in New York (2005) and the Mainichi Fashion Grand Prix for best new designer (2011); LVMH Prize finalist in 2019.',
   },
   janJanVanEssche: {
@@ -20189,6 +20963,9 @@ export const designers = {
       { house: 'alaia', role: 'Other', roleDetail: 'Intern under Pieter Mulier' },
       { house: 'julieKegelsLabel', role: 'Founder', roleDetail: 'Founder, designer', start: 2024, end: null },
     ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2026, house: 'julieKegelsLabel' },
+    ],
     notes: 'Royal Academy of Fine Arts Antwerp graduate; LVMH Prize finalist 2025 and winner 2026. Daughter of Kipling co-founder Xavier Kegels.',
   },
   anVandevorst: {
@@ -20257,6 +21034,10 @@ export const designers = {
     born: 1954,
     nationality: 'American',
     career: [{ house: 'kennethCole', role: 'Founder', roleDetail: 'Founder; executive chairman and chief creative officer', start: 1982, end: null }],
+    awards: [
+      { award: AwardId.CfdaHumanitarianAward, year: 1996 },
+      { award: AwardId.CfdaPositiveChange, year: 2017, detail: 'Swarovski Award for Positive Change' },
+    ],
     notes: 'Worked at his father’s El-Bee Shoe Company before founding his own. Also chairs the Mental Health Coalition.',
   },
   emilyCole: {
@@ -20707,6 +21488,9 @@ export const designers = {
     born: 1987,
     nationality: 'Italian',
     career: [{ house: 'magliano', role: 'Founder', roleDetail: 'Founder and creative director', start: 2017, end: null }],
+    awards: [
+      { award: AwardId.LvmhKarlLagerfeldPrize, year: 2023, house: 'magliano' },
+    ],
     notes: 'Born in Bologna; graduated from the city’s Libera Università delle Arti. Worked on Alessandro Dell’Acqua’s team in Milan before returning to Bologna in 2013. Guest designer at Pitti Uomo 105 (January 2024).',
     sources: ['https://www.lvmhprize.com/en/magliano', 'https://uomo.pittimmagine.com/en/pittimmagine/archive/uomo105/news/luca-magliano-guest-designer-pu105'],
   },
@@ -20720,6 +21504,9 @@ export const designers = {
       { house: 'givenchy', role: 'Other', roleDetail: 'Studio designer under Riccardo Tisci' },
       { house: 'goldenGoose', role: 'Other', roleDetail: 'Designer', notes: 'Just before founding Setchu.' },
       { house: 'setchu', role: 'Founder', roleDetail: 'Founder and creative director', start: 2020, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2023, house: 'setchu' },
     ],
     notes: 'Born near Kyoto; moved to London at 21, studied at Central Saint Martins and apprenticed on Savile Row. Also worked for Edun in New York and with Kanye West in Paris. Named artistic director of the Aigle by Setchu capsule in 2026.',
     sources: ['https://en.wikipedia.org/wiki/Satoshi_Kuwata', 'https://numero.com/?p=137100'],
@@ -21097,6 +21884,9 @@ export const designers = {
       { house: 'dkny', role: 'Other', roleDetail: 'Design team' },
       { house: 'ruibuilt', role: 'Founder', roleDetail: 'Founder, creative director', start: 2019, end: null },
     ],
+    awards: [
+      { award: AwardId.LvmhKarlLagerfeldPrize, year: 2021, house: 'ruibuilt' },
+    ],
     notes: 'From Hunan province. BA from Tsinghua University in Beijing and an MFA in Fashion Design and Society from Parsons (2018), selected as a CFDA+ Design Graduate. Won the LVMH Prize’s Karl Lagerfeld Prize in 2021, the first Chinese designer to win an LVMH Prize award, and was a 2022 Woolmark Prize finalist.',
   },
   stevenStokeyDaley: {
@@ -21106,6 +21896,10 @@ export const designers = {
       { house: 'tomFord', role: 'Other', roleDetail: 'Intern', sources: ['https://www.westminster.ac.uk/news/fashion-alumnus-steven-stokey-daley-wins-the-2022-lvmh-prize'] },
       { house: 'alexanderMcQueen', role: 'Other', roleDetail: 'Intern', sources: ['https://www.westminster.ac.uk/news/fashion-alumnus-steven-stokey-daley-wins-the-2022-lvmh-prize'] },
       { house: 'ssDaley', role: 'Founder', roleDetail: 'Founder and designer', start: 2020, end: null, sources: ['https://ssdaley.com/pages/about'] },
+    ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2022, house: 'ssDaley' },
+      { award: AwardId.BfaEmergingDesigner, year: 2022, house: 'ssDaley', detail: 'BFC Foundation Award' },
     ],
     notes: 'Also written Steven Stokey Daley. From Liverpool; graduated from the University of Westminster in 2020 under Andrew Groves. Won the 2022 LVMH Prize and the 2022 British Fashion Award for emerging designer. Years of the internships are unconfirmed.',
   },
@@ -21117,6 +21911,10 @@ export const designers = {
       { house: 'puma', role: 'Creative Director', roleDetail: 'Creative director, sport-lifestyle', start: 2008, sources: ['https://about.puma.com/en/newsroom/news/designer-artist-and-film-maker-hussein-chalayan-takes-creative-director-post-puma'] },
       { house: 'vionnet', role: 'Other', roleDetail: 'Designer of the demi-couture line, then the ready-to-wear design team', start: 2014, sources: ['https://www.businessoffashion.com/articles/luxury/bof-exclusive-hussein-chalayan-commits-to-vionnet'] },
     ],
+    awards: [
+      { award: AwardId.BfaDesignerOfTheYear, year: 1999, house: 'husseinChalayan' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 2000, house: 'husseinChalayan' },
+    ],
     notes: 'Born in Nicosia in 1970 and moved to England at 12; graduated from Central Saint Martins in 1993. Also design director of TSE cashmere in New York (from 1998, about two years) and creative director of Asprey (about 2001–2004); neither company is currently in the dataset. The end years of the Puma and Vionnet roles are unconfirmed.',
   },
   richardQuinn: {
@@ -21125,6 +21923,9 @@ export const designers = {
     career: [
       { house: 'richardQuinn', role: 'Founder', roleDetail: 'Founder and designer', start: 2016, end: null, sources: ['https://en.wikipedia.org/wiki/Richard_Quinn_(designer)'] },
     ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2018, house: 'richardQuinn', detail: 'Womenswear' },
+    ],
     notes: 'Born in 1990. Studied BA Fashion Print (2014) and the MA Fashion (2016) at Central Saint Martins, where his graduate collection won the H&M Design Award.',
   },
   marcoCapaldo: {
@@ -21132,6 +21933,9 @@ export const designers = {
     nationality: 'British-Italian',
     career: [
       { house: 'sixteenArlington', role: 'Founder', roleDetail: 'Co-founder and creative director', start: 2017, end: null, sources: ['https://www.tatlerasia.com/style/fashion/16arlington-marco-capaldo-on-love-inspiration-and-design'] },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2024, house: 'sixteenArlington', detail: 'New Establishment Womenswear' },
     ],
     notes: 'London-born to an Italian family; graduated from Istituto Marangoni London in 2015, where he met Kikka Cavenati.',
   },
@@ -21158,6 +21962,9 @@ export const designers = {
     nationality: 'Nigerian-British',
     career: [
       { house: 'duroOlowu', role: 'Founder', roleDetail: 'Founder and designer', start: 2004, end: null, sources: ['https://en.wikipedia.org/wiki/Duro_Olowu'] },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2005, house: 'duroOlowu', detail: 'New Generation' },
     ],
     notes: 'Born in Lagos to a Nigerian father and Jamaican mother; practised law in Nigeria before turning to fashion. Earlier ran the label and Notting Hill shop Olowu Golding with his then-wife from 1998. Also a curator (“Making & Unmaking”, Camden Arts Centre, 2016; “Seeing Chicago”, MCA Chicago, 2020).',
   },
@@ -22178,6 +22985,9 @@ export const designers = {
       { house: 'ruffoResearch', role: 'Creative Director', roleDetail: 'Designer of the first collection', start: 1998, end: 1998 },
       { house: 'lesCopains', role: 'Creative Director', roleDetail: 'Trend Les Copains', start: 2005, approximate: true, notes: 'First collection Spring/Summer 2006.' },
     ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 1997, detail: 'New Generation' },
+    ],
   },
   graemeBlack: {
     name: 'Graeme Black',
@@ -23045,6 +23855,9 @@ export const designers = {
       { house: 'rolandMouretLabel', role: 'Creative Director', roleDetail: 'Designer of RM, later Roland Mouret', start: 2007, end: 2021 },
       { house: 'rolandMouretLabel', role: 'Creative Director', roleDetail: 'Co-creative director with Han Chong', start: 2022, end: 2025 },
     ],
+    awards: [
+      { award: AwardId.BfaRedCarpet, year: 2005, house: 'rolandMouretLabel' },
+    ],
     notes: 'Also creative director of shoe label Robert Clergerie from 2011.',
   },
   hanChong: {
@@ -23363,6 +24176,9 @@ export const designers = {
     career: [
       { house: 'seanJohn', role: 'Founder', start: 1998 },
     ],
+    awards: [
+      { award: AwardId.CfdaMenswearDesigner, year: 2004, house: 'seanJohn' },
+    ],
   },
   damonDash: {
     name: 'Damon Dash',
@@ -23619,6 +24435,10 @@ export const designers = {
     name: 'Kate Mulleavy',
     nationality: 'American',
     career: [{ house: 'rodarte', role: 'Founder', roleDetail: 'Co-founder, co-designer', start: 2005, end: null }],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2009, house: 'rodarte' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2008, house: 'rodarte', detail: 'Womenswear' },
+    ],
     notes: 'Founded Rodarte with her sister Laura; they also design film costumes and wrote and directed Woodshock (2017).',
     sources: ['https://cfda.com/member/kate-mulleavy/', 'https://en.wikipedia.org/wiki/Kate_and_Laura_Mulleavy'],
   },
@@ -23626,6 +24446,10 @@ export const designers = {
     name: 'Laura Mulleavy',
     nationality: 'American',
     career: [{ house: 'rodarte', role: 'Founder', roleDetail: 'Co-founder, co-designer', start: 2005, end: null }],
+    awards: [
+      { award: AwardId.CfdaWomenswearDesigner, year: 2009, house: 'rodarte' },
+      { award: AwardId.CfdaSwarovskiAward, year: 2008, house: 'rodarte', detail: 'Womenswear' },
+    ],
     notes: 'Founded Rodarte with her sister Kate; they also design film costumes and wrote and directed Woodshock (2017).',
     sources: ['https://en.wikipedia.org/wiki/Kate_and_Laura_Mulleavy'],
   },
@@ -23638,6 +24462,1120 @@ export const designers = {
     ],
     notes: 'Japanese designer (佐藤信彦, also romanized Satoh) and head of MANIAC Corporation in Tokyo, which makes IF SIX WAS NINE and L.G.B. He keeps a deliberately low public profile.',
     sources: ['https://circusbymaniac.shop/', 'https://www.grailed.com/designers/if-six-was-nine'],
+  },
+  stephenJones: {
+    name: 'Stephen Jones',
+    born: 1957,
+    nationality: 'British',
+    career: [
+      { house: 'stephenJonesMillinery', role: 'Founder', roleDetail: 'Founder and milliner', start: 1980, end: null },
+      { house: 'dior', role: 'Other', roleDetail: 'Milliner, hats and headpieces for the runway', start: 1996, end: null, sources: ['https://stephenjonesmillinery.com/history', 'https://fashionunited.com/news/fashion/london-fashion-week-master-milliner-stephen-jones-wears-many-hats/2025022164632'] },
+    ],
+    awards: [
+      { award: AwardId.BfaAccessoriesDesigner, year: 2005, house: 'stephenJonesMillinery' },
+      { award: AwardId.BfaOutstandingAchievement, year: 2008 },
+      { award: AwardId.BfaAccessoriesDesigner, year: 2024, house: 'stephenJonesMillinery', detail: 'British Accessories Brand' },
+    ],
+    notes: 'London milliner with his own label since 1980. He has made Dior’s runway hats since John Galliano’s arrival in 1996, continuing under each later creative director through Jonathan Anderson.',
+  },
+  philipTreacy: {
+    name: 'Philip Treacy',
+    born: 1967,
+    nationality: 'Irish',
+    career: [
+      { house: 'philipTreacy', role: 'Founder', roleDetail: 'Founder and milliner', end: null },
+      { house: 'chanel', role: 'Other', roleDetail: 'Milliner for the haute couture shows', start: 1991, end: 2001, approximate: true, sources: ['https://www.wmagazine.com/fashion/philip-treacy-hats-milliner-interview', 'https://www.scmp.com/article/465055/philip-treacy'] },
+    ],
+    awards: [
+      { award: AwardId.BfaAccessoriesDesigner, year: 1991, house: 'philipTreacy' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 1992, house: 'philipTreacy' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 1993, house: 'philipTreacy' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 1996, house: 'philipTreacy' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 1997, house: 'philipTreacy' },
+    ],
+    notes: 'London milliner introduced to Karl Lagerfeld by Isabella Blow; he designed hats for Chanel’s haute couture shows for about a decade from 1991 (end year approximate).',
+  },
+  ozwaldBoateng: {
+    name: 'Ozwald Boateng',
+    born: 1967,
+    nationality: 'British',
+    career: [
+      { house: 'ozwaldBoateng', role: 'Founder', roleDetail: 'Founder and creative director', start: 1991, end: null },
+      { house: 'givenchy', role: 'Menswear Director', roleDetail: 'Creative director, Givenchy Homme', start: 2003, end: 2007, approximate: true, sources: ['https://en.wikipedia.org/wiki/Ozwald_Boateng', 'https://moodiedavittreport.com/fashion-accessories-ozwald-boateng-to-drive-givenchy-menswear/'] },
+    ],
+    awards: [
+      { award: AwardId.BfaBritishMenswear, year: 2000, house: 'ozwaldBoateng' },
+    ],
+    notes: 'Savile Row tailor with his own bespoke and ready-to-wear label. Appointed to Givenchy Homme in late 2003; his last collection there was Spring/Summer 2007, and sources differ on whether he left at the end of 2006 or in 2007.',
+  },
+  rupertSanderson: {
+    name: 'Rupert Sanderson',
+    nationality: 'British',
+    career: [
+      { house: 'rupertSanderson', role: 'Founder', roleDetail: 'Founder and designer', start: 2001, end: null },
+      { house: 'sergioRossi', role: 'Other', roleDetail: 'Shoe designer (one-season scholarship)', start: 2000, approximate: true, sources: ['https://www.rupertsanderson.com/story', 'https://en.wikipedia.org/wiki/Rupert_Sanderson'] },
+      { house: 'brunoMagli', role: 'Other', roleDetail: 'Shoe designer', start: 2000, end: 2001, approximate: true, sources: ['https://www.rupertsanderson.com/story'] },
+    ],
+    awards: [
+      { award: AwardId.BfaAccessoriesDesigner, year: 2008, house: 'rupertSanderson' },
+    ],
+    notes: 'Left advertising in 1999 to study at Cordwainers, then designed a season at Sergio Rossi on a scholarship before a permanent role at Bruno Magli. Launched his London shoe label in 2001. The Italian years are inferred from that sequence.',
+  },
+  michaelHalpern: {
+    name: 'Michael Halpern',
+    nationality: 'American',
+    career: [
+      { house: 'halpern', role: 'Founder', roleDetail: 'Founder and creative director', start: 2016, end: null },
+      { house: 'jMendel', role: 'Other', roleDetail: 'Design team', sources: ['https://www.showstudio.com/contributors/halpern'] },
+      { house: 'versace', role: 'Other', roleDetail: 'Consultant, Atelier Versace', start: 2015, approximate: true, sources: ['https://www.showstudio.com/contributors/halpern'] },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2017, house: 'halpern', detail: 'Womenswear' },
+      { award: AwardId.BfaLeaderOfChange, year: 2020, detail: 'Community; Emergency Designer Network' },
+    ],
+    notes: 'Parsons graduate (2010) who worked at J. Mendel and Oscar de la Renta before an MA at Central Saint Martins (2015). Donatella Versace hired him to consult on Atelier Versace shortly after; he launched his London label Halpern in 2016. Oscar de la Renta is not currently represented in the dataset.',
+  },
+  bellaFreud: {
+    name: 'Bella Freud',
+    born: 1961,
+    nationality: 'British',
+    career: [
+      { house: 'bellaFreud', role: 'Founder', roleDetail: 'Founder and designer', start: 1990, end: null },
+      { house: 'vivienneWestwood', role: 'Other', roleDetail: 'Shop assistant (Seditionaries)', start: 1977, approximate: true, sources: ['https://bellafreud.com/blogs/happenings/viviennewestwood'] },
+      { house: 'vivienneWestwood', role: 'Other', roleDetail: 'Design assistant', sources: ['https://bellafreud.com/blogs/happenings/viviennewestwood', 'https://www.encyclopedia.com/fashion/news-wires-white-papers-and-books/freud-bella'] },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 1991, detail: 'New Generation', house: 'bellaFreud' },
+    ],
+    notes: 'Worked at Westwood’s Seditionaries shop as a teenager, then returned as Vivienne Westwood’s design assistant in the 1980s after studying fashion in Rome; sources disagree on those years. Launched her own label around 1990.',
+  },
+  patrickCox: {
+    name: 'Patrick Cox',
+    born: 1963,
+    nationality: 'Canadian',
+    career: [
+      { house: 'patrickCox', role: 'Founder', roleDetail: 'Founder and designer', start: 1985 },
+      { house: 'vivienneWestwood', role: 'Other', roleDetail: 'Shoe designer, while a Cordwainers student', start: 1984, sources: ['https://www.encyclopedia.com/fashion/news-wires-white-papers-and-books/cox-patrick', 'https://cordwainers.org/blog/wannabe-the-career-of-patrick-cox/'] },
+    ],
+    awards: [
+      { award: AwardId.BfaAccessoriesDesigner, year: 1994, house: 'patrickCox' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 1995, house: 'patrickCox' },
+    ],
+    notes: 'Designed shoes for Vivienne Westwood in 1984 while studying at Cordwainers, then set up his own shoe label in the mid-1980s, known for the Wannabe loafer line from 1993.',
+  },
+  helenStorey: {
+    name: 'Helen Storey',
+    born: 1959,
+    nationality: 'British',
+    career: [
+      { house: 'helenStorey', role: 'Founder', roleDetail: 'Founder and designer', start: 1984, end: 1995 },
+      { house: 'valentino', role: 'Other', roleDetail: 'Design studio, Rome', start: 1981, end: 1983, approximate: true, sources: ['https://kingston.ac.uk/alumni/our-alumni/made-in-kingston/profiles/Helen-Storey', 'https://www.encyclopedia.com/fashion/news-wires-white-papers-and-books/storey-helen'] },
+    ],
+    awards: [
+      { award: AwardId.BfaInnovativeDesigner, year: 1990, house: 'helenStorey' },
+    ],
+    notes: 'Kingston Polytechnic graduate (1981) who worked in Valentino’s Rome studio and for Lancetti before launching her own London label around 1984, which ran until 1997. Later a professor at the University of the Arts London known for art-and-science projects.',
+  },
+  jordanAskill: {
+    name: 'Jordan Askill',
+    nationality: 'Australian',
+    career: [
+      { house: 'jordanAskill', role: 'Founder', roleDetail: 'Founder and designer', start: 2010, end: null },
+      { house: 'alexanderMcQueen', role: 'Other', roleDetail: 'Intern', sources: ['https://theglassmagazine.com/glass-meets-jewellery-designer-jordan-askill/'] },
+      { house: 'ksubi', role: 'Other', roleDetail: 'Design team', sources: ['https://theglassmagazine.com/glass-meets-jewellery-designer-jordan-askill/'] },
+      { house: 'dior', role: 'Other', roleDetail: 'Dior Homme studio, under Hedi Slimane', start: 2004, end: 2007, approximate: true, sources: ['https://en.wikipedia.org/wiki/Jordan_Askill', 'https://www.neueluxury.com/feature/jordan-askill'] },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2015, house: 'jordanAskill', detail: 'Accessories' },
+    ],
+    notes: 'Sydney-born jeweller and sculptor. Worked at Dior Homme under Hedi Slimane until Slimane’s final collection in 2007 (sources disagree on the start year), then founded his own London jewellery label.',
+  },
+  torishejuDumi: {
+    name: 'Torishéju Dumi',
+    nationality: 'British',
+    career: [
+      { house: 'torisheju', role: 'Founder', roleDetail: 'Founder and creative director', end: null },
+      { house: 'celine', role: 'Other', roleDetail: 'Design team, under Phoebe Philo', sources: ['https://www.arts.ac.uk/people/honoraries/torisheju-dumi'] },
+      { house: 'annDemeulemeester', role: 'Other', roleDetail: 'Design team', sources: ['https://www.arts.ac.uk/people/honoraries/torisheju-dumi'] },
+    ],
+    awards: [
+      { award: AwardId.LvmhSavoirFairePrize, year: 2025, house: 'torisheju' },
+    ],
+    notes: 'London College of Fashion menswear graduate (2018) with an MA from Central Saint Martins. Worked at Celine, Ann Demeulemeester and Sibling London before founding her Paris-shown label Torishéju.',
+  },
+  delphineArnault: {
+    name: 'Delphine Arnault',
+    born: 1975,
+    nationality: 'French',
+    career: [
+      { house: 'louisVuitton', role: 'Other', roleDetail: 'Executive vice president, overseeing product', start: 2013, end: 2023, sources: ['https://www.lvmh.com/en/our-group/governance/delphine-arnault'] },
+      { house: 'dior', role: 'CEO', roleDetail: 'Chairman and CEO, Christian Dior Couture', start: 2023, end: null, sources: ['https://www.lvmh.com/en/our-group/governance/delphine-arnault'] },
+    ],
+    awards: [
+      { award: AwardId.BfaSpecialRecognition, year: 2025, detail: 'Outstanding contribution to the fashion industry' },
+    ],
+    notes: 'Began at McKinsey, then worked with John Galliano’s own label and was deputy managing director of Christian Dior Couture until 2013 (sources give 2001 or 2008 for her arrival at Dior). Founded the LVMH Prize in 2013. Succeeded Pietro Beccari at Dior on 1 February 2023.',
+  },
+  margaretBarbour: {
+    name: 'Margaret Barbour',
+    born: 1940,
+    nationality: 'British',
+    career: [
+      { house: 'barbour', role: 'Head of House', roleDetail: 'Chairman, J. Barbour & Sons', start: 1972, end: null, sources: ['https://en.wikipedia.org/wiki/Margaret_Barbour', 'https://philanthropynortheast.com/the-philanthropists/barbour-dame-margaret'] },
+    ],
+    awards: [
+      { award: AwardId.Dbe, year: 2001 },
+      { award: AwardId.BfaSpecialRecognition, year: 2024, house: 'barbour' },
+    ],
+    notes: 'Took charge of the family company after her husband John Barbour’s death and has chaired it since 1972, working alongside her daughter Helen as vice chairman.',
+  },
+  dickonBowden: {
+    name: 'Dickon Bowden',
+    nationality: 'British',
+    career: [
+      { house: 'doverStreetMarket', role: 'Other', roleDetail: 'Global vice president; business leadership', start: 2004, end: null, sources: ['https://www.anothermag.com/fashion-beauty/16104/20-years-of-dover-street-market-adrian-joffe-dickon-bowden', 'https://fashionunited.com/news/fashion/rei-kawakubo-adrian-joffe-and-dickon-bowden-named-as-fashion-awards-honourees/2025111069098'] },
+    ],
+    awards: [
+      { award: AwardId.BfaIsabellaBlow, year: 2025, house: 'commeDesGarcons', detail: 'Shared with Rei Kawakubo and Adrian Joffe' },
+    ],
+    notes: 'With Dover Street Market since its London opening in 2004, and now its global vice president, working alongside Adrian Joffe on its international expansion.',
+  },
+  thomasTait: {
+    name: 'Thomas Tait',
+    nationality: 'Canadian',
+    career: [
+      { house: 'thomasTait', role: 'Founder', roleDetail: 'Founder and creative director', start: 2010, end: 2016 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2015, house: 'thomasTait', detail: 'Womenswear' },
+      { award: AwardId.LvmhPrize, year: 2014, house: 'thomasTait' },
+    ],
+    notes: 'Canadian-born; trained at Collège LaSalle and took the Central Saint Martins MA Womenswear (2010). Won the first LVMH Prize in 2014. Since closing his label he has consulted for international brands as a designer, art director and creative director; those clients are unnamed in sources.',
+  },
+  nikitaSutradhar: {
+    name: 'Nikita Sutradhar',
+    nationality: 'Indian',
+    career: [
+      { house: 'miuniku', role: 'Founder', roleDetail: 'Co-founder and designer' },
+    ],
+    awards: [
+      { award: AwardId.LvmhSpecialPrize, year: 2014, house: 'miuniku', detail: 'Shared with Tina Sutradhar' },
+    ],
+    notes: 'Co-founded Miuniku with her sister Tina after studying at London College of Fashion. Its current status is unconfirmed.',
+  },
+  tinaSutradhar: {
+    name: 'Tina Sutradhar',
+    nationality: 'Indian',
+    career: [
+      { house: 'miuniku', role: 'Founder', roleDetail: 'Co-founder and designer' },
+    ],
+    awards: [
+      { award: AwardId.LvmhSpecialPrize, year: 2014, house: 'miuniku', detail: 'Shared with Nikita Sutradhar' },
+    ],
+    notes: 'Co-founded Miuniku with her sister Nikita after studying at London College of Fashion. Its current status is unconfirmed.',
+  },
+  martaMarques: {
+    name: 'Marta Marques',
+    nationality: 'Portuguese',
+    career: [
+      { house: 'marquesAlmeida', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2011, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2014, house: 'marquesAlmeida', detail: 'Womenswear' },
+      { award: AwardId.LvmhPrize, year: 2015, house: 'marquesAlmeida', detail: 'Shared with Paulo Almeida' },
+    ],
+    notes: 'Met Paulo Almeida at CITEX in Portugal; both studied at Central Saint Martins before founding Marques’Almeida in London in 2011.',
+  },
+  pauloAlmeida: {
+    name: 'Paulo Almeida',
+    nationality: 'Portuguese',
+    career: [
+      { house: 'marquesAlmeida', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2011, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2014, house: 'marquesAlmeida', detail: 'Womenswear' },
+      { award: AwardId.LvmhPrize, year: 2015, house: 'marquesAlmeida', detail: 'Shared with Marta Marques' },
+    ],
+    notes: 'Met Marta Marques at CITEX in Portugal; both studied at Central Saint Martins before founding Marques’Almeida in London in 2011.',
+  },
+  vejasKruszewski: {
+    name: 'Vejas Kruszewski',
+    nationality: 'Canadian',
+    career: [
+      { house: 'vejas', role: 'Founder', roleDetail: 'Founder and designer' },
+    ],
+    awards: [
+      { award: AwardId.LvmhSpecialPrize, year: 2016, house: 'vejas' },
+    ],
+    notes: 'Self-taught Toronto designer of Polish and Lithuanian descent, who started his label at about 18 with business partner Saam Emme. The label’s founding and end years are unconfirmed.',
+  },
+  tomoKoizumi: {
+    name: 'Tomo Koizumi',
+    nationality: 'Japanese',
+    career: [
+      { house: 'tomoKoizumi', role: 'Founder', roleDetail: 'Founder and creative director', start: 2011, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2020, house: 'tomoKoizumi', detail: 'Prize shared among the eight finalists' },
+      { award: AwardId.MainichiFashionGrandPrix, year: 2021, house: 'tomoKoizumi' },
+    ],
+    notes: 'Born Tomotaka Koizumi. Studied at Chiba University and started his ruffle-dress label as a side project a year before graduating.',
+  },
+  sindisoKhumalo: {
+    name: 'Sindiso Khumalo',
+    nationality: 'South African',
+    career: [
+      { house: 'sindisoKhumalo', role: 'Founder', roleDetail: 'Founder and creative director', start: 2014, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2020, house: 'sindisoKhumalo', detail: 'Prize shared among the eight finalists' },
+    ],
+    notes: 'Founded her Cape Town womenswear label in 2014 (one source says 2015).',
+  },
+  supriyaLele: {
+    name: 'Supriya Lele',
+    nationality: 'British',
+    career: [
+      { house: 'supriyaLele', role: 'Founder', roleDetail: 'Founder and creative director', start: 2016, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2020, house: 'supriyaLele', detail: 'Prize shared among the eight finalists' },
+    ],
+    notes: 'British-Indian designer who founded her label after her Royal College of Art MA (2016) and debuted with Fashion East in 2017; SSENSE dates the launch to 2017.',
+  },
+  nensiDojaka: {
+    name: 'Nensi Dojaka',
+    nationality: 'Albanian',
+    career: [
+      { house: 'nensiDojaka', role: 'Founder', roleDetail: 'Founder and creative director', start: 2019, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2021, house: 'nensiDojaka' },
+      { award: AwardId.BfaEmergingDesigner, year: 2021, house: 'nensiDojaka', detail: 'BFC Foundation Award' },
+    ],
+    notes: 'Albanian-born, London-based designer who graduated from Central Saint Martins in 2019. Her label skipped two seasons at one point; no dated pause has been confirmed.',
+  },
+  lukhanyoMdingi: {
+    name: 'Lukhanyo Mdingi',
+    nationality: 'South African',
+    career: [
+      { house: 'lukhanyoMdingi', role: 'Founder', roleDetail: 'Founder and creative director', start: 2015, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhKarlLagerfeldPrize, year: 2021, house: 'lukhanyoMdingi' },
+    ],
+    notes: 'Graduated from Cape Peninsula University of Technology in 2015, the year he established his Cape Town label.',
+  },
+  idrisBalogun: {
+    name: 'Idris Balogun',
+    nationality: 'British',
+    career: [
+      { house: 'burberry', role: 'Other', roleDetail: 'Design team', sources: ['https://www.yahoo.com/video/meet-winnie-menswear-brand-savile-150000646.html'] },
+      { house: 'tomFord', role: 'Other', roleDetail: 'Senior director, menswear made-to-measure', sources: ['https://www.yahoo.com/video/meet-winnie-menswear-brand-savile-150000646.html'] },
+      { house: 'winnieNewYork', role: 'Founder', roleDetail: 'Founder and creative director', start: 2018, end: 2024 },
+      { house: 'lacoste', role: 'Other', roleDetail: 'Head of menswear', start: 2024, end: null, approximate: true, sources: ['https://rocketreach.co/idris-balogun-email_64243147'] },
+    ],
+    awards: [
+      { award: AwardId.LvmhKarlLagerfeldPrize, year: 2022, house: 'winnieNewYork' },
+    ],
+    notes: 'Nigerian-born, London-raised designer who trained on Savile Row and worked at Burberry and Tom Ford before founding Winnie New York; he also owned a New York garment factory. After Winnie stopped in 2024 he joined Lacoste in Paris as head of menswear. Dates of the Burberry and Tom Ford roles are unconfirmed.',
+  },
+  juliePelipas: {
+    name: 'Julie Pelipas',
+    nationality: 'Ukrainian',
+    career: [
+      { house: 'bettter', role: 'Founder', roleDetail: 'Founder and creative director', start: 2021, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaLeaderOfChange, year: 2022, house: 'bettter', detail: 'People' },
+      { award: AwardId.LvmhKarlLagerfeldPrize, year: 2023, house: 'bettter' },
+    ],
+    notes: 'Former fashion director of Vogue Ukraine who launched the Bettter upcycling system in 2021.',
+  },
+  ellenHodakovaLarsson: {
+    name: 'Ellen Hodakova Larsson',
+    nationality: 'Swedish',
+    career: [
+      { house: 'hodakova', role: 'Founder', roleDetail: 'Founder and creative director', start: 2021, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2024, house: 'hodakova' },
+    ],
+    notes: 'Graduated from the Swedish School of Textiles in Borås in 2021, the year she founded Hodakova; the first Swedish LVMH Prize winner.',
+  },
+  michaelStewart: {
+    name: 'Michael Stewart',
+    nationality: 'Irish',
+    career: [
+      { house: 'standingGround', role: 'Founder', roleDetail: 'Founder and creative director', start: 2022, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhSavoirFairePrize, year: 2024, house: 'standingGround' },
+    ],
+    notes: 'From County Clare; graduated from the Royal College of Art in 2017 and established Standing Ground in 2022 (some reports say 2021), showing with Fashion East.',
+  },
+  soshiOtsuki: {
+    name: 'Soshi Otsuki',
+    nationality: 'Japanese',
+    career: [
+      { house: 'soshiotsuki', role: 'Founder', roleDetail: 'Founder and creative director', start: 2015, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhPrize, year: 2025, house: 'soshiotsuki' },
+    ],
+    notes: 'Bunka Fashion College graduate whose label’s second collection was shortlisted for the 2016 LVMH Prize; he won it in 2025.',
+  },
+  steveOSmith: {
+    name: 'Steve O Smith',
+    nationality: 'British',
+    career: [
+      { house: 'steveOSmith', role: 'Founder', roleDetail: 'Founder and creative director', start: 2017, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhKarlLagerfeldPrize, year: 2025, house: 'steveOSmith' },
+    ],
+    notes: 'London-born designer who studied at the Rhode Island School of Design and took the Central Saint Martins MA; founded his label in 2017.',
+  },
+  zaneLi: {
+    name: 'Zane Li',
+    nationality: 'Chinese',
+    career: [
+      { house: 'lii', role: 'Founder', roleDetail: 'Founder and creative director', end: null },
+    ],
+    awards: [
+      { award: AwardId.CfdaVogueFashionFund, year: 2026, house: 'lii' },
+      { award: AwardId.LvmhKarlLagerfeldPrize, year: 2026, house: 'lii' },
+    ],
+    notes: 'Chongqing-born, New York-based designer; graduated from the Fashion Institute of Technology in 2023 and founded LII shortly after, with a first collection for Autumn/Winter 2024.',
+  },
+  anilPadia: {
+    name: 'Anil Padia',
+    nationality: 'Kenyan',
+    career: [
+      { house: 'yoshita1967', role: 'Founder', roleDetail: 'Founder and creative director', start: 2024, end: null },
+    ],
+    awards: [
+      { award: AwardId.LvmhSavoirFairePrize, year: 2026, house: 'yoshita1967' },
+    ],
+    notes: 'Kenyan designer of Gujarati Indian descent who works between Nairobi and Paris; developed Yoshita 1967’s first pieces with the Nairobi tailor Catherine Wanjalo.',
+  },
+  dilaraFindikoglu: {
+    name: 'Dilara Fındıkoğlu',
+    nationality: 'Turkish',
+    career: [
+      { house: 'dilaraFindikoglu', role: 'Founder', roleDetail: 'Founder and creative director', start: 2016, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2025, house: 'dilaraFindikoglu', detail: 'Vanguard Award' },
+    ],
+    notes: 'Istanbul-born designer who graduated from Central Saint Martins in 2015 and founded her London label in 2016.',
+  },
+  connerIves: {
+    name: 'Conner Ives',
+    born: 1996,
+    nationality: 'American',
+    career: [
+      { house: 'connerIves', role: 'Founder', roleDetail: 'Founder and creative director', start: 2021, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaLeaderOfChange, year: 2022, house: 'connerIves', detail: 'Environment' },
+      { award: AwardId.BfaEmergingDesigner, year: 2023, house: 'connerIves', detail: 'BFC Foundation Award' },
+    ],
+    notes: 'Born in Bedford, New York; moved to London in 2014 for Central Saint Martins, graduating from BA Womenswear in 2020.',
+  },
+  bethanyWilliams: {
+    name: 'Bethany Williams',
+    nationality: 'British',
+    career: [
+      { house: 'bethanyWilliams', role: 'Founder', roleDetail: 'Founder and creative director', start: 2017, end: null },
+    ],
+    awards: [
+      { award: AwardId.QueenElizabethIIAward, year: 2019, house: 'bethanyWilliams' },
+      { award: AwardId.BfaEmergingDesigner, year: 2019, house: 'bethanyWilliams', detail: 'Menswear' },
+      { award: AwardId.BfaLeaderOfChange, year: 2021, house: 'bethanyWilliams', detail: 'Environment' },
+      { award: AwardId.BfaLeaderOfChange, year: 2022, house: 'bethanyWilliams', detail: 'Environment' },
+    ],
+    notes: 'Studied fine art, then menswear at London College of Fashion, launching her label in 2017.',
+  },
+  phoebeEnglish: {
+    name: 'Phoebe English',
+    nationality: 'British',
+    career: [
+      { house: 'phoebeEnglish', role: 'Founder', roleDetail: 'Founder and creative director', start: 2011, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaLeaderOfChange, year: 2021, house: 'phoebeEnglish', detail: 'Environment' },
+    ],
+    notes: 'Central Saint Martins MA graduate who has shown at London Fashion Week since founding her label in 2011.',
+  },
+  auroraJames: {
+    name: 'Aurora James',
+    nationality: 'Canadian',
+    career: [
+      { house: 'brotherVellies', role: 'Founder', roleDetail: 'Founder and creative director', start: 2013, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaLeaderOfChange, year: 2020, detail: 'People' },
+      { award: AwardId.BfaLeaderOfChange, year: 2022, detail: 'People' },
+    ],
+    notes: 'Toronto-born; founded Brother Vellies in New York in 2013 after travelling to work with artisans across Africa. Also founded the Fifteen Percent Pledge in 2020, the context of her Leader of Change awards.',
+  },
+  aSaiTa: {
+    name: 'A Sai Ta',
+    nationality: 'British',
+    career: [
+      { house: 'asai', role: 'Founder', roleDetail: 'Founder and creative director', start: 2017, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaLeaderOfChange, year: 2020, house: 'asai', detail: 'Community' },
+    ],
+    notes: 'London designer who draws on his Chinese heritage and launched Asai through Fashion East in 2017.',
+  },
+  charlotteDellal: {
+    name: 'Charlotte Dellal',
+    nationality: 'British',
+    career: [
+      { house: 'charlotteOlympia', role: 'Founder', roleDetail: 'Founder and creative director', start: 2008, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaAccessoriesDesigner, year: 2011, house: 'charlotteOlympia' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 2015, house: 'charlotteOlympia' },
+    ],
+    notes: 'Founded Charlotte Olympia in 2008.',
+  },
+  maryKatrantzou: {
+    name: 'Mary Katrantzou',
+    nationality: 'Greek',
+    career: [
+      { house: 'maryKatrantzou', role: 'Founder', roleDetail: 'Founder and creative director', start: 2008, end: null },
+      { house: 'bulgari', role: 'Other', roleDetail: 'Creative director, leather goods and accessories', start: 2024, end: null, sources: ['https://www.fashiontrustarabia.com/editions/mary-katrantzou'] },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2011, house: 'maryKatrantzou', detail: 'Ready-to-wear' },
+      { award: AwardId.BfaNewEstablishment, year: 2015, house: 'maryKatrantzou' },
+    ],
+    notes: 'Athens-born; studied textile design and the MA Fashion at Central Saint Martins. Became Bulgari’s first creative director of leather goods and accessories in April 2024, alongside her own label.',
+  },
+  joeCaselyHayford: {
+    name: 'Joe Casely-Hayford',
+    born: 1956,
+    died: 2019,
+    nationality: 'British',
+    career: [
+      { house: 'caselyHayford', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2009, end: 2019 },
+    ],
+    awards: [
+      { award: AwardId.Obe },
+      { award: AwardId.BfaSpecialRecognition, year: 2023, detail: 'Posthumous' },
+    ],
+    notes: 'London menswear designer who trained on Savile Row and at Saint Martins, ran his own label from the 1980s (not currently represented) and was creative director of Gieves & Hawkes in the mid-2000s, then co-founded Casely-Hayford with his son Charlie. Died in January 2019.',
+  },
+  charlieCaselyHayford: {
+    name: 'Charlie Casely-Hayford',
+    nationality: 'British',
+    career: [
+      { house: 'caselyHayford', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2009, end: null },
+    ],
+    notes: 'Co-founded Casely-Hayford with his father Joe and has run it alone since 2019, working between London and Tokyo, where the collections are produced.',
+  },
+  amandaWakeley: {
+    name: 'Amanda Wakeley',
+    born: 1962,
+    nationality: 'British',
+    career: [
+      { house: 'amandaWakeley', role: 'Founder', roleDetail: 'Founder and creative director', start: 1990, end: 2021 },
+    ],
+    awards: [
+      { award: AwardId.BfaGlamourDesigner, year: 1992, house: 'amandaWakeley' },
+      { award: AwardId.BfaGlamourDesigner, year: 1993, house: 'amandaWakeley' },
+      { award: AwardId.BfaGlamourDesigner, year: 1996, house: 'amandaWakeley' },
+    ],
+    notes: 'Former model who launched her label in 1990 with a loan from her father; patronage from Diana, Princess of Wales established it.',
+  },
+  reynoldPearce: {
+    name: 'Reynold Pearce',
+    born: 1965,
+    nationality: 'British',
+    career: [
+      { house: 'pearceFionda', role: 'Founder', roleDetail: 'Co-founder and designer' },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 1995, house: 'pearceFionda', detail: 'New Generation' },
+      { award: AwardId.BfaGlamourDesigner, year: 1997, house: 'pearceFionda' },
+    ],
+    notes: 'Met Andrew Fionda at Nottingham Trent University (1985–88), then took an MA at Central Saint Martins.',
+  },
+  andrewFionda: {
+    name: 'Andrew Fionda',
+    born: 1967,
+    nationality: 'British',
+    career: [
+      { house: 'pearceFionda', role: 'Founder', roleDetail: 'Co-founder and designer' },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 1995, house: 'pearceFionda', detail: 'New Generation' },
+      { award: AwardId.BfaGlamourDesigner, year: 1997, house: 'pearceFionda' },
+    ],
+    notes: 'Met Reynold Pearce at Nottingham Trent University (1985–88), then took an MA at the Royal College of Art.',
+  },
+  antonyPrice: {
+    name: 'Antony Price',
+    born: 1945,
+    died: 2025,
+    nationality: 'British',
+    career: [
+      { house: 'antonyPrice', role: 'Founder', roleDetail: 'Founder and designer', end: 2025 },
+    ],
+    awards: [
+      { award: AwardId.BfaGlamourDesigner, year: 1989, house: 'antonyPrice' },
+    ],
+    notes: 'Yorkshire-born designer and image-maker, trained at Bradford School of Art and the Royal College of Art; defined Roxy Music’s look and later launched a Topman menswear line in 2008. Died in December 2025.',
+  },
+  benDeLisi: {
+    name: 'Ben de Lisi',
+    born: 1955,
+    nationality: 'American',
+    career: [
+      { house: 'benDeLisi', role: 'Founder', roleDetail: 'Founder and designer', end: 2009 },
+    ],
+    awards: [
+      { award: AwardId.BfaGlamourDesigner, year: 1994, house: 'benDeLisi' },
+      { award: AwardId.BfaGlamourDesigner, year: 1995, house: 'benDeLisi' },
+    ],
+    notes: 'New York-born designer who studied sculpture at the Pratt Institute, designed menswear from 1979 and moved to London in 1982; worked with Debenhams from 1992 and was a judge on Project Catwalk.',
+  },
+  edwardMeadham: {
+    name: 'Edward Meadham',
+    nationality: 'British',
+    career: [
+      { house: 'meadhamKirchhoff', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2006, end: 2015 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2010, house: 'meadhamKirchhoff', detail: 'Ready-to-wear' },
+    ],
+    notes: 'Somerset-born; met Benjamin Kirchhoff on the Central Saint Martins BA.',
+  },
+  benjaminKirchhoff: {
+    name: 'Benjamin Kirchhoff',
+    career: [
+      { house: 'meadhamKirchhoff', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2006, end: 2015 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2010, house: 'meadhamKirchhoff', detail: 'Ready-to-wear' },
+    ],
+    notes: 'Born in Chad; met Edward Meadham on the Central Saint Martins BA.',
+  },
+  bettyJackson: {
+    name: 'Betty Jackson',
+    born: 1949,
+    nationality: 'British',
+    career: [
+      { house: 'bettyJackson', role: 'Founder', roleDetail: 'Founder and designer', start: 1981 },
+    ],
+    awards: [
+      { award: AwardId.BfaDesignerOfTheYear, year: 1985, house: 'bettyJackson' },
+      { award: AwardId.BfaContemporaryDesigner, year: 1999, house: 'bettyJackson' },
+    ],
+    notes: 'Born in Bacup, Lancashire; studied at Birmingham College of Art, then designed for Wendy Dagworthy and Ossie Clark’s Quorum line before founding her company with David Cohen. MBE 1987, CBE 2007.',
+  },
+  carloBrandelli: {
+    name: 'Carlo Brandelli',
+    nationality: 'British',
+    career: [
+      { house: 'kilgour', role: 'Creative Director', roleDetail: 'Creative and design director', start: 2003, end: 2008, approximate: true, sources: ['https://www.showstudio.com/contributor/carlo_brandelli'] },
+      { house: 'kilgour', role: 'Creative Director', roleDetail: 'Freelance creative director', start: 2013, end: 2017, sources: ['https://carlobrandelli.com'] },
+    ],
+    awards: [
+      { award: AwardId.BfaBritishMenswear, year: 2005, house: 'kilgour' },
+    ],
+    notes: 'Artist and designer who founded the menswear shop Squire before joining Kilgour in 2003; he resigned after the 2008 change of ownership (sources give 2008 or 2009) and returned as freelance creative director from 2013 to 2017.',
+  },
+  catherineWalker: {
+    name: 'Catherine Walker',
+    born: 1945,
+    died: 2010,
+    nationality: 'French-British',
+    career: [
+      { house: 'catherineWalker', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1977, end: 2010 },
+    ],
+    awards: [
+      { award: AwardId.BfaCoutureDesigner, year: 1990, house: 'catherineWalker' },
+      { award: AwardId.BfaGlamourDesigner, year: 1991, house: 'catherineWalker' },
+    ],
+    notes: 'Born Catherine Baheux in Calais; studied aesthetics and philosophy in Lille and Aix-en-Provence before settling in London. Dressed Diana, Princess of Wales. Died in 2010.',
+  },
+  saidCyrus: {
+    name: 'Said Cyrus',
+    career: [
+      { house: 'catherineWalker', role: 'Founder', roleDetail: 'Co-founder', start: 1977 },
+    ],
+    notes: 'Chelsea School of Art lecturer and Catherine Walker’s second husband, with whom he co-founded the business.',
+  },
+  peterPilotto: {
+    name: 'Peter Pilotto',
+    career: [
+      { house: 'peterPilotto', role: 'Founder', roleDetail: 'Co-founder and designer, print and textiles', start: 2007, end: 2020 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2009, house: 'peterPilotto', detail: 'Ready-to-wear' },
+    ],
+    notes: 'Studied at the Royal Academy of Fine Arts Antwerp, where he met Christopher De Vos in 2000.',
+  },
+  christopherDeVos: {
+    name: 'Christopher De Vos',
+    career: [
+      { house: 'peterPilotto', role: 'Founder', roleDetail: 'Co-founder and designer, silhouette and drape', start: 2007, end: 2020 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2009, house: 'peterPilotto', detail: 'Ready-to-wear' },
+    ],
+    notes: 'Studied at the Royal Academy of Fine Arts Antwerp, where he met Peter Pilotto; joined the label in 2007. One source says he worked at Vivienne Westwood until 2008 (unconfirmed).',
+  },
+  dinnyHall: {
+    name: 'Dinny Hall',
+    nationality: 'British',
+    career: [
+      { house: 'dinnyHall', role: 'Founder', roleDetail: 'Founder and designer', start: 1985, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaAccessoriesDesigner, year: 1989, house: 'dinnyHall' },
+    ],
+    notes: 'Central Saint Martins graduate whose 1984 graduate collection was bought by Liberty.',
+  },
+  elspethGibson: {
+    name: 'Elspeth Gibson',
+    born: 1963,
+    nationality: 'British',
+    career: [
+      { house: 'zandraRhodes', role: 'Other', roleDetail: 'Work experience placement', start: 1984, sources: ['https://en.wikipedia.org/wiki/Elspeth_Gibson'] },
+      { house: 'topshop', role: 'Other', roleDetail: 'Designer', sources: ['https://en.wikipedia.org/wiki/Elspeth_Gibson'] },
+      { house: 'elspethGibson', role: 'Founder', roleDetail: 'Founder and designer', start: 1995 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 1999, house: 'elspethGibson', detail: 'New Generation' },
+    ],
+    notes: 'Graduated from Mansfield College of Art and Design in 1984; designed for Topshop, Miss Selfridge and Monix (as head designer) before going freelance in 1994. Wikipedia dates her New Generation award to 1998; the BFA list gives 1999.',
+  },
+  georginaChapman: {
+    name: 'Georgina Chapman',
+    nationality: 'British',
+    career: [
+      { house: 'marchesa', role: 'Founder', roleDetail: 'Founder and designer', start: 2004, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaRedCarpet, year: 2007, house: 'marchesa' },
+    ],
+    notes: 'Co-founded Marchesa after meeting Keren Craig at Chelsea College of Art and Design.',
+  },
+  kerenCraig: {
+    name: 'Keren Craig',
+    nationality: 'British',
+    career: [
+      { house: 'marchesa', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2004, end: 2019 },
+    ],
+    awards: [
+      { award: AwardId.BfaRedCarpet, year: 2007, house: 'marchesa' },
+    ],
+    notes: 'Met Georgina Chapman at Chelsea College of Art and Design; left Marchesa in June 2019 after its Resort 2020 collection.',
+  },
+  grahamFraser: {
+    name: 'Graham Fraser',
+    nationality: 'British',
+    career: [
+      { house: 'workersForFreedom', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1985, end: 1998 },
+    ],
+    awards: [
+      { award: AwardId.BfaDesignerOfTheYear, year: 1989, house: 'workersForFreedom' },
+    ],
+    notes: 'Co-founded Workers for Freedom with Richard Nott; they sold it in 1998.',
+  },
+  richardNott: {
+    name: 'Richard Nott',
+    nationality: 'British',
+    career: [
+      { house: 'workersForFreedom', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1985, end: 1998 },
+    ],
+    awards: [
+      { award: AwardId.BfaDesignerOfTheYear, year: 1989, house: 'workersForFreedom' },
+    ],
+    notes: 'Co-founded Workers for Freedom with Graham Fraser; they sold it in 1998.',
+  },
+  hardyAmies: {
+    name: 'Hardy Amies',
+    born: 1909,
+    died: 2003,
+    nationality: 'British',
+    career: [
+      { house: 'hardyAmies', role: 'Founder', roleDetail: 'Founder and couturier', start: 1946, end: 2001 },
+    ],
+    awards: [
+      { award: AwardId.BfaHallOfFame, year: 1989 },
+    ],
+    notes: 'Couturier and royal dressmaker to Queen Elizabeth II, knighted (KCVO). Sold the business to the Luxury Brands Group in 2001 and retired.',
+  },
+  hollyFulton: {
+    name: 'Holly Fulton',
+    born: 1977,
+    nationality: 'British',
+    career: [
+      { house: 'lanvin', role: 'Other', roleDetail: 'Design experience', sources: ['https://en.wikipedia.org/wiki/Holly_Fulton'] },
+      { house: 'hollyFulton', role: 'Founder', roleDetail: 'Founder and designer', start: 2009 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2009, house: 'hollyFulton', detail: 'Accessories' },
+    ],
+    notes: 'Edinburgh-born; studied fashion textiles at Edinburgh College of Art and took the Royal College of Art MA. Head of Fashion at the Cambridge School of Visual and Performing Arts from 2017.',
+  },
+  husamElOdeh: {
+    name: 'Husam El Odeh',
+    nationality: 'German',
+    career: [
+      { house: 'husamElOdeh', role: 'Founder', roleDetail: 'Founder and designer', end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2010, house: 'husamElOdeh', detail: 'Accessories' },
+    ],
+    notes: 'German-born artist and jeweller who trained in fine art in Berlin; teaches jewellery at London College of Fashion since 2016.',
+  },
+  jasperConran: {
+    name: 'Jasper Conran',
+    born: 1959,
+    nationality: 'British',
+    career: [
+      { house: 'jasperConran', role: 'Founder', roleDetail: 'Founder and designer', start: 1978, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaDesignerOfTheYear, year: 1986, house: 'jasperConran' },
+      { award: AwardId.BfaClassicDesigner, year: 1991, house: 'jasperConran' },
+    ],
+    notes: 'Son of Sir Terence Conran; studied at Parsons in New York. Briefly chaired Conran Holdings until 2016.',
+  },
+  jeanMuir: {
+    name: 'Jean Muir',
+    born: 1928,
+    died: 1995,
+    nationality: 'British',
+    career: [
+      { house: 'libertyLondon', role: 'Other', roleDetail: 'Stockroom, sales and sketching in ready-to-wear', start: 1950, sources: ['https://en.wikipedia.org/wiki/Jean_Muir'] },
+      { house: 'jeanMuir', role: 'Founder', roleDetail: 'Founder and designer', start: 1966, end: 1995 },
+    ],
+    awards: [
+      { award: AwardId.BfaHallOfFame, year: 1994 },
+    ],
+    notes: 'London designer of Scottish descent who rose from Liberty’s stockroom to sketching for its ready-to-wear department; also designed for Jaeger before founding her company. Died in 1995.',
+  },
+  johnRocha: {
+    name: 'John Rocha',
+    born: 1953,
+    nationality: 'Irish',
+    career: [
+      { house: 'johnRocha', role: 'Founder', roleDetail: 'Founder and designer', end: 2014 },
+    ],
+    awards: [
+      { award: AwardId.BfaDesignerOfTheYear, year: 1993, house: 'johnRocha' },
+    ],
+    notes: 'Hong Kong-born designer who moved to Ireland after the Croydon School of Art; first known for his Chinatown label in Dublin in the 1980s. CBE.',
+  },
+  josephEttedgui: {
+    name: 'Joseph Ettedgui',
+    born: 1936,
+    died: 2010,
+    nationality: 'Moroccan-British',
+    career: [
+      { house: 'joseph', role: 'Founder', roleDetail: 'Founder', start: 1972, end: 2005 },
+    ],
+    awards: [
+      { award: AwardId.BfaClassicDesigner, year: 1990, house: 'joseph' },
+      { award: AwardId.BfaKnitwearDesigner, year: 1990, house: 'joseph' },
+      { award: AwardId.BfaKnitwearDesigner, year: 1992, house: 'joseph' },
+      { award: AwardId.BfaKnitwearDesigner, year: 1993, house: 'joseph' },
+      { award: AwardId.BfaKnitwearDesigner, year: 1994, house: 'joseph' },
+      { award: AwardId.BfaContemporaryDesigner, year: 2000, house: 'joseph' },
+    ],
+    notes: 'Casablanca-born retailer who moved to London in 1960 and first ran hairdressing salons on the King’s Road before opening Joseph. Died in 2010.',
+  },
+  katharineHamnett: {
+    name: 'Katharine Hamnett',
+    born: 1947,
+    nationality: 'British',
+    career: [
+      { house: 'katharineHamnett', role: 'Founder', roleDetail: 'Founder and designer', start: 1979, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaDesignerOfTheYear, year: 1984, house: 'katharineHamnett' },
+    ],
+    notes: 'Saint Martin’s graduate who co-founded Tuttabankem in 1969 and freelanced internationally before her own label.',
+  },
+  louiseGoldin: {
+    name: 'Louise Goldin',
+    nationality: 'British',
+    career: [
+      { house: 'louiseGoldin', role: 'Founder', roleDetail: 'Founder and designer', start: 2005 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2008, house: 'louiseGoldin', detail: 'Ready-to-wear' },
+    ],
+    notes: 'Central Saint Martins BA Fashion Knitwear graduate (2001) who was head of design at Tereza Santos in Brazil before her MA.',
+  },
+  mariosSchwab: {
+    name: 'Marios Schwab',
+    nationality: 'Greek-Austrian',
+    career: [
+      { house: 'mariosSchwab', role: 'Founder', roleDetail: 'Founder and designer', start: 2005 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2006, house: 'mariosSchwab', detail: 'New Generation' },
+    ],
+    notes: 'Greek-Austrian designer; creative director of Halston (2009–2011), later a consultant and, from 2020, at the Greek label Zeus + Dione. Those houses are not currently represented in the dataset.',
+  },
+  nicholasKirkwood: {
+    name: 'Nicholas Kirkwood',
+    born: 1980,
+    nationality: 'British',
+    career: [
+      { house: 'nicholasKirkwood', role: 'Founder', roleDetail: 'Founder and designer', start: 2004, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2008, house: 'nicholasKirkwood', detail: 'Accessories' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 2010, house: 'nicholasKirkwood' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 2012, house: 'nicholasKirkwood' },
+      { award: AwardId.BfaAccessoriesDesigner, year: 2013, house: 'nicholasKirkwood' },
+    ],
+    notes: 'Learned shoemaking at Cordwainers and worked for Philip Treacy; creative director of Pollini (2010–2014), which is not currently represented.',
+  },
+  patrickGrant: {
+    name: 'Patrick Grant',
+    born: 1972,
+    nationality: 'British',
+    career: [
+      { house: 'eTautz', role: 'Head of House', roleDetail: 'Owner and director; relaunched as ready-to-wear in 2009', start: 2005, end: 2022, sources: ['https://en.wikipedia.org/wiki/Patrick_Grant_(designer)'] },
+    ],
+    awards: [
+      { award: AwardId.BfaBritishMenswear, year: 2010, house: 'eTautz' },
+    ],
+    notes: 'Edinburgh-born clothier who took over Norton & Sons of Savile Row in 2005; now runs Community Clothing and Cookson & Clegg, and judges The Great British Sewing Bee.',
+  },
+  richardJames: {
+    name: 'Richard James',
+    nationality: 'British',
+    career: [
+      { house: 'richardJames', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1992 },
+    ],
+    awards: [
+      { award: AwardId.BfaBritishMenswear, year: 2001, house: 'richardJames' },
+      { award: AwardId.BfaBespoke, year: 2008, house: 'richardJames' },
+    ],
+    notes: 'Brighton College of Art graduate and former buyer for Browns.',
+  },
+  seanDixon: {
+    name: 'Sean Dixon',
+    career: [
+      { house: 'richardJames', role: 'Founder', roleDetail: 'Co-founder; business partner', start: 1992 },
+    ],
+    notes: 'Richard James’s business partner in founding the Savile Row tailor.',
+  },
+  rifatOzbek: {
+    name: 'Rifat Ozbek',
+    born: 1953,
+    nationality: 'Turkish',
+    career: [
+      { house: 'ozbek', role: 'Founder', roleDetail: 'Founder and designer', start: 1984 },
+    ],
+    awards: [
+      { award: AwardId.BfaDesignerOfTheYear, year: 1988, house: 'ozbek' },
+      { award: AwardId.BfaGlamourDesigner, year: 1990, house: 'ozbek' },
+      { award: AwardId.BfaDesignerOfTheYear, year: 1992, house: 'ozbek' },
+    ],
+    notes: 'Istanbul-born; studied architecture in Liverpool and fashion at Saint Martin’s, then worked in Milan and for Monsoon before founding Ozbek.',
+  },
+  roksandaIlincic: {
+    name: 'Roksanda Ilinčić',
+    born: 1975,
+    nationality: 'Serbian',
+    career: [
+      { house: 'roksanda', role: 'Founder', roleDetail: 'Founder and designer', start: 2005, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaRedCarpet, year: 2012, house: 'roksanda' },
+    ],
+    notes: 'Belgrade-born; studied architecture and design in Belgrade before the Central Saint Martins MA Womenswear.',
+  },
+  sophiaWebster: {
+    name: 'Sophia Webster',
+    born: 1985,
+    nationality: 'British',
+    career: [
+      { house: 'nicholasKirkwood', role: 'Other', roleDetail: 'Apprentice', sources: ['https://en.wikipedia.org/wiki/Sophia_Webster'] },
+      { house: 'sophiaWebster', role: 'Founder', roleDetail: 'Founder and designer', start: 2012, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2013, house: 'sophiaWebster', detail: 'Accessories' },
+    ],
+    notes: 'Studied at Camberwell College of Arts, Cordwainers and the Royal College of Art.',
+  },
+  sophieHulme: {
+    name: 'Sophie Hulme',
+    nationality: 'British',
+    career: [
+      { house: 'sophieHulme', role: 'Founder', roleDetail: 'Founder and designer', start: 2011, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2012, house: 'sophieHulme', detail: 'Accessories' },
+    ],
+    notes: 'Graduated in fashion design from Kingston University in 2007.',
+  },
+  suzanneClements: {
+    name: 'Suzanne Clements',
+    nationality: 'British',
+    career: [
+      { house: 'clementsRibeiro', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1993 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 1996, house: 'clementsRibeiro', detail: 'New Generation' },
+    ],
+    notes: 'Met her husband Inacio Ribeiro on the Central Saint Martins MA, graduating in 1991.',
+  },
+  inacioRibeiro: {
+    name: 'Inacio Ribeiro',
+    nationality: 'Brazilian',
+    career: [
+      { house: 'clementsRibeiro', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1993 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 1996, house: 'clementsRibeiro', detail: 'New Generation' },
+    ],
+    notes: 'Brazilian-born; met his wife Suzanne Clements on the Central Saint Martins MA, graduating in 1991.',
+  },
+  tabithaSimmons: {
+    name: 'Tabitha Simmons',
+    nationality: 'British',
+    career: [
+      { house: 'tabithaSimmons', role: 'Founder', roleDetail: 'Founder and designer', start: 2009, end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2011, house: 'tabithaSimmons', detail: 'Accessories' },
+    ],
+    notes: 'Cambridgeshire-born stylist and Vogue contributing editor; studied film and set design at Kingston University and modelled before styling.',
+  },
+  wayneHemingway: {
+    name: 'Wayne Hemingway',
+    born: 1961,
+    nationality: 'British',
+    career: [
+      { house: 'redOrDead', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1982, end: 1998 },
+    ],
+    awards: [
+      { award: AwardId.BfaStreetStyle, year: 1995, house: 'redOrDead' },
+      { award: AwardId.BfaStreetStyle, year: 1996, house: 'redOrDead' },
+      { award: AwardId.BfaStreetStyle, year: 1997, house: 'redOrDead' },
+    ],
+    notes: 'Morecambe-born; co-founded Red or Dead with Gerardine Hemingway and later turned to housing and urban design.',
+  },
+  gerardineHemingway: {
+    name: 'Gerardine Hemingway',
+    nationality: 'British',
+    career: [
+      { house: 'redOrDead', role: 'Founder', roleDetail: 'Co-founder and designer', start: 1982, end: 1998 },
+    ],
+    awards: [
+      { award: AwardId.BfaStreetStyle, year: 1995, house: 'redOrDead' },
+      { award: AwardId.BfaStreetStyle, year: 1996, house: 'redOrDead' },
+      { award: AwardId.BfaStreetStyle, year: 1997, house: 'redOrDead' },
+    ],
+    notes: 'Co-founded Red or Dead with Wayne Hemingway.',
+  },
+  zandraRhodes: {
+    name: 'Zandra Rhodes',
+    born: 1940,
+    nationality: 'British',
+    career: [
+      { house: 'zandraRhodes', role: 'Founder', roleDetail: 'Founder and designer', end: null },
+    ],
+    awards: [
+      { award: AwardId.BfaHallOfFame, year: 1995 },
+    ],
+    notes: 'Chatham-born textile and fashion designer whose mother was a fitter at the House of Worth; founded the Fashion and Textile Museum in 2003. Dame.',
+  },
+  agiMdumulla: {
+    name: 'Agi Mdumulla',
+    career: [
+      { house: 'agiAndSam', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2010, end: 2017 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2013, house: 'agiAndSam', detail: 'Menswear' },
+    ],
+    notes: 'Co-founded Agi & Sam with Sam Cotton.',
+  },
+  samCotton: {
+    name: 'Sam Cotton',
+    career: [
+      { house: 'agiAndSam', role: 'Founder', roleDetail: 'Co-founder and designer', start: 2010, end: 2017 },
+    ],
+    awards: [
+      { award: AwardId.BfaEmergingDesigner, year: 2013, house: 'agiAndSam', detail: 'Menswear' },
+    ],
+    notes: 'Co-founded Agi & Sam with Agi Mdumulla.',
+  },
+  chisatoTsumori: {
+    name: 'Chisato Tsumori',
+    nationality: 'Japanese',
+    career: [
+      { house: 'isseyMiyake', role: 'Other', roleDetail: 'Designer of ISSEY SPORTS', start: 1977, end: 1983 },
+      { house: 'isseyMiyake', role: 'Head Designer', roleDetail: 'Chief designer of I.S. Chisato Tsumori Design (formerly ISSEY SPORTS)', start: 1983 },
+      { house: 'tsumoriChisato', role: 'Founder', roleDetail: 'Founder and designer', start: 1990, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2002, house: 'tsumoriChisato' },
+    ],
+    notes: 'Born in Sayama, Saitama; graduated from Bunka Fashion College in 1976. Won the Mainichi Fashion Grand Prix newcomer award in 1985.',
+    sources: ['https://rakutenfashionweektokyo.com/en/brands/detail/tsumori-chisato'],
+  },
+  akiraMinagawa: {
+    name: 'Akira Minagawa',
+    born: 1967,
+    nationality: 'Japanese',
+    career: [
+      { house: 'minaPerhonen', role: 'Founder', roleDetail: 'Founder and designer', start: 1995, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2006, house: 'minaPerhonen' },
+    ],
+    notes: 'Born in Tokyo; graduated from Bunka Fashion College. Also received a Mainichi Fashion Grand Prix special award in 2025.',
+    sources: ['https://www.mina-perhonen.jp/en/about/brand', 'https://www.finnishdesignshop.com/en-us/designer/akira-minagawa'],
+  },
+  hokutoKatsui: {
+    name: 'Hokuto Katsui',
+    nationality: 'Japanese',
+    career: [
+      { house: 'mintdesigns', role: 'Founder', roleDetail: 'Co-founder and designer with Nao Yagi', start: 2001, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2010, house: 'mintdesigns', detail: 'Shared with Nao Yagi' },
+    ],
+    notes: 'Graduated from Central Saint Martins in London before co-founding mintdesigns.',
+  },
+  naoYagi: {
+    name: 'Nao Yagi',
+    nationality: 'Japanese',
+    career: [
+      { house: 'mintdesigns', role: 'Founder', roleDetail: 'Co-founder and designer with Hokuto Katsui', start: 2001, end: null },
+    ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2010, house: 'mintdesigns', detail: 'Shared with Hokuto Katsui' },
+    ],
+    notes: 'Graduated from Central Saint Martins in London before co-founding mintdesigns.',
+  },
+  yoichiNagasawa: {
+    name: 'Yoichi Nagasawa',
+    nationality: 'Japanese',
+    career: [
+      { house: 'yoichiNagasawa', role: 'Founder', roleDetail: 'Founder and designer', start: 1992 },
+    ],
+    awards: [
+      { award: AwardId.MainichiFashionGrandPrix, year: 2004, house: 'yoichiNagasawa' },
+    ],
+    notes: 'Graduated from Nagoya Mode College in 1980 and was a designer, later chief designer, at TOKIO KUMAGAI in Paris. Returned to Japan to found STIL in 1991, won the Mainichi newcomer award in 1992, and later worked on apparel for MUJI and AEON. Became director of the postgraduate fashion design course at Kanazawa College of Art in 2005.',
+    sources: ['https://rakutenfashionweektokyo.com/archive/2005/en/collection/maisons/designer48.html', 'https://www.fashion-press.net/news/137307'],
   },
 } satisfies Record<string, DesignerData<HouseId>>;
 

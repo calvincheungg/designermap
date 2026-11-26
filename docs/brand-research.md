@@ -284,6 +284,28 @@ participants a source credits, normally Porter and the third brand.
   keep both. Never record a parent and its own label as each other's partners:
   a release by two labels of a family gets one record per label.
 
+### Designer awards
+
+Record awards and honours in the designer's `awards` list in `designers.ts`,
+each one an `AwardId` from `src/data/awards.ts` with its year. Never write an
+award name as free text: if an award or grade is missing, add an `AwardId` value
+and its `awardInfo` entry first (one value per award and grade, grouped by
+presenter). When an award was won for a brand in the dataset (CFDA Womenswear
+for Calvin Klein), set `house` to its id so Properties can link it. Use `detail`
+only for other short context, such as "shared with Miuccia Prada".
+
+- For notable designers, read their Business of Fashion profile
+  (`businessoffashion.com/people/<name>/`) for the awards they've won. Its
+  pages refuse automated fetches, so open it in a browser or ask the user to
+  paste the awards.
+- `node scripts/awards/fashiondb.mjs --new` (or `--designer <id>`) lists FashionDB
+  awards for matched designers. FashionDB is incomplete, has duplicates and
+  errors (Miuccia Prada is credited with a Turner Prize), and often lacks the
+  year, so treat it as leads only.
+- Confirm each award with the presenter's announcement (CFDA, British Fashion
+  Council, ANDAM, LVMH Prize, official gazettes) or reputable reporting. Use the
+  ceremony year. Omit an unknown year rather than guessing it.
+
 ## 4. Resolve evidence and uncertainty
 
 - Batch independent searches. Open the relevant pages and read the supporting

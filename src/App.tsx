@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { allMoves, careerOf, designers, getDesigner, getGroup, getHouse, houses, housesInGroup } from './data';
+import { allMoves, careerOf, designers, getDesigner, getGroup, getHouse, houses, housesInGroup, type AwardId } from './data';
 import { matchesHouseFilters, type HouseFilters } from './data/tags';
 import type { ConnectionFilter, DesignerGraph, ScreenBox } from './graph/graph';
 import { ActiveFilters, setFilterValue, type FilterGroup } from './ui/filters';
@@ -9,10 +9,11 @@ import { StartIcon } from './ui/start-icons';
 import { StartMenu } from './ui/start-menu';
 import { PanelContent, type Place, type Selection } from './ui/panel';
 import { PropertiesWindow, WINDOW_PLACES, type WindowRect } from './ui/side-panel';
-import { closeWindow, focusWindow, initialDesk, isPlace, isTool, isSelectionItem, HELP, RUN, SETTINGS, MY_COMPUTER, NOTEPAD, minimizeWindow, toggleMaximized as toggleWindowMaximized, anchorWindow, openItem, openItemAt, retainItems, sameItem, toggleTask, windowFor, windowType, closeWindows, minimizeWindows, restoreWindows, type Desk, type Item } from './ui/desktop';
+import { awardItem, closeWindow, focusWindow, initialDesk, isAward, isPlace, isTool, isSelectionItem, HELP, RUN, SETTINGS, MY_COMPUTER, NOTEPAD, minimizeWindow, toggleMaximized as toggleWindowMaximized, anchorWindow, openItem, openItemAt, retainItems, sameItem, toggleTask, windowFor, windowType, closeWindows, minimizeWindows, restoreWindows, type Desk, type Item } from './ui/desktop';
 import { TaskGroup, type Task } from './ui/taskbar';
 import { YearTray } from './ui/year-tray';
 import { HelpContent, MissingReportContent, RecycleBinContent } from './ui/tool-windows';
+import { AwardWindowContent } from './ui/award-window';
 import { NOTEPAD_KEY, SettingsContent, textScale } from './ui/settings';
 import { RunContent, type RunTarget } from './ui/run-dialog';
 import { addRecent, readRecent, recentLabel, saveRecent, type RecentItem } from './ui/recent';
@@ -166,7 +167,8 @@ export function App() {
     if (cityViewRef.current === 'map') graph.current?.toggleCity(city);
     else openPlace({ kind: 'city', id: city }, pin);
   }, [openPlace]);
-  const isVisibleItem = useCallback((item: Item) => item.kind === 'group' || isPlace(item) || isTool(item) || (item.kind === 'house'
+  const openAward = useCallback((award: AwardId) => setDesk((current) => openItem(current, awardItem(award))), []);
+  const isVisibleItem = useCallback((item: Item) => item.kind === 'group' || isPlace(item) || isTool(item) || isAward(item) || (item.kind === 'house'
     ? visibleIds.has(item.id) : !!getDesigner(item.id)?.career.some((t) => visibleIds.has(t.house))), [visibleIds]);
   const onExpandChange = useCallback((open: number, total: number, fullyOpen: readonly string[]) => {
     setAllExpanded(open === total);
@@ -243,7 +245,7 @@ export function App() {
   // Start ▸ Documents: whatever brand, designer, group or place window is brought to the front.
   const activeItem = windowFor(desk, desk.active)?.item;
   useEffect(() => {
-    if (activeItem && !isTool(activeItem)) setRecent((list) => addRecent(list, activeItem));
+    if (activeItem && !isTool(activeItem) && !isAward(activeItem)) setRecent((list) => addRecent(list, activeItem));
   }, [activeItem?.kind, activeItem?.id]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => saveRecent(recent), [recent]);
   // Reset View: once the cleared selection reaches the graph, close open cities and show the whole map.
@@ -480,7 +482,7 @@ export function App() {
       </div>}
     </MapWindowFrame>
     {desk.windows.map((w) => <PropertiesWindow key={w.key} id={w.key} titleId={`${w.key}-title`} bodyId={`${w.key}-body`}
-      title={windowTitle(w.item)} cascade={w.slot} anchor={w.anchor} align={isPlace(w.item) || isTool(w.item) ? 'left' : 'right'} className={windowClass(w.item)}
+      title={windowTitle(w.item)} cascade={w.slot} anchor={w.anchor} align={isPlace(w.item) || isTool(w.item) || isAward(w.item) ? 'left' : 'right'} className={windowClass(w.item)}
       icon={isTool(w.item) && TITLE_ICONS.has(w.item.id) ? windowIcon(w.item, 16) : undefined}
       preferredSize={preferredSize(w.item, { visibleHouses, visibleIds, year: visibleYear, scale: textScale(textSize) })} minSize={minimumSize(w.item, textScale(textSize))}
       initialRect={session?.rects[w.key]} onRect={(rect) => { if (rect) rects.current[w.key] = rect; else delete rects.current[w.key]; }}
@@ -492,6 +494,7 @@ export function App() {
       {isPlace(w.item) ? <PlaceWindowContent place={w.item} visibleIds={visibleIds} onSelect={select}
         onShowOnMap={revealOnMap} onShowBrands={showBrandsOnMap} onOpenPlace={openPlace} onShowPlace={showPlaceOnMap}
         onHidePlace={hidePlaceOnMap} openCities={mapHidden ? undefined : openCities} />
+        : isAward(w.item) ? <AwardWindowContent award={w.item.id} onSelect={select} />
         : isTool(w.item) ? w.item.id === 'stats' ? <StatisticsWindow visibleHouses={visibleHouses} year={visibleYear} filtered={!!matchingIds} onSelect={select} onOpenPlace={openPlace} />
           : w.item.id === 'recycle' ? <RecycleBinContent visibleHouses={visibleHouses} year={visibleYear} onSelect={select} onShowOnMap={revealOnMap} />
           : w.item.id === 'help' ? <HelpContent />
@@ -505,7 +508,7 @@ export function App() {
             onOpenPlace={openPlace} onShowPlace={showPlaceOnMap} onOpenSettings={() => openTool(SETTINGS)} />
           : w.item.id === 'notepad' ? <NotepadWindow clock={clock} fontSize={notepadFontSize} onFontSize={setNotepadFontSize} onClose={() => closeKeys([w.key])} onHelp={() => openTool(HELP)} />
           : <MissingReportContent onSelect={select} />
-        : <PanelContent key={`${w.revision}:${filterKey}`} selection={w.item} year={visibleYear} onSelect={select} onTag={addTag} onOpenPlace={openPlace} onShowOnMap={revealSelection}
+        : <PanelContent key={`${w.revision}:${filterKey}`} selection={w.item} year={visibleYear} onSelect={select} onTag={addTag} onOpenPlace={openPlace} onOpenAward={openAward} onShowOnMap={revealSelection}
           onHideOnMap={hideSelection} shownOnMap={!mapHidden && sameItem(selection, w.item)} onCopyLink={copyLink} />}
     </PropertiesWindow>)}
     {/* Explorer always sits under the other windows, so its dialogs open over all of them. */}
@@ -538,7 +541,7 @@ export function App() {
       onClick={() => setMapWindow((w) => ({ ...w, state: w.state === 'open' ? 'minimized' : 'open' }))}>
       <img className="task-icon" src={MAP_ICON} alt="" width={16} height={16} draggable={false} /><span className="task-label">Explorer</span>
     </button>}
-    {([['Brands', 'brand'], ['Designers', 'designer'], ['Locations', 'place'], ['Statistics', 'stats'], ['Spreadsheet', 'list'], ['Recycle Bin', 'recycle'], ["What's Missing", 'missing'], ['Settings', 'settings'], ['My Computer', 'computer'], ['Notepad', 'notepad'], ['Help', 'help'], ['Run', 'run']] as const).map(([label, type]) => <TaskGroup key={label} label={label} active={desk.active}
+    {([['Brands', 'brand'], ['Designers', 'designer'], ['Locations', 'place'], ['Awards', 'award'], ['Statistics', 'stats'], ['Spreadsheet', 'list'], ['Recycle Bin', 'recycle'], ["What's Missing", 'missing'], ['Settings', 'settings'], ['My Computer', 'computer'], ['Notepad', 'notepad'], ['Help', 'help'], ['Run', 'run']] as const).map(([label, type]) => <TaskGroup key={label} label={label} active={desk.active}
       onToggle={toggle} onShow={show} onClose={(key) => closeKeys([key])} windowActions={windowActions} groupActions={groupActions} tasks={desk.windows.filter((w) => windowType(w.item) === type)
         .map((w) => ({ key: w.key, title: windowTitle(w.item), minimized: w.minimized, controls: w.key }))} />)}<YearTray clock={clock} year={year} minYear={minYear} maxYear={maxYear} playing={playFrom !== null} onYear={setYear}
       onPlay={() => setPlayFrom((current) => current === null ? year >= maxYear ? minYear : year : null)} />

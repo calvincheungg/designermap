@@ -1,7 +1,7 @@
 import type { House } from '../types';
-import { getHouse } from '../data';
+import { awardName, getHouse } from '../data';
 import { BrandIcon, cityWindowSize, placeTileCount, placeTitle } from './city-window';
-import { isPlace, isTool, LIST_VIEW, MY_COMPUTER, NOTEPAD, SETTINGS, STATISTICS, tool, type Item } from './desktop';
+import { isAward, isPlace, isTool, LIST_VIEW, MY_COMPUTER, NOTEPAD, SETTINGS, STATISTICS, tool, type Item } from './desktop';
 import { panelTitle } from './panel';
 import { StartIcon } from './start-icons';
 import { endedBrands, recycleBinSize } from './tool-windows';
@@ -14,6 +14,8 @@ const scaleSize = (size: { width: number; height: number }, scale: number) => sc
   : { width: Math.round(size.width * scale), height: Math.round(size.height * scale) };
 /** Tool windows' opening sizes: Statistics is wider than Properties so its bar tables have room. */
 const TOOL_SIZES = { stats: { width: 560, height: 640 }, recycle: { width: 380, height: 480 }, missing: { width: 420, height: 560 }, help: { width: 440, height: 560 }, run: { width: 400, height: 240 }, list: { width: 820, height: 560 }, settings: { width: 430, height: 500 }, computer: { width: 520, height: 440 }, notepad: { width: 460, height: 380 } } as const;
+/** An award's recipients table: Year, Designer and Brand columns. */
+const AWARD_SIZE = { width: 460, height: 420 };
 /** Run is a small dialog-like window, so it may be smaller than the Properties minimum. */
 const RUN_MIN_SIZE = { width: 320, height: 200 };
 // Desktop icon positions on the desktop area (the old keys held positions inside the map window).
@@ -44,6 +46,7 @@ export function windowIcon(item: Item, size: number) {
   if (item.kind === 'designer') return <StartIcon name="designer" size={size} />;
   if (item.kind === 'group') return <StartIcon name="group" size={size} />;
   if (isPlace(item)) return image(FOLDER_ICON, size);
+  if (isAward(item)) return <StartIcon name="award" size={size} />;
   switch (item.id) {
     case 'recycle': return image('/assets/bin.webp', size);
     case 'list': return image(LIST_VIEW_ICON, size, 'xl-icon');
@@ -58,7 +61,7 @@ export function windowIcon(item: Item, size: number) {
 }
 /** Tool windows with their own 16px title-bar icon. */
 export const TITLE_ICONS: ReadonlySet<string> = new Set(['list', 'settings', 'computer', 'notepad', 'help']);
-export const windowTitle = (item: Item) => isPlace(item) ? placeTitle(item) : isTool(item) ? TOOL_TITLES[item.id] : panelTitle(item);
+export const windowTitle = (item: Item) => isPlace(item) ? placeTitle(item) : isTool(item) ? TOOL_TITLES[item.id] : isAward(item) ? awardName(item.id) : panelTitle(item);
 
 /** The desktop's shortcuts, shown as icons on the desktop and as Quick Launch buttons beside Start. */
 export function desktopShortcuts(openMap: () => void, open: (item: Item) => void) {
@@ -79,6 +82,7 @@ export function desktopShortcuts(openMap: () => void, open: (item: Item) => void
 interface Shown { visibleHouses: readonly House[]; visibleIds: ReadonlySet<string>; year: number; scale: number }
 export function preferredSize(item: Item, { visibleHouses, visibleIds, year, scale }: Shown) {
   if (isPlace(item)) return scaleSize(cityWindowSize(placeTileCount(item, visibleIds)), scale);
+  if (isAward(item)) return AWARD_SIZE;
   if (!isTool(item)) return undefined;
   return item.id === 'recycle' ? scaleSize(recycleBinSize(endedBrands(visibleHouses, year).length), scale) : TOOL_SIZES[item.id];
 }

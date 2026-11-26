@@ -1,4 +1,5 @@
 import type { ScreenBox } from '../graph/graph';
+import type { AwardId } from '../data/awards';
 import type { Place, Selection } from './panel';
 
 /** Brand and group Properties windows open at once. */
@@ -7,6 +8,8 @@ export const MAX_PROPERTY_WINDOWS = 10;
 export const MAX_DESIGNER_WINDOWS = 10;
 /** City and country windows open at once, counted separately from Properties. */
 export const MAX_LOCATION_WINDOWS = 10;
+/** Award windows (an award's recipients) open at once. */
+export const MAX_AWARD_WINDOWS = 10;
 
 /** Single-instance tool windows: Statistics, the Recycle Bin of ended brands, the What's Missing report, Help, Run, the Spreadsheet, Settings, My Computer and Notepad. */
 export type ToolId = 'stats' | 'recycle' | 'missing' | 'help' | 'run' | 'list' | 'settings' | 'computer' | 'notepad';
@@ -19,17 +22,21 @@ export const LIST_VIEW = tool('list');
 export const SETTINGS = tool('settings');
 export const MY_COMPUTER = tool('computer');
 export const NOTEPAD = tool('notepad');
-/** A map selection shown in Properties, a city's brand grid, or a tool window. */
-export type Item = NonNullable<Selection> | Place | ToolItem;
+/** An award's window: everyone who received it. Not a map selection. */
+export type AwardItem = { kind: 'award'; id: AwardId };
+export const awardItem = (id: AwardId): AwardItem => ({ kind: 'award', id });
+/** A map selection shown in Properties, a city's brand grid, an award's recipients, or a tool window. */
+export type Item = NonNullable<Selection> | Place | AwardItem | ToolItem;
 /** City and country windows: grids of brands, not map selections. */
 export const isPlace = (item: Item): item is Place => item.kind === 'city' || item.kind === 'country';
 export const isTool = (item: Item): item is ToolItem => item.kind === 'tool';
+export const isAward = (item: Item): item is AwardItem => item.kind === 'award';
 /** Brand, designer and group windows: the ones that follow (and drive) the map selection. */
-export const isSelectionItem = (item: Item): item is NonNullable<Selection> => !isPlace(item) && !isTool(item);
+export const isSelectionItem = (item: Item): item is NonNullable<Selection> => !isPlace(item) && !isTool(item) && !isAward(item);
 /** Window types: each has its own limit, cascade and taskbar button. Each tool is its own type. */
-export type WindowType = 'brand' | 'designer' | 'place' | ToolId;
-export const windowType = (item: Item): WindowType => isPlace(item) ? 'place' : isTool(item) ? item.id : item.kind === 'designer' ? 'designer' : 'brand';
-const limitFor = (item: Item) => isTool(item) ? 1 : ({ brand: MAX_PROPERTY_WINDOWS, designer: MAX_DESIGNER_WINDOWS, place: MAX_LOCATION_WINDOWS } as const)[windowType(item) as 'brand' | 'designer' | 'place'];
+export type WindowType = 'brand' | 'designer' | 'place' | 'award' | ToolId;
+export const windowType = (item: Item): WindowType => isPlace(item) ? 'place' : isTool(item) ? item.id : isAward(item) ? 'award' : item.kind === 'designer' ? 'designer' : 'brand';
+const limitFor = (item: Item) => isTool(item) ? 1 : ({ brand: MAX_PROPERTY_WINDOWS, designer: MAX_DESIGNER_WINDOWS, place: MAX_LOCATION_WINDOWS, award: MAX_AWARD_WINDOWS } as const)[windowType(item) as 'brand' | 'designer' | 'place' | 'award'];
 /** Designer windows cascade on past the brand windows instead of opening on top of them. */
 const firstSlot = (item: Item) => windowType(item) === 'designer' ? MAX_PROPERTY_WINDOWS + 1 : 1;
 const sameCategory = (a: Item, b: Item) => windowType(a) === windowType(b);

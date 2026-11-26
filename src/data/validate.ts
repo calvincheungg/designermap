@@ -2,6 +2,7 @@ import { collaborations, collectionTags, designers, getDesigner, getGroup, getHo
 import type { Collaboration, House } from '../types';
 import { cities, cityRegions, type CityName } from './cities';
 import { CountryCode } from './countries';
+import { awardInfo } from './awards';
 
 /**
  * Sanity checks that types can't catch. House ids are already checked by the
@@ -23,6 +24,21 @@ export function validateData(): string[] {
         if (d.born && t.start < d.born + 14) problems.push(`${where}: starts before age 14`);
       }
       if (d.died && t.end === null) problems.push(`${where}: marked current but designer died ${d.died}`);
+    }
+
+    const seenAwards = new Set<string>();
+    for (const a of d.awards ?? []) {
+      const where = `${d.id} award ${a.award} (${a.year ?? 'undated'})`;
+      if (!Object.hasOwn(awardInfo, a.award)) problems.push(`${where}: not an AwardId in awards.ts`);
+      if (a.year !== undefined) {
+        if (!Number.isInteger(a.year) || a.year <= 0) problems.push(`${where}: year must be a positive integer`);
+        if (a.year > thisYear) problems.push(`${where}: year is in the future`);
+        if (d.born && a.year < d.born) problems.push(`${where}: before the designer was born`);
+      } else if (a.approximate) problems.push(`${where}: approximate needs a year`);
+      if (a.house !== undefined && !getHouse(a.house)) problems.push(`${where}: brand ${a.house} is not in houses.ts`);
+      const key = `${a.award}:${a.year ?? ''}`;
+      if (seenAwards.has(key)) problems.push(`${where}: listed twice`);
+      seenAwards.add(key);
     }
   }
 

@@ -1,3 +1,4 @@
+import { awardInfo, type AwardId } from '../data/awards';
 import type { ConnectionFilter, MapViewState } from '../graph/graph';
 import { initialDesk, isSelectionItem, sameItem, type Desk, type Item, type PropertyWindow, type ToolId } from './desktop';
 import type { Selection } from './panel';
@@ -34,6 +35,7 @@ const numbers = (value: unknown, keys: readonly string[]) => keys.every((key) =>
 /** An item that still exists, or undefined (a brand removed since, say). */
 function validItem(value: unknown): Item | undefined {
   const { kind, id } = record(value);
+  if (kind === 'award') return typeof id === 'string' && Object.hasOwn(awardInfo, id) ? { kind, id: id as AwardId } : undefined;
   if (kind === 'tool') return typeof id === 'string' && Object.hasOwn(TOOLS, id) && TOOLS[id as ToolId] ? { kind, id: id as ToolId } : undefined;
   return isRecentItem(value) && itemExists(value) ? { kind: value.kind, id: value.id } as Item : undefined;
 }

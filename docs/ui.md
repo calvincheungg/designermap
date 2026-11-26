@@ -127,6 +127,17 @@ Architecture and data rules are in [CLAUDE.md](../CLAUDE.md).
 - Brand profile descriptions, creative directors, other roles, collaboration history and tags
   use matching fieldset headings (counts shown as "Creative directors (N)", "Other roles (N)") with clickable expand/collapse buttons. Other roles starts collapsed; the rest open
   by default; descriptions show their text in a separate inset box.
+- Designer Properties shows an "Awards (N)" section after Moves, only when the designer
+  has awards: a Year | Award | Brand table from `awardsOf` (oldest first, undated last as "Unknown",
+  approximate years with "~"), with any `detail` in parentheses. Brand links to the record's
+  `house`; the award name (`AwardLink`) opens that award's window. Sources are never shown.
+- Award windows (`{ kind: 'award', id: AwardId }`, `ui/award-window.tsx`) list everyone who
+  received the award from `awardRecipients`: Year | Designer | Brand, with links to each
+  designer and brand, and the presenter above. The table has no scrollbar of its own (the window
+  scrolls), and clicking the Year header toggles newest first (default) / oldest first; undated
+  recipients stay last either way. They are their own window type ("Awards" on the
+  taskbar, up to `MAX_AWARD_WINDOWS`, a trophy icon), not map selections: they don't drive
+  the map, Favorites or Start ▸ Documents, ignore year/tag filters, and survive a page refresh.
   Clicking the brand's logo (top left) selects and frames it on the map (`onShowOnMap`).
   Each newly selected brand starts with these sections expanded. Collaboration descriptions are
   not displayed at all; do not generate descriptions for new collaborations.

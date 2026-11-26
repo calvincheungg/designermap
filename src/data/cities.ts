@@ -7,6 +7,9 @@ import { CountryCode } from './countries';
  * house is somewhere new.
  */
 export const cities = {
+  'Cape Town': [-33.9249, 18.4241],
+  Porto: [41.1579, -8.6291],
+  Nairobi: [-1.2921, 36.8219],
   Cincinnati: [39.1031, -84.512],
   Dayton: [39.7589, -84.1916],
   'Lake Forest': [33.6469, -117.6861],

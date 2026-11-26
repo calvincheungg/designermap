@@ -261,6 +261,25 @@ const icons = {
     '.kkkkkkkkkkkkkk.',
     '................',
   ],
+  /** An award window: a gold trophy cup. */
+  award: [
+    '................',
+    '..kkkkkkkkkkkk..',
+    '.kkwyyyyyyyyokk.',
+    'k.kwyyyyyyyyok.k',
+    'k.kwyyyyyyyyok.k',
+    '.kkwyyyyyyyyokk.',
+    '...kwyyyyyyok...',
+    '....kyyyyyok....',
+    '.....kkyokk.....',
+    '.......yo.......',
+    '.......yo.......',
+    '......kyok......',
+    '....kkkkkkkk....',
+    '....knnnnnnk....',
+    '....kkkkkkkk....',
+    '................',
+  ],
   /** A group (fashion conglomerate) folder in My Computer: an office building. */
   group: [
     '................',

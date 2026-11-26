@@ -1,9 +1,10 @@
-import type { Collaboration, CollaborationData, Designer, House, HouseTenure, Move, Tenure } from '../types';
+import type { AwardRecord, Collaboration, CollaborationData, Designer, House, HouseTenure, Move, Tenure } from '../types';
 import { collaborations as collaborationRecords } from './collaborations';
 import type { HouseId } from './houses';
 import { designers as designerRecords } from './designers';
 import type { DesignerId } from './designers';
 import { houses as houseRecords } from './houses';
+import { awardName, type AwardId } from './awards';
 import { groups as groupRecords, GroupId, type GroupData } from './groups';
 
 export type { HouseId } from './houses';
@@ -15,6 +16,8 @@ export type { HouseTags, HouseFilters } from './tags';
 export { GroupId } from './groups';
 export type { GroupData } from './groups';
 export { CountryCode, countryNames } from './countries';
+export { AwardId, awardInfo, awardName } from './awards';
+export type { AwardInfo } from './awards';
 
 export const groups: (GroupData & { id: GroupId })[] = Object.values(GroupId).map((id) => ({ id, ...groupRecords[id] }));
 const groupById = new Map<string, (typeof groups)[number]>(groups.map((group) => [group.id, group]));
@@ -190,6 +193,22 @@ export function formatTenureYears(t: Tenure): string {
   const end = t.end === null ? 'Present' : t.end;
   return `${prefix}${t.start ?? '?'}–${end}`;
 }
+
+/** A designer's awards, oldest first; undated awards last, then by name. */
+export function awardsOf(designerId: string): AwardRecord[] {
+  return [...(getDesigner(designerId)?.awards ?? [])].sort((a, b) =>
+    (a.year ?? Infinity) - (b.year ?? Infinity) || awardName(a.award).localeCompare(awardName(b.award)));
+}
+
+/** Everyone who received an award, oldest first (undated last, then by name). */
+export function awardRecipients(award: AwardId): (AwardRecord & { designerId: string })[] {
+  return designers.flatMap((d) => (d.awards ?? []).filter((a) => a.award === award).map((a) => ({ ...a, designerId: d.id })))
+    .sort((a, b) => (a.year ?? Infinity) - (b.year ?? Infinity) || getDesigner(a.designerId)!.name.localeCompare(getDesigner(b.designerId)!.name));
+}
+
+/** "2017", "~2017", or "Unknown" when the year isn't recorded. */
+export const formatAwardYear = (a: AwardRecord): string =>
+  a.year === undefined ? 'Unknown' : `${a.approximate ? '~' : ''}${a.year}`;
 
 /** Where a house's logo loads from: a full URL as-is, or a file in public/logos/. */
 export const logoUrl = (h: House): string | undefined => {

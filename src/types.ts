@@ -11,6 +11,7 @@
  * is only written down once.
  */
 
+import type { AwardId } from './data/awards';
 import type { HouseTags } from './data/tags';
 import type { GroupId } from './data/groups';
 import type { CountryCode } from './data/countries';
@@ -148,6 +149,20 @@ export interface Tenure<HouseId extends string = string> {
   sources?: string[];
 }
 
+/** One award or honour a designer received. */
+export interface AwardRecord<HouseId extends string = string> {
+  award: AwardId;
+  /** The brand it was won for, when it was for one (a CFDA award for Calvin Klein). */
+  house?: HouseId;
+  /** Year it was presented. Omit when unknown. */
+  year?: number;
+  /** Mark an unconfirmed year so it shows a "~" in the UI. */
+  approximate?: boolean;
+  /** Optional context, e.g. "shared with Miuccia Prada". Put the brand in `house`. */
+  detail?: string;
+  sources?: string[];
+}
+
 export interface DesignerData<HouseId extends string = string> {
   name: string;
   born?: number;
@@ -155,6 +170,8 @@ export interface DesignerData<HouseId extends string = string> {
   nationality?: string;
   /** Order doesn't matter; it's sorted by start year when displayed. */
   career: Tenure<HouseId>[];
+  /** Standardized awards (data/awards.ts); sorted by year when displayed. */
+  awards?: AwardRecord<HouseId>[];
   notes?: string;
   sources?: string[];
 }

@@ -252,6 +252,10 @@
 }
 .side-window .section-toggle:focus-visible { outline: 1px dotted #000; outline-offset: 2px; }
 .side-window .sunken-panel { width: 100%; max-height: 50vh; }
+/* Award windows: the recipients table grows with the window, so the window has the only scrollbar. */
+.side-window .sunken-panel.award-recipients { max-height: none; overflow: visible; }
+.side-window .award-sort { all: unset; display: block; width: 100%; cursor: var(--cursor-pointer); white-space: nowrap; }
+.side-window .award-sort:focus-visible { outline: 1px dotted #000; outline-offset: -2px; }
 /* Statistics window (ui/statistics.tsx): count tables with navy bars scaled to the largest row. */
 .side-window .stats-table table { width: 100%; }
 .side-window .stats-table .stats-count { width: 1%; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }

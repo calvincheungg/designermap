@@ -1,12 +1,13 @@
 import { useNotes } from './use-notes';
 import { Fragment, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
-  careerOf, collaborationsOf, countryNames, formatTenureYears, foundersOf, getDesigner, getGroup,
+  awardName, awardsOf, careerOf, collaborationsOf, formatAwardYear, countryNames, formatTenureYears, foundersOf, getDesigner, getGroup,
   getHouse, housesInGroup, isBusinessLeadership, labelsOf, logoUrl, movesOf, parentHouseOf, regionalHousesInGroup, tenuresAt,
 } from '../data';
 import type { Selection as GraphSelection } from '../graph/graph';
 import type { Collaboration, House, HouseEvent, HouseTenure, Tenure } from '../types';
 import type { CountryCode } from '../data/countries';
+import type { AwardId } from '../data/awards';
 import { mapLocationForCity } from '../graph/locations';
 import { frameIcon, initialsIcon, logoInfo } from '../graph/icons';
 import { tagLabel } from './labels';
@@ -21,6 +22,8 @@ export type Place = { kind: 'city'; id: string } | { kind: 'country'; id: Countr
 export interface Actions {
   onSelect: (selection: Selection, reveal?: boolean) => void;
   onTag: (group: keyof HouseFilters, value: string) => void;
+  /** Open an award's window of recipients; awards show as plain text without it. */
+  onOpenAward?: (award: AwardId) => void;
   /** Open a city or country window; places show as plain text without it. */
   onOpenPlace?: (place: Place) => void;
   /** Select and frame an item on the map (the brand logo); the logo is a plain image without it. */
@@ -50,6 +53,13 @@ export function EntityLink({ kind, id, children, onSelect }: {
       if (group) onSelect({ kind, id: group.id }, true);
     } else onSelect({ kind, id }, true);
   }}>{children}</a>;
+}
+
+/** An award's name, opening its window of recipients when it can. */
+export function AwardLink({ award, onOpenAward }: { award: AwardId; onOpenAward?: Actions['onOpenAward'] }) {
+  const name = awardName(award);
+  if (!onOpenAward) return <>{name}</>;
+  return <a href="#" data-award={award} title={`Show everyone who received the ${name}`} onClick={(event) => { event.preventDefault(); onOpenAward(award); }}>{name}</a>;
 }
 
 export function Fields({ rows }: { rows: [string, ReactNode][] }) {
@@ -332,11 +342,11 @@ function GroupProfile({ id, onSelect, onShowOnMap, onHideOnMap, shownOnMap, onCo
     <Description text={[group.description, group.notes].filter(Boolean).join('\n\n')} /></>;
 }
 
-function DesignerProfile({ id, onSelect, onShowOnMap, onHideOnMap, shownOnMap, onCopyLink }: { id: string } & ProfileActions) {
+function DesignerProfile({ id, onSelect, onOpenAward, onShowOnMap, onHideOnMap, shownOnMap, onCopyLink }: { id: string } & ProfileActions & Pick<Actions, 'onOpenAward'>) {
   const designer = getDesigner(id);
   const notes = useNotes('designers', id, designer?.notes);
   if (!designer) return <p>No designer with id “{id}”.</p>;
-  const career = careerOf(id), moves = movesOf(id);
+  const career = careerOf(id), moves = movesOf(id), awards = awardsOf(id);
   return <><ItemActions item={{ kind: 'designer', id }} onShowOnMap={onShowOnMap} onHideOnMap={onHideOnMap} shownOnMap={shownOnMap} onCopyLink={onCopyLink} /><h2>{designer.name}</h2><Fields rows={[
     ['Born', designer.born ? `${designer.born}${designer.died ? `–${designer.died}` : ''}` : undefined], ['Nationality', designer.nationality],
   ]} /><fieldset><legend>Career</legend><div className="sunken-panel"><table className="interactive"><thead><tr><th>Years</th><th>House</th><th>Role</th></tr></thead><tbody>
@@ -348,7 +358,13 @@ function DesignerProfile({ id, onSelect, onShowOnMap, onHideOnMap, shownOnMap, o
         <span className="hint">(alongside <EntityLink kind="house" id={move.from.house} onSelect={onSelect}>{getHouse(move.from.house)?.name ?? move.from.house}</EntityLink>)</span></> : <>
         <EntityLink kind="house" id={move.from.house} onSelect={onSelect}>{getHouse(move.from.house)?.name ?? move.from.house}</EntityLink>{' → '}
         <EntityLink kind="house" id={move.to.house} onSelect={onSelect}>{getHouse(move.to.house)?.name ?? move.to.house}</EntityLink></>}
-    </li>)}</ul> : <p className="hint">No moves between houses recorded.</p>}</fieldset><Description text={notes} /></>;
+    </li>)}</ul> : <p className="hint">No moves between houses recorded.</p>}</fieldset>
+    {!!awards.length && <ProfileSection title={`Awards (${awards.length})`}><div className="sunken-panel"><table className="interactive"><thead><tr><th>Year</th><th>Award</th><th>Brand</th></tr></thead><tbody>
+      {awards.map((award, index) => <tr key={index}><td className="nowrap">{formatAwardYear(award)}</td>
+        <td><AwardLink award={award.award} onOpenAward={onOpenAward} />{award.detail && <span className="hint"> ({award.detail})</span>}</td>
+        <td>{award.house && <EntityLink kind="house" id={award.house} onSelect={onSelect}>{getHouse(award.house)?.name ?? award.house}</EntityLink>}</td></tr>)}
+    </tbody></table></div></ProfileSection>}
+    <Description text={notes} /></>;
 }
 
 export function panelTitle(selection: Selection): string {
@@ -357,14 +373,14 @@ export function panelTitle(selection: Selection): string {
   return name ?? 'Not found';
 }
 
-export function PanelContent({ selection, year = Infinity, onSelect, onTag, onOpenPlace, onShowOnMap, onHideOnMap, shownOnMap, onCopyLink }: {
+export function PanelContent({ selection, year = Infinity, onSelect, onTag, onOpenPlace, onOpenAward, onShowOnMap, onHideOnMap, shownOnMap, onCopyLink }: {
   selection: Selection; year?: number;
 } & Actions) {
   if (selection?.kind === 'house') {
     const house = getHouse(selection.id);
     return house ? <HouseProfile key={house.id} house={house} year={year} onSelect={onSelect} onTag={onTag} onOpenPlace={onOpenPlace} onShowOnMap={onShowOnMap} onHideOnMap={onHideOnMap} shownOnMap={shownOnMap} onCopyLink={onCopyLink} /> : <p>No house with id “{selection.id}”.</p>;
   }
-  if (selection?.kind === 'designer') return <DesignerProfile key={selection.id} id={selection.id} onSelect={onSelect} onShowOnMap={onShowOnMap} onHideOnMap={onHideOnMap} shownOnMap={shownOnMap} onCopyLink={onCopyLink} />;
+  if (selection?.kind === 'designer') return <DesignerProfile key={selection.id} id={selection.id} onSelect={onSelect} onOpenAward={onOpenAward} onShowOnMap={onShowOnMap} onHideOnMap={onHideOnMap} shownOnMap={shownOnMap} onCopyLink={onCopyLink} />;
   if (selection?.kind === 'group') return <GroupProfile key={selection.id} id={selection.id} onSelect={onSelect} onShowOnMap={onShowOnMap} onHideOnMap={onHideOnMap} shownOnMap={shownOnMap} onCopyLink={onCopyLink} />;
   return <p className="hint">Nothing selected.</p>;
 }
